@@ -53,8 +53,8 @@ export function StarBackground() {
     }));
   }, []);
 
-  const [stars, setStars] = useState<Star[]>(() => createStars());
-  const [meteors, setMeteors] = useState<Meteor[]>(() => createMeteors());
+  const [stars, setStars] = useState<Star[]>([]);
+  const [meteors, setMeteors] = useState<Meteor[]>([]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -65,6 +65,8 @@ export function StarBackground() {
       setStars(createStars());
       setMeteors(createMeteors());
     };
+
+    handleResize();
 
     window.addEventListener("resize", handleResize);
 
