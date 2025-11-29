@@ -54,7 +54,6 @@ export function NetworkBackground() {
     let width = 0;
     let height = 0;
     const target: Target = { x: 0, y: 0 };
-    let animateHeader = true;
     let animationFrameId = 0;
     let points: Point[] = [];
 
@@ -176,9 +175,7 @@ export function NetworkBackground() {
     };
 
     const animate = (now: number) => {
-      if (animateHeader) {
-        context.clearRect(0, 0, width, height);
-      }
+      context.clearRect(0, 0, width, height);
 
       points.forEach((point) => {
         updatePointPosition(point, now);
@@ -198,10 +195,8 @@ export function NetworkBackground() {
           point.circle.active = 0;
         }
 
-        if (animateHeader) {
-          drawLines(point);
-          drawCircle(point);
-        }
+        drawLines(point);
+        drawCircle(point);
       });
 
       animationFrameId = window.requestAnimationFrame(animate);
@@ -211,10 +206,6 @@ export function NetworkBackground() {
       const { clientX, clientY } = event;
       target.x = clientX;
       target.y = clientY;
-    };
-
-    const handleScroll = () => {
-      animateHeader = window.scrollY <= height;
     };
 
     const handleResize = () => {
@@ -231,13 +222,11 @@ export function NetworkBackground() {
     animationFrameId = window.requestAnimationFrame(animate);
 
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
