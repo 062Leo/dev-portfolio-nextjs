@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowDown } from "lucide-react";
+import { portfolioData } from "@/data/portfolio-data";
 
 export function HomeSection() {
   return (
@@ -9,12 +10,12 @@ export function HomeSection() {
         <div className="space-y-6">
           <h1 className="text-4xl font-bold tracking-tight md:text-6xl">
             <span className="opacity-0 animate-fade-in">Hi, I&apos;m</span>
-            <span className="opacity-0 animate-fade-in-delay-1 text-primary"> Peter</span>
-            <span className="opacity-0 animate-fade-in-delay-2"> Pan</span>
+            <span className="opacity-0 animate-fade-in-delay-1 text-primary"> {portfolioData.personal.name.split(" ")[0]}</span>
+            <span className="opacity-0 animate-fade-in-delay-2"> {portfolioData.personal.name.split(" ")[1]}</span>
           </h1>
 
           <p className="mx-auto text-lg opacity-0 animate-fade-in-delay-3 md:text-xl">
-            I&apos;m a Software Developer specialized in Unity and Web Development. 
+            {portfolioData.personal.role}
           </p>
 
           <div className="pt-4 opacity-0 animate-fade-in-delay-4">

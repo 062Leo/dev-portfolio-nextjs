@@ -1,0 +1,319 @@
+Startseite / Über mich
+
+Kurze Vorstellung:
+
+Name :Peter Pan
+
+Softwareentwickler (B.Sc.) – Schwerpunkt Games Engineering
+
+Spezialisiert in Unity, C#, .NET
+
+Fokus auf Clean Code, Refactoring, qualitativ hochwertige Software
+
+1–2 Sätze zu deiner Motivation (Game Dev & Software Engineering)
+
+
+2. Skills
+Hard Skills
+
+Programmiersprachen
+
+C# (main)
+
+Java
+
+Js/Ts
+
+HTML/CSS
+
+C (Grundlagen)
+
+Game Development
+
+Unity (main)
+
+Photon PUN 2
+
+Netcode for GameObjects
+
+Unity ML-Agents (Reinforcement Learning)
+
+Mobile / Android
+
+In-App Purchases & Ads (Unity Ads, IronSource, AdMob)
+
+Unity Performance Optimierung
+
+Gameplay-Mechaniken
+
+
+
+
+
+Frameworks & Technologien
+
+.NET
+
+Blazor
+
+Flutter
+
+REST APIs
+
+Docker
+
+MariaDB
+
+Angular
+
+Tools & Methoden
+
+Git
+
+GitHub / GitLab
+
+Azure DevOps (CI/CD)
+
+Jenkins
+
+Jira, Confluence, Bitbucket
+
+Unity Version Control 
+
+Visual Studio, VSCode, IntelliJ,  Windsurf und Antigravity  (KI code editoren)
+
+Scrum / Agile
+
+Unit-Tests & Integration-Tests
+
+Clean Code
+
+Refactoring
+
+Konzepte
+
+Objektorientierte Programmierung (OOP)
+
+Client-Server-Architektur
+
+Design Patterns
+
+State Machines
+
+Reinforcement Learning
+
+
+
+
+
+Soft Skills
+
+Teamfähigkeit
+
+Analytische & strukturierte Arbeitsweise
+
+Schnelle Auffassungsgabe
+
+Lernbereitschaft
+
+Problemlösungskompetenz
+
+Kommunikationsfähigkeit
+
+Agiles Mindset
+
+Hoher Qualitätsanspruch
+
+Motivation / Begeisterung
+
+
+
+
+
+
+
+
+3. Projekte (mit Showcase)
+Hauptprojekte (detailliert darstellen)
+
+Asymmetrisches Online-Multiplayer-Spiel (Prop-Hunt / Killer) — Note 1.3
+
+Unity 3D, C#, Netcode for GameObjects, Unity Transport
+
+Physikbasierte Prop-Bewegung
+
+FP/TP-Kamera
+
+Komplexes Multiplayer-Debugging
+
+Netzwerkarchitektur / State Machines
+
+Map-Design & ProBuilder
+
+Erworbene Kompetenzen (Netzwerk, Debugging, Physik, Strukturierung)
+
+
+
+
+
+
+
+
+
+
+Bachelorarbeit – ML-Agent in Unity — Note 1.0
+
+Reinforcement Learning
+
+Unity ML-Agents
+
+Training eines Agenten zur Lösung von Hindernis-Parcours & Rätseln
+
+Showcase: Videos/GIFs
+
+Technische Einblicke (Training, Belohnungssystem)
+
+
+
+
+
+
+
+
+
+
+
+
+2D Online Multiplayer Mobile Kartenspiel (Privatprojekt)
+
+Unity, C#, Photon PUN 2
+
+Multiplayer
+
+Android
+
+Mobile UI/UX
+
+Kartenlogik
+
+Optional: Download / Demo
+
+
+
+
+
+
+
+
+
+
+Broforce 2D Nachbau — Note 1.0
+
+Unity 2D
+
+Tilemap, Grid-System
+
+Physik, Explosionen, Kettenreaktionen
+
+State Management
+
+Input Handling
+
+Dynamische, zerstörbare Umgebung
+
+
+
+
+
+
+
+
+
+BUGA23 Interaktive Webanwendung
+
+Java Backend
+
+Flutter / Dart Frontend
+
+MariaDB
+
+Docker
+
+Projektergebnis für reale Messe
+
+
+
+
+
+
+
+
+
+
+
+Oware Spiel + ML-Bot (Praktikum)
+
+C#, .NET, Blazor
+
+ML-Algorithmus für Bot-Gegner
+
+SQL
+
+Azure Cloud
+
+Web UI
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Weitere kleinere Projekte (als Liste mit Screenshots)
+
+Monetarisierungs-Integration in Mobile Unity Game
+
+Fitness-Tracking App
+
+Sammlung von Mini-Spielen (TicTacToe, T-Rex usw.)
+
+Java Spiel MAXX (Konsole + GUI)
+
+
+
+
+
+
+
+
+
+
+8. Optional – Blog / Dev-Notizen
+
+(Sehr attraktiver Pluspunkt für Arbeitgeber)
+
+Multiplayer Debugging Challenges
+
+Wie du ML-Agents trainiert hast
+
+Refactoring großer .NET Systeme
+
+Unity Performance-Tipps
+
+
+
+9. Optional – Interaktive/Visuelle Elemente
+
+Unity WebGL Demos
+
+GIFs von Gameplay
+
+Filterbare Projektliste
+

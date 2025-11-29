@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Briefcase, ChartNoAxesCombined, Code, Gamepad2 } from "lucide-react";
+import { portfolioData } from "@/data/portfolio-data";
 
 export function About() {
   return (
@@ -15,15 +16,11 @@ export function About() {
           <div className="space-y-6 text-center md:text-left">
             <h3 className="text-2xl font-semibold">Aspiring Developer</h3>
 
-            <p>
-              I enjoy building smooth digital experiences, whether it is interactive user
-              interfaces or backend services that power them.
-            </p>
-
-            <p>
-              My focus is on web and game development, combining creativity with engineering
-              best practices that I learn throughout my Software Engineering studies.
-            </p>
+            {portfolioData.about.description.map((paragraph, index) => (
+              <p key={index}>
+                {paragraph}
+              </p>
+            ))}
 
             <div className="flex flex-col justify-center gap-4 pt-4 sm:flex-row">
               <a href="#contact" className="cosmic-button">

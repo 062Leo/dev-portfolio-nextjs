@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { cn } from "@/lib/utils";
+import { portfolioData } from "@/data/portfolio-data";
 
 type SkillCategory = "all" | "languages" | "frameworks & libraries" | "devOps & tools" | "game engines";
 
@@ -12,23 +13,7 @@ type Skill = {
   category: SkillCategory;
 };
 
-const skills: Skill[] = [
-  { name: "Unity", level: 90, category: "game engines" },
-  { name: "React", level: 80, category: "frameworks & libraries" },
-  { name: "Tailwind CSS", level: 80, category: "frameworks & libraries" },
-  { name: "Flutter", level: 60, category: "frameworks & libraries" },
-  { name: "Java", level: 90, category: "languages" },
-  { name: "C#", level: 90, category: "languages" },
-  { name: "JavaScript", level: 90, category: "languages" },
-  { name: "TypeScript", level: 85, category: "languages" },
-  { name: "Python", level: 70, category: "languages" },
-  { name: "Dart", level: 60, category: "languages" },
-  { name: "HTML/CSS", level: 70, category: "languages" },
-  { name: "Git/GitHub", level: 90, category: "devOps & tools" },
-  { name: "Docker", level: 70, category: "devOps & tools" },
-  { name: "VS Code", level: 80, category: "devOps & tools" },
-  { name: "Linux", level: 70, category: "devOps & tools" },
-];
+const skills: Skill[] = portfolioData.skills as Skill[];
 
 const categories: SkillCategory[] = [
   "all",

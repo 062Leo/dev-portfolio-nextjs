@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { name: "Home", href: "#home" },
-  { name: "About", href: "#about" },
-  { name: "Skills", href: "#skills" },
-  { name: "Projects", href: "#projects" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", href: "/#home" },
+  { name: "About", href: "/#about" },
+  { name: "Skills", href: "/#skills" },
+  { name: "Projects", href: "/projects" },
+  { name: "Contact", href: "/#contact" },
 ];
 
 export function Navbar() {
@@ -47,21 +48,21 @@ export function Navbar() {
       )}
     >
       <div className="container flex items-center justify-between">
-        <a href="#home" className="flex items-center text-xl font-bold text-primary">
+        <Link href="/#home" className="flex items-center text-xl font-bold text-primary">
           <span className="relative z-10">
             <span className="text-glow text-foreground">Peter Pan</span> Portfolio
           </span>
-        </a>
+        </Link>
 
         <div className="hidden space-x-8 md:flex">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.name}
               href={item.href}
               className="text-foreground/80 transition-colors duration-300 hover:text-primary"
             >
               {item.name}
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -81,14 +82,14 @@ export function Navbar() {
         >
           <div className="flex flex-col space-y-8 text-xl">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.name}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
                 className="text-foreground/80 transition-colors duration-300 hover:text-primary"
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
