@@ -2,42 +2,53 @@
 
 import Image from "next/image";
 import { ArrowRight, ExternalLink } from "lucide-react";
+import { portfolioData } from "@/data/portfolio-data";
+import Link from "next/link";
 
-const projects = [
-  {
-    id: 1,
-    title: "DummyProject",
-    description: "A modern Dummy built with Dummy and Project.",
-    image: "/projects/dummy.png",
-    tags: ["Dummy", "Project", "Language"],
-    demoUrl: "#",
-    githubUrl: "#",
-  },
-];
+const projects = portfolioData.projects;
 
 export function ProjectsSection() {
   return (
     <section id="projects" className="relative px-4 py-24">
+      <div className="container mx-auto max-w-3xl text-center">
+        <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+          Featured <span className="text-primary">Projects</span>
+        </h2>
+        <p className="mx-auto mb-8 max-w-2xl">
+          Explore the products I have crafted with a focus on performance, design, and clean code.
+        </p>
+        <Link href="/projects" className="cosmic-button mx-auto flex w-fit items-center gap-2">
+          Check out my Projects <ArrowRight size={16} />
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+export function ProjectsShowcase() {
+  return (
+    <section className="relative px-4 py-24">
       <div className="container mx-auto max-w-5xl">
         <h2 className="mb-4 text-center text-3xl font-bold md:text-4xl">
           Featured <span className="text-primary">Projects</span>
         </h2>
         <p className="mx-auto mb-12 max-w-2xl text-center">
-          Here are some of my recent projects that combine design, performance, and clean
-          code.
+          Here are some of my recent projects that combine design, performance, and clean code.
         </p>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
             <div key={project.id} className="card-hover overflow-hidden rounded-lg bg-card shadow-sm">
               <div className="h-48 overflow-hidden">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  width={600}
-                  height={400}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+                <Link href={`/projects/${project.id}`}>
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    width={600}
+                    height={400}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </Link>
               </div>
 
               <div className="p-6">
@@ -49,7 +60,9 @@ export function ProjectsSection() {
                   ))}
                 </div>
 
-                <h3 className="mb-1 text-xl font-semibold">{project.title}</h3>
+                <Link href={`/projects/${project.id}`}>
+                  <h3 className="mb-1 text-xl font-semibold transition-colors hover:text-primary">{project.title}</h3>
+                </Link>
                 <p className="mb-4 text-sm text-foreground/70">{project.description}</p>
 
                 <div className="flex justify-center space-x-3 text-primary">
@@ -95,7 +108,7 @@ export function ProjectsSection() {
             Check My Personal GitHub <ArrowRight size={16} />
           </a>
         </div>
-         <div className="mt-12 text-center">
+        <div className="mt-12 text-center">
           <a
             href="https://github.com/LeosGmbH"
             target="_blank"
