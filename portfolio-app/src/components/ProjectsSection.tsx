@@ -50,6 +50,16 @@ export function ProjectsShowcase() {
                   ))}
                 </div>
                 
+                <div className="mb-4">
+                  <Link
+                    href={`/projects/${project.id}`}
+                    className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
+                  >
+                    View more Details
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+
                 <div className="flex justify-center space-x-3 text-primary">
                   <a
                     href={project.demoUrl}

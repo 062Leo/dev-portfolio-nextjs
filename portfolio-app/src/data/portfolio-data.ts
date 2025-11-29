@@ -177,6 +177,24 @@ export const portfolioData = {
       techStack: ["C#", ".NET", "Blazor", "SQL", "Azure"],
       demoUrl: "#",
       githubUrl: "#"
+    },
+    {
+      id: "game-of-life",
+      title: "Conway's Game of Life",
+      description: "Desktop-Anwendung zur Simulation von Conways Game of Life.",
+      longDescription:
+        "Ein interaktiver Desktop-Editor für Conways Game of Life. Er bietet freien Zeichenmodus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Zoom- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
+      image: "/projects/dummy.png",
+      tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
+      features: [
+        "Freies Zeichnen und Prefab-Modus für Zellkonfigurationen",
+       "Umschaltbares Dark/Light Theme",
+       "Pinselgrößen- und Zoom-Regler für präzises Editing",
+       "Anpassbare Simulationsgeschwindigkeit mit Start/Stopp-Steuerung"
+      ],
+      techStack: ["C#", ".NET", "WPF", "XAML"],
+      demoUrl: "#",
+      githubUrl: "#"
     }
   ]
 };

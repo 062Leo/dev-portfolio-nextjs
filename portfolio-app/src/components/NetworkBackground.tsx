@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ShiftState = {
   startX: number;
@@ -39,6 +39,27 @@ const MAX_SHIFT_DURATION = 2000;
 
 export function NetworkBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    if (typeof document === "undefined") {
+      return;
+    }
+
+    const handleThemeChange = () => {
+      setIsDarkMode(document.documentElement.classList.contains("dark"));
+    };
+
+    const observer = new MutationObserver(handleThemeChange);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    handleThemeChange();
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -56,6 +77,8 @@ export function NetworkBackground() {
     const target: Target = { x: 0, y: 0 };
     let animationFrameId = 0;
     let points: Point[] = [];
+    const strokeBase = isDarkMode ? "rgba(156, 217, 249, " : "rgba(21, 23, 31, ";
+    const circleBase = isDarkMode ? "rgba(156, 217, 249, " : "rgba(27, 34, 54, ";
 
     const getDistance = (p1: Target, p2: Target) => {
       const dx = p1.x - p2.x;
@@ -159,7 +182,7 @@ export function NetworkBackground() {
         context.beginPath();
         context.moveTo(point.x, point.y);
         context.lineTo(closestPoint.x, closestPoint.y);
-        context.strokeStyle = `rgba(156, 217, 249, ${point.active})`;
+        context.strokeStyle = `${strokeBase}${point.active})`;
         context.stroke();
       });
     };
@@ -170,7 +193,7 @@ export function NetworkBackground() {
       }
       context.beginPath();
       context.arc(point.x, point.y, point.circle.radius, 0, Math.PI * 2, false);
-      context.fillStyle = `rgba(156, 217, 249, ${point.circle.active})`;
+      context.fillStyle = `${circleBase}${point.circle.active})`;
       context.fill();
     };
 
@@ -229,10 +252,17 @@ export function NetworkBackground() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [isDarkMode]);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_center,_rgba(20,20,30,0.9),_rgba(3,7,18,1))]">
+    <div
+      className="pointer-events-none fixed inset-0 z-0"
+      style={{
+        background: isDarkMode
+          ? "radial-gradient(circle at center, rgba(41, 41, 94, 0.9), rgba(0, 0, 0, 1))"
+          : "radial-gradient(circle at center, rgba(155, 144, 136, 0.9), rgba(240,239,235,1))",
+      }}
+    >
       <canvas ref={canvasRef} className="h-full w-full" />
     </div>
   );

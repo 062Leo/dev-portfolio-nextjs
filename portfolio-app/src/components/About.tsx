@@ -13,7 +13,7 @@ export function About() {
         </h2>
 
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
-          <div className="space-y-6 text-center md:text-left">
+          <div className="space-y-6 rounded-xl bg-card/60 p-6 text-center shadow-sm backdrop-blur md:text-left">
             <h3 className="text-2xl font-semibold">Aspiring Developer</h3>
 
             {portfolioData.about.description.map((paragraph, index) => (
@@ -28,7 +28,7 @@ export function About() {
               </a>
               <a
                 href="#"
-                className="rounded-full border border-primary px-6 py-2 text-primary transition-colors duration-300 hover:bg-primary/10"
+                className="rounded-full border-3 border-primary px-6 py-2 font-bold text-primary outline outline-2 outline-primary/30 transition-colors duration-300 hover:bg-primary/10 focus:outline-primary/50"
               >
                 Download CV
               </a>

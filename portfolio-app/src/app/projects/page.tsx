@@ -15,7 +15,9 @@ export default function ProjectsPage() {
         <ProjectsShowcase />
       </main>
 
-      <Footer />
+     <div className="relative z-10">
+        <Footer />
+      </div>
     </div>
   );
 }
