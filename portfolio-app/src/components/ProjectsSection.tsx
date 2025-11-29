@@ -36,6 +36,12 @@ export function ProjectsShowcase() {
               </div>
 
               <div className="p-6">
+
+                <Link href={`/projects/${project.id}`}>
+                  <h3 className="mb-1 text-xl font-semibold transition-colors hover:text-primary">{project.title}</h3>
+                </Link>
+                <p className="mb-4 text-sm text-foreground/70">{project.description}</p>
+
                 <div className="mb-4 flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
                     <span key={tag} className="rounded-full border px-2 py-1 text-sm font-medium">
@@ -43,12 +49,7 @@ export function ProjectsShowcase() {
                     </span>
                   ))}
                 </div>
-
-                <Link href={`/projects/${project.id}`}>
-                  <h3 className="mb-1 text-xl font-semibold transition-colors hover:text-primary">{project.title}</h3>
-                </Link>
-                <p className="mb-4 text-sm text-foreground/70">{project.description}</p>
-
+                
                 <div className="flex justify-center space-x-3 text-primary">
                   <a
                     href={project.demoUrl}
