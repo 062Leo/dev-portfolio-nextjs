@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { StarBackground } from "@/components/StarBackground";
+import { NetworkBackground } from "@/components/NetworkBackground";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ProjectsShowcase } from "@/components/ProjectsSection";
 
@@ -8,10 +8,10 @@ export default function ProjectsPage() {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
       <ThemeToggle />
-      <StarBackground />
+      <NetworkBackground />
       <Navbar />
 
-      <main>
+      <main className="relative z-10">
         <ProjectsShowcase />
       </main>
 
