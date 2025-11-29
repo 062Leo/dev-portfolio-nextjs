@@ -5,7 +5,7 @@ import { HomeSection } from "@/components/HomeSection";
 import { Navbar } from "@/components/Navbar";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { SkillsSection } from "@/components/SkillsSection";
-import { StarBackground } from "@/components/StarBackground";
+import { NetworkBackground } from "@/components/NetworkBackground";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
       <ThemeToggle />
-      <StarBackground />
+      <NetworkBackground />
       <Navbar />
       <main>
         <HomeSection />
