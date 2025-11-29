@@ -4,6 +4,13 @@ import { ArrowDown } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
 
 export function HomeSection() {
+  const handleScrollClick = () => {
+    const aboutSection = document.getElementById("about");
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section id="home" className="relative flex min-h-screen flex-col items-center justify-center px-4">
       <div className="container z-10 mx-auto max-w-4xl text-center">
@@ -25,10 +32,14 @@ export function HomeSection() {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center animate-bounce">
+      <button
+        type="button"
+        onClick={handleScrollClick}
+        className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center animate-bounce text-foreground transition-colors hover:text-primary"
+      >
         <span className="mb-1 select-none text-sm">Scroll</span>
-        <ArrowDown className="h-5 w-5 text-primary" />
-      </div>
+        <ArrowDown className="h-5 w-5" />
+      </button>
     </section>
   );
 }
