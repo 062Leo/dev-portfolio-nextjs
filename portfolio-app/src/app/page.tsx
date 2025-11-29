@@ -3,7 +3,6 @@ import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 import { HomeSection } from "@/components/HomeSection";
 import { Navbar } from "@/components/Navbar";
-import { ProjectsSection } from "@/components/ProjectsSection";
 import { SkillsSection } from "@/components/SkillsSection";
 import { NetworkBackground } from "@/components/NetworkBackground";
 import { ThemeToggle } from "@/components/ThemeToggle";
