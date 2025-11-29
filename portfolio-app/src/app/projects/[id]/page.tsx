@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { portfolioData } from "@/data/portfolio-data";
-import { ArrowLeft, ExternalLink, Github } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, Github } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Navbar } from "@/components/Navbar";
@@ -100,7 +100,7 @@ export default function ProjectPage() {
                             </div>
                         )}
 
-                        <div className="flex gap-4 pt-4">
+                        <div className="flex flex-wrap gap-4 pt-4">
                             {project.demoUrl && (
                                 <a
                                     href={project.demoUrl}
@@ -109,6 +109,16 @@ export default function ProjectPage() {
                                     className="cosmic-button flex items-center gap-2"
                                 >
                                     <ExternalLink size={18} /> Live Demo
+                                </a>
+                            )}
+                            {project.demoDownload && (
+                                <a
+                                    href={project.demoDownload}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex items-center gap-2 rounded-full border border-primary px-6 py-2 text-primary transition-colors hover:bg-primary/10"
+                                >
+                                    <Download size={18} /> Download Demo
                                 </a>
                             )}
                             {project.githubUrl && (
