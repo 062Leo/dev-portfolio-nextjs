@@ -14,14 +14,18 @@ export default function Home() {
       <ThemeToggle />
       <NetworkBackground />
       <Navbar />
-      <main>
+      <main className="relative z-10">
         <HomeSection />
         <About />
         <SkillsSection />
         <ContactSection />
       </main>
-      <Footer />
-      <Toaster />
+      <div className="relative z-10">
+        <Footer />
+      </div>
+      <div className="relative z-10">
+        <Toaster />
+      </div>
     </div>
   );
 }
