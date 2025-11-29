@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { StarBackground } from "@/components/StarBackground";
+import { NetworkBackground } from "@/components/NetworkBackground";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function ProjectPage() {
@@ -29,10 +29,10 @@ export default function ProjectPage() {
     return (
         <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
             <ThemeToggle />
-            <StarBackground />
+            <NetworkBackground />
             <Navbar />
 
-            <main className="container mx-auto max-w-5xl px-4 py-24">
+            <main className="relative z-10 container mx-auto max-w-5xl px-4 py-24">
                 <Link
                     href="/#projects"
                     className="mb-8 inline-flex items-center gap-2 text-foreground/70 transition-colors hover:text-primary"
