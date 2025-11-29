@@ -7,23 +7,7 @@ import Link from "next/link";
 
 const projects = portfolioData.projects;
 
-export function ProjectsSection() {
-  return (
-    <section id="projects" className="relative px-4 py-24">
-      <div className="container mx-auto max-w-3xl text-center">
-        <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-          Featured <span className="text-primary">Projects</span>
-        </h2>
-        <p className="mx-auto mb-8 max-w-2xl">
-          Explore the products I have crafted with a focus on performance, design, and clean code.
-        </p>
-        <Link href="/projects" className="cosmic-button mx-auto flex w-fit items-center gap-2">
-          Check out my Projects <ArrowRight size={16} />
-        </Link>
-      </div>
-    </section>
-  );
-}
+
 
 export function ProjectsShowcase() {
   return (
