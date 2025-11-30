@@ -47,7 +47,11 @@ export default function ProjectPage() {
             <NetworkBackground />
             <Navbar />
 
-            <main className="relative z-10 container mx-auto max-w-5xl px-4 py-24">
+            <main
+                className={`relative z-10 container mx-auto px-4 py-24 transition-[max-width] duration-1500 ease-in-out ${
+                    demoState === "image" ? "max-w-5xl" : "lg:max-w-[84rem]"
+                }`}
+            >
                 <Link
                     href="/#projects"
                     className="mb-8 inline-flex items-center gap-2 text-foreground/70 transition-colors hover:text-primary"
@@ -55,14 +59,18 @@ export default function ProjectPage() {
                     <ArrowLeft size={20} /> Back to Projects
                 </Link>
 
-                <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
+                <div
+                    className={`grid gap-12 transition-all duration-1500 ease-in-out lg:justify-between lg:gap-16 ${
+                        demoState === "image"
+                            ? "lg:grid-cols-2 lg:items-start"
+                            : "lg:grid-cols-[minmax(0,46rem)_minmax(0,32rem)] lg:items-center"
+                    }`}
+                >
                     {/* Image Section */}
-                    <div
-                        className={`self-start overflow-hidden rounded-xl border border-primary/20 bg-card shadow-lg transition-all duration-700 ease-in-out`}
-                    >
+                    <div className="self-center overflow-hidden rounded-xl border border-primary/20 bg-card shadow-lg transition-all duration-1500 ease-in-out">
                         {project.demoEmbedUrl && demoState === "demo" ? (
                             <div
-                                className="relative w-full overflow-hidden rounded-xl transition-all duration-700 ease-in-out"
+                                className="relative w-full overflow-hidden rounded-xl transition-all duration-1500 ease-in-out"
                                 style={mediaContainerStyle}
                             >
                                 <iframe
@@ -77,7 +85,7 @@ export default function ProjectPage() {
                             </div>
                         ) : (
                             <div
-                                className="relative w-full overflow-hidden rounded-xl transition-all duration-700 ease-in-out"
+                                className="relative w-full overflow-hidden rounded-xl transition-all duration-1500 ease-in-out"
                                 style={mediaContainerStyle}
                             >
                                 <Image
@@ -85,7 +93,7 @@ export default function ProjectPage() {
                                     alt={project.title}
                                     fill
                                     sizes="(min-width: 1024px) 50vw, 100vw"
-                                    className={`object-cover transition-transform duration-700 ease-in-out ${demoState === "image" ? "" : "scale-110"}`}
+                                    className={`object-cover transition-transform duration-1500 ease-in-out ${demoState === "image" ? "" : "scale-110"}`}
                                 />
                                 {project.demoEmbedUrl && demoState === "image" && (
                                     <button
@@ -102,7 +110,7 @@ export default function ProjectPage() {
 
                     {/* Content Section */}
                     <div
-                        className={`space-y-6 transition-transform duration-700 ease-in-out ${
+                        className={`space-y-6 transition-transform duration-1500 ease-in-out lg:max-w-[32rem] ${
                             demoState === "image" ? "" : "lg:translate-x-24"
                         }`}
                     >
