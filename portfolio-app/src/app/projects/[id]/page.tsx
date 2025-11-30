@@ -43,14 +43,25 @@ export default function ProjectPage() {
                 <div className="grid gap-12 lg:grid-cols-2">
                     {/* Image Section */}
                     <div className="overflow-hidden rounded-xl border border-primary/20 bg-card shadow-lg">
-                        <div className="relative aspect-video w-full">
-                            <Image
-                                src={project.image}
-                                alt={project.title}
-                                fill
-                                className="object-cover"
+                        {project.demoEmbedUrl ? (
+                            <iframe
+                                src={project.demoEmbedUrl}
+                                title={`${project.title} demo`}
+                                className="aspect-video w-full"
+                                allow="fullscreen; xr-spatial-tracking"
+                                allowFullScreen
+                                loading="lazy"
                             />
-                        </div>
+                        ) : (
+                            <div className="relative aspect-video w-full">
+                                <Image
+                                    src={project.image}
+                                    alt={project.title}
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                        )}
                     </div>
 
                     {/* Content Section */}

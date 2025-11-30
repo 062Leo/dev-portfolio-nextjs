@@ -7,6 +7,7 @@ export type Project = {
   image: string;
   tags: string[];
   demoUrl?: string;
+  demoEmbedUrl?: string;
   demoDownload?: string;
   githubUrl?: string;
   features?: string[];
@@ -142,7 +143,8 @@ export const portfolioData = {
         "Dynamische, zerstörbare Umgebung"
       ],
       techStack: ["Unity", "C#"],
-      demoUrl: "#",
+      demoUrl: "/unity-demo/BroforceWebBuild/index.html",
+      demoEmbedUrl: "/unity-demo/BroforceWebBuild/index.html",
       githubUrl: "#"
     },
     {
