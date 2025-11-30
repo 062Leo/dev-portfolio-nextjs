@@ -92,7 +92,8 @@ export const portfolioData = {
         "Map-Design & ProBuilder"
       ],
       techStack: ["Unity", "C#", "Netcode for GameObjects", "Unity Transport"],
-      demoUrl: "#",
+      demoUrl: "/unity-demo/HuntAndHide_WebGl_Demo_Build/index.html",
+      demoEmbedUrl: "/unity-demo/HuntAndHide_WebGl_Demo_Build/index.html",
       githubUrl: "#"
     },
     {
