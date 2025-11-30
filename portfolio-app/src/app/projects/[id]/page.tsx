@@ -72,7 +72,7 @@ export default function ProjectPage() {
                 }`}
             >
                 <Link
-                    href="/#projects"
+                    href="/projects"
                     className="mb-8 inline-flex items-center gap-2 text-foreground/70 transition-colors hover:text-primary"
                 >
                     <ArrowLeft size={20} /> Back to Projects
