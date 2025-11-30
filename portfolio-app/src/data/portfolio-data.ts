@@ -133,7 +133,7 @@ export const portfolioData = {
       title: "Broforce 2D Nachbau",
       description: "Unity 2D Projekt mit zerstörbarer Umgebung und Physik. Note 1.0.",
       longDescription: "Ein Nachbau des Spiels Broforce in Unity 2D. Das Projekt erhielt die Note 1.0 und zeichnet sich durch eine dynamische, zerstörbare Umgebung, Physik-Effekte und ein ausgefeiltes State Management aus.",
-      image: "/projects/dummy.png", // Placeholder
+      image: "/projects/BoomForce.png", 
       tags: ["Unity 2D", "Physics", "Destructible Environment"],
       features: [
         "Tilemap & Grid-System",
