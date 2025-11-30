@@ -3,7 +3,7 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { useParams } from "next/navigation";
 import { portfolioData } from "@/data/portfolio-data";
-import { ArrowLeft, Download, ExternalLink, Github } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, Github, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Navbar } from "@/components/Navbar";
@@ -40,6 +40,25 @@ export default function ProjectPage() {
             </div>
         );
     }
+
+    const hasDemoEmbed = Boolean(project.demoEmbedUrl);
+    const showDemoButton = hasDemoEmbed || Boolean(project.demoUrl);
+    const isDemoActive = hasDemoEmbed && demoState !== "image";
+
+    const handleDemoToggle = () => {
+        if (!hasDemoEmbed) {
+            if (project.demoUrl) {
+                window.open(project.demoUrl, "_blank", "noopener,noreferrer");
+            }
+            return;
+        }
+
+        if (demoState === "demo" || demoState === "transitioning") {
+            setDemoState("image");
+        } else {
+            setDemoState("transitioning");
+        }
+    };
 
     return (
         <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
@@ -98,7 +117,7 @@ export default function ProjectPage() {
                                 {project.demoEmbedUrl && demoState === "image" && (
                                     <button
                                         type="button"
-                                        onClick={() => setDemoState("transitioning")}
+                                        onClick={handleDemoToggle}
                                         className="absolute inset-0 flex items-center justify-center bg-background/70 text-lg font-semibold text-primary transition hover:bg-background/80"
                                     >
                                         Interaktive Demo starten
@@ -160,15 +179,15 @@ export default function ProjectPage() {
                         )}
 
                         <div className="flex flex-wrap gap-4 pt-4">
-                            {project.demoUrl && (
-                                <a
-                                    href={project.demoUrl}
-                                    target="_blank"
-                                    rel="noreferrer"
+                            {showDemoButton && (
+                                <button
+                                    type="button"
+                                    onClick={handleDemoToggle}
                                     className="cosmic-button flex items-center gap-2"
                                 >
-                                    <ExternalLink size={18} /> Live Demo
-                                </a>
+                                    {isDemoActive ? <X size={18} /> : <ExternalLink size={18} />}
+                                    {isDemoActive ? "Close demo" : "Live Demo"}
+                                </button>
                             )}
                             {project.demoDownload && (
                                 <a
@@ -195,7 +214,9 @@ export default function ProjectPage() {
                 </div>
             </main>
 
-            <Footer />
+            <div className="relative z-10">
+                <Footer />
+            </div>
         </div>
     );
 }

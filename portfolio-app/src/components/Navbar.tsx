@@ -7,7 +7,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { name: "Home", href: "/#home" },
+  { name: "Home", href: "/" },
   { name: "About", href: "/#about" },
   { name: "Skills", href: "/#skills" },
   { name: "Projects", href: "/projects" },
@@ -48,7 +48,7 @@ export function Navbar() {
       )}
     >
       <div className="container flex items-center justify-between">
-        <Link href="/#home" className="flex items-center text-xl font-bold text-primary">
+        <Link href="/" className="flex items-center text-xl font-bold text-primary">
           <span className="relative z-10">
             <span className="text-glow text-foreground">Peter Pan</span> Portfolio
           </span>
