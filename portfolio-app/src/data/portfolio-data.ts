@@ -197,7 +197,7 @@ export const portfolioData = {
       ],
       techStack: ["C#", ".NET", "WPF", "XAML"],
       demoDownload: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF/releases/download/releaseV1/GameOfLife.zip",
-      githubUrl: "#"
+      githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF"
     }
   ]
 };
