@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState, type CSSProperties } from "react";
 import { useParams } from "next/navigation";
 import { portfolioData } from "@/data/portfolio-data";
 import { ArrowLeft, Download, ExternalLink, Github } from "lucide-react";
@@ -10,10 +11,24 @@ import { Footer } from "@/components/Footer";
 import { NetworkBackground } from "@/components/NetworkBackground";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
+type DemoState = "image" | "transitioning" | "demo";
+
 export default function ProjectPage() {
     const params = useParams();
     const id = params.id as string;
     const project = portfolioData.projects.find((p) => p.id === id);
+    const [demoState, setDemoState] = useState<DemoState>("image");
+    const mediaContainerStyle: CSSProperties = {
+        paddingBottom: demoState === "image" ? "133.333%" : "56.25%",
+        transition: "padding-bottom 800ms ease"
+    };
+
+    useEffect(() => {
+        if (demoState === "transitioning") {
+            const timer = setTimeout(() => setDemoState("demo"), 800);
+            return () => clearTimeout(timer);
+        }
+    }, [demoState]);
 
     if (!project) {
         return (
@@ -40,32 +55,57 @@ export default function ProjectPage() {
                     <ArrowLeft size={20} /> Back to Projects
                 </Link>
 
-                <div className="grid gap-12 lg:grid-cols-2">
+                <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
                     {/* Image Section */}
-                    <div className="overflow-hidden rounded-xl border border-primary/20 bg-card shadow-lg">
-                        {project.demoEmbedUrl ? (
-                            <iframe
-                                src={project.demoEmbedUrl}
-                                title={`${project.title} demo`}
-                                className="aspect-video w-full"
-                                allow="fullscreen; xr-spatial-tracking"
-                                allowFullScreen
-                                loading="lazy"
-                            />
+                    <div
+                        className={`self-start overflow-hidden rounded-xl border border-primary/20 bg-card shadow-lg transition-all duration-700 ease-in-out`}
+                    >
+                        {project.demoEmbedUrl && demoState === "demo" ? (
+                            <div
+                                className="relative w-full overflow-hidden rounded-xl transition-all duration-700 ease-in-out"
+                                style={mediaContainerStyle}
+                            >
+                                <iframe
+                                    src={project.demoEmbedUrl}
+                                    title={`${project.title} demo`}
+                                    className="absolute inset-0 h-full w-full"
+                                    allow="fullscreen; xr-spatial-tracking"
+                                    allowFullScreen
+                                    loading="lazy"
+                                    scrolling="no"
+                                />
+                            </div>
                         ) : (
-                            <div className="relative aspect-video w-full">
+                            <div
+                                className="relative w-full overflow-hidden rounded-xl transition-all duration-700 ease-in-out"
+                                style={mediaContainerStyle}
+                            >
                                 <Image
                                     src={project.image}
                                     alt={project.title}
                                     fill
-                                    className="object-cover"
+                                    sizes="(min-width: 1024px) 50vw, 100vw"
+                                    className={`object-cover transition-transform duration-700 ease-in-out ${demoState === "image" ? "" : "scale-110"}`}
                                 />
+                                {project.demoEmbedUrl && demoState === "image" && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setDemoState("transitioning")}
+                                        className="absolute inset-0 flex items-center justify-center bg-background/70 text-lg font-semibold text-primary transition hover:bg-background/80"
+                                    >
+                                        Interaktive Demo starten
+                                    </button>
+                                )}
                             </div>
                         )}
                     </div>
 
                     {/* Content Section */}
-                    <div className="space-y-6">
+                    <div
+                        className={`space-y-6 transition-transform duration-700 ease-in-out ${
+                            demoState === "image" ? "" : "lg:translate-x-24"
+                        }`}
+                    >
                         <div>
                             <h1 className="mb-2 text-3xl font-bold md:text-4xl">{project.title}</h1>
                             <div className="flex flex-wrap gap-2">
