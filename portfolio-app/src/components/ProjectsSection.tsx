@@ -12,7 +12,7 @@ const projects = portfolioData.projects;
 export function ProjectsShowcase() {
   return (
     <section className="relative px-4 py-24">
-      <div className="container mx-auto max-w-5xl">
+      <div className="container mx-auto max-w-6xl px-4">
         <h2 className="mb-4 text-center text-3xl font-bold md:text-4xl">
           Featured <span className="text-primary">Projects</span>
         </h2>
@@ -20,7 +20,7 @@ export function ProjectsShowcase() {
           Here are some of my recent projects that combine design, performance, and clean code.
         </p>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
           {projects.map((project) => (
             <div key={project.id} className="card-hover overflow-hidden rounded-lg bg-card shadow-sm">
               <div className="h-48 overflow-hidden">

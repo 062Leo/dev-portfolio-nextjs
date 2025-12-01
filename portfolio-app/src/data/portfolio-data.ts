@@ -1,10 +1,16 @@
 
+export type ProjectImage = {
+  url: string;
+  caption?: string;
+};
+
 export type Project = {
   id: string;
   title: string;
   description: string;
   longDescription?: string;
-  image: string;
+  image: string; // Kept for backward compatibility as the main image
+  images?: ProjectImage[]; // New field for multiple images with captions
   tags: string[];
   demoUrl?: string;
   demoEmbedUrl?: string;
@@ -135,7 +141,11 @@ export const portfolioData = {
       title: "Broforce 2D Nachbau",
       description: "Unity 2D Projekt mit zerstörbarer Umgebung und Physik. Note 1.0.",
       longDescription: "Ein Nachbau des Spiels Broforce in Unity 2D. Das Projekt erhielt die Note 1.0 und zeichnet sich durch eine dynamische, zerstörbare Umgebung, Physik-Effekte und ein ausgefeiltes State Management aus.",
-      image: "/projects/BoomForce.png", 
+      image: "/projects/BoomForce.png",
+      images: [
+        { url: "/projects/BoomForce3_4.png", caption: "" },
+        { url: "/projects/BoomForce3_2.png", caption: "Gameplay mit zerstörbarer Umgebung" }
+      ],
       tags: ["Unity 2D", "Physics", "Destructible Environment"],
       features: [
         "Tilemap & Grid-System",
@@ -154,7 +164,12 @@ export const portfolioData = {
       title: "BUGA23 Interaktive Webanwendung",
       description: "Java Backend und Flutter Frontend für eine reale Messe.",
       longDescription: "Eine interaktive Webanwendung für die BUGA23. Das System besteht aus einem Java Backend und einem Flutter Frontend, containerisiert mit Docker.",
-      image: "/projects/dummy.png", // Placeholder
+      image: "/projects/dummy.png",
+      images: [
+        { url: "/projects/dummy.png" },
+        { url: "/projects/dummy2.png", caption: "Benutzeroberfläche der Webanwendung" },
+        { url: "/projects/dummy3.png", caption: "Architekturübersicht" }
+      ],
       tags: ["Java", "Flutter", "Docker", "MariaDB"],
       features: [
         "Java Backend",
