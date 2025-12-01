@@ -18,6 +18,7 @@ export type Project = {
   githubUrl?: string;
   features?: string[];
   techStack?: string[];
+  detailComponent?: "BoomForce" | "Old";
 };
 
 export const portfolioData = {
@@ -90,6 +91,7 @@ export const portfolioData = {
       description: "Prop-Hunt / Killer Spiel mit Note 1.3. Physikbasierte Prop-Bewegung und komplexes Networking.",
       longDescription: "Ein asymmetrisches Online-Multiplayer-Spiel im Stil von Prop-Hunt. Das Projekt wurde mit der Note 1.3 bewertet. Es beinhaltet physikbasierte Prop-Bewegung, First-Person/Third-Person Kameras und eine komplexe Netzwerkarchitektur.",
       image: "/projects/dummy.png", // Placeholder
+      detailComponent: "",
       tags: ["Unity 3D", "C#", "Netcode for GameObjects", "Multiplayer"],
       features: [
         "Physikbasierte Prop-Bewegung",
@@ -109,6 +111,7 @@ export const portfolioData = {
       description: "Reinforcement Learning Agent, der Hindernis-Parcours & Rätsel löst. Note 1.0.",
       longDescription: "Im Rahmen meiner Bachelorarbeit (Note 1.0) habe ich einen ML-Agenten mit Unity ML-Agents trainiert. Der Agent ist in der Lage, komplexe Hindernis-Parcours und Rätsel selbstständig zu lösen.",
       image: "/projects/dummy.png", // Placeholder
+      detailComponent: "",
       tags: ["Reinforcement Learning", "Unity ML-Agents", "Python", "Research"],
       features: [
         "Training eines Agenten",
@@ -125,6 +128,7 @@ export const portfolioData = {
       description: "Privatprojekt mit Unity, C# und Photon PUN 2 für Android.",
       longDescription: "Ein 2D Online Multiplayer Kartenspiel für Mobile (Android), entwickelt als Privatprojekt. Es nutzt Photon PUN 2 für den Multiplayer-Part und bietet eine optimierte Mobile UI/UX.",
       image: "/projects/dummy.png", // Placeholder
+      detailComponent: "",
       tags: ["Unity 2D", "Photon PUN 2", "Android", "Mobile"],
       features: [
         "Online Multiplayer",
@@ -142,6 +146,7 @@ export const portfolioData = {
       description: "Unity 2D Projekt mit zerstörbarer Umgebung und Physik. Note 1.0.",
       longDescription: "Ein Nachbau des Spiels Broforce in Unity 2D. Das Projekt erhielt die Note 1.0 und zeichnet sich durch eine dynamische, zerstörbare Umgebung, Physik-Effekte und ein ausgefeiltes State Management aus.",
       image: "/projects/BoomForce.png",
+      detailComponent: "BoomForce",
       images: [
         { url: "/projects/BoomForce3_4.png", caption: "" },
         { url: "/projects/BoomForce3_2.png", caption: "Gameplay mit zerstörbarer Umgebung" }
@@ -165,6 +170,7 @@ export const portfolioData = {
       description: "Java Backend und Flutter Frontend für eine reale Messe.",
       longDescription: "Eine interaktive Webanwendung für die BUGA23. Das System besteht aus einem Java Backend und einem Flutter Frontend, containerisiert mit Docker.",
       image: "/projects/dummy.png",
+      detailComponent: "",
       images: [
         { url: "/projects/dummy.png" },
         { url: "/projects/dummy2.png", caption: "Benutzeroberfläche der Webanwendung" },
@@ -187,6 +193,7 @@ export const portfolioData = {
       description: "C#, .NET, Blazor Anwendung mit ML-Gegner.",
       longDescription: "Ein Oware Spiel, entwickelt als Praktikumsprojekt. Es verfügt über einen ML-basierten Bot-Gegner und wurde mit C#, .NET und Blazor umgesetzt.",
       image: "/projects/dummy.png", // Placeholder
+      detailComponent: "",
       tags: ["C#", ".NET", "Blazor", "ML"],
       features: [
         "ML-Algorithmus für Bot-Gegner",
@@ -205,6 +212,7 @@ export const portfolioData = {
       longDescription:
         "Eine interaktive Desktop-Anwendung für Conways Game of Life. Sie bietet einen freies Zeichen Modus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Canvasgrößen- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
       image: "/projects/dummy.png",
+      detailComponent: "",
       tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
       features: [
         "Freies Zeichnen und Prefab-Modus für Zellkonfigurationen",
