@@ -53,7 +53,7 @@ export function LanguageToggle() {
   return (
     <button
       onClick={toggleLanguage}
-      className="fixed right-15 top-2 z-50 p-0.5 focus:outline-none max-sm:hidden group"
+      className="fixed right-17 top-3.5 z-50 p-0.5 focus:outline-none max-sm:hidden group"
       aria-label="Toggle language"
     >
       <div className="relative">

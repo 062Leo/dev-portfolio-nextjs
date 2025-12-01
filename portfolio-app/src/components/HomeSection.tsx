@@ -3,6 +3,8 @@
 import { ArrowDown } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
 
+const hoverText = " onClick={reload}";
+
 export function HomeSection() {
   const handleScrollClick = () => {
     const aboutSection = document.getElementById("about");
@@ -11,14 +13,42 @@ export function HomeSection() {
     }
   };
 
+  const reload = () => {
+    window.location.reload();
+  };
+
   return (
     <section id="home" className="relative flex min-h-screen flex-col items-center justify-center px-4">
-      <div className="container z-10 mx-auto max-w-4xl text-center">
+      <div className="container z-10 mx-auto max-w-6xl text-center">
         <div className="space-y-6">
           <h1 className="text-4xl font-bold tracking-tight md:text-6xl">
-            <span className="opacity-0 animate-fade-in">Hi, I&apos;m</span>
-            <span className="opacity-0 animate-fade-in-delay-1 text-primary"> {portfolioData.personal.name.split(" ")[0]}</span>
-            <span className="opacity-0 animate-fade-in-delay-2"> {portfolioData.personal.name.split(" ")[1]}</span>
+            <span className="opacity-0 animate-fade-in">Hi, I&apos;m </span>
+            <span className="opacity-0 animate-fade-in-delay-1 text-primary inline-flex items-baseline">
+              <span className="text-gray-400">&lt;</span>
+              <span className="relative inline-flex items-baseline">
+                <button
+                  type="button"
+                  onClick={reload}
+                  className="relative inline-flex items-baseline cursor-pointer select-none bg-transparent border-0 p-0 text-current group"
+                >
+                  <span>{portfolioData.personal.firstName}</span>
+                  <span className="inline-flex overflow-hidden max-w-0 transition-[max-width] duration-300 ease-out group-hover:max-w-[30rem]">
+                    {hoverText.split("").map((char, index) => (
+                      <span
+                        key={`hover-char-${index}`}
+                        className="text-green-400 opacity-0 translate-x-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0"
+                        style={{ transitionDelay: `${index * 30}ms` }}
+                      >
+                        {char === " " ? "\u00A0" : char}
+                      </span>
+                    ))}
+                  </span>
+                </button>
+              </span>
+              <span className="text-cyan-500">{' /'}</span>
+              <span className="text-gray-400">&gt;</span>
+            </span>
+            <span className="opacity-0 animate-fade-in-delay-2"> {portfolioData.personal.lastName}</span>
           </h1>
 
           <p className="mx-auto text-lg opacity-0 animate-fade-in-delay-3 md:text-xl">
