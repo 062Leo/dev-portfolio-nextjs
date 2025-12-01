@@ -57,17 +57,17 @@ export function LanguageToggle() {
       aria-label="Toggle language"
     >
       <div className="relative">
-        {/* Umrandung */}
+        {/* Hintergrund-Dot als Outline */}
         <div 
-          className="absolute inset-0 rounded-full transition-all duration-300"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300"
           style={{
-            border: '2px solid',
-            borderColor: isDarkTheme ? '#ffffff' : '#000000',
-            transform: 'scale(1.1)'
+            width: '1.8rem',
+            height: '1.8rem',
+            backgroundColor: isDarkTheme ? '#ffffff' : '#000000ff'
           }}
         />
         {/* Flagge */}
-        <div className="relative h-6 w-8 overflow-hidden rounded">
+        <div className="relative h-6 w-6 overflow-hidden rounded-full z-10">
           <Image
             src={language === 'de' ? "/unity-demo/Icons/de_flag.png" : "/unity-demo/Icons/en_flag.png"}
             alt={language === 'de' ? "Deutsch" : "English"}
