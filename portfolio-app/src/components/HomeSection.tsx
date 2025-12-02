@@ -35,12 +35,29 @@ export function HomeSection() {
   }
 
   return (
-    <section id="home" className="relative flex min-h-screen flex-col items-center justify-center px-4">
-      <div className="container z-10 mx-auto max-w-6xl text-center">
-        <div className="space-y-6">
-          <h1 className="text-4xl font-bold tracking-tight md:text-6xl">
-            <span className="opacity-0 animate-fade-in">Hi, I&apos;m </span>
-            <span className="opacity-0 animate-fade-in-delay-1 text-primary inline-flex items-baseline">
+    <section
+      id="home"
+      className="relative flex min-h-screen flex-col items-center justify-center px-4"
+      style={{ backgroundImage: colors.homeSectionBackgroundGradient }}
+    >
+      <div className="container z-10 mx-auto max-w-7xl text-center">
+        <div
+          className="mx-auto flex w-full flex-col gap-8 rounded-[40px] border px-6 py-12 md:px-10"
+          style={{
+            borderColor: colors.homeSectionAccentLine,
+            boxShadow: colors.homeSectionBorderGlow,
+            backgroundColor: colors.background,
+          }}
+        >
+          <h1
+            className="text-4xl font-bold tracking-tight opacity-0 animate-fade-in md:text-6xl"
+            style={{
+              color: colors.homeSectionTitleColor,
+              textShadow: colors.homeSectionTitleGlow,
+            }}
+          >
+            <span>Hi, I&apos;m </span>
+            <span className="inline-flex items-baseline">
               <span style={{ color: colors.homeSectionBracketText }}>&lt;</span>
               <span className="relative inline-flex items-baseline">
                 <button
@@ -68,12 +85,27 @@ export function HomeSection() {
             <span className="opacity-0 animate-fade-in-delay-2"> {portfolioData.personal.lastName}</span>
           </h1>
 
-          <p className="mx-auto text-lg opacity-0 animate-fade-in-delay-3 md:text-xl">
+          <p
+            className="mx-auto text-lg opacity-0 animate-fade-in-delay-3 md:text-xl"
+            style={{ color: colors.homeSectionDescriptionText }}
+          >
             {portfolioData.personal.role}
           </p>
 
-          <div className="pt-4 opacity-0 animate-fade-in-delay-4">
-            <a href="/projects" className="cosmic-button">
+          <div className="flex flex-col items-center gap-3 pt-4 opacity-0 animate-fade-in-delay-4">
+            <div
+              className="h-[2px] w-24 rounded-full"
+              style={{ backgroundColor: colors.homeSectionAccentLine }}
+            />
+            <a
+              href="/projects"
+              className="cosmic-button inline-flex items-center justify-center rounded-full px-8 py-3 text-sm font-semibold uppercase tracking-wide"
+              style={{
+                backgroundImage: `linear-gradient(135deg, ${colors.homeSectionButtonGradientStart}, ${colors.homeSectionButtonGradientEnd})`,
+                color: colors.homeSectionButtonText,
+                boxShadow: colors.homeSectionBorderGlow,
+              }}
+            >
               View My Work
             </a>
           </div>
@@ -82,7 +114,8 @@ export function HomeSection() {
       <button
         type="button"
         onClick={handleScrollClick}
-        className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center animate-bounce text-foreground transition-colors hover:text-primary"
+        className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center animate-bounce"
+        style={{ color: colors.homeSectionTitleColor }}
       >
         <span className="mb-1 select-none text-sm">Scroll</span>
         <ArrowDown className="h-5 w-5" />

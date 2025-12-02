@@ -15,6 +15,16 @@ export type ThemeColorSet = {
     homeSectionBracketText: string;
     homeSectionHoverText: string;
     homeSectionSeparator: string;
+    // HomeSection Visual Tokens
+    homeSectionBackgroundGradient: string;
+    homeSectionBorderGlow: string;
+    homeSectionTitleColor: string;
+    homeSectionTitleGlow: string;
+    homeSectionDescriptionText: string;
+    homeSectionButtonGradientStart: string;
+    homeSectionButtonGradientEnd: string;
+    homeSectionButtonText: string;
+    homeSectionAccentLine: string;
     // Old Component Colors (Slider)
     oldSliderCounterBg: string;
     oldSliderCounterText: string;
@@ -52,6 +62,20 @@ export type ThemeColorSet = {
     boomforceScreenshotsTitleColor: string;
     boomforceScreenshotsBorder: string;
     boomforceScreenshotsBackground: string;
+    // ProjectsSection Visual Tokens
+    projectsSectionTitleColor: string;
+    projectsSectionAccentText: string;
+    projectsSectionSubtitleColor: string;
+    projectsSectionCardBackground: string;
+    projectsSectionCardBorder: string;
+    projectsSectionCardShadow: string;
+    projectsSectionTagBorder: string;
+    projectsSectionTagBackground: string;
+    projectsSectionTagText: string;
+    projectsSectionLinkColor: string;
+    projectsSectionLinkHover: string;
+    projectsSectionIconColor: string;
+    projectsSectionDivider: string;
 };
 
 export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
@@ -131,6 +155,31 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         boomforceScreenshotsTitleColor: "rgba(220, 38, 38, 1)",
         boomforceScreenshotsBorder: "rgba(220, 38, 38, 1)",
         boomforceScreenshotsBackground: "rgba(0, 0, 0, 1)",
+        // HomeSection Visual Tokens
+        homeSectionBackgroundGradient:
+            "radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.25), transparent 45%), radial-gradient(circle at 80% 0%, rgba(167, 139, 250, 0.35), transparent 55%)",
+        homeSectionBorderGlow: "0 0 25px rgba(239, 68, 68, 0.6), 0 0 40px rgba(167, 139, 250, 0.6)",
+        homeSectionTitleColor: "rgba(239, 68, 68, 1)",
+        homeSectionTitleGlow: "0 0 15px rgba(180, 162, 234, 0.3), 0 0 25px rgba(104, 80, 172, 0.3)",
+        homeSectionDescriptionText: "rgba(209, 213, 219, 0.95)",
+        homeSectionButtonGradientStart: "rgba(220, 38, 38, 1)",
+        homeSectionButtonGradientEnd: "rgba(127, 29, 29, 1)",
+        homeSectionButtonText: "rgba(255, 255, 255, 1)",
+        homeSectionAccentLine: "rgba(167, 139, 250, 1)",
+        // ProjectsSection Visual Tokens
+        projectsSectionTitleColor: "rgba(239, 68, 68, 1)",
+        projectsSectionAccentText: "rgba(248, 113, 113, 1)",
+        projectsSectionSubtitleColor: "rgba(209, 213, 219, 0.85)",
+        projectsSectionCardBackground: "rgba(11, 13, 23, 0.95)",
+        projectsSectionCardBorder: "rgba(167, 139, 250, 0.6)",
+        projectsSectionCardShadow: "0 25px 60px rgba(167, 139, 250, 0.35)",
+        projectsSectionTagBorder: "rgba(167, 139, 250, 0.4)",
+        projectsSectionTagBackground: "rgba(167, 139, 250, 0.15)",
+        projectsSectionTagText: "rgba(167, 139, 250, 1)",
+        projectsSectionLinkColor: "rgba(239, 68, 68, 1)",
+        projectsSectionLinkHover: "rgba(239, 68, 68, 0.8)",
+        projectsSectionIconColor: "rgba(250, 204, 21, 1)",
+        projectsSectionDivider: "rgba(167, 139, 250, 0.3)",
     },
     dark: {
         // Background & Foreground
@@ -208,6 +257,31 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         boomforceScreenshotsTitleColor: "rgba(248, 113, 113, 1)",
         boomforceScreenshotsBorder: "rgba(167, 139, 250, 1)",
         boomforceScreenshotsBackground: "rgba(11, 13, 23, 1)",
+        // HomeSection Visual Tokens
+        homeSectionBackgroundGradient:
+            "radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.35), transparent 45%), radial-gradient(circle at 80% 0%, rgba(167, 139, 250, 0.4), transparent 50%)",
+        homeSectionBorderGlow: "0 0 25px rgba(239, 68, 68, 0.8), 0 0 45px rgba(167, 139, 250, 0.7)",
+        homeSectionTitleColor: "rgba(239, 68, 68, 1)",
+        homeSectionTitleGlow: "0 0 15px rgba(180, 162, 234, 0.3), 0 0 25px rgba(104, 80, 172, 0.3)",
+        homeSectionDescriptionText: "rgba(213, 220, 232, 0.95)",
+        homeSectionButtonGradientStart: "rgba(220, 38, 38, 1)",
+        homeSectionButtonGradientEnd: "rgba(127, 29, 29, 1)",
+        homeSectionButtonText: "rgba(213, 220, 232, 1)",
+        homeSectionAccentLine: "rgba(167, 139, 250, 1)",
+        // ProjectsSection Visual Tokens
+        projectsSectionTitleColor: "rgba(239, 68, 68, 1)",
+        projectsSectionAccentText: "rgba(248, 113, 113, 1)",
+        projectsSectionSubtitleColor: "rgba(213, 220, 232, 0.9)",
+        projectsSectionCardBackground: "rgba(11, 13, 23, 0.92)",
+        projectsSectionCardBorder: "rgba(167, 139, 250, 0.6)",
+        projectsSectionCardShadow: "0 25px 60px rgba(167, 139, 250, 0.35)",
+        projectsSectionTagBorder: "rgba(167, 139, 250, 0.4)",
+        projectsSectionTagBackground: "rgba(167, 139, 250, 0.18)",
+        projectsSectionTagText: "rgba(167, 139, 250, 1)",
+        projectsSectionLinkColor: "rgba(239, 68, 68, 1)",
+        projectsSectionLinkHover: "rgba(239, 68, 68, 0.8)",
+        projectsSectionIconColor: "rgba(250, 204, 21, 1)",
+        projectsSectionDivider: "rgba(167, 139, 250, 0.3)",
     }
 };
 

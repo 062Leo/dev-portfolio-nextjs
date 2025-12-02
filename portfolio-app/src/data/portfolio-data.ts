@@ -23,8 +23,8 @@ export type Project = {
 
 export const portfolioData = {
   personal: {
-    firstName: "Peter",
-    lastName: "Pan",
+    firstName: "Leo",
+    lastName: "",
     role: "Softwareentwickler (B.Sc.) – Schwerpunkt Games Engineering",
     tagline: "Spezialisiert in Unity, C#, .NET",
     motivation: "Fokus auf Clean Code, Refactoring, qualitativ hochwertige Software. Leidenschaft für Game Dev & Software Engineering.",

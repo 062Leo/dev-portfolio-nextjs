@@ -50,7 +50,7 @@ export function Navbar() {
       <div className="container flex items-center justify-between">
         <Link href="/" className="flex items-center text-xl font-bold text-primary">
           <span className="relative z-10">
-            <span className="text-glow text-foreground">Peter Pan</span> Portfolio
+            <span className="text-glow text-foreground">Leo's</span> Portfolio
           </span>
         </Link>
 
