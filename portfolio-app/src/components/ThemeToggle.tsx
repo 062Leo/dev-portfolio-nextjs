@@ -3,6 +3,8 @@
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { applyThemeColors } from "@/components/colors";
+
 const getInitialTheme = () => {
   if (typeof window === "undefined") {
     return true;
@@ -27,6 +29,7 @@ export function ThemeToggle() {
 
     const prefersDark = getInitialTheme();
     setIsDarkMode(prefersDark);
+    applyThemeColors(prefersDark);
     setIsReady(true);
   }, []);
 
@@ -42,6 +45,8 @@ export function ThemeToggle() {
       document.documentElement.classList.remove("dark");
       window.localStorage.setItem("theme", "light");
     }
+
+    applyThemeColors(isDarkMode);
   }, [isDarkMode, isReady]);
 
   const toggleTheme = () => {
@@ -59,9 +64,9 @@ export function ThemeToggle() {
       aria-label="Toggle theme"
     >
       {isDarkMode ? (
-        <Sun className="h-6 w-6 text-yellow-300" />
+        <Sun className="h-6 w-6" style={{ color: "var(--warning)" }} />
       ) : (
-        <Moon className="h-6 w-6 text-blue-900" />
+        <Moon className="h-6 w-6" style={{ color: "var(--accent)" }} />
       )}
     </button>
   );
