@@ -41,7 +41,7 @@ export function HomeSection() {
           <h1 className="text-4xl font-bold tracking-tight md:text-6xl">
             <span className="opacity-0 animate-fade-in">Hi, I&apos;m </span>
             <span className="opacity-0 animate-fade-in-delay-1 text-primary inline-flex items-baseline">
-              <span style={{ color: colors.grayLight }}>&lt;</span>
+              <span style={{ color: colors.homeSectionBracketText }}>&lt;</span>
               <span className="relative inline-flex items-baseline">
                 <button
                   type="button"
@@ -54,7 +54,7 @@ export function HomeSection() {
                       <span
                         key={`hover-char-${index}`}
                         className="opacity-0 translate-x-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0"
-                        style={{ color: colors.green, transitionDelay: `${index * 30}ms` }}
+                        style={{ color: colors.homeSectionHoverText, transitionDelay: `${index * 30}ms` }}
                       >
                         {char === " " ? "\u00A0" : char}
                       </span>
@@ -62,8 +62,8 @@ export function HomeSection() {
                   </span>
                 </button>
               </span>
-              <span style={{ color: colors.cyan }}>{' /'}</span>
-              <span style={{ color: colors.grayLight }}>&gt;</span>
+              <span style={{ color: colors.homeSectionSeparator }}>{' /'}</span>
+              <span style={{ color: colors.homeSectionBracketText }}>&gt;</span>
             </span>
             <span className="opacity-0 animate-fade-in-delay-2"> {portfolioData.personal.lastName}</span>
           </h1>

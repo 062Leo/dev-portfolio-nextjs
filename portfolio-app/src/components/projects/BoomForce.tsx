@@ -92,7 +92,7 @@ export function DetailPage() {
                         </div>
 
                         {/* Main Image */}
-                        <div className="aspect-video w-full rounded-xl overflow-hidden border-2" style={{ borderColor: colors.mainImageBorder, backgroundColor: colors.mainImageBackground }}>
+                        <div className="aspect-video w-full rounded-xl overflow-hidden border-2" style={{ borderColor: colors.boomforceMainImageBorder, backgroundColor: colors.boomforceMainImageBackground }}>
                             {/* Use project.image if available, otherwise a placeholder or the first image from images array */}
                             <img
                                 src={project.image || (project.images && project.images[0]?.url) || "/api/placeholder/800/450"}
@@ -101,17 +101,17 @@ export function DetailPage() {
                             />
                         </div>
 
-                        <p className="text-lg leading-relaxed" style={{ color: colors.projectDescriptionText }}>
+                        <p className="text-lg leading-relaxed" style={{ color: colors.boomforceProjectDescriptionText }}>
                             {project.longDescription || project.description}
                         </p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
-                                <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.featureTitleColor }}>KEY FEATURES</h3>
-                                <ul className="space-y-2" style={{ color: colors.featureListText }}>
+                                <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.boomforceFeatureTitleColor }}>KEY FEATURES</h3>
+                                <ul className="space-y-2" style={{ color: colors.boomforceFeatureListText }}>
                                     {project.features?.map((feature, index) => (
                                         <li key={index} className="flex items-start">
-                                            <CheckCircle className="mr-2 w-4 h-4 mt-1 shrink-0" style={{ color: colors.featureCheckmarkColor }} />
+                                            <CheckCircle className="mr-2 w-4 h-4 mt-1 shrink-0" style={{ color: colors.boomforceFeatureCheckmarkColor }} />
                                             <span>{feature}</span>
                                         </li>
                                     ))}
@@ -119,13 +119,13 @@ export function DetailPage() {
                             </div>
 
                             <div>
-                                <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.techStackTitleColor }}>TECH STACK</h3>
+                                <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.boomforceTechStackTitleColor }}>TECH STACK</h3>
                                 <div className="flex flex-wrap gap-3">
                                     {project.techStack?.map((tech) => (
                                         <span
                                             key={tech}
                                             className="rounded-md px-3 py-1.5 text-sm font-mono uppercase"
-                                            style={{ backgroundColor: colors.techStackBgColor, color: colors.techStackTextColor }}
+                                            style={{ backgroundColor: colors.boomforceTechStackBgColor, color: colors.boomforceTechStackTextColor }}
                                         >
                                             {tech}
                                         </span>
@@ -134,18 +134,18 @@ export function DetailPage() {
 
                                 {showStats && (
                                     <>
-                                        <h3 className="mt-6 mb-4 text-xl font-semibold font-press-start" style={{ color: colors.statsTitleColor }}>STATS</h3>
-                                        <div className="space-y-2" style={{ color: colors.statsTextColor }}>
+                                        <h3 className="mt-6 mb-4 text-xl font-semibold font-press-start" style={{ color: colors.boomforceStatsTitleColor }}>STATS</h3>
+                                        <div className="space-y-2" style={{ color: colors.boomforceStatsTextColor }}>
                                             <div className="flex items-center">
-                                                <Clock className="mr-2 w-4 h-4" style={{ color: colors.statsIconColor }} />
+                                                <Clock className="mr-2 w-4 h-4" style={{ color: colors.boomforceStatsIconColor }} />
                                                 <span>Development Time: {stats.devTime}</span>
                                             </div>
                                             <div className="flex items-center">
-                                                <Star className="mr-2 w-4 h-4" style={{ color: colors.statsIconColor }} />
+                                                <Star className="mr-2 w-4 h-4" style={{ color: colors.boomforceStatsIconColor }} />
                                                 <span>Grade: {stats.grade}</span>
                                             </div>
                                             <div className="flex items-center">
-                                                <Code className="mr-2 w-4 h-4" style={{ color: colors.statsIconColor }} />
+                                                <Code className="mr-2 w-4 h-4" style={{ color: colors.boomforceStatsIconColor }} />
                                                 <span>Lines of Code: {stats.loc}</span>
                                             </div>
                                         </div>
@@ -161,7 +161,7 @@ export function DetailPage() {
                                     target="_blank"
                                     rel="noreferrer"
                                     className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
-                                    style={{ background: `linear-gradient(to right, ${colors.demoBtnGradientStart}, ${colors.demoBtnGradientEnd})`, color: colors.demoBtnTextColor, boxShadow: `0 0 20px ${colors.demoBtnShadow}` }}
+                                    style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
                                 >
                                     <Play className="mr-2 w-5 h-5" />
                                     PLAY DEMO
@@ -173,7 +173,7 @@ export function DetailPage() {
                                     target="_blank"
                                     rel="noreferrer"
                                     className="flex items-center gap-2 rounded-lg px-6 py-3 transition-all transform hover:scale-105 shadow-lg"
-                                    style={{ border: `1px solid ${colors.viewCodeBtnBorder}`, color: colors.viewCodeBtnText, boxShadow: `0 0 20px ${colors.viewCodeBtnShadow}` }}
+                                    style={{ border: `1px solid ${colors.boomforceViewCodeBtnBorder}`, color: colors.boomforceViewCodeBtnText, boxShadow: `0 0 20px ${colors.boomforceViewCodeBtnShadow}` }}
                                 >
                                     <Github className="w-5 h-5" />
                                     VIEW CODE
@@ -184,10 +184,10 @@ export function DetailPage() {
                         {/* Screenshots Section */}
                         {project.images && project.images.length > 0 && (
                             <div className="pt-8">
-                                <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.screenshotsTitleColor }}>SCREENSHOTS</h3>
+                                <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.boomforceScreenshotsTitleColor }}>SCREENSHOTS</h3>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                     {project.images.map((img, index) => (
-                                        <div key={index} className="aspect-video rounded-lg overflow-hidden transition-all cursor-pointer" style={{ border: `1px solid ${colors.screenshotsBorder}`, backgroundColor: colors.screenshotsBackground }}>
+                                        <div key={index} className="aspect-video rounded-lg overflow-hidden transition-all cursor-pointer" style={{ border: `1px solid ${colors.boomforceScreenshotsBorder}`, backgroundColor: colors.boomforceScreenshotsBackground }}>
                                             <img
                                                 src={img.url}
                                                 alt={img.caption || `Screenshot ${index + 1}`}

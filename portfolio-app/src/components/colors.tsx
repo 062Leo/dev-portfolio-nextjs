@@ -11,40 +11,40 @@ export type ThemeColorSet = {
     textPrimary: string;
     textSecondary: string;
     textMuted: string;
-    // Additional colors
-    red: string;
-    redLight: string;
-    redDark: string;
-    green: string;
-    greenLight: string;
-    yellow: string;
-    cyan: string;
-    grayLight: string;
-    white: string;
-    black: string;
-    // BoomForce Detail Page Colors
-    mainImageBorder: string;
-    mainImageBackground: string;
-    projectDescriptionText: string;
-    featureTitleColor: string;
-    featureListText: string;
-    featureCheckmarkColor: string;
-    techStackTitleColor: string;
-    techStackBgColor: string;
-    techStackTextColor: string;
-    statsTitleColor: string;
-    statsTextColor: string;
-    statsIconColor: string;
-    demoBtnGradientStart: string;
-    demoBtnGradientEnd: string;
-    demoBtnTextColor: string;
-    demoBtnShadow: string;
-    viewCodeBtnBorder: string;
-    viewCodeBtnText: string;
-    viewCodeBtnShadow: string;
-    screenshotsTitleColor: string;
-    screenshotsBorder: string;
-    screenshotsBackground: string;
+    // HomeSection Component Colors
+    homeSectionBracketText: string;
+    homeSectionHoverText: string;
+    homeSectionSeparator: string;
+    // Old Component Colors (Slider)
+    oldSliderCounterBg: string;
+    oldSliderCounterText: string;
+    oldSliderButtonBg: string;
+    oldSliderButtonText: string;
+    oldSliderDotActive: string;
+    oldSliderDotInactive: string;
+    // BoomForce Component Colors
+    boomforceMainImageBorder: string;
+    boomforceMainImageBackground: string;
+    boomforceProjectDescriptionText: string;
+    boomforceFeatureTitleColor: string;
+    boomforceFeatureListText: string;
+    boomforceFeatureCheckmarkColor: string;
+    boomforceTechStackTitleColor: string;
+    boomforceTechStackBgColor: string;
+    boomforceTechStackTextColor: string;
+    boomforceStatsTitleColor: string;
+    boomforceStatsTextColor: string;
+    boomforceStatsIconColor: string;
+    boomforceDemoBtnGradientStart: string;
+    boomforceDemoBtnGradientEnd: string;
+    boomforceDemoBtnTextColor: string;
+    boomforceDemoBtnShadow: string;
+    boomforceViewCodeBtnBorder: string;
+    boomforceViewCodeBtnText: string;
+    boomforceViewCodeBtnShadow: string;
+    boomforceScreenshotsTitleColor: string;
+    boomforceScreenshotsBorder: string;
+    boomforceScreenshotsBackground: string;
 };
 
 export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
@@ -83,50 +83,40 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         // textMuted: Muted text color with 60% opacity (CSS variable --text-muted)
         textMuted: "rgba(21, 23, 31, 0.6)",
 
-        // Additional Colors
-        // red: Project titles, headings, key features (BoomForce.tsx - h3 titles, borders)
-        red: "rgba(220, 38, 38, 1)",
-        // redLight: Tech stack badges text (BoomForce.tsx - tech stack items)
-        redLight: "rgba(248, 113, 113, 1)",
-        // redDark: Tech stack badges background (BoomForce.tsx - tech stack bg)
-        redDark: "rgba(127, 29, 29, 1)",
-        // green: Feature icons, checkmarks (BoomForce.tsx - CheckCircle icons)
-        green: "rgba(34, 197, 94, 1)",
-        // greenLight: Hover text animation (HomeSection.tsx - hover character animation)
-        greenLight: "rgba(134, 239, 172, 1)",
-        // yellow: Stats icons (BoomForce.tsx - Clock, Star, Code icons)
-        yellow: "rgba(234, 179, 8, 1)",
-        // cyan: Slash separator in name (HomeSection.tsx - "/" character)
-        cyan: "rgba(34, 211, 238, 1)",
-        // grayLight: Description text, secondary text (BoomForce.tsx - project description, feature list)
-        grayLight: "rgba(209, 213, 219, 1)",
-        // white: Slider dots, button text (Old.tsx - slider navigation dots)
-        white: "rgba(255, 255, 255, 1)",
-        // black: Image backgrounds, slider controls (BoomForce.tsx - image border, Old.tsx - slider buttons)
-        black: "rgba(0, 0, 0, 1)",
-        // BoomForce Detail Page Colors
-        mainImageBorder: "rgba(220, 38, 38, 1)",
-        mainImageBackground: "rgba(0, 0, 0, 1)",
-        projectDescriptionText: "rgba(209, 213, 219, 1)",
-        featureTitleColor: "rgba(220, 38, 38, 1)",
-        featureListText: "rgba(209, 213, 219, 1)",
-        featureCheckmarkColor: "rgba(34, 197, 94, 1)",
-        techStackTitleColor: "rgba(220, 38, 38, 1)",
-        techStackBgColor: "rgba(127, 29, 29, 1)",
-        techStackTextColor: "rgba(248, 113, 113, 1)",
-        statsTitleColor: "rgba(220, 38, 38, 1)",
-        statsTextColor: "rgba(209, 213, 219, 1)",
-        statsIconColor: "rgba(234, 179, 8, 1)",
-        demoBtnGradientStart: "rgba(220, 38, 38, 1)",
-        demoBtnGradientEnd: "rgba(127, 29, 29, 1)",
-        demoBtnTextColor: "rgba(255, 255, 255, 1)",
-        demoBtnShadow: "rgba(127, 29, 29, 1)",
-        viewCodeBtnBorder: "rgba(220, 38, 38, 1)",
-        viewCodeBtnText: "rgba(220, 38, 38, 1)",
-        viewCodeBtnShadow: "rgba(220, 38, 38, 1)",
-        screenshotsTitleColor: "rgba(220, 38, 38, 1)",
-        screenshotsBorder: "rgba(220, 38, 38, 1)",
-        screenshotsBackground: "rgba(0, 0, 0, 1)",
+        // HomeSection Component Colors
+        homeSectionBracketText: "rgba(209, 213, 219, 1)",
+        homeSectionHoverText: "rgba(34, 197, 94, 1)",
+        homeSectionSeparator: "rgba(34, 211, 238, 1)",
+        // Old Component Colors (Slider)
+        oldSliderCounterBg: "rgba(0, 0, 0, 1)",
+        oldSliderCounterText: "rgba(255, 255, 255, 1)",
+        oldSliderButtonBg: "rgba(0, 0, 0, 1)",
+        oldSliderButtonText: "rgba(255, 255, 255, 1)",
+        oldSliderDotActive: "rgba(255, 255, 255, 1)",
+        oldSliderDotInactive: "rgba(255, 255, 255, 0.5)",
+        // BoomForce Component Colors
+        boomforceMainImageBorder: "rgba(220, 38, 38, 1)",
+        boomforceMainImageBackground: "rgba(0, 0, 0, 1)",
+        boomforceProjectDescriptionText: "rgba(209, 213, 219, 1)",
+        boomforceFeatureTitleColor: "rgba(220, 38, 38, 1)",
+        boomforceFeatureListText: "rgba(209, 213, 219, 1)",
+        boomforceFeatureCheckmarkColor: "rgba(34, 197, 94, 1)",
+        boomforceTechStackTitleColor: "rgba(220, 38, 38, 1)",
+        boomforceTechStackBgColor: "rgba(127, 29, 29, 1)",
+        boomforceTechStackTextColor: "rgba(248, 113, 113, 1)",
+        boomforceStatsTitleColor: "rgba(220, 38, 38, 1)",
+        boomforceStatsTextColor: "rgba(209, 213, 219, 1)",
+        boomforceStatsIconColor: "rgba(234, 179, 8, 1)",
+        boomforceDemoBtnGradientStart: "rgba(220, 38, 38, 1)",
+        boomforceDemoBtnGradientEnd: "rgba(127, 29, 29, 1)",
+        boomforceDemoBtnTextColor: "rgba(255, 255, 255, 1)",
+        boomforceDemoBtnShadow: "rgba(127, 29, 29, 1)",
+        boomforceViewCodeBtnBorder: "rgba(220, 38, 38, 1)",
+        boomforceViewCodeBtnText: "rgba(220, 38, 38, 1)",
+        boomforceViewCodeBtnShadow: "rgba(220, 38, 38, 1)",
+        boomforceScreenshotsTitleColor: "rgba(220, 38, 38, 1)",
+        boomforceScreenshotsBorder: "rgba(220, 38, 38, 1)",
+        boomforceScreenshotsBackground: "rgba(0, 0, 0, 1)",
     },
     dark: {
         // Background & Foreground
@@ -163,50 +153,40 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         // textMuted: Muted text color with 60% opacity (CSS variable --text-muted)
         textMuted: "rgba(213, 220, 232, 0.6)",
 
-        // Additional Colors
-        // red: Project titles, headings, key features (BoomForce.tsx - h3 titles, borders)
-        red: "rgba(239, 68, 68, 1)",
-        // redLight: Tech stack badges text (BoomForce.tsx - tech stack items)
-        redLight: "rgba(248, 113, 113, 1)",
-        // redDark: Tech stack badges background (BoomForce.tsx - tech stack bg)
-        redDark: "rgba(70, 54, 116, 1)",
-        // green: Feature icons, checkmarks (BoomForce.tsx - CheckCircle icons)
-        green: "rgba(74, 222, 128, 1)",
-        // greenLight: Hover text animation (HomeSection.tsx - hover character animation)
-        greenLight: "rgba(134, 239, 172, 1)",
-        // yellow: Stats icons (BoomForce.tsx - Clock, Star, Code icons)
-        yellow: "rgba(250, 204, 21, 1)",
-        // cyan: Slash separator in name (HomeSection.tsx - "/" character)
-        cyan: "rgba(34, 211, 238, 1)",
-        // grayLight: Description text, secondary text (BoomForce.tsx - project description, feature list)
-        grayLight: "rgba(209, 213, 219, 1)",
-        // white: Slider dots, button text (Old.tsx - slider navigation dots)
-        white: "rgba(255, 255, 255, 1)",
-        // black: Image backgrounds, slider controls (BoomForce.tsx - image border, Old.tsx - slider buttons)
-        black: "rgba(0, 0, 0, 1)",
-        // BoomForce Detail Page Colors
-        mainImageBorder: "rgba(239, 68, 68, 1)",
-        mainImageBackground: "rgba(0, 0, 0, 1)",
-        projectDescriptionText: "rgba(209, 213, 219, 1)",
-        featureTitleColor: "rgba(239, 68, 68, 1)",
-        featureListText: "rgba(209, 213, 219, 1)",
-        featureCheckmarkColor: "rgba(74, 222, 128, 1)",
-        techStackTitleColor: "rgba(239, 68, 68, 1)",
-        techStackBgColor: "rgba(75, 47, 197, 1)",
-        techStackTextColor: "rgba(248, 113, 113, 1)",
-        statsTitleColor: "rgba(239, 68, 68, 1)",
-        statsTextColor: "rgba(209, 213, 219, 1)",
-        statsIconColor: "rgba(250, 204, 21, 1)",
-        demoBtnGradientStart: "rgba(239, 68, 68, 1)",
-        demoBtnGradientEnd: "rgba(70, 54, 116, 1)",
-        demoBtnTextColor: "rgba(255, 255, 255, 1)",
-        demoBtnShadow: "rgba(70, 54, 116, 1)",
-        viewCodeBtnBorder: "rgba(239, 68, 68, 1)",
-        viewCodeBtnText: "rgba(239, 68, 68, 1)",
-        viewCodeBtnShadow: "rgba(239, 68, 68, 1)",
-        screenshotsTitleColor: "rgba(239, 68, 68, 1)",
-        screenshotsBorder: "rgba(239, 68, 68, 1)",
-        screenshotsBackground: "rgba(0, 0, 0, 1)",
+        // HomeSection Component Colors
+        homeSectionBracketText: "rgba(213, 220, 232, 1)",
+        homeSectionHoverText: "rgba(74, 222, 128, 1)",
+        homeSectionSeparator: "rgba(34, 211, 238, 1)",
+        // Old Component Colors (Slider)
+        oldSliderCounterBg: "rgba(11, 13, 23, 1)",
+        oldSliderCounterText: "rgba(255, 255, 255, 1)",
+        oldSliderButtonBg: "rgba(11, 13, 23, 1)",
+        oldSliderButtonText: "rgba(255, 255, 255, 1)",
+        oldSliderDotActive: "rgba(255, 255, 255, 1)",
+        oldSliderDotInactive: "rgba(255, 255, 255, 0.5)",
+        // BoomForce Component Colors
+        boomforceMainImageBorder: "rgba(167, 139, 250, 1)",
+        boomforceMainImageBackground: "rgba(11, 13, 23, 1)",
+        boomforceProjectDescriptionText: "rgba(213, 220, 232, 1)",
+        boomforceFeatureTitleColor: "rgba(167, 139, 250, 1)",
+        boomforceFeatureListText: "rgba(213, 220, 232, 1)",
+        boomforceFeatureCheckmarkColor: "rgba(74, 222, 128, 1)",
+        boomforceTechStackTitleColor: "rgba(167, 139, 250, 1)",
+        boomforceTechStackBgColor: "rgba(239, 68, 68, 0.15)",
+        boomforceTechStackTextColor: "rgba(167, 139, 250, 1)",
+        boomforceStatsTitleColor: "rgba(167, 139, 250, 1)",
+        boomforceStatsTextColor: "rgba(213, 220, 232, 1)",
+        boomforceStatsIconColor: "rgba(250, 204, 21, 1)",
+        boomforceDemoBtnGradientStart: "rgba(239, 68, 68, 1)",
+        boomforceDemoBtnGradientEnd: "rgba(167, 139, 250, 1)",
+        boomforceDemoBtnTextColor: "rgba(213, 220, 232, 1)",
+        boomforceDemoBtnShadow: "rgba(167, 139, 250, 0.5)",
+        boomforceViewCodeBtnBorder: "rgba(167, 139, 250, 1)",
+        boomforceViewCodeBtnText: "rgba(167, 139, 250, 1)",
+        boomforceViewCodeBtnShadow: "rgba(167, 139, 250, 0.3)",
+        boomforceScreenshotsTitleColor: "rgba(167, 139, 250, 1)",
+        boomforceScreenshotsBorder: "rgba(239, 68, 68, 1)",
+        boomforceScreenshotsBackground: "rgba(11, 13, 23, 1)",
     }
 };
 

@@ -146,13 +146,13 @@ export function DetailPage() {
 
                                     {hasMultipleImages && (
                                         <>
-                                            <div className="absolute top-4 right-4 rounded-full px-3 py-1 text-xs font-semibold shadow" style={{ backgroundColor: colors.black, color: colors.white }}>
+                                            <div className="absolute top-4 right-4 rounded-full px-3 py-1 text-xs font-semibold shadow" style={{ backgroundColor: colors.oldSliderCounterBg, color: colors.oldSliderCounterText }}>
                                                 {currentImageIndex + 1} / {totalSlides}
                                             </div>
                                             <button
                                                 onClick={goToPrevImage}
                                                 className="btns absolute left-4 top-1/2 -translate-y-1/2 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-primary"
-                                                style={{ backgroundColor: colors.black, color: colors.white }}
+                                                style={{ backgroundColor: colors.oldSliderButtonBg, color: colors.oldSliderButtonText }}
                                                 aria-label="Previous image"
                                             >
                                                 <ChevronLeft className="h-5 w-5" />
@@ -160,7 +160,7 @@ export function DetailPage() {
                                             <button
                                                 onClick={goToNextImage}
                                                 className="btns absolute right-4 top-1/2 -translate-y-1/2 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-primary"
-                                                style={{ backgroundColor: colors.black, color: colors.white }}
+                                                style={{ backgroundColor: colors.oldSliderButtonBg, color: colors.oldSliderButtonText }}
                                                 aria-label="Next image"
                                             >
                                                 <ChevronRight className="h-5 w-5" />
@@ -174,7 +174,7 @@ export function DetailPage() {
                                                             aria-label={`Go to image ${index + 1}`}
                                                             className="h-2.5 w-2.5 rounded-full transition-all"
                                                             style={{
-                                                                backgroundColor: index === currentImageIndex ? colors.white : `rgba(255, 255, 255, 0.5)`,
+                                                                backgroundColor: index === currentImageIndex ? colors.oldSliderDotActive : colors.oldSliderDotInactive,
                                                                 ...(index === currentImageIndex && { height: '0.75rem', width: '0.75rem', boxShadow: '0 0 10px rgba(255, 255, 255, 0.5)' })
                                                             }}
                                                         />
