@@ -22,6 +22,29 @@ export type ThemeColorSet = {
     grayLight: string;
     white: string;
     black: string;
+    // BoomForce Detail Page Colors
+    mainImageBorder: string;
+    mainImageBackground: string;
+    projectDescriptionText: string;
+    featureTitleColor: string;
+    featureListText: string;
+    featureCheckmarkColor: string;
+    techStackTitleColor: string;
+    techStackBgColor: string;
+    techStackTextColor: string;
+    statsTitleColor: string;
+    statsTextColor: string;
+    statsIconColor: string;
+    demoBtnGradientStart: string;
+    demoBtnGradientEnd: string;
+    demoBtnTextColor: string;
+    demoBtnShadow: string;
+    viewCodeBtnBorder: string;
+    viewCodeBtnText: string;
+    viewCodeBtnShadow: string;
+    screenshotsTitleColor: string;
+    screenshotsBorder: string;
+    screenshotsBackground: string;
 };
 
 export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
@@ -81,6 +104,29 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         white: "rgba(255, 255, 255, 1)",
         // black: Image backgrounds, slider controls (BoomForce.tsx - image border, Old.tsx - slider buttons)
         black: "rgba(0, 0, 0, 1)",
+        // BoomForce Detail Page Colors
+        mainImageBorder: "rgba(220, 38, 38, 1)",
+        mainImageBackground: "rgba(0, 0, 0, 1)",
+        projectDescriptionText: "rgba(209, 213, 219, 1)",
+        featureTitleColor: "rgba(220, 38, 38, 1)",
+        featureListText: "rgba(209, 213, 219, 1)",
+        featureCheckmarkColor: "rgba(34, 197, 94, 1)",
+        techStackTitleColor: "rgba(220, 38, 38, 1)",
+        techStackBgColor: "rgba(127, 29, 29, 1)",
+        techStackTextColor: "rgba(248, 113, 113, 1)",
+        statsTitleColor: "rgba(220, 38, 38, 1)",
+        statsTextColor: "rgba(209, 213, 219, 1)",
+        statsIconColor: "rgba(234, 179, 8, 1)",
+        demoBtnGradientStart: "rgba(220, 38, 38, 1)",
+        demoBtnGradientEnd: "rgba(127, 29, 29, 1)",
+        demoBtnTextColor: "rgba(255, 255, 255, 1)",
+        demoBtnShadow: "rgba(127, 29, 29, 1)",
+        viewCodeBtnBorder: "rgba(220, 38, 38, 1)",
+        viewCodeBtnText: "rgba(220, 38, 38, 1)",
+        viewCodeBtnShadow: "rgba(220, 38, 38, 1)",
+        screenshotsTitleColor: "rgba(220, 38, 38, 1)",
+        screenshotsBorder: "rgba(220, 38, 38, 1)",
+        screenshotsBackground: "rgba(0, 0, 0, 1)",
     },
     dark: {
         // Background & Foreground
@@ -123,7 +169,7 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         // redLight: Tech stack badges text (BoomForce.tsx - tech stack items)
         redLight: "rgba(248, 113, 113, 1)",
         // redDark: Tech stack badges background (BoomForce.tsx - tech stack bg)
-        redDark: "rgba(75, 43, 150, 1)",
+        redDark: "rgba(70, 54, 116, 1)",
         // green: Feature icons, checkmarks (BoomForce.tsx - CheckCircle icons)
         green: "rgba(74, 222, 128, 1)",
         // greenLight: Hover text animation (HomeSection.tsx - hover character animation)
@@ -138,6 +184,29 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         white: "rgba(255, 255, 255, 1)",
         // black: Image backgrounds, slider controls (BoomForce.tsx - image border, Old.tsx - slider buttons)
         black: "rgba(0, 0, 0, 1)",
+        // BoomForce Detail Page Colors
+        mainImageBorder: "rgba(239, 68, 68, 1)",
+        mainImageBackground: "rgba(0, 0, 0, 1)",
+        projectDescriptionText: "rgba(209, 213, 219, 1)",
+        featureTitleColor: "rgba(239, 68, 68, 1)",
+        featureListText: "rgba(209, 213, 219, 1)",
+        featureCheckmarkColor: "rgba(74, 222, 128, 1)",
+        techStackTitleColor: "rgba(239, 68, 68, 1)",
+        techStackBgColor: "rgba(75, 47, 197, 1)",
+        techStackTextColor: "rgba(248, 113, 113, 1)",
+        statsTitleColor: "rgba(239, 68, 68, 1)",
+        statsTextColor: "rgba(209, 213, 219, 1)",
+        statsIconColor: "rgba(250, 204, 21, 1)",
+        demoBtnGradientStart: "rgba(239, 68, 68, 1)",
+        demoBtnGradientEnd: "rgba(70, 54, 116, 1)",
+        demoBtnTextColor: "rgba(255, 255, 255, 1)",
+        demoBtnShadow: "rgba(70, 54, 116, 1)",
+        viewCodeBtnBorder: "rgba(239, 68, 68, 1)",
+        viewCodeBtnText: "rgba(239, 68, 68, 1)",
+        viewCodeBtnShadow: "rgba(239, 68, 68, 1)",
+        screenshotsTitleColor: "rgba(239, 68, 68, 1)",
+        screenshotsBorder: "rgba(239, 68, 68, 1)",
+        screenshotsBackground: "rgba(0, 0, 0, 1)",
     }
 };
 
