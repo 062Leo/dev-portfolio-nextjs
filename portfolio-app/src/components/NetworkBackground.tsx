@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { getColor } from "@/components/colors";
 
 type ShiftState = {
   startX: number;
@@ -77,8 +78,9 @@ export function NetworkBackground() {
     const target: Target = { x: 0, y: 0 };
     let animationFrameId = 0;
     let points: Point[] = [];
-    const strokeBase = isDarkMode ? "rgba(156, 217, 249, " : "rgba(21, 23, 31, ";
-    const circleBase = isDarkMode ? "rgba(156, 217, 249, " : "rgba(27, 34, 54, ";
+    const colors = getColor(isDarkMode);
+    const strokeBase = colors.networkStroke;
+    const circleBase = colors.networkCircle;
 
     const getDistance = (p1: Target, p2: Target) => {
       const dx = p1.x - p2.x;
@@ -182,7 +184,8 @@ export function NetworkBackground() {
         context.beginPath();
         context.moveTo(point.x, point.y);
         context.lineTo(closestPoint.x, closestPoint.y);
-        context.strokeStyle = `${strokeBase}${point.active})`;
+        // Replace the alpha value in the rgba string
+        context.strokeStyle = strokeBase.replace(/[\d.]+\)$/, `${point.active})`);
         context.stroke();
       });
     };
@@ -193,7 +196,8 @@ export function NetworkBackground() {
       }
       context.beginPath();
       context.arc(point.x, point.y, point.circle.radius, 0, Math.PI * 2, false);
-      context.fillStyle = `${circleBase}${point.circle.active})`;
+      // Replace the alpha value in the rgba string
+      context.fillStyle = circleBase.replace(/[\d.]+\)$/, `${point.circle.active})`);
       context.fill();
     };
 
@@ -258,9 +262,7 @@ export function NetworkBackground() {
     <div
       className="pointer-events-none fixed inset-0 z-0"
       style={{
-        background: isDarkMode
-          ? "radial-gradient(circle at center, rgba(41, 41, 94, 0.9), rgba(0, 0, 0, 1))"
-          : "radial-gradient(circle at center, rgba(155, 144, 136, 0.9), rgba(240,239,235,1))",
+        background: getColor(isDarkMode).networkBackground,
       }}
     >
       <canvas ref={canvasRef} className="h-full w-full" />

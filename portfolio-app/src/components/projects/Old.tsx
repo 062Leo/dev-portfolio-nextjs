@@ -10,6 +10,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { NetworkBackground } from "@/components/NetworkBackground";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useThemeColors } from "@/components/colors";
 
 type ProjectImage = {
   url: string;
@@ -21,6 +22,20 @@ export function DetailPage() {
     const project = portfolioData.projects.find((p) => p.id === id);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isSliderPaused, setIsSliderPaused] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(true);
+    const [isReady, setIsReady] = useState(false);
+    const colors = useThemeColors(isDarkMode);
+
+    useEffect(() => {
+        const storedTheme = window.localStorage.getItem("theme");
+        const isDark = storedTheme ? storedTheme === "dark" : true;
+        setIsDarkMode(isDark);
+        setIsReady(true);
+    }, []);
+
+    if (!isReady) {
+        return null;
+    }
 
     // Early return if project is not found
     if (!project) {
@@ -131,19 +146,21 @@ export function DetailPage() {
 
                                     {hasMultipleImages && (
                                         <>
-                                            <div className="absolute top-4 right-4 rounded-full bg-black/50 px-3 py-1 text-xs font-semibold text-white shadow">
+                                            <div className="absolute top-4 right-4 rounded-full px-3 py-1 text-xs font-semibold shadow" style={{ backgroundColor: colors.black, color: colors.white }}>
                                                 {currentImageIndex + 1} / {totalSlides}
                                             </div>
                                             <button
                                                 onClick={goToPrevImage}
-                                                className="btns absolute left-4 top-1/2 -translate-y-1/2 rounded-md bg-black/40 text-white shadow hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-primary"
+                                                className="btns absolute left-4 top-1/2 -translate-y-1/2 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-primary"
+                                                style={{ backgroundColor: colors.black, color: colors.white }}
                                                 aria-label="Previous image"
                                             >
                                                 <ChevronLeft className="h-5 w-5" />
                                             </button>
                                             <button
                                                 onClick={goToNextImage}
-                                                className="btns absolute right-4 top-1/2 -translate-y-1/2 rounded-md bg-black/40 text-white shadow hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-primary"
+                                                className="btns absolute right-4 top-1/2 -translate-y-1/2 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-primary"
+                                                style={{ backgroundColor: colors.black, color: colors.white }}
                                                 aria-label="Next image"
                                             >
                                                 <ChevronRight className="h-5 w-5" />
@@ -155,7 +172,11 @@ export function DetailPage() {
                                                             key={`dot-${index}`}
                                                             onClick={() => setCurrentImageIndex(index)}
                                                             aria-label={`Go to image ${index + 1}`}
-                                                            className={`h-2.5 w-2.5 rounded-full transition-all ${index === currentImageIndex ? 'h-3 w-3 bg-white shadow' : 'bg-white/50'}`}
+                                                            className="h-2.5 w-2.5 rounded-full transition-all"
+                                                            style={{
+                                                                backgroundColor: index === currentImageIndex ? colors.white : `rgba(255, 255, 255, 0.5)`,
+                                                                ...(index === currentImageIndex && { height: '0.75rem', width: '0.75rem', boxShadow: '0 0 10px rgba(255, 255, 255, 0.5)' })
+                                                            }}
                                                         />
                                                     ))}
                                                 </div>

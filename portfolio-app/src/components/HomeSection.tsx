@@ -1,11 +1,24 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { ArrowDown } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
+import { useThemeColors } from "@/components/colors";
 
 const hoverText = " onClick={reload}";
 
 export function HomeSection() {
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+  const colors = useThemeColors(isDarkMode);
+
+  useEffect(() => {
+    const storedTheme = window.localStorage.getItem("theme");
+    const isDark = storedTheme ? storedTheme === "dark" : true;
+    setIsDarkMode(isDark);
+    setIsReady(true);
+  }, []);
+
   const handleScrollClick = () => {
     const aboutSection = document.getElementById("about");
     if (aboutSection) {
@@ -17,6 +30,10 @@ export function HomeSection() {
     window.location.reload();
   };
 
+  if (!isReady) {
+    return null;
+  }
+
   return (
     <section id="home" className="relative flex min-h-screen flex-col items-center justify-center px-4">
       <div className="container z-10 mx-auto max-w-6xl text-center">
@@ -24,7 +41,7 @@ export function HomeSection() {
           <h1 className="text-4xl font-bold tracking-tight md:text-6xl">
             <span className="opacity-0 animate-fade-in">Hi, I&apos;m </span>
             <span className="opacity-0 animate-fade-in-delay-1 text-primary inline-flex items-baseline">
-              <span className="text-gray-400">&lt;</span>
+              <span style={{ color: colors.grayLight }}>&lt;</span>
               <span className="relative inline-flex items-baseline">
                 <button
                   type="button"
@@ -36,8 +53,8 @@ export function HomeSection() {
                     {hoverText.split("").map((char, index) => (
                       <span
                         key={`hover-char-${index}`}
-                        className="text-green-400 opacity-0 translate-x-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0"
-                        style={{ transitionDelay: `${index * 30}ms` }}
+                        className="opacity-0 translate-x-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0"
+                        style={{ color: colors.green, transitionDelay: `${index * 30}ms` }}
                       >
                         {char === " " ? "\u00A0" : char}
                       </span>
@@ -45,8 +62,8 @@ export function HomeSection() {
                   </span>
                 </button>
               </span>
-              <span className="text-cyan-500">{' /'}</span>
-              <span className="text-gray-400">&gt;</span>
+              <span style={{ color: colors.cyan }}>{' /'}</span>
+              <span style={{ color: colors.grayLight }}>&gt;</span>
             </span>
             <span className="opacity-0 animate-fade-in-delay-2"> {portfolioData.personal.lastName}</span>
           </h1>
