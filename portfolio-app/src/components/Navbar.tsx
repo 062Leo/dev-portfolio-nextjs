@@ -60,19 +60,19 @@ export function Navbar() {
         "fixed z-40 w-full transition-all duration-300",
         isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-sm" : "py-5",
       )}
-      style={{ backgroundColor: isScrolled ? `${colors.background}cc` : "transparent" }}
+      style={{ backgroundColor: isScrolled ? `${colors.navbarBackground}cc` : "transparent" }}
     >
       <div className="container flex items-center justify-between">
         <Link href="/" className="flex items-center text-xl font-bold">
           <span className="relative z-10">
-            <span className="text-glow" style={{ color: colors.boomforceProjectTitleColor }}>
+            <span className="text-glow" style={{ color: colors.navbarTitleColor }}>
               Leo's
             </span>
             <span
               className="text-glow"
               style={{
-                color: colors.boomforceFeatureTitleColor,
-                textShadow: colors.boomforceProjectTitleGlow,
+                color: colors.navbarLinkHover,
+                textShadow: colors.navbarTitleGlow,
               }}
             >
               {' Portfolio'}
@@ -86,9 +86,9 @@ export function Navbar() {
               key={item.name}
               href={item.href}
               className="transition-colors duration-300"
-              style={{ color: colors.projectsSectionSubtitleColor }}
-              onMouseEnter={(event) => (event.currentTarget.style.color = colors.boomforceFeatureTitleColor)}
-              onMouseLeave={(event) => (event.currentTarget.style.color = colors.projectsSectionSubtitleColor)}
+              style={{ color: colors.navbarLinkText }}
+              onMouseEnter={(event) => (event.currentTarget.style.color = colors.navbarLinkHover)}
+              onMouseLeave={(event) => (event.currentTarget.style.color = colors.navbarLinkText)}
             >
               {item.name}
             </Link>
@@ -99,7 +99,7 @@ export function Navbar() {
           onClick={() => setIsMenuOpen((prev) => !prev)}
           className="z-50 p-2 md:hidden"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          style={{ color: colors.boomforceProjectTitleColor }}
+          style={{ color: colors.navbarTitleColor }}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -109,7 +109,7 @@ export function Navbar() {
             "fixed inset-0 z-40 flex flex-col items-center justify-center bg-background/95 backdrop-blur-md transition-all duration-300 md:hidden",
             isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
           )}
-          style={{ backgroundColor: `${colors.background}` }}
+          style={{ backgroundColor: colors.navbarMenuBackdrop }}
         >
           <div className="flex flex-col space-y-8 text-xl">
             {navItems.map((item) => (
@@ -118,9 +118,9 @@ export function Navbar() {
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
                 className="transition-colors duration-300"
-                style={{ color: colors.projectsSectionSubtitleColor }}
-                onMouseEnter={(event) => (event.currentTarget.style.color = colors.boomforceFeatureTitleColor)}
-                onMouseLeave={(event) => (event.currentTarget.style.color = colors.projectsSectionSubtitleColor)}
+                style={{ color: colors.navbarMenuText }}
+                onMouseEnter={(event) => (event.currentTarget.style.color = colors.navbarLinkHover)}
+                onMouseLeave={(event) => (event.currentTarget.style.color = colors.navbarMenuText)}
               >
                 {item.name}
               </Link>

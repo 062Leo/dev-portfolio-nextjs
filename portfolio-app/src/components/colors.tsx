@@ -76,6 +76,46 @@ export type ThemeColorSet = {
     projectsSectionLinkHover: string;
     projectsSectionIconColor: string;
     projectsSectionDivider: string;
+
+    // Navbar Colors
+    navbarTitleColor: string;
+    navbarTitleGlow: string;
+    navbarLinkText: string;
+    navbarLinkHover: string;
+    navbarMenuBackdrop: string;
+    navbarMenuText: string;
+    navbarBackground: string;
+
+    // ContactSection Colors
+    contactSectionTitleColor: string;
+    contactSectionAccentColor: string;
+    contactSectionIconBackground: string;
+    contactSectionIconColor: string;
+    contactSectionCardBackground: string;
+    contactSectionCardBorder: string;
+    contactSectionCardShadow: string;
+
+    // About Section Colors
+    aboutSectionTitleColor: string;
+    aboutSectionAccentColor: string;
+    aboutSectionCardBackground: string;
+    aboutSectionCardBorder: string;
+    aboutSectionCardShadow: string;
+    aboutSectionIconBackground: string;
+    aboutSectionIconColor: string;
+    aboutSectionDescriptionText: string;
+
+    // Skills Section Colors
+    skillsSectionTitleColor: string;
+    skillsSectionButtonActiveBackground: string;
+    skillsSectionButtonActiveText: string;
+    skillsSectionButtonInactiveText: string;
+    skillsSectionCardBackground: string;
+    skillsSectionCardBorder: string;
+    skillsSectionCardShadow: string;
+    skillsSectionProgressBarBg: string;
+    skillsSectionProgressBarFill: string;
+    skillsSectionLevelText: string;
 };
 
 export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
@@ -180,6 +220,42 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         projectsSectionLinkHover: "rgba(239, 68, 68, 0.8)",
         projectsSectionIconColor: "rgba(250, 204, 21, 1)",
         projectsSectionDivider: "rgba(167, 139, 250, 0.3)",
+
+        navbarTitleColor: "rgba(239, 68, 68, 1)",
+        navbarTitleGlow: "0 0 15px rgba(180, 162, 234, 0.3), 0 0 25px rgba(104, 80, 172, 0.3)",
+        navbarLinkText: "rgba(209, 213, 219, 1)",
+        navbarLinkHover: "rgba(248, 113, 113, 1)",
+        navbarMenuBackdrop: "rgba(11, 13, 23, 0.95)",
+        navbarMenuText: "rgba(209, 213, 219, 1)",
+        navbarBackground: "rgba(11, 13, 23, 0.95)",
+
+        contactSectionTitleColor: "rgba(239, 68, 68, 1)",
+        contactSectionAccentColor: "rgba(248, 113, 113, 1)",
+        contactSectionIconBackground: "rgba(139, 92, 246, 0.1)",
+        contactSectionIconColor: "rgba(239, 68, 68, 1)",
+        contactSectionCardBackground: "rgba(11, 13, 23, 0.95)",
+        contactSectionCardBorder: "rgba(167, 139, 250, 0.6)",
+        contactSectionCardShadow: "0 25px 60px rgba(167, 139, 250, 0.35)",
+
+        aboutSectionTitleColor: "rgba(239, 68, 68, 1)",
+        aboutSectionAccentColor: "rgba(248, 113, 113, 1)",
+        aboutSectionCardBackground: "rgba(11, 13, 23, 0.95)",
+        aboutSectionCardBorder: "rgba(167, 139, 250, 0.6)",
+        aboutSectionCardShadow: "0 25px 60px rgba(167, 139, 250, 0.35)",
+        aboutSectionIconBackground: "rgba(139, 92, 246, 0.1)",
+        aboutSectionIconColor: "rgba(239, 68, 68, 1)",
+        aboutSectionDescriptionText: "rgba(209, 213, 219, 0.9)",
+
+        skillsSectionTitleColor: "rgba(239, 68, 68, 1)",
+        skillsSectionButtonActiveBackground: "rgba(239, 68, 68, 1)",
+        skillsSectionButtonActiveText: "rgba(255, 255, 255, 1)",
+        skillsSectionButtonInactiveText: "rgba(209, 213, 219, 0.8)",
+        skillsSectionCardBackground: "rgba(11, 13, 23, 0.95)",
+        skillsSectionCardBorder: "rgba(167, 139, 250, 0.6)",
+        skillsSectionCardShadow: "0 25px 60px rgba(167, 139, 250, 0.35)",
+        skillsSectionProgressBarBg: "rgba(167, 139, 250, 0.33)",
+        skillsSectionProgressBarFill: "rgba(248, 113, 113, 1)",
+        skillsSectionLevelText: "rgba(209, 213, 219, 0.85)",
     },
     dark: {
         // Background & Foreground
@@ -260,12 +336,12 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         // HomeSection Visual Tokens
         homeSectionBackgroundGradient:
             "radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.35), transparent 45%), radial-gradient(circle at 80% 0%, rgba(167, 139, 250, 0.4), transparent 50%)",
-        homeSectionBorderGlow: "0 0 25px rgba(239, 68, 68, 0.8), 0 0 45px rgba(167, 139, 250, 0.7)",
+        homeSectionBorderGlow: "0 0 25px rgba(239, 68, 68, 0.5), 0 0 45px rgba(167, 139, 250, 0.4)",
         homeSectionTitleColor: "rgba(239, 68, 68, 1)",
         homeSectionTitleGlow: "0 0 15px rgba(180, 162, 234, 0.3), 0 0 25px rgba(104, 80, 172, 0.3)",
         homeSectionDescriptionText: "rgba(213, 220, 232, 0.95)",
-        homeSectionButtonGradientStart: "rgba(220, 38, 38, 1)",
-        homeSectionButtonGradientEnd: "rgba(127, 29, 29, 1)",
+        homeSectionButtonGradientStart: "rgba(105, 30, 155, 1)",
+        homeSectionButtonGradientEnd: "rgba(131, 40, 40, 1)",
         homeSectionButtonText: "rgba(213, 220, 232, 1)",
         homeSectionAccentLine: "rgba(167, 139, 250, 1)",
         // ProjectsSection Visual Tokens
@@ -282,6 +358,42 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         projectsSectionLinkHover: "rgba(239, 68, 68, 0.8)",
         projectsSectionIconColor: "rgba(250, 204, 21, 1)",
         projectsSectionDivider: "rgba(167, 139, 250, 0.3)",
+
+        navbarTitleColor: "rgba(213, 220, 232, 1)",
+        navbarTitleGlow: "0 0 15px rgba(180, 162, 234, 0.3), 0 0 25px rgba(104, 80, 172, 0.3)",
+        navbarLinkText: "rgba(213, 220, 232, 1)",
+        navbarLinkHover: "rgba(248, 113, 113, 1)",
+        navbarMenuBackdrop: "rgba(11, 13, 23, 0.95)",
+        navbarMenuText: "rgba(213, 220, 232, 1)",
+        navbarBackground: "rgba(11, 13, 23, 0.95)",
+
+        contactSectionTitleColor: "rgba(239, 68, 68, 1)",
+        contactSectionAccentColor: "rgba(248, 113, 113, 1)",
+        contactSectionIconBackground: "rgba(139, 92, 246, 0.1)",
+        contactSectionIconColor: "rgba(239, 68, 68, 1)",
+        contactSectionCardBackground: "rgba(11, 13, 23, 0.95)",
+        contactSectionCardBorder: "rgba(167, 139, 250, 0.6)",
+        contactSectionCardShadow: "0 25px 60px rgba(167, 139, 250, 0.35)",
+
+        aboutSectionTitleColor: "rgba(239, 68, 68, 1)",
+        aboutSectionAccentColor: "rgba(248, 113, 113, 1)",
+        aboutSectionCardBackground: "rgba(11, 13, 23, 0.95)",
+        aboutSectionCardBorder: "rgba(167, 139, 250, 0.6)",
+        aboutSectionCardShadow: "0 25px 60px rgba(167, 139, 250, 0.35)",
+        aboutSectionIconBackground: "rgba(139, 92, 246, 0.1)",
+        aboutSectionIconColor: "rgba(239, 68, 68, 1)",
+        aboutSectionDescriptionText: "rgba(213, 220, 232, 0.9)",
+
+        skillsSectionTitleColor: "rgba(239, 68, 68, 1)",
+        skillsSectionButtonActiveBackground: "rgba(239, 68, 68, 1)",
+        skillsSectionButtonActiveText: "rgba(255, 255, 255, 1)",
+        skillsSectionButtonInactiveText: "rgba(213, 220, 232, 0.8)",
+        skillsSectionCardBackground: "rgba(11, 13, 23, 0.95)",
+        skillsSectionCardBorder: "rgba(167, 139, 250, 0.6)",
+        skillsSectionCardShadow: "0 25px 60px rgba(167, 139, 250, 0.35)",
+        skillsSectionProgressBarBg: "rgba(167, 139, 250, 0.33)",
+        skillsSectionProgressBarFill: "rgba(248, 113, 113, 1)",
+        skillsSectionLevelText: "rgba(213, 220, 232, 0.85)",
     }
 };
 

@@ -32,11 +32,11 @@ export function ProjectsShowcase() {
       <div className="container mx-auto max-w-6xl px-4">
         <h2
           className="mb-4 text-center text-3xl font-bold md:text-4xl"
-          style={{ color: colors.boomforceProjectTitleColor }}
+          style={{ color: colors.projectsSectionTitleColor }}
         >
-          Featured <span style={{ color: colors.boomforceFeatureTitleColor }}>Projects</span>
+          Featured <span style={{ color: colors.projectsSectionAccentText }}>Projects</span>
         </h2>
-        <p className="mx-auto mb-12 max-w-2xl text-center" style={{ color: colors.boomforceProjectDescriptionText }}>
+        <p className="mx-auto mb-12 max-w-2xl text-center" style={{ color: colors.projectsSectionSubtitleColor }}>
           Here are some of my recent projects that combine design, performance, and clean code.
         </p>
 
@@ -46,8 +46,8 @@ export function ProjectsShowcase() {
               key={project.id}
               className="card-hover overflow-hidden rounded-lg shadow-sm"
               style={{
-                backgroundColor: colors.boomforceScreenshotsBackground,
-                borderColor: colors.boomforceMainImageBorder,
+                backgroundColor: colors.projectsSectionCardBackground,
+                borderColor: colors.projectsSectionCardBorder,
                 boxShadow: colors.projectsSectionCardShadow,
                 borderWidth: "1px",
                 borderStyle: "solid",
@@ -71,13 +71,13 @@ export function ProjectsShowcase() {
                   <h3
                     className="mb-1 text-xl font-semibold transition-colors"
                     style={{
-                      color: colors.boomforceFeatureTitleColor,
+                      color: colors.projectsSectionTitleColor,
                     }}
                   >
                     {project.title}
                   </h3>
                 </Link>
-                <p className="mb-4 text-sm" style={{ color: colors.boomforceProjectDescriptionText }}>
+                <p className="mb-4 text-sm" style={{ color: colors.projectsSectionSubtitleColor }}>
                   {project.description}
                 </p>
 
@@ -87,9 +87,9 @@ export function ProjectsShowcase() {
                       key={tag}
                       className="rounded-full border px-2 py-1 text-sm font-medium"
                       style={{
-                        borderColor: colors.boomforceTagBorder,
-                        color: colors.boomforceTagText,
-                        backgroundColor: colors.boomforceTagBackground,
+                        borderColor: colors.projectsSectionTagBorder,
+                        color: colors.projectsSectionTagText,
+                        backgroundColor: colors.projectsSectionTagBackground,
                       }}
                     >
                       {tag}
@@ -101,10 +101,10 @@ export function ProjectsShowcase() {
                   <Link
                     href={`/projects/${project.id}`}
                     className="inline-flex items-center gap-1 text-sm font-semibold transition-colors"
-                    style={{ color: colors.boomforceFeatureTitleColor }}
+                    style={{ color: colors.projectsSectionLinkColor }}
                   >
                     View more Details
-                    <ArrowRight className="h-4 w-4" style={{ color: colors.boomforceFeatureTitleColor }} />
+                    <ArrowRight className="h-4 w-4" style={{ color: colors.projectsSectionLinkColor }} />
                   </Link>
                 </div>
 
@@ -115,7 +115,7 @@ export function ProjectsShowcase() {
                       target="_blank"
                       rel="noreferrer"
                       className="text-foreground/80 transition-colors duration-300"
-                      style={{ color: colors.boomforceStatsIconColor }}
+                      style={{ color: colors.projectsSectionIconColor }}
                       aria-label="Live demo"
                     >
                       <ExternalLink size={25} />
@@ -127,7 +127,7 @@ export function ProjectsShowcase() {
                       target="_blank"
                       rel="noreferrer"
                       className="text-foreground/80 transition-colors duration-300"
-                      style={{ color: colors.boomforceStatsIconColor }}
+                      style={{ color: colors.projectsSectionIconColor }}
                       aria-label="Download demo"
                     >
                       <Download size={25} />
@@ -139,7 +139,7 @@ export function ProjectsShowcase() {
                       target="_blank"
                       rel="noreferrer"
                       className="text-foreground/80 transition-colors duration-300"
-                      style={{ color: colors.boomforceStatsIconColor }}
+                      style={{ color: colors.projectsSectionIconColor }}
                       aria-label="View source on GitHub"
                     >
                       <svg
