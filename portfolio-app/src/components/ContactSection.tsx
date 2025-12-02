@@ -42,9 +42,9 @@ export function ContactSection() {
       <div className="container mx-auto max-w-5xl">
         <h2
           className="mb-4 text-center text-3xl font-bold md:text-4xl"
-          style={{ color: colors.boomforceProjectTitleColor }}
+          style={{ color: colors.contactSectionTitleColor }}
         >
-          Get In <span style={{ color: colors.boomforceFeatureTitleColor }}>Touch</span>
+          Get In <span style={{ color: colors.contactSectionAccentColor }}>Touch</span>
         </h2>
 
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
@@ -78,9 +78,9 @@ export function ContactSection() {
           <div
             className="rounded-lg p-8 shadow-sm"
             style={{
-              backgroundColor: colors.projectsSectionCardBackground,
-              borderColor: colors.projectsSectionCardBorder,
-              boxShadow: colors.projectsSectionCardShadow,
+              backgroundColor: colors.contactSectionCardBackground,
+              borderColor: colors.contactSectionCardBorder,
+              boxShadow: colors.contactSectionCardShadow,
             }}
           >
             <h3 className="mb-6 text-2xl font-semibold">Send a Message</h3>
@@ -134,8 +134,8 @@ function ContactRow({ icon, title, value, href, colors }: ContactRowProps) {
       <div
         className="rounded-full p-3"
         style={{
-          backgroundColor: colors.boomforceTagBackground,
-          color: colors.boomforceProjectTitleColor,
+          backgroundColor: colors.contactSectionIconBackground,
+          color: colors.contactSectionIconColor,
         }}
       >
         {icon}
@@ -145,7 +145,7 @@ function ContactRow({ icon, title, value, href, colors }: ContactRowProps) {
         <Wrapper
           {...(href ? { href, target: href.startsWith("http") ? "_blank" : undefined } : {})}
           className="transition-colors duration-300"
-          style={{ color: colors.boomforceProjectTitleColor }}
+          style={{ color: colors.contactSectionTitleColor }}
         >
           {value}
         </Wrapper>

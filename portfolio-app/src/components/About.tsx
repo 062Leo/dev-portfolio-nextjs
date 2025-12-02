@@ -25,18 +25,18 @@ export function About() {
       <div className="container mx-auto max-w-5xl">
         <h2
           className="mb-12 text-center text-3xl font-bold md:text-4xl"
-          style={{ color: colors.boomforceProjectTitleColor }}
+          style={{ color: colors.aboutSectionTitleColor }}
         >
-          About <span style={{ color: colors.boomforceFeatureTitleColor }}>Me</span>
+          About <span style={{ color: colors.aboutSectionAccentColor }}>Me</span>
         </h2>
 
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
           <div
             className="space-y-6 rounded-xl p-6 text-center shadow-sm backdrop-blur md:text-left"
             style={{
-              backgroundColor: colors.projectsSectionCardBackground,
-              borderColor: colors.projectsSectionCardBorder,
-              boxShadow: colors.projectsSectionCardShadow,
+              backgroundColor: colors.aboutSectionCardBackground,
+              borderColor: colors.aboutSectionCardBorder,
+              boxShadow: colors.aboutSectionCardShadow,
             }}
           >
             <h3 className="text-2xl font-semibold">Aspiring Developer</h3>
@@ -55,9 +55,9 @@ export function About() {
                 href="#"
                 className="rounded-full border-3 border-primary px-6 py-2 font-bold outline outline-2 transition-colors duration-300"
                 style={{
-                  borderColor: colors.boomforceTagBorder,
-                  color: colors.boomforceProjectTitleColor,
-                  outlineColor: colors.boomforceMainImageBorder,
+                  borderColor: colors.aboutSectionCardBorder,
+                  color: colors.aboutSectionTitleColor,
+                  outlineColor: colors.aboutSectionIconBackground,
                   backgroundColor: "transparent",
                 }}
               >
@@ -110,26 +110,26 @@ function InfoCard({ icon, title, description, colors }: InfoCardProps) {
     <div
       className="gradient-border card-hover p-6 text-left"
       style={{
-        backgroundColor: colors.projectsSectionCardBackground,
-        borderColor: colors.projectsSectionCardBorder,
-        boxShadow: colors.projectsSectionCardShadow,
+        backgroundColor: colors.aboutSectionCardBackground,
+        borderColor: colors.aboutSectionCardBorder,
+        boxShadow: colors.aboutSectionCardShadow,
       }}
     >
       <div className="flex items-start gap-4">
         <div
           className="rounded-full p-3"
           style={{
-            backgroundColor: colors.boomforceTagBackground,
-            color: colors.boomforceProjectTitleColor,
+            backgroundColor: colors.aboutSectionIconBackground,
+            color: colors.aboutSectionIconColor,
           }}
         >
           {icon}
         </div>
         <div>
-          <h4 className="text-lg font-semibold" style={{ color: colors.boomforceFeatureTitleColor }}>
+          <h4 className="text-lg font-semibold" style={{ color: colors.aboutSectionTitleColor }}>
             {title}
           </h4>
-          <p style={{ color: colors.projectsSectionSubtitleColor }}>{description}</p>
+          <p style={{ color: colors.aboutSectionDescriptionText }}>{description}</p>
         </div>
       </div>
     </div>

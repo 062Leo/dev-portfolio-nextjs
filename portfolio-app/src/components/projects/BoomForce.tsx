@@ -13,10 +13,8 @@ import { useThemeColors } from "@/components/colors";
 export function DetailPage() {
     const params = useParams();
     const id = params.id as string;
-    const project = portfolioData.projects.find((p) => p.id === id);
     const [isDarkMode, setIsDarkMode] = useState(true);
     const [isReady, setIsReady] = useState(false);
-    const colors = useThemeColors(isDarkMode);
 
     useEffect(() => {
         const storedTheme = window.localStorage.getItem("theme");
@@ -24,6 +22,9 @@ export function DetailPage() {
         setIsDarkMode(isDark);
         setIsReady(true);
     }, []);
+
+    const project = portfolioData.projects.find((p) => p.id === id);
+    const colors = useThemeColors(isDarkMode);
 
     // Early return if project is not found
     if (!project) {

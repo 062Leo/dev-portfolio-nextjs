@@ -53,9 +53,9 @@ export function SkillsSection() {
       <div className="container mx-auto max-w-5xl">
         <h2
           className="mb-12 text-center text-3xl font-bold md:text-4xl"
-          style={{ color: colors.boomforceProjectTitleColor }}
+          style={{ color: colors.skillsSectionTitleColor }}
         >
-          My <span style={{ color: colors.boomforceFeatureTitleColor }}>Skills</span>
+          My <span style={{ color: colors.skillsSectionButtonActiveBackground }}>Skills</span>
         </h2>
 
         <div className="mb-12 flex flex-wrap justify-center gap-4">
@@ -70,12 +70,12 @@ export function SkillsSection() {
                 style={
                   isActive
                     ? {
-                        backgroundColor: colors.boomforceProjectTitleColor,
-                        color: colors.boomforceDemoBtnTextColor,
-                        boxShadow: `0 0 20px ${colors.boomforceProjectTitleColor}`,
+                        backgroundColor: colors.skillsSectionButtonActiveBackground,
+                        color: colors.skillsSectionButtonActiveText,
+                        boxShadow: `0 0 20px ${colors.skillsSectionButtonActiveBackground}`,
                       }
                     : {
-                        color: colors.boomforceProjectDescriptionText,
+                        color: colors.skillsSectionButtonInactiveText,
                       }
                 }
               >
@@ -91,32 +91,32 @@ export function SkillsSection() {
               key={skill.name}
               className="card-hover rounded-lg p-6 shadow-sm"
               style={{
-                backgroundColor: colors.boomforceScreenshotsBackground,
-                borderColor: colors.boomforceMainImageBorder,
-                boxShadow: colors.boomforceProjectTitleGlow,
+                backgroundColor: colors.skillsSectionCardBackground,
+                borderColor: colors.skillsSectionCardBorder,
+                boxShadow: colors.skillsSectionCardShadow,
               }}
             >
               <div className="mb-4 text-left">
-                <h3 className="text-lg font-semibold" style={{ color: colors.boomforceFeatureTitleColor }}>
+                <h3 className="text-lg font-semibold" style={{ color: colors.skillsSectionTitleColor }}>
                   {skill.name}
                 </h3>
               </div>
 
               <div
                 className="h-2 w-full overflow-hidden rounded-full"
-                style={{ backgroundColor: colors.boomforceTechStackBgColor }}
+                style={{ backgroundColor: colors.skillsSectionProgressBarBg }}
               >
                 <div
                   className="h-2 origin-left rounded-full transition-all duration-700"
                   style={{
                     width: `${skill.level}%`,
-                    backgroundColor: colors.boomforceFeatureTitleColor,
+                    backgroundColor: colors.skillsSectionProgressBarFill,
                   }}
                 />
               </div>
 
               <div className="mt-1 text-right">
-                <span className="text-sm" style={{ color: colors.boomforceProjectDescriptionText }}>
+                <span className="text-sm" style={{ color: colors.skillsSectionLevelText }}>
                   {skill.level}%
                 </span>
               </div>
