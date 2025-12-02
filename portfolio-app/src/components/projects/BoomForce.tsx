@@ -30,7 +30,7 @@ export function DetailPage() {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
                 <h1 className="text-4xl font-bold">Project not found</h1>
-                <Link href="/" className="mt-4 text-primary hover:underline">
+                <Link href="/" className="mt-4 hover:underline" style={{ color: colors.boomforceBackLinkText }}>
                     Back to Home
                 </Link>
             </div>
@@ -66,7 +66,10 @@ export function DetailPage() {
                 <div className="mb-8">
                     <Link
                         href="/projects"
-                        className="mb-8 inline-flex items-center gap-2 text-foreground/70 transition-colors hover:text-primary"
+                        className="mb-8 inline-flex items-center gap-2 transition-colors"
+                        style={{ color: colors.boomforceBackLinkText }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = colors.boomforceBackLinkHover}
+                        onMouseLeave={(e) => e.currentTarget.style.color = colors.boomforceBackLinkText}
                     >
                         <ArrowLeft size={20} />
                         Back to Projects
@@ -74,16 +77,17 @@ export function DetailPage() {
                 </div>
 
                 <div className="flex justify-center">
-                    <div className="w-full max-w-3xl space-y-8">
+                    <div className="w-full max-w-4xl space-y-8">
                         <div>
-                            <h1 className="mb-4 text-4xl font-bold font-rubik md:text-5xl text-primary uppercase">
+                            <h1 className="mb-4 text-4xl font-bold font-rubik md:text-5xl uppercase" style={{ color: colors.boomforceProjectTitleColor, textShadow: colors.boomforceProjectTitleGlow }}>
                                 {project.title}
                             </h1>
                             <div className="flex flex-wrap gap-2">
                                 {project.tags.map((tag) => (
                                     <span
                                         key={tag}
-                                        className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm font-medium text-primary"
+                                        className="rounded-full px-3 py-1 text-sm font-medium"
+                                        style={{ borderColor: colors.boomforceTagBorder, border: `1px solid ${colors.boomforceTagBorder}`, backgroundColor: colors.boomforceTagBackground, color: colors.boomforceTagText }}
                                     >
                                         {tag}
                                     </span>
@@ -92,7 +96,7 @@ export function DetailPage() {
                         </div>
 
                         {/* Main Image */}
-                        <div className="aspect-video w-full rounded-xl overflow-hidden border-2" style={{ borderColor: colors.boomforceMainImageBorder, backgroundColor: colors.boomforceMainImageBackground }}>
+                        <div className="aspect-video w-full max-w-4xl rounded-xl overflow-hidden border-2" style={{ borderColor: colors.boomforceMainImageBorder, backgroundColor: colors.boomforceMainImageBackground }}>
                             {/* Use project.image if available, otherwise a placeholder or the first image from images array */}
                             <img
                                 src={project.image || (project.images && project.images[0]?.url) || "/api/placeholder/800/450"}

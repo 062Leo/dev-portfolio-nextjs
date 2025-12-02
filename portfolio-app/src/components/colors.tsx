@@ -23,6 +23,13 @@ export type ThemeColorSet = {
     oldSliderDotActive: string;
     oldSliderDotInactive: string;
     // BoomForce Component Colors
+    boomforceBackLinkText: string;
+    boomforceBackLinkHover: string;
+    boomforceProjectTitleColor: string;
+    boomforceProjectTitleGlow: string;
+    boomforceTagBorder: string;
+    boomforceTagBackground: string;
+    boomforceTagText: string;
     boomforceMainImageBorder: string;
     boomforceMainImageBackground: string;
     boomforceProjectDescriptionText: string;
@@ -95,6 +102,13 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         oldSliderDotActive: "rgba(255, 255, 255, 1)",
         oldSliderDotInactive: "rgba(255, 255, 255, 0.5)",
         // BoomForce Component Colors
+        boomforceBackLinkText: "rgba(139, 92, 246, 1)",
+        boomforceBackLinkHover: "rgba(139, 92, 246, 1)",
+        boomforceProjectTitleColor: "rgba(139, 92, 246, 1)",
+        boomforceProjectTitleGlow: "0 0 20px rgba(139, 92, 246, 0.6), 0 0 40px rgba(139, 92, 246, 0.3)",
+        boomforceTagBorder: "rgba(139, 92, 246, 0.3)",
+        boomforceTagBackground: "rgba(139, 92, 246, 0.1)",
+        boomforceTagText: "rgba(139, 92, 246, 1)",
         boomforceMainImageBorder: "rgba(220, 38, 38, 1)",
         boomforceMainImageBackground: "rgba(0, 0, 0, 1)",
         boomforceProjectDescriptionText: "rgba(209, 213, 219, 1)",
@@ -165,16 +179,23 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         oldSliderDotActive: "rgba(255, 255, 255, 1)",
         oldSliderDotInactive: "rgba(255, 255, 255, 0.5)",
         // BoomForce Component Colors
+        boomforceBackLinkText: "rgba(167, 139, 250, 1)",
+        boomforceBackLinkHover: "rgba(167, 139, 250, 1)",
+        boomforceProjectTitleColor: "rgba(239, 68, 68, 1)",
+        boomforceProjectTitleGlow: "0 0 15px rgba(180, 162, 234, 0.3), 0 0 25px rgba(104, 80, 172, 0.3)",
+        boomforceTagBorder: "rgba(167, 139, 250, 0.3)",
+        boomforceTagBackground: "rgba(167, 139, 250, 0.1)",
+        boomforceTagText: "rgba(167, 139, 250, 1)",
         boomforceMainImageBorder: "rgba(167, 139, 250, 1)",
         boomforceMainImageBackground: "rgba(11, 13, 23, 1)",
         boomforceProjectDescriptionText: "rgba(213, 220, 232, 1)",
-        boomforceFeatureTitleColor: "rgba(167, 139, 250, 1)",
+        boomforceFeatureTitleColor: "rgba(248, 113, 113, 1)",
         boomforceFeatureListText: "rgba(213, 220, 232, 1)",
         boomforceFeatureCheckmarkColor: "rgba(74, 222, 128, 1)",
-        boomforceTechStackTitleColor: "rgba(167, 139, 250, 1)",
-        boomforceTechStackBgColor: "rgba(239, 68, 68, 0.15)",
-        boomforceTechStackTextColor: "rgba(167, 139, 250, 1)",
-        boomforceStatsTitleColor: "rgba(167, 139, 250, 1)",
+        boomforceTechStackTitleColor: "rgba(248, 113, 113, 1)",
+        boomforceTechStackBgColor: "rgba(167, 139, 250, 0.33)",
+        boomforceTechStackTextColor: "rgba(213, 220, 232, 1)",
+        boomforceStatsTitleColor: "rgba(248, 113, 113, 1)",
         boomforceStatsTextColor: "rgba(213, 220, 232, 1)",
         boomforceStatsIconColor: "rgba(250, 204, 21, 1)",
         boomforceDemoBtnGradientStart: "rgba(239, 68, 68, 1)",
@@ -184,8 +205,8 @@ export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
         boomforceViewCodeBtnBorder: "rgba(167, 139, 250, 1)",
         boomforceViewCodeBtnText: "rgba(167, 139, 250, 1)",
         boomforceViewCodeBtnShadow: "rgba(167, 139, 250, 0.3)",
-        boomforceScreenshotsTitleColor: "rgba(167, 139, 250, 1)",
-        boomforceScreenshotsBorder: "rgba(239, 68, 68, 1)",
+        boomforceScreenshotsTitleColor: "rgba(248, 113, 113, 1)",
+        boomforceScreenshotsBorder: "rgba(167, 139, 250, 1)",
         boomforceScreenshotsBackground: "rgba(11, 13, 23, 1)",
     }
 };
