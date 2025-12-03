@@ -228,7 +228,7 @@ const darkColors: ThemeColorSet = {
     projectsSectionTagText: "rgba(167, 139, 250, 1)",
     projectsSectionLinkColor: "rgba(239, 68, 68, 1)",
     projectsSectionLinkHover: "rgba(239, 68, 68, 0.8)",
-    projectsSectionIconColor: "rgba(250, 204, 21, 1)",
+    projectsSectionIconColor: "rgba(78, 167, 197, 1)",
     projectsSectionDivider: "rgba(167, 139, 250, 0.3)",
 
     navbarTitleColor: "rgba(213, 220, 232, 1)",

@@ -181,18 +181,51 @@ export function DetailPage() {
                             )}
                         </div>
 
-                        {/* Screenshots Section */}
+                        {/* Details Section */}
                         {project.images && project.images.length > 0 && (
                             <div className="pt-8">
-                                <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.boomforceScreenshotsTitleColor }}>SCREENSHOTS</h3>
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <h3 className="mb-8 text-2xl font-semibold font-press-start text-center" style={{ color: colors.boomforceScreenshotsTitleColor }}>DETAILS</h3>
+                                <div className="space-y-12">
                                     {project.images.map((img, index) => (
-                                        <div key={index} className="aspect-video rounded-lg overflow-hidden transition-all cursor-pointer" style={{ border: `1px solid ${colors.boomforceScreenshotsBorder}`, backgroundColor: colors.boomforceScreenshotsBackground }}>
-                                            <img
-                                                src={img.url}
-                                                alt={img.caption || `Screenshot ${index + 1}`}
-                                                className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                                            />
+                                        <div 
+                                            key={index} 
+                                            className={`relative flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8 group`}
+                                        >
+                                            {/* Connecting line */}
+                                            <div className="hidden md:block absolute top-1/2 left-1/2 w-12 h-0.5 -translate-x-1/2 -translate-y-1/2 z-0" style={{ backgroundColor: colors.boomforceScreenshotsBorder }}></div>
+                                            
+                                            {/* Image container */}
+                                            <div className="w-full md:w-1/2 p-2 relative z-10">
+                                                <div className="aspect-video rounded-lg overflow-hidden h-full transition-all duration-300 group-hover:shadow-lg" 
+                                                    style={{ 
+                                                        border: `1px solid ${colors.boomforceScreenshotsBorder}`, 
+                                                        backgroundColor: colors.boomforceScreenshotsBackground 
+                                                    }}>
+                                                    <img
+                                                        src={img.url}
+                                                        alt={img.caption || `Detail ${index + 1}`}
+                                                        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                                                    />
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Text container */}
+                                            <div className="w-full md:w-1/2 p-2 flex items-center relative z-10">
+                                                {img.caption && (
+                                                    <div className="w-full p-6 rounded-lg h-full flex items-center transition-all duration-300 group-hover:shadow-lg" 
+                                                        style={{ 
+                                                            backgroundColor: colors.boomforceScreenshotsBackground, 
+                                                            border: `1px solid ${colors.boomforceScreenshotsBorder}`, 
+                                                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' 
+                                                        }}>
+                                                        <div className="w-full">
+                                                            <p className="text-sm md:text-base" style={{ color: colors.boomforceProjectDescriptionText }}>
+                                                                {img.caption}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
