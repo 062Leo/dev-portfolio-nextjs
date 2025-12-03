@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useThemeColors } from '@/components/colors';
 
 export function LanguageToggle() {
   const [language, setLanguage] = useState<'de' | 'en'>('de');
   const [isReady, setIsReady] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
+  const colors = useThemeColors(true);
 
   useEffect(() => {
     // Hier könntest du später die gespeicherte Sprache aus dem localStorage laden
@@ -63,7 +65,7 @@ export function LanguageToggle() {
           style={{
             width: '1.8rem',
             height: '1.8rem',
-            backgroundColor: isDarkTheme ? '#ffffff' : '#000000ff'
+            backgroundColor: colors.languageToggleBgColor
           }}
         />
         {/* Flagge */}
