@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { portfolioData } from "@/data/portfolio-data";
-import { ArrowLeft, ExternalLink, Github, Play, CheckCircle, Clock, Star, Code } from "lucide-react";
+import { ArrowLeft, Github, Play, CheckCircle, Clock, Star, Code } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { NetworkBackground } from "@/components/NetworkBackground";
@@ -51,15 +51,12 @@ export function DetailPage() {
     };
 
     return (
-        <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground font-sans">
+        <>
             <style jsx global>{`
                 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik+Mono+One&display=swap');
                 .font-rubik { font-family: 'Rubik Mono One', sans-serif; }
                 .font-press-start { font-family: 'Press Start 2P', cursive; }
             `}</style>
-
-            <NetworkBackground />
-            <Navbar />
 
             <main className="relative z-10 container mx-auto max-w-5xl px-4 py-24">
                 <div className="mb-8">
@@ -204,6 +201,6 @@ export function DetailPage() {
                     </div>
                 </div>
             </main>
-        </div>
+        </>
     );
 }
