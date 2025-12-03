@@ -151,6 +151,10 @@ export const portfolioData = {
         { url: "/projects/BoomForce3_4.png", caption: "" },
         { url: "/projects/BoomForce3_2.png", caption: "Gameplay mit zerstörbarer Umgebung" }
       ],
+      videos: [
+        { url: "/Videos/BoomForce/KettenReaktionen.mp4", caption: "Hier sieht man eine Beispielhafte Kettenreaktion in einem möglichen Level" },
+        { url: "/Videos/BoomForce/SteineShowcase.mp4", caption: "Hier sieht man das Verhalten der fallenden Steine" }
+      ],
       tags: ["Unity 2D", "Physics", "Destructible Environment"],
       features: [
         "Tilemap & Grid-System",
