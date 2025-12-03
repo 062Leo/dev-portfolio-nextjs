@@ -7,9 +7,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight, Download, ExternalLink, Github } 
 import Link from "next/link";
 import Image from "next/image";
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { NetworkBackground } from "@/components/NetworkBackground";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { useThemeColors } from "@/components/colors";
 
 type ProjectImage = {
@@ -82,7 +80,6 @@ export function DetailPage() {
 
     return (
         <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
-            <ThemeToggle />
             <NetworkBackground />
             <Navbar />
 

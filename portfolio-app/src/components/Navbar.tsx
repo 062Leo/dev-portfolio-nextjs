@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Moon, Sun } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
-import { useThemeColors } from "@/components/colors";
+import { useThemeColors, applyThemeColors } from "@/components/colors";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -19,6 +20,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [language, setLanguage] = useState<'de' | 'en'>('de');
   const colors = useThemeColors(isDarkMode);
 
   useEffect(() => {
@@ -52,7 +54,20 @@ export function Navbar() {
     if (storedTheme) {
       setIsDarkMode(storedTheme === "dark");
     }
+    applyThemeColors(storedTheme === "dark" || !storedTheme);
   }, []);
+
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => !prev);
+    const newTheme = !isDarkMode ? "dark" : "light";
+    document.documentElement.classList.toggle("dark");
+    window.localStorage.setItem("theme", newTheme);
+    applyThemeColors(!isDarkMode);
+  };
+
+  const toggleLanguage = () => {
+    setLanguage((prev) => (prev === 'de' ? 'en' : 'de'));
+  };
 
   return (
     <nav
@@ -80,7 +95,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden space-x-8 md:flex">
+        <div className="hidden space-x-8 md:flex flex-1 ml-170">
           {navItems.map((item) => (
             <Link
               key={item.name}
@@ -94,6 +109,49 @@ export function Navbar() {
             </Link>
           ))}
         </div>
+
+        <div className="hidden md:flex items-center gap-4 ml-auto">
+          {/* Language Toggle Button */}
+          <button
+            onClick={toggleLanguage}
+            className="z-50 focus:outline-none"
+            aria-label="Toggle language"
+          >
+            <div className="relative">
+              <div 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300"
+                style={{
+                  width: '1.8rem',
+                  height: '1.8rem',
+                  backgroundColor: colors.languageToggleBgColor
+                }}
+              />
+              <div className="relative h-6 w-6 overflow-hidden rounded-full z-10">
+                <Image
+                  src={language === 'de' ? "/unity-demo/Icons/de_flag.png" : "/unity-demo/Icons/en_flag.png"}
+                  alt={language === 'de' ? "Deutsch" : "English"}
+                  fill
+                  className="transition-opacity duration-300 object-cover"
+                  priority
+                />
+              </div>
+            </div>
+          </button>
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="z-50 rounded-full transition-colors duration-300 focus:outline-none"
+            aria-label="Toggle theme"
+          >
+            {isDarkMode ? (
+              <Sun className="h-6 w-6" style={{ color: colors.navbarLinkText }} />
+            ) : (
+              <Moon className="h-6 w-6" style={{ color: colors.navbarLinkText }} />
+            )}
+          </button>
+        </div>
+
+       
 
         <button
           onClick={() => setIsMenuOpen((prev) => !prev)}

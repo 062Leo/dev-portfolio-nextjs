@@ -1,7 +1,6 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { NetworkBackground } from "@/components/NetworkBackground";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { portfolioData } from "@/data/portfolio-data";
 import { DetailPage as BoomForceDetailPage } from "@/components/projects/BoomForce";
 import { DetailPage as OldDetailPage } from "@/components/projects/Old";
@@ -29,7 +28,6 @@ export default async function ProjectsPage({ params }: { params: Promise<{ id: s
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
-      <ThemeToggle />
       <NetworkBackground />
       <Navbar />
 

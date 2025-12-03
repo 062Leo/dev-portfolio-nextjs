@@ -7,7 +7,6 @@ import { ArrowLeft, ExternalLink, Github, Play, CheckCircle, Clock, Star, Code }
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { NetworkBackground } from "@/components/NetworkBackground";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { useThemeColors } from "@/components/colors";
 
 export function DetailPage() {
@@ -59,7 +58,6 @@ export function DetailPage() {
                 .font-press-start { font-family: 'Press Start 2P', cursive; }
             `}</style>
 
-            <ThemeToggle />
             <NetworkBackground />
             <Navbar />
 
