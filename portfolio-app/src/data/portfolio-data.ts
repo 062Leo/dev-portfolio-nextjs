@@ -145,15 +145,15 @@ export const portfolioData = {
       title: "Broforce 2D Nachbau",
       description: "Unity 2D Projekt mit zerstörbarer Umgebung und Physik. Note 1.0.",
       longDescription: "Ein Nachbau des Spiels Broforce in Unity 2D. Das Projekt erhielt die Note 1.0 und zeichnet sich durch eine dynamische, zerstörbare Umgebung, Physik-Effekte und ein ausgefeiltes State Management aus.",
-      image: "/projects/BoomForce.png",
+      image: "/Bilder/BoomForce/BoomForce.png",
       detailComponent: "BoomForce",
       images: [
-        { url: "/projects/BoomForce3_4.png", caption: "" },
-        { url: "/projects/BoomForce3_2.png", caption: "Gameplay mit zerstörbarer Umgebung" }
+        { url: "/Bilder/BoomForce/BoomForce3_4.png", caption: "" },
+        { url: "/Bilder/BoomForce/BoomForce3_2.png", caption: "Gameplay mit zerstörbarer Umgebung" }
       ],
       videos: [
         { url: "/Videos/BoomForce/KettenReaktionen.mp4", caption: "Hier sieht man eine Beispielhafte Kettenreaktion in einem möglichen Level" },
-        { url: "/Videos/BoomForce/SteineShowcase.mp4", caption: "Hier sieht man das Verhalten der fallenden Steine" }
+        { url: "/Videos/BoomForce/Steine.mp4", caption: "Hier sieht man das Verhalten der fallenden Steine" }
       ],
       tags: ["Unity 2D", "Physics", "Destructible Environment"],
       features: [
