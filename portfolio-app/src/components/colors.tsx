@@ -94,6 +94,10 @@ export type ThemeColorSet = {
     contactSectionCardBackground: string;
     contactSectionCardBorder: string;
     contactSectionCardShadow: string;
+    contactSectionSubmitBtnGradientStart: string;
+    contactSectionSubmitBtnGradientEnd: string;
+    contactSectionSubmitBtnText: string;
+    contactSectionSubmitBtnGlow: string;
 
     // About Section Colors
     aboutSectionTitleColor: string;
@@ -104,6 +108,10 @@ export type ThemeColorSet = {
     aboutSectionIconBackground: string;
     aboutSectionIconColor: string;
     aboutSectionDescriptionText: string;
+    aboutMe_GetInTouchButton_G_Start: string;
+    aboutMe_GetInTouchButton_G_End: string;
+    aboutMe_GetInTouchButton_Text: string;
+    aboutMe_GetInTouchButton_Glow: string;
 
     // Skills Section Colors
     skillsSectionTitleColor: string;
@@ -238,8 +246,12 @@ const darkColors: ThemeColorSet = {
     contactSectionCardBackground: "rgba(11, 13, 23, 0.95)",
     contactSectionCardBorder: "rgba(167, 139, 250, 0.6)",
     contactSectionCardShadow: "0 25px 60px rgba(167, 139, 250, 0.35)",
+    contactSectionSubmitBtnGradientStart: "rgba(105, 30, 155, 1)",
+    contactSectionSubmitBtnGradientEnd: "rgba(167, 139, 250, 0.7)",
+    contactSectionSubmitBtnText: "rgba(213, 220, 232, 1)",
+    contactSectionSubmitBtnGlow: "0 0 20px rgba(167, 139, 250, 0.5)",
 
-    aboutSectionTitleColor: "rgba(239, 68, 68, 1)",
+    aboutSectionTitleColor: "rgba(239, 68, 68, 0.9)",
     aboutSectionAccentColor: "rgba(248, 113, 113, 1)",
     aboutSectionCardBackground: "rgba(11, 13, 23, 0.95)",
     aboutSectionCardBorder: "rgba(167, 139, 250, 0.6)",
@@ -247,6 +259,10 @@ const darkColors: ThemeColorSet = {
     aboutSectionIconBackground: "rgba(139, 92, 246, 0.1)",
     aboutSectionIconColor: "rgba(239, 68, 68, 1)",
     aboutSectionDescriptionText: "rgba(213, 220, 232, 0.9)",
+    aboutMe_GetInTouchButton_G_Start: "rgba(105, 30, 155, 1)",
+    aboutMe_GetInTouchButton_G_End: "rgba(167, 139, 250, 0.7)",
+    aboutMe_GetInTouchButton_Text: "rgba(213, 220, 232, 1)",
+    aboutMe_GetInTouchButton_Glow: "0 0 20px rgba(167, 139, 250, 0.5)",
 
     skillsSectionTitleColor: "rgba(239, 68, 68, 1)",
     skillsSectionButtonActiveBackground: "rgba(239, 68, 68, 1)",

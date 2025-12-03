@@ -47,10 +47,23 @@ export function About() {
               </p>
             ))}
 
+
+
+
+
             <div className="flex flex-col justify-center gap-4 pt-4 sm:flex-row">
-              <a href="#contact" className="cosmic-button">
-                Get In Touch
-              </a>
+              <a
+              href="#contact"
+              className="cosmic-button inline-flex items-center justify-center rounded-full px-8 py-3 text-sm font-semibold uppercase tracking-wide"
+              style={{
+                backgroundImage: `linear-gradient(135deg, ${colors.aboutMe_GetInTouchButton_G_Start}, ${colors.aboutMe_GetInTouchButton_G_End})`,
+                color: colors.aboutMe_GetInTouchButton_Text,
+                boxShadow: colors.aboutMe_GetInTouchButton_Glow,
+              }}
+            >
+              Get In Touch
+            </a>
+
               <a
                 href="#"
                 className="rounded-full border-3 border-primary px-6 py-2 font-bold outline outline-2 transition-colors duration-300"

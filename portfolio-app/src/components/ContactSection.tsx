@@ -41,7 +41,7 @@ export function ContactSection() {
     <section id="contact" className="relative px-4 py-24">
       <div className="container mx-auto max-w-5xl">
         <h2
-          className="mb-4 text-center text-3xl font-bold md:text-4xl"
+          className="mb-13 text-center text-3xl font-bold md:text-4xl"
           style={{ color: colors.contactSectionTitleColor }}
         >
           Get In <span style={{ color: colors.contactSectionAccentColor }}>Touch</span>
@@ -106,6 +106,11 @@ export function ContactSection() {
                 type="submit"
                 disabled={isSubmitting}
                 className="cosmic-button flex w-full items-center justify-center gap-2 disabled:opacity-70"
+                style={{
+                  backgroundImage: `linear-gradient(135deg, ${colors.contactSectionSubmitBtnGradientStart}, ${colors.contactSectionSubmitBtnGradientEnd})`,
+                  color: colors.contactSectionSubmitBtnText,
+                  boxShadow: colors.contactSectionSubmitBtnGlow,
+                }}
               >
                 {isSubmitting ? "Sending ..." : "Send Message"}
                 <Send size={16} />
