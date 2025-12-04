@@ -3,12 +3,24 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { portfolioData } from "@/data/portfolio-data";
-import { ArrowLeft, Github, Play, CheckCircle, Clock, Star, Code } from "lucide-react";
+import { ArrowLeft, Github, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { NetworkBackground } from "@/components/NetworkBackground";
 import { useThemeColors } from "@/components/colors";
 import ProjectVideos from "./components/ProjectVideos";
+
+// Icon map for dynamic stat rendering
+const iconMap = {
+  Clock,
+  Star,
+  Code,
+  Zap,
+  Users,
+  Target,
+  Award,
+  Layers
+};
 
 // Helper function to render markdown-like formatting
 const renderMarkdownText = (text: string, color: string) => {
@@ -65,14 +77,8 @@ export function DetailPage() {
         return null;
     }
 
-    // Hardcoded stats for Broforce project (as requested to match example.html)
-    // In a real app, these would come from the project data
-    const showStats = project.id === 'broforce-clone';
-    const stats = {
-        devTime: "3 months",
-        grade: "1.0 (A+)",
-        loc: "~5,000"
-    };
+    // Dynamic stats from project data
+    const showStats = project.stats && project.stats.length > 0;
 
     return (
         <>
@@ -169,18 +175,15 @@ export function DetailPage() {
                                     <>
                                         <h3 className="mt-6 mb-4 text-xl font-semibold font-press-start" style={{ color: colors.boomforceStatsTitleColor }}>STATS</h3>
                                         <div className="space-y-2" style={{ color: colors.boomforceStatsTextColor }}>
-                                            <div className="flex items-center">
-                                                <Clock className="mr-2 w-4 h-4" style={{ color: colors.boomforceStatsIconColor }} />
-                                                <span>Development Time: {stats.devTime}</span>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <Star className="mr-2 w-4 h-4" style={{ color: colors.boomforceStatsIconColor }} />
-                                                <span>Grade: {stats.grade}</span>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <Code className="mr-2 w-4 h-4" style={{ color: colors.boomforceStatsIconColor }} />
-                                                <span>Lines of Code: {stats.loc}</span>
-                                            </div>
+                                            {project.stats?.map((stat, index) => {
+                                                const IconComponent = iconMap[stat.icon as keyof typeof iconMap];
+                                                return (
+                                                    <div key={index} className="flex items-center">
+                                                        {IconComponent && <IconComponent className="mr-2 w-4 h-4" style={{ color: colors.boomforceStatsIconColor }} />}
+                                                        <span>{stat.label}: {stat.value}</span>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     </>
                                 )}

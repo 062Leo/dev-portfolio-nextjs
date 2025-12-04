@@ -4,6 +4,12 @@ export type ProjectImage = {
   caption?: string;
 };
 
+export type ProjectStat = {
+  icon: "Clock" | "Star" | "Code" | "Zap" | "Users" | "Target" | "Award" | "Layers";
+  label: string;
+  value: string;
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -20,6 +26,7 @@ export type Project = {
   features?: string[];
   techStack?: string[];
   detailComponent?: "BoomForce" | "Old";
+  stats?: ProjectStat[];
 };
 
 export const portfolioData = {
@@ -145,8 +152,8 @@ export const portfolioData = {
       id: "broforce-clone",
       title: "BoomForce",
       subtitle:"(Broforce Klon)",
-      description: "Dynamisches 2D-Spiel mit zerstörbarer Umgebung, physikbasierten Explosionen und Kettenreaktionen. Note 1.0.",
-      longDescription: "**BoomForce** entstand als Projekt für den Game Engines-Kurs meines Studiums. Ich habe den Prototyp eines physikbasiertes 2D-Side-Scrolling-Shooters entwickelt, das sich auf **zerstörbare Umgebungen** und **komplexe Kettenreaktionen** konzentriert.\n\nDas Spiel demonstriert fortgeschrittene Spielmechaniken: Ein **ausgefeiltes Explosionssystem** berechnet Schäden basierend auf Nähe und Objekttyp. Ein **robustes State-Management** verwaltet mehrere gleichzeitige Kettenreaktionen ohne Performance-Probleme.\n\nSpieler interagieren mit einer dynamischen Welt aus **zerstörbaren Blöcken**, **fallenden Steinen** und **verschiedenen Fasstypen** - jedes mit eigenen Explosionsradien und Brandeffekten. Das Projekt zeigt tiefes Verständnis für **Physik-Systeme**, **Event-Handling** und **Optimierungstechniken**.",
+      description: "2D-Side-Scrolling-Shooter mit zerstörbarer Umgebung, Kettenreaktions-Engine und physikbasiertem Explosionssystem.",
+      longDescription: "**BoomForce** entstand als Projekt für den Game Engines-Kurs meines Studiums. Ich habe den Prototyp eines physikbasiertes 2D-Side-Scrolling-Shooters entwickelt, das sich auf **zerstörbare Umgebungen** und **komplexe Kettenreaktionen** konzentriert.\n\nDas Spiel demonstriert fortgeschrittene Spielmechaniken: Ein **ausgefeiltes Explosionssystem** berechnet Schäden basierend auf Nähe und Objekttyp. Ein **robustes State-Management** verwaltet mehrere gleichzeitige Kettenreaktionen ohne Performance-Probleme.\n\nSpieler interagieren mit einer dynamischen Welt aus **zerstörbaren Blöcken**, **fallenden Steinen** und **verschiedenen Fasstypen** - jedes mit eigenen Explosionsradien und Brandeffekten. Das Projekt zeigt tiefes Verständnis für **Physik-Systeme**, **Event-Handling** und **Optimierungstechniken**.\n\n Mehr Informationen und technische Details  im **README auf GitHub**.",
       image: "/Bilder/BoomForce/BoomForce.png",
       detailComponent: "BoomForce",
       videos: [
@@ -168,7 +175,12 @@ export const portfolioData = {
       techStack: ["Unity", "C#", "Physics2D", "Tilemap System"],
       demoUrl: "/unity-demo/BroforceWebBuild/index.html",
       demoEmbedUrl: "/unity-demo/BroforceWebBuild/index.html",
-      githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone"
+      githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
+      stats: [
+        { icon: "Clock", label: "Entwicklungszeit", value: "1 Monat" },
+        { icon: "Award", label: "Note", value: "1.0" },
+        { icon: "Code", label: "Lines of Code (LOC)", value: "~5.000" }
+      ]
     },
     {
       id: "buga23-web",
