@@ -15,23 +15,31 @@ interface ProjectVideosProps {
 const renderMarkdownText = (text: string, color: string) => {
     if (!text) return null;
     
-    // Split by double newlines to create paragraphs
-    const paragraphs = text.split('\n\n');
-    
-    return paragraphs.map((paragraph, pIndex) => (
-        <p key={pIndex} className="mb-4 last:mb-0">
-            {paragraph.split(/(\*\*.*?\*\*)/g).map((part, index) => {
-                if (part.startsWith('**') && part.endsWith('**')) {
-                    return (
-                        <strong key={index} style={{ color }}>
-                            {part.slice(2, -2)}
-                        </strong>
-                    );
-                }
-                return <span key={index} style={{ color }}>{part}</span>;
-            })}
-        </p>
-    ));
+    // First split by double newlines to handle paragraphs
+    return text.split('\n\n').map((paragraph, pIndex, arr) => {
+        // Then split each paragraph by single newlines
+        const lines = paragraph.split('\n');
+        
+        return (
+            <p key={pIndex} className={pIndex < arr.length - 1 ? 'mb-4' : 'mb-0'}>
+                {lines.map((line, lineIndex) => (
+                    <React.Fragment key={lineIndex}>
+                        {lineIndex > 0 && <br />}
+                        {line.split(/(\*\*.*?\*\*)/g).map((part, partIndex) => {
+                            if (part.startsWith('**') && part.endsWith('**')) {
+                                return (
+                                    <strong key={partIndex} style={{ color }}>
+                                        {part.slice(2, -2)}
+                                    </strong>
+                                );
+                            }
+                            return <span key={partIndex} style={{ color }}>{part}</span>;
+                        })}
+                    </React.Fragment>
+                ))}
+            </p>
+        );
+    });
 };
 
 const ProjectVideos: React.FC<ProjectVideosProps> = ({ videos, colors }) => {

@@ -157,10 +157,10 @@ export const portfolioData = {
       image: "/Bilder/BoomForce/BoomForce.png",
       detailComponent: "BoomForce",
       videos: [
-        { url: "/Videos/BoomForce/KettenReaktionen.mp4", caption: "Kettenreaktion in Aktion: Mehrere Explosionen lösen sich gegenseitig aus und erzeugen eine Kaskade von Zerstörung" },
-        { url: "/Videos/BoomForce/Steine.mp4", caption: "Fallende Steine-Mechanik: Blöcke stürzen ab, wenn die Unterstützung wegfällt - zentral für das Puzzle-Design" },
-        { url: "/Videos/BoomForce/Radius2.mp4", caption: "Explosionsradius eines roten Fasses: Zeigt die präzise Schadensberechnung und Brandausbreitung" },
-        { url: "/Videos/BoomForce/radius.mp4", caption: "Komplexe Kettenreaktion: Mehrere explodierende Fässer triggern sich gegenseitig und beeinflussen die Umgebung" }
+        { url: "/Videos/BoomForce/KettenReaktionen.mp4", caption: "Kettenreaktion in Aktion:\n Mehrere Explosionen lösen sich gegenseitig aus und erzeugen eine Kaskade von Zerstörung." },
+        { url: "/Videos/BoomForce/Steine.mp4", caption: "Fallende Steine:\n\n Auslösebedingungen:\nTreffer durch Kugeln; Feuerkontakt; Kollision mit Spieler;\n\n Verhalten:\n Fällt, wenn nichts drunter ist; Fällt, wenn nur ein Nachber-Block vorhanden ist." },
+        { url: "/Videos/BoomForce/Radius2.mp4", caption: "Explosionsradius eines Fasses:\n Radius = 2 Kacheln.\n Innere Kachel: Sofortige Zerstörung. \n Äußere Kacheln: 4s Brandeffekt." },
+        { url: "/Videos/BoomForce/radius.mp4", caption: "Komplexe Kettenreaktion:\n Mehrere Fässer triggern sich gegenseitig und beeinflussen die Umliegenden Blöcke:\n\n Blöcke in Farb-Kategorien:\n Sofortige Zerstörung; Brennt und stirbt; Brennt und bleibt am leben;\n (je nach Anzahl und Radius der Fässer die den Block triggern) " }
       ],
       tags: ["Unity 2D", "Physics Engine", "Destructible Environment", "State Management", "C#"],
       features: [
@@ -179,7 +179,7 @@ export const portfolioData = {
       stats: [
         { icon: "Clock", label: "Entwicklungszeit", value: "1 Monat" },
         { icon: "Award", label: "Note", value: "1.0" },
-        { icon: "Code", label: "Lines of Code (LOC)", value: "~5.000" }
+        { icon: "Code", label: "Lines of Code", value: "~1.500" }
       ]
     },
     {
