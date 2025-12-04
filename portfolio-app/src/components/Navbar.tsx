@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Moon, Sun } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
+import { useThemeColors, applyThemeColors } from "@/components/colors";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -17,6 +19,9 @@ const navItems = [
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [language, setLanguage] = useState<'de' | 'en'>('de');
+  const colors = useThemeColors(isDarkMode);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,36 +45,119 @@ export function Navbar() {
     };
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const storedTheme = window.localStorage.getItem("theme");
+    if (storedTheme) {
+      setIsDarkMode(storedTheme === "dark");
+    }
+    applyThemeColors(storedTheme === "dark" || !storedTheme);
+  }, []);
+
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => !prev);
+    const newTheme = !isDarkMode ? "dark" : "light";
+    document.documentElement.classList.toggle("dark");
+    window.localStorage.setItem("theme", newTheme);
+    applyThemeColors(!isDarkMode);
+  };
+
+  const toggleLanguage = () => {
+    setLanguage((prev) => (prev === 'de' ? 'en' : 'de'));
+  };
+
   return (
     <nav
       className={cn(
         "fixed z-40 w-full transition-all duration-300",
         isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-sm" : "py-5",
       )}
+      style={{ backgroundColor: isScrolled ? `${colors.navbarBackground}cc` : "transparent" }}
     >
       <div className="container flex items-center justify-between">
-        <Link href="/" className="flex items-center text-xl font-bold text-primary">
+        <Link href="/" className="flex items-center text-xl font-bold">
           <span className="relative z-10">
-            <span className="text-glow text-foreground">Peter Pan</span> Portfolio
+            <span className="text-glow" style={{ color: colors.navbarTitleColor }}>
+              Leo's
+            </span>
+            <span
+              className="text-glow"
+              style={{
+                color: colors.navbarLinkHover,
+                textShadow: colors.navbarTitleGlow,
+              }}
+            >
+              {' Portfolio'}
+            </span>
           </span>
         </Link>
 
-        <div className="hidden space-x-8 md:flex">
+        <div className="hidden space-x-8 md:flex flex-1 ml-170">
           {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="text-foreground/80 transition-colors duration-300 hover:text-primary"
+              className="transition-colors duration-300"
+              style={{ color: colors.navbarLinkText }}
+              onMouseEnter={(event) => (event.currentTarget.style.color = colors.navbarLinkHover)}
+              onMouseLeave={(event) => (event.currentTarget.style.color = colors.navbarLinkText)}
             >
               {item.name}
             </Link>
           ))}
         </div>
 
+        <div className="hidden md:flex items-center gap-4 ml-auto">
+          {/* Language Toggle Button */}
+          <button
+            onClick={toggleLanguage}
+            className="z-50 focus:outline-none"
+            aria-label="Toggle language"
+          >
+            <div className="relative">
+              <div 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300"
+                style={{
+                  width: '1.8rem',
+                  height: '1.8rem',
+                  backgroundColor: colors.languageToggleBgColor
+                }}
+              />
+              <div className="relative h-6 w-6 overflow-hidden rounded-full z-10">
+                <Image
+                  src={language === 'de' ? "/unity-demo/Icons/de_flag.png" : "/unity-demo/Icons/en_flag.png"}
+                  alt={language === 'de' ? "Deutsch" : "English"}
+                  fill
+                  className="transition-opacity duration-300 object-cover"
+                  priority
+                />
+              </div>
+            </div>
+          </button>
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="z-50 rounded-full transition-colors duration-300 focus:outline-none"
+            aria-label="Toggle theme"
+          >
+            {isDarkMode ? (
+              <Sun className="h-6 w-6" style={{ color: colors.navbarLinkText }} />
+            ) : (
+              <Moon className="h-6 w-6" style={{ color: colors.navbarLinkText }} />
+            )}
+          </button>
+        </div>
+
+       
+
         <button
           onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="z-50 p-2 text-foreground md:hidden"
+          className="z-50 p-2 md:hidden"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          style={{ color: colors.navbarTitleColor }}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -79,6 +167,7 @@ export function Navbar() {
             "fixed inset-0 z-40 flex flex-col items-center justify-center bg-background/95 backdrop-blur-md transition-all duration-300 md:hidden",
             isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
           )}
+          style={{ backgroundColor: colors.navbarMenuBackdrop }}
         >
           <div className="flex flex-col space-y-8 text-xl">
             {navItems.map((item) => (
@@ -86,7 +175,10 @@ export function Navbar() {
                 key={item.name}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="text-foreground/80 transition-colors duration-300 hover:text-primary"
+                className="transition-colors duration-300"
+                style={{ color: colors.navbarMenuText }}
+                onMouseEnter={(event) => (event.currentTarget.style.color = colors.navbarLinkHover)}
+                onMouseLeave={(event) => (event.currentTarget.style.color = colors.navbarMenuText)}
               >
                 {item.name}
               </Link>

@@ -4,9 +4,16 @@ export type ProjectImage = {
   caption?: string;
 };
 
+export type ProjectStat = {
+  icon: "Clock" | "Star" | "Code" | "Zap" | "Users" | "Target" | "Award" | "Layers";
+  label: string;
+  value: string;
+};
+
 export type Project = {
   id: string;
   title: string;
+  subtitle?: string;
   description: string;
   longDescription?: string;
   image: string; // Kept for backward compatibility as the main image
@@ -19,13 +26,14 @@ export type Project = {
   features?: string[];
   techStack?: string[];
   detailComponent?: "BoomForce" | "Old";
+  stats?: ProjectStat[];
 };
 
 export const portfolioData = {
   personal: {
-    firstName: "Peter",
-    lastName: "Pan",
-    role: "Softwareentwickler (B.Sc.) – Schwerpunkt Games Engineering",
+    firstName: "Leo",
+    lastName: "",
+    role: "Softwareentwickler (B.Sc.) - Schwerpunkt Games Engineering",
     tagline: "Spezialisiert in Unity, C#, .NET",
     motivation: "Fokus auf Clean Code, Refactoring, qualitativ hochwertige Software. Leidenschaft für Game Dev & Software Engineering.",
     email: "contact@example.com", // Placeholder
@@ -86,11 +94,46 @@ export const portfolioData = {
   ],
   projects: [
     {
+      id: "broforce-clone",
+      title: "BoomForce",
+      subtitle:"(Broforce Klon)",
+      description: "2D-Side-Scrolling-Shooter mit zerstörbarer Umgebung, Kettenreaktions-Engine und physikbasiertem Explosionssystem.",
+      longDescription: "**BoomForce** entstand als Projekt für den Game Engines-Kurs meines Studiums. Ich habe den Prototyp eines physikbasiertes 2D-Side-Scrolling-Shooters entwickelt, das sich auf **zerstörbare Umgebungen** und **komplexe Kettenreaktionen** konzentriert.\n\nDas Spiel demonstriert fortgeschrittene Spielmechaniken: Ein **ausgefeiltes Explosionssystem** berechnet Schäden basierend auf Nähe und Objekttyp. Ein **robustes State-Management** verwaltet mehrere gleichzeitige Kettenreaktionen ohne Performance-Probleme.\n\nSpieler interagieren mit einer dynamischen Welt aus **zerstörbaren Blöcken**, **fallenden Steinen** und **verschiedenen Fasstypen** - jedes mit eigenen Explosionsradien und Brandeffekten. Das Projekt zeigt tiefes Verständnis für **Physik-Systeme**, **Event-Handling** und **Optimierungstechniken**.\n\n Mehr Informationen und technische Details  im **README auf GitHub**.",
+      image: "/Bilder/BoomForce/BoomForce.png",
+      detailComponent: "BoomForce",
+      videos: [
+        { url: "/Videos/BoomForce/KettenReaktionen.mp4", caption: "Kettenreaktion in Aktion:\n Mehrere Explosionen lösen sich gegenseitig aus und erzeugen eine Kaskade von Zerstörung." },
+        { url: "/Videos/BoomForce/Steine.mp4", caption: "Fallende Steine:\n\n Auslösebedingungen:\nTreffer durch Kugeln; Feuerkontakt; Kollision mit Spieler;\n\n Verhalten:\n Fällt, wenn nichts drunter ist; Fällt, wenn nur ein Nachber-Block vorhanden ist." },
+        { url: "/Videos/BoomForce/Radius2.mp4", caption: "Explosionsradius eines Fasses:\n Radius = 2 Kacheln.\n Innere Kachel: Sofortige Zerstörung. \n Äußere Kacheln: 4s Brandeffekt." },
+        { url: "/Videos/BoomForce/radius.mp4", caption: "Komplexe Kettenreaktion:\n Mehrere Fässer triggern sich gegenseitig und beeinflussen die Umliegenden Blöcke:\n\n Blöcke in Farb-Kategorien:\n Sofortige Zerstörung; Brennt und stirbt; Brennt und bleibt am leben;\n (je nach Anzahl und Radius der Fässer die den Block triggern) " }
+      ],
+      tags: ["Unity 2D", "Physics Engine", "Destructible Environment", "State Management", "C#"],
+      features: [
+        "Tilemap-basiertes Grid-System mit zerstörbaren Blöcken",
+        "Physikbasiertes Explosionssystem mit Radiusberechnung",
+        "Kettenreaktions-Engine mit Zustandsverfolgung",
+        "Mehrere Fasstypen (Schwarz, Rot, Fliegend) mit unterschiedlichem Verhalten und Zündzeiten",
+        "Brandausbreitungs-Mechanik mit Zeitsteuerung",
+        "Robustes Input-Handling und Spieler-Steuerung",
+        "Dynamische Objektzerstörung und Speicheroptimierung"
+      ],
+      techStack: ["Unity", "C#", "Physics2D", "Tilemap System"],
+      demoUrl: "/unity-demo/BroforceWebBuild/index.html",
+      demoEmbedUrl: "/unity-demo/BroforceWebBuild/index.html",
+      githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
+      stats: [
+        { icon: "Clock", label: "Entwicklungszeit", value: "1 Monat" },
+        { icon: "Award", label: "Note", value: "1.0" },
+        { icon: "Code", label: "Lines of Code", value: "~1.500" }
+      ]
+    },
+    {
       id: "prop-hunt",
-      title: "Asymmetrisches Online-Multiplayer-Spiel",
-      description: "Prop-Hunt / Killer Spiel mit Note 1.3. Physikbasierte Prop-Bewegung und komplexes Networking.",
-      longDescription: "Ein asymmetrisches Online-Multiplayer-Spiel im Stil von Prop-Hunt. Das Projekt wurde mit der Note 1.3 bewertet. Es beinhaltet physikbasierte Prop-Bewegung, First-Person/Third-Person Kameras und eine komplexe Netzwerkarchitektur.",
-      image: "/projects/dummy.png", // Placeholder
+      title: "Hide'n Hunt",
+      subtitle:"",
+      description: "Asymmetrisches Online-Multiplayer-Spiel, inspiriert von \"Propnight\". Physikbasierte Prop-Bewegung und komplexes Networking.",
+      longDescription: "**Hide'n Hunt** entstand als Projekt für den \"Labor Games\" Kurs meines Studiums. Es ist Prototyp eines asymmetrisches Online-Multiplayer-Spiels, inspiriert von dem Spiel  \"Propnight \". \n\n Mehr Informationen und technische Details  im **README auf GitHub**.",
+      image: "/Bilder/dummy.png", // Placeholder
       detailComponent: "",
       tags: ["Unity 3D", "C#", "Netcode for GameObjects", "Multiplayer"],
       features: [
@@ -107,10 +150,10 @@ export const portfolioData = {
     },
     {
       id: "ml-agent-bachelor",
-      title: "Bachelorarbeit – ML-Agent in Unity",
+      title: "Bachelorarbeit - ML-Agent in Unity",
       description: "Reinforcement Learning Agent, der Hindernis-Parcours & Rätsel löst. Note 1.0.",
       longDescription: "Im Rahmen meiner Bachelorarbeit (Note 1.0) habe ich einen ML-Agenten mit Unity ML-Agents trainiert. Der Agent ist in der Lage, komplexe Hindernis-Parcours und Rätsel selbstständig zu lösen.",
-      image: "/projects/dummy.png", // Placeholder
+      image: "/Bilder/dummy.png", // Placeholder
       detailComponent: "",
       tags: ["Reinforcement Learning", "Unity ML-Agents", "Python", "Research"],
       features: [
@@ -127,7 +170,7 @@ export const portfolioData = {
       title: "2D Online Multiplayer Mobile Kartenspiel",
       description: "Privatprojekt mit Unity, C# und Photon PUN 2 für Android.",
       longDescription: "Ein 2D Online Multiplayer Kartenspiel für Mobile (Android), entwickelt als Privatprojekt. Es nutzt Photon PUN 2 für den Multiplayer-Part und bietet eine optimierte Mobile UI/UX.",
-      image: "/projects/dummy.png", // Placeholder
+      image: "/Bilder/dummy.png", // Placeholder
       detailComponent: "",
       tags: ["Unity 2D", "Photon PUN 2", "Android", "Mobile"],
       features: [
@@ -141,38 +184,14 @@ export const portfolioData = {
       githubUrl: "#"
     },
     {
-      id: "broforce-clone",
-      title: "Broforce 2D Nachbau",
-      description: "Unity 2D Projekt mit zerstörbarer Umgebung und Physik. Note 1.0.",
-      longDescription: "Ein Nachbau des Spiels Broforce in Unity 2D. Das Projekt erhielt die Note 1.0 und zeichnet sich durch eine dynamische, zerstörbare Umgebung, Physik-Effekte und ein ausgefeiltes State Management aus.",
-      image: "/projects/BoomForce.png",
-      detailComponent: "BoomForce",
-      images: [
-        { url: "/projects/BoomForce3_4.png", caption: "" },
-        { url: "/projects/BoomForce3_2.png", caption: "Gameplay mit zerstörbarer Umgebung" }
-      ],
-      tags: ["Unity 2D", "Physics", "Destructible Environment"],
-      features: [
-        "Tilemap & Grid-System",
-        "Physik, Explosionen, Kettenreaktionen",
-        "State Management",
-        "Input Handling",
-        "Dynamische, zerstörbare Umgebung"
-      ],
-      techStack: ["Unity", "C#"],
-      demoUrl: "/unity-demo/BroforceWebBuild/index.html",
-      demoEmbedUrl: "/unity-demo/BroforceWebBuild/index.html",
-      githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone"
-    },
-    {
       id: "buga23-web",
       title: "BUGA23 Interaktive Webanwendung",
       description: "Java Backend und Flutter Frontend für eine reale Messe.",
       longDescription: "Eine interaktive Webanwendung für die BUGA23. Das System besteht aus einem Java Backend und einem Flutter Frontend, containerisiert mit Docker.",
-      image: "/projects/dummy.png",
+      image: "/Bilder/dummy.png",
       detailComponent: "",
       images: [
-        { url: "/projects/dummy.png" },
+        { url: "/Bilder/dummy.png" },
         { url: "/projects/dummy2.png", caption: "Benutzeroberfläche der Webanwendung" },
         { url: "/projects/dummy3.png", caption: "Architekturübersicht" }
       ],
@@ -192,7 +211,7 @@ export const portfolioData = {
       title: "Oware Spiel + ML-Bot",
       description: "C#, .NET, Blazor Anwendung mit ML-Gegner.",
       longDescription: "Ein Oware Spiel, entwickelt als Praktikumsprojekt. Es verfügt über einen ML-basierten Bot-Gegner und wurde mit C#, .NET und Blazor umgesetzt.",
-      image: "/projects/dummy.png", // Placeholder
+      image: "/Bilder/dummy.png", // Placeholder
       detailComponent: "",
       tags: ["C#", ".NET", "Blazor", "ML"],
       features: [
@@ -211,7 +230,7 @@ export const portfolioData = {
       description: "Desktop-Anwendung zur Simulation von Conways Game of Life.",
       longDescription:
         "Eine interaktive Desktop-Anwendung für Conways Game of Life. Sie bietet einen freies Zeichen Modus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Canvasgrößen- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
-      image: "/projects/dummy.png",
+      image: "/Bilder/dummy.png",
       detailComponent: "",
       tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
       features: [

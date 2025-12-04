@@ -1,28 +1,58 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ArrowRight, Download, ExternalLink } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
 import Link from "next/link";
+import { useThemeColors } from "@/components/colors";
 
 const projects = portfolioData.projects;
 
 
 
 export function ProjectsShowcase() {
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const storedTheme = window.localStorage.getItem("theme");
+    if (storedTheme) {
+      setIsDarkMode(storedTheme === "dark");
+    }
+  }, []);
+
+  const colors = useThemeColors(isDarkMode);
+
   return (
     <section className="relative px-4 py-24">
       <div className="container mx-auto max-w-6xl px-4">
-        <h2 className="mb-4 text-center text-3xl font-bold md:text-4xl">
-          Featured <span className="text-primary">Projects</span>
+        <h2
+          className="mb-4 text-center text-3xl font-bold md:text-4xl"
+          style={{ color: colors.projectsSectionTitleColor }}
+        >
+          Featured <span style={{ color: colors.projectsSectionAccentText }}>Projects</span>
         </h2>
-        <p className="mx-auto mb-12 max-w-2xl text-center">
+        <p className="mx-auto mb-12 max-w-2xl text-center" style={{ color: colors.projectsSectionSubtitleColor }}>
           Here are some of my recent projects that combine design, performance, and clean code.
         </p>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
           {projects.map((project) => (
-            <div key={project.id} className="card-hover overflow-hidden rounded-lg bg-card shadow-sm">
+            <div
+              key={project.id}
+              className="card-hover overflow-hidden rounded-lg shadow-sm"
+              style={{
+                backgroundColor: colors.projectsSectionCardBackground,
+                borderColor: colors.projectsSectionCardBorder,
+                boxShadow: colors.projectsSectionCardShadow,
+                borderWidth: "1px",
+                borderStyle: "solid",
+              }}
+            >
               <div className="h-48 overflow-hidden">
                 <Link href={`/projects/${project.id}`}>
                   <Image
@@ -38,13 +68,42 @@ export function ProjectsShowcase() {
               <div className="p-6">
 
                 <Link href={`/projects/${project.id}`}>
-                  <h3 className="mb-1 text-xl font-semibold transition-colors hover:text-primary">{project.title}</h3>
+                  <div className="mb-1 flex items-baseline gap-2 flex-wrap">
+                    <h3
+                      className="text-xl font-semibold transition-colors"
+                      style={{
+                        color: colors.projectsSectionTitleColor,
+                      }}
+                    >
+                      {project.title}
+                    </h3>
+                    {project.subtitle && project.subtitle.trim() && (
+                      <span
+                        className="text-xl font-semibold"
+                        style={{
+                          color: colors.projectsSectionTitleColor,
+                        }}
+                      >
+                        {project.subtitle}
+                      </span>
+                    )}
+                  </div>
                 </Link>
-                <p className="mb-4 text-sm text-foreground/70">{project.description}</p>
+                <p className="mb-4 text-sm" style={{ color: colors.projectsSectionSubtitleColor }}>
+                  {project.description}
+                </p>
 
                 <div className="mb-4 flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
-                    <span key={tag} className="rounded-full border px-2 py-1 text-sm font-medium">
+                    <span
+                      key={tag}
+                      className="rounded-full border px-2 py-1 text-sm font-medium"
+                      style={{
+                        borderColor: colors.projectsSectionTagBorder,
+                        color: colors.projectsSectionTagText,
+                        backgroundColor: colors.projectsSectionTagBackground,
+                      }}
+                    >
                       {tag}
                     </span>
                   ))}
@@ -53,10 +112,11 @@ export function ProjectsShowcase() {
                 <div className="mb-4">
                   <Link
                     href={`/projects/${project.id}`}
-                    className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
+                    className="inline-flex items-center gap-1 text-sm font-semibold transition-colors"
+                    style={{ color: colors.projectsSectionLinkColor }}
                   >
                     View more Details
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="h-4 w-4" style={{ color: colors.projectsSectionLinkColor }} />
                   </Link>
                 </div>
 
@@ -66,7 +126,8 @@ export function ProjectsShowcase() {
                       href={project.demoUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-foreground/80 transition-colors duration-300 hover:text-primary"
+                      className="text-foreground/80 transition-colors duration-300"
+                      style={{ color: colors.projectsSectionIconColor }}
                       aria-label="Live demo"
                     >
                       <ExternalLink size={25} />
@@ -77,7 +138,8 @@ export function ProjectsShowcase() {
                       href={project.demoDownload}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-foreground/80 transition-colors duration-300 hover:text-primary"
+                      className="text-foreground/80 transition-colors duration-300"
+                      style={{ color: colors.projectsSectionIconColor }}
                       aria-label="Download demo"
                     >
                       <Download size={25} />
@@ -88,7 +150,8 @@ export function ProjectsShowcase() {
                       href={project.githubUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-foreground/80 transition-colors duration-300 hover:text-primary"
+                      className="text-foreground/80 transition-colors duration-300"
+                      style={{ color: colors.projectsSectionIconColor }}
                       aria-label="View source on GitHub"
                     >
                       <svg
