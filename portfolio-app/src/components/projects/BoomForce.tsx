@@ -10,6 +10,29 @@ import { NetworkBackground } from "@/components/NetworkBackground";
 import { useThemeColors } from "@/components/colors";
 import ProjectVideos from "./components/ProjectVideos";
 
+// Helper function to render markdown-like formatting
+const renderMarkdownText = (text: string, color: string) => {
+    if (!text) return null;
+    
+    // Split by double newlines to create paragraphs
+    const paragraphs = text.split('\n\n');
+    
+    return paragraphs.map((paragraph, pIndex) => (
+        <p key={pIndex} className="mb-4 last:mb-0">
+            {paragraph.split(/(\*\*.*?\*\*)/g).map((part, index) => {
+                if (part.startsWith('**') && part.endsWith('**')) {
+                    return (
+                        <strong key={index} style={{ color }}>
+                            {part.slice(2, -2)}
+                        </strong>
+                    );
+                }
+                return <span key={index} style={{ color }}>{part}</span>;
+            })}
+        </p>
+    ));
+};
+
 export function DetailPage() {
     const params = useParams();
     const id = params.id as string;
@@ -102,9 +125,9 @@ export function DetailPage() {
                             />
                         </div>
 
-                        <p className="text-lg leading-relaxed" style={{ color: colors.boomforceProjectDescriptionText }}>
-                            {project.longDescription || project.description}
-                        </p>
+                        <div className="text-lg leading-relaxed">
+                            {renderMarkdownText(project.longDescription || project.description, colors.boomforceProjectDescriptionText)}
+                        </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>

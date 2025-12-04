@@ -25,7 +25,7 @@ export const portfolioData = {
   personal: {
     firstName: "Leo",
     lastName: "",
-    role: "Softwareentwickler (B.Sc.) – Schwerpunkt Games Engineering",
+    role: "Softwareentwickler (B.Sc.) - Schwerpunkt Games Engineering",
     tagline: "Spezialisiert in Unity, C#, .NET",
     motivation: "Fokus auf Clean Code, Refactoring, qualitativ hochwertige Software. Leidenschaft für Game Dev & Software Engineering.",
     email: "contact@example.com", // Placeholder
@@ -107,7 +107,7 @@ export const portfolioData = {
     },
     {
       id: "ml-agent-bachelor",
-      title: "Bachelorarbeit – ML-Agent in Unity",
+      title: "Bachelorarbeit - ML-Agent in Unity",
       description: "Reinforcement Learning Agent, der Hindernis-Parcours & Rätsel löst. Note 1.0.",
       longDescription: "Im Rahmen meiner Bachelorarbeit (Note 1.0) habe ich einen ML-Agenten mit Unity ML-Agents trainiert. Der Agent ist in der Lage, komplexe Hindernis-Parcours und Rätsel selbstständig zu lösen.",
       image: "/projects/dummy.png", // Placeholder
@@ -142,28 +142,28 @@ export const portfolioData = {
     },
     {
       id: "broforce-clone",
-      title: "Broforce 2D Nachbau",
-      description: "Unity 2D Projekt mit zerstörbarer Umgebung und Physik. Note 1.0.",
-      longDescription: "Ein Nachbau des Spiels Broforce in Unity 2D. Das Projekt erhielt die Note 1.0 und zeichnet sich durch eine dynamische, zerstörbare Umgebung, Physik-Effekte und ein ausgefeiltes State Management aus.",
+      title: "BoomForce - 2D Physik-Puzzle-Spiel",
+      description: "Dynamisches 2D-Spiel mit zerstörbarer Umgebung, physikbasierten Explosionen und Kettenreaktionen. Note 1.0.",
+      longDescription: "**BoomForce** entstand als Projekt für den Game Engines-Kurs meines Studiums. Ich habe den Prototyp eines physikbasiertes 2D-Side-Scrolling-Shooters entwickelt, das sich auf **zerstörbare Umgebungen** und **komplexe Kettenreaktionen** konzentriert.\n\nDas Spiel demonstriert fortgeschrittene Spielmechaniken: Ein **ausgefeiltes Explosionssystem** berechnet Schäden basierend auf Nähe und Objekttyp. Ein **robustes State-Management** verwaltet mehrere gleichzeitige Kettenreaktionen ohne Performance-Probleme.\n\nSpieler interagieren mit einer dynamischen Welt aus **zerstörbaren Blöcken**, **fallenden Steinen** und **verschiedenen Fasstypen** - jedes mit eigenen Explosionsradien und Brandeffekten. Das Projekt zeigt tiefes Verständnis für **Physik-Systeme**, **Event-Handling** und **Optimierungstechniken**.",
       image: "/Bilder/BoomForce/BoomForce.png",
       detailComponent: "BoomForce",
-      images: [
-        { url: "/Bilder/BoomForce/BoomForce3_4.png", caption: "" },
-        { url: "/Bilder/BoomForce/BoomForce3_2.png", caption: "Gameplay mit zerstörbarer Umgebung" }
-      ],
       videos: [
-        { url: "/Videos/BoomForce/KettenReaktionen.mp4", caption: "Hier sieht man eine Beispielhafte Kettenreaktion in einem möglichen Level" },
-        { url: "/Videos/BoomForce/Steine.mp4", caption: "Hier sieht man das Verhalten der fallenden Steine" }
+        { url: "/Videos/BoomForce/KettenReaktionen.mp4", caption: "Kettenreaktion in Aktion: Mehrere Explosionen lösen sich gegenseitig aus und erzeugen eine Kaskade von Zerstörung" },
+        { url: "/Videos/BoomForce/Steine.mp4", caption: "Fallende Steine-Mechanik: Blöcke stürzen ab, wenn die Unterstützung wegfällt - zentral für das Puzzle-Design" },
+        { url: "/Videos/BoomForce/Radius2.mp4", caption: "Explosionsradius eines roten Fasses: Zeigt die präzise Schadensberechnung und Brandausbreitung" },
+        { url: "/Videos/BoomForce/radius.mp4", caption: "Komplexe Kettenreaktion: Mehrere explodierende Fässer triggern sich gegenseitig und beeinflussen die Umgebung" }
       ],
-      tags: ["Unity 2D", "Physics", "Destructible Environment"],
+      tags: ["Unity 2D", "Physics Engine", "Destructible Environment", "State Management", "C#"],
       features: [
-        "Tilemap & Grid-System",
-        "Physik, Explosionen, Kettenreaktionen",
-        "State Management",
-        "Input Handling",
-        "Dynamische, zerstörbare Umgebung"
+        "Tilemap-basiertes Grid-System mit zerstörbaren Blöcken",
+        "Physikbasiertes Explosionssystem mit Radiusberechnung",
+        "Kettenreaktions-Engine mit Zustandsverfolgung",
+        "Mehrere Fasstypen (Schwarz, Rot, Fliegend) mit unterschiedlichem Verhalten und Zündzeiten",
+        "Brandausbreitungs-Mechanik mit Zeitsteuerung",
+        "Robustes Input-Handling und Spieler-Steuerung",
+        "Dynamische Objektzerstörung und Speicheroptimierung"
       ],
-      techStack: ["Unity", "C#"],
+      techStack: ["Unity", "C#", "Physics2D", "Tilemap System"],
       demoUrl: "/unity-demo/BroforceWebBuild/index.html",
       demoEmbedUrl: "/unity-demo/BroforceWebBuild/index.html",
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone"

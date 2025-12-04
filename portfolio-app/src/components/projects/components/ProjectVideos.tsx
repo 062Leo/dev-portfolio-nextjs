@@ -1,6 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { Project, ProjectImage } from '@/data/portfolio-data';
-import { Play } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { ProjectImage } from '@/data/portfolio-data';
 
 interface ProjectVideosProps {
   videos: ProjectImage[] | undefined;
@@ -13,60 +12,38 @@ interface ProjectVideosProps {
 }
 
 const ProjectVideos: React.FC<ProjectVideosProps> = ({ videos, colors }) => {
-  const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({});
-  const [playingStates, setPlayingStates] = useState<{ [key: number]: boolean }>({});
-  const [showControls, setShowControls] = useState<{ [key: number]: boolean }>({});
-
   if (!videos || videos.length === 0) return null;
-  
-  // Type guard to ensure video has required properties
+
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    videoRefs.current.forEach((video) => {
+      if (video) {
+        observer.observe(video);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [videos]);
+
   const isValidVideo = (video: any): video is { url: string; caption?: string } => {
     return video && typeof video === 'object' && 'url' in video;
-  };
-
-  const handleVideoPlay = (index: number) => {
-    setPlayingStates(prev => ({
-      ...prev,
-      [index]: true
-    }));
-  };
-
-  const handleVideoPause = (index: number) => {
-    setPlayingStates(prev => ({
-      ...prev,
-      [index]: false
-    }));
-  };
-  
-  const handleVideoClick = (index: number) => {
-    const video = videoRefs.current[index];
-    if (video) {
-      if (video.paused) {
-        video.play();
-      } else {
-        video.pause();
-      }
-    }
-  };
-
-  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const hoverY = event.clientY - bounds.top;
-    const lowerThreshold = bounds.height * 0.25;
-    const shouldShowControls = hoverY >= bounds.height - lowerThreshold;
-    setShowControls(prev => ({
-      ...prev,
-      [index]: shouldShowControls
-    }));
-  };
-
-  const handleMouseLeave = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const leavingFromBottom = event.clientY >= bounds.bottom - 5;
-    setShowControls(prev => ({
-      ...prev,
-      [index]: leavingFromBottom ? prev[index] ?? false : false
-    }));
   };
 
   return (
@@ -90,33 +67,27 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videos, colors }) => {
             ></div>
             
             {/* Video container - 4:3 aspect ratio */}
-            <div className="w-full md:w-1/2 p-2 relative z-10 group/video">
+            <div className="w-full md:w-1/2 p-2 relative z-10">
               <div 
-                className="rounded-lg overflow-hidden h-full relative cursor-pointer" 
+                className="rounded-lg overflow-hidden h-full transition-all duration-300 group-hover:shadow-lg" 
                 style={{ 
                   border: `1px solid ${colors.boomforceScreenshotsBorder}`, 
                   backgroundColor: colors.boomforceScreenshotsBackground,
                   aspectRatio: '4/3'
                 }}
-                onClick={() => handleVideoClick(index)}
-                onMouseMove={event => handleMouseMove(event, index)}
-                onMouseLeave={event => handleMouseLeave(event, index)}
               >
                 <video
-                  ref={el => { videoRefs.current[index] = el; }}
+                  ref={(el) => {
+                    videoRefs.current[index] = el;
+                  }}
                   src={video.url}
-                  controls={!!showControls[index]}
-                  className="w-full h-full object-contain"
-                  onPlay={() => handleVideoPlay(index)}
-                  onPause={() => handleVideoPause(index)}
+                  preload="auto"
+                  muted
+                  loop
+                  playsInline
+                  controls
+                  className="w-full h-full object-contain transition-all duration-500"
                 />
-                {!playingStates[index] && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover/video:opacity-100 transition-opacity duration-300">
-                    <div className="w-16 h-16 rounded-full bg-white/80 flex items-center justify-center">
-                      <Play className="w-8 h-8 text-gray-800 ml-1" />
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
             
