@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { NetworkBackground } from "@/components/NetworkBackground";
 import { useThemeColors } from "@/components/colors";
+import ProjectVideos from "./components/ProjectVideos";
 
 export function DetailPage() {
     const params = useParams();
@@ -182,56 +183,15 @@ export function DetailPage() {
                         </div>
 
                         {/* Details Section with Videos */}
-                        {project.videos && project.videos.length > 0 && (
-                            <div className="pt-8">
-                                <h3 className="mb-8 text-2xl font-semibold font-press-start text-center" style={{ color: colors.boomforceScreenshotsTitleColor }}>DETAILS</h3>
-                                <div className="space-y-12">
-                                    {project.videos.map((video, index) => (
-                                        <div 
-                                            key={index} 
-                                            className={`relative flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8 group`}
-                                        >
-                                            {/* Connecting line */}
-                                            <div className="hidden md:block absolute top-1/2 left-1/2 w-12 h-0.5 -translate-x-1/2 -translate-y-1/2 z-0" style={{ backgroundColor: colors.boomforceScreenshotsBorder }}></div>
-                                            
-                                            {/* Video container - 4:3 aspect ratio */}
-                                            <div className="w-full md:w-1/2 p-2 relative z-10">
-                                                <div className="rounded-lg overflow-hidden h-full transition-all duration-300 group-hover:shadow-lg" 
-                                                    style={{ 
-                                                        border: `1px solid ${colors.boomforceScreenshotsBorder}`, 
-                                                        backgroundColor: colors.boomforceScreenshotsBackground,
-                                                        aspectRatio: '4/3'
-                                                    }}>
-                                                    <video
-                                                        src={video.url}
-                                                        controls
-                                                        className="w-full h-full object-contain transition-all duration-500 group-hover:scale-105"
-                                                    />
-                                                </div>
-                                            </div>
-                                            
-                                            {/* Text container */}
-                                            <div className="w-full md:w-1/2 p-2 flex items-center relative z-10">
-                                                {video.caption && (
-                                                    <div className="w-full p-6 rounded-lg h-full flex items-center transition-all duration-300 group-hover:shadow-lg" 
-                                                        style={{ 
-                                                            backgroundColor: colors.boomforceScreenshotsBackground, 
-                                                            border: `1px solid ${colors.boomforceScreenshotsBorder}`, 
-                                                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' 
-                                                        }}>
-                                                        <div className="w-full">
-                                                            <p className="text-sm md:text-base" style={{ color: colors.boomforceProjectDescriptionText }}>
-                                                                {video.caption}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+                        <ProjectVideos 
+                            videos={project.videos}
+                            colors={{
+                                boomforceScreenshotsTitleColor: colors.boomforceScreenshotsTitleColor,
+                                boomforceScreenshotsBorder: colors.boomforceScreenshotsBorder,
+                                boomforceScreenshotsBackground: colors.boomforceScreenshotsBackground,
+                                boomforceProjectDescriptionText: colors.boomforceProjectDescriptionText
+                            }}
+                        />
                     </div>
                 </div>
             </main>
