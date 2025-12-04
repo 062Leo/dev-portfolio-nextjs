@@ -94,61 +94,6 @@ export const portfolioData = {
   ],
   projects: [
     {
-      id: "prop-hunt",
-      title: "Asymmetrisches Online-Multiplayer-Spiel",
-      description: "Prop-Hunt / Killer Spiel mit Note 1.3. Physikbasierte Prop-Bewegung und komplexes Networking.",
-      longDescription: "Ein asymmetrisches Online-Multiplayer-Spiel im Stil von Prop-Hunt. Das Projekt wurde mit der Note 1.3 bewertet. Es beinhaltet physikbasierte Prop-Bewegung, First-Person/Third-Person Kameras und eine komplexe Netzwerkarchitektur.",
-      image: "/projects/dummy.png", // Placeholder
-      detailComponent: "",
-      tags: ["Unity 3D", "C#", "Netcode for GameObjects", "Multiplayer"],
-      features: [
-        "Physikbasierte Prop-Bewegung",
-        "FP/TP-Kamera",
-        "Komplexes Multiplayer-Debugging",
-        "Netzwerkarchitektur / State Machines",
-        "Map-Design & ProBuilder"
-      ],
-      techStack: ["Unity", "C#", "Netcode for GameObjects", "Unity Transport"],
-      demoUrl: "/unity-demo/HuntAndHide_WebGl_Demo_Build/index.html",
-      demoEmbedUrl: "/unity-demo/HuntAndHide_WebGl_Demo_Build/index.html",
-      githubUrl: "#"
-    },
-    {
-      id: "ml-agent-bachelor",
-      title: "Bachelorarbeit - ML-Agent in Unity",
-      description: "Reinforcement Learning Agent, der Hindernis-Parcours & Rätsel löst. Note 1.0.",
-      longDescription: "Im Rahmen meiner Bachelorarbeit (Note 1.0) habe ich einen ML-Agenten mit Unity ML-Agents trainiert. Der Agent ist in der Lage, komplexe Hindernis-Parcours und Rätsel selbstständig zu lösen.",
-      image: "/projects/dummy.png", // Placeholder
-      detailComponent: "",
-      tags: ["Reinforcement Learning", "Unity ML-Agents", "Python", "Research"],
-      features: [
-        "Training eines Agenten",
-        "Lösung von Hindernis-Parcours & Rätseln",
-        "Analyse von Belohnungssystemen"
-      ],
-      techStack: ["Unity", "ML-Agents", "Python", "TensorFlow"],
-      demoUrl: "#",
-      githubUrl: "#"
-    },
-    {
-      id: "card-game-mobile",
-      title: "2D Online Multiplayer Mobile Kartenspiel",
-      description: "Privatprojekt mit Unity, C# und Photon PUN 2 für Android.",
-      longDescription: "Ein 2D Online Multiplayer Kartenspiel für Mobile (Android), entwickelt als Privatprojekt. Es nutzt Photon PUN 2 für den Multiplayer-Part und bietet eine optimierte Mobile UI/UX.",
-      image: "/projects/dummy.png", // Placeholder
-      detailComponent: "",
-      tags: ["Unity 2D", "Photon PUN 2", "Android", "Mobile"],
-      features: [
-        "Online Multiplayer",
-        "Android Build",
-        "Mobile UI/UX",
-        "Komplexe Kartenlogik"
-      ],
-      techStack: ["Unity", "C#", "Photon PUN 2"],
-      demoUrl: "#",
-      githubUrl: "#"
-    },
-    {
       id: "broforce-clone",
       title: "BoomForce",
       subtitle:"(Broforce Klon)",
@@ -183,14 +128,70 @@ export const portfolioData = {
       ]
     },
     {
+      id: "prop-hunt",
+      title: "Hide'n Hunt",
+      subtitle:"",
+      description: "Asymmetrisches Online-Multiplayer-Spiel, inspiriert von \"Propnight\". Physikbasierte Prop-Bewegung und komplexes Networking.",
+      longDescription: "**Hide'n Hunt** entstand als Projekt für den \"Labor Games\" Kurs meines Studiums. Es ist Prototyp eines asymmetrisches Online-Multiplayer-Spiels, inspiriert von dem Spiel  \"Propnight \". \n\n Mehr Informationen und technische Details  im **README auf GitHub**.",
+      image: "/Bilder/dummy.png", // Placeholder
+      detailComponent: "",
+      tags: ["Unity 3D", "C#", "Netcode for GameObjects", "Multiplayer"],
+      features: [
+        "Physikbasierte Prop-Bewegung",
+        "FP/TP-Kamera",
+        "Komplexes Multiplayer-Debugging",
+        "Netzwerkarchitektur / State Machines",
+        "Map-Design & ProBuilder"
+      ],
+      techStack: ["Unity", "C#", "Netcode for GameObjects", "Unity Transport"],
+      demoUrl: "/unity-demo/HuntAndHide_WebGl_Demo_Build/index.html",
+      demoEmbedUrl: "/unity-demo/HuntAndHide_WebGl_Demo_Build/index.html",
+      githubUrl: "#"
+    },
+    {
+      id: "ml-agent-bachelor",
+      title: "Bachelorarbeit - ML-Agent in Unity",
+      description: "Reinforcement Learning Agent, der Hindernis-Parcours & Rätsel löst. Note 1.0.",
+      longDescription: "Im Rahmen meiner Bachelorarbeit (Note 1.0) habe ich einen ML-Agenten mit Unity ML-Agents trainiert. Der Agent ist in der Lage, komplexe Hindernis-Parcours und Rätsel selbstständig zu lösen.",
+      image: "/Bilder/dummy.png", // Placeholder
+      detailComponent: "",
+      tags: ["Reinforcement Learning", "Unity ML-Agents", "Python", "Research"],
+      features: [
+        "Training eines Agenten",
+        "Lösung von Hindernis-Parcours & Rätseln",
+        "Analyse von Belohnungssystemen"
+      ],
+      techStack: ["Unity", "ML-Agents", "Python", "TensorFlow"],
+      demoUrl: "#",
+      githubUrl: "#"
+    },
+    {
+      id: "card-game-mobile",
+      title: "2D Online Multiplayer Mobile Kartenspiel",
+      description: "Privatprojekt mit Unity, C# und Photon PUN 2 für Android.",
+      longDescription: "Ein 2D Online Multiplayer Kartenspiel für Mobile (Android), entwickelt als Privatprojekt. Es nutzt Photon PUN 2 für den Multiplayer-Part und bietet eine optimierte Mobile UI/UX.",
+      image: "/Bilder/dummy.png", // Placeholder
+      detailComponent: "",
+      tags: ["Unity 2D", "Photon PUN 2", "Android", "Mobile"],
+      features: [
+        "Online Multiplayer",
+        "Android Build",
+        "Mobile UI/UX",
+        "Komplexe Kartenlogik"
+      ],
+      techStack: ["Unity", "C#", "Photon PUN 2"],
+      demoUrl: "#",
+      githubUrl: "#"
+    },
+    {
       id: "buga23-web",
       title: "BUGA23 Interaktive Webanwendung",
       description: "Java Backend und Flutter Frontend für eine reale Messe.",
       longDescription: "Eine interaktive Webanwendung für die BUGA23. Das System besteht aus einem Java Backend und einem Flutter Frontend, containerisiert mit Docker.",
-      image: "/projects/dummy.png",
+      image: "/Bilder/dummy.png",
       detailComponent: "",
       images: [
-        { url: "/projects/dummy.png" },
+        { url: "/Bilder/dummy.png" },
         { url: "/projects/dummy2.png", caption: "Benutzeroberfläche der Webanwendung" },
         { url: "/projects/dummy3.png", caption: "Architekturübersicht" }
       ],
@@ -210,7 +211,7 @@ export const portfolioData = {
       title: "Oware Spiel + ML-Bot",
       description: "C#, .NET, Blazor Anwendung mit ML-Gegner.",
       longDescription: "Ein Oware Spiel, entwickelt als Praktikumsprojekt. Es verfügt über einen ML-basierten Bot-Gegner und wurde mit C#, .NET und Blazor umgesetzt.",
-      image: "/projects/dummy.png", // Placeholder
+      image: "/Bilder/dummy.png", // Placeholder
       detailComponent: "",
       tags: ["C#", ".NET", "Blazor", "ML"],
       features: [
@@ -229,7 +230,7 @@ export const portfolioData = {
       description: "Desktop-Anwendung zur Simulation von Conways Game of Life.",
       longDescription:
         "Eine interaktive Desktop-Anwendung für Conways Game of Life. Sie bietet einen freies Zeichen Modus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Canvasgrößen- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
-      image: "/projects/dummy.png",
+      image: "/Bilder/dummy.png",
       detailComponent: "",
       tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
       features: [
