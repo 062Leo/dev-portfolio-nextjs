@@ -68,14 +68,26 @@ export function ProjectsShowcase() {
               <div className="p-6">
 
                 <Link href={`/projects/${project.id}`}>
-                  <h3
-                    className="mb-1 text-xl font-semibold transition-colors"
-                    style={{
-                      color: colors.projectsSectionTitleColor,
-                    }}
-                  >
-                    {project.title}
-                  </h3>
+                  <div className="mb-1 flex items-baseline gap-2 flex-wrap">
+                    <h3
+                      className="text-xl font-semibold transition-colors"
+                      style={{
+                        color: colors.projectsSectionTitleColor,
+                      }}
+                    >
+                      {project.title}
+                    </h3>
+                    {project.subtitle && project.subtitle.trim() && (
+                      <span
+                        className="text-xl font-semibold"
+                        style={{
+                          color: colors.projectsSectionTitleColor,
+                        }}
+                      >
+                        {project.subtitle}
+                      </span>
+                    )}
+                  </div>
                 </Link>
                 <p className="mb-4 text-sm" style={{ color: colors.projectsSectionSubtitleColor }}>
                   {project.description}

@@ -11,6 +11,29 @@ interface ProjectVideosProps {
   };
 }
 
+// Helper function to render markdown-like formatting
+const renderMarkdownText = (text: string, color: string) => {
+    if (!text) return null;
+    
+    // Split by double newlines to create paragraphs
+    const paragraphs = text.split('\n\n');
+    
+    return paragraphs.map((paragraph, pIndex) => (
+        <p key={pIndex} className="mb-4 last:mb-0">
+            {paragraph.split(/(\*\*.*?\*\*)/g).map((part, index) => {
+                if (part.startsWith('**') && part.endsWith('**')) {
+                    return (
+                        <strong key={index} style={{ color }}>
+                            {part.slice(2, -2)}
+                        </strong>
+                    );
+                }
+                return <span key={index} style={{ color }}>{part}</span>;
+            })}
+        </p>
+    ));
+};
+
 const ProjectVideos: React.FC<ProjectVideosProps> = ({ videos, colors }) => {
   if (!videos || videos.length === 0) return null;
 
@@ -54,7 +77,7 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videos, colors }) => {
       >
         DETAILS
       </h3>
-      <div className="space-y-12">
+      <div>
         {videos.filter(isValidVideo).map((video, index) => (
           <div 
             key={index} 
@@ -102,13 +125,8 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videos, colors }) => {
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' 
                   }}
                 >
-                  <div className="w-full">
-                    <p 
-                      className="text-sm md:text-base" 
-                      style={{ color: colors.boomforceProjectDescriptionText }}
-                    >
-                      {video.caption}
-                    </p>
+                  <div className="w-full text-sm md:text-base">
+                    {renderMarkdownText(video.caption, colors.boomforceProjectDescriptionText) || video.caption}
                   </div>
                 </div>
               )}

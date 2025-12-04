@@ -99,9 +99,16 @@ export function DetailPage() {
                 <div className="flex justify-center">
                     <div className="w-full max-w-4xl space-y-8">
                         <div>
-                            <h1 className="mb-4 text-4xl font-bold font-rubik md:text-5xl uppercase" style={{ color: colors.boomforceProjectTitleColor, textShadow: colors.boomforceProjectTitleGlow }}>
-                                {project.title}
-                            </h1>
+                            <div className="mb-4 flex items-baseline gap-3 flex-wrap">
+                                <h1 className="text-4xl font-bold font-rubik md:text-5xl uppercase" style={{ color: colors.boomforceProjectTitleColor, textShadow: colors.boomforceProjectTitleGlow }}>
+                                    {renderMarkdownText(project.title, colors.boomforceProjectTitleColor) || project.title}
+                                </h1>
+                                {project.subtitle && project.subtitle.trim() && (
+                                    <h2 className="text-xl font-semibold font-rubik md:text-2xl uppercase" style={{ color: colors.boomforceProjectTitleColor, textShadow: colors.boomforceProjectTitleGlow }}>
+                                        {project.subtitle}
+                                    </h2>
+                                )}
+                            </div>
                             <div className="flex flex-wrap gap-2">
                                 {project.tags.map((tag) => (
                                     <span
@@ -136,7 +143,9 @@ export function DetailPage() {
                                     {project.features?.map((feature, index) => (
                                         <li key={index} className="flex items-start">
                                             <CheckCircle className="mr-2 w-4 h-4 mt-1 shrink-0" style={{ color: colors.boomforceFeatureCheckmarkColor }} />
-                                            <span>{feature}</span>
+                                            <div className="flex-1">
+                                                {renderMarkdownText(feature, colors.boomforceFeatureListText) || feature}
+                                            </div>
                                         </li>
                                     ))}
                                 </ul>

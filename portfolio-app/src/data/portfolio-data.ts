@@ -7,6 +7,7 @@ export type ProjectImage = {
 export type Project = {
   id: string;
   title: string;
+  subtitle?: string;
   description: string;
   longDescription?: string;
   image: string; // Kept for backward compatibility as the main image
@@ -142,7 +143,8 @@ export const portfolioData = {
     },
     {
       id: "broforce-clone",
-      title: "BoomForce - 2D Physik-Puzzle-Spiel",
+      title: "BoomForce",
+      subtitle:"(Broforce Klon)",
       description: "Dynamisches 2D-Spiel mit zerstörbarer Umgebung, physikbasierten Explosionen und Kettenreaktionen. Note 1.0.",
       longDescription: "**BoomForce** entstand als Projekt für den Game Engines-Kurs meines Studiums. Ich habe den Prototyp eines physikbasiertes 2D-Side-Scrolling-Shooters entwickelt, das sich auf **zerstörbare Umgebungen** und **komplexe Kettenreaktionen** konzentriert.\n\nDas Spiel demonstriert fortgeschrittene Spielmechaniken: Ein **ausgefeiltes Explosionssystem** berechnet Schäden basierend auf Nähe und Objekttyp. Ein **robustes State-Management** verwaltet mehrere gleichzeitige Kettenreaktionen ohne Performance-Probleme.\n\nSpieler interagieren mit einer dynamischen Welt aus **zerstörbaren Blöcken**, **fallenden Steinen** und **verschiedenen Fasstypen** - jedes mit eigenen Explosionsradien und Brandeffekten. Das Projekt zeigt tiefes Verständnis für **Physik-Systeme**, **Event-Handling** und **Optimierungstechniken**.",
       image: "/Bilder/BoomForce/BoomForce.png",
