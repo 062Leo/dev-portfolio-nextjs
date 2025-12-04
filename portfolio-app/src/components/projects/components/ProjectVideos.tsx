@@ -15,6 +15,7 @@ interface ProjectVideosProps {
 const ProjectVideos: React.FC<ProjectVideosProps> = ({ videos, colors }) => {
   const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({});
   const [playingStates, setPlayingStates] = useState<{ [key: number]: boolean }>({});
+  const [showControls, setShowControls] = useState<{ [key: number]: boolean }>({});
 
   if (!videos || videos.length === 0) return null;
   
@@ -48,6 +49,26 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videos, colors }) => {
     }
   };
 
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const hoverY = event.clientY - bounds.top;
+    const lowerThreshold = bounds.height * 0.25;
+    const shouldShowControls = hoverY >= bounds.height - lowerThreshold;
+    setShowControls(prev => ({
+      ...prev,
+      [index]: shouldShowControls
+    }));
+  };
+
+  const handleMouseLeave = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const leavingFromBottom = event.clientY >= bounds.bottom - 5;
+    setShowControls(prev => ({
+      ...prev,
+      [index]: leavingFromBottom ? prev[index] ?? false : false
+    }));
+  };
+
   return (
     <div className="pt-8">
       <h3 
@@ -78,11 +99,13 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videos, colors }) => {
                   aspectRatio: '4/3'
                 }}
                 onClick={() => handleVideoClick(index)}
+                onMouseMove={event => handleMouseMove(event, index)}
+                onMouseLeave={event => handleMouseLeave(event, index)}
               >
                 <video
                   ref={el => { videoRefs.current[index] = el; }}
                   src={video.url}
-                  controls
+                  controls={!!showControls[index]}
                   className="w-full h-full object-contain"
                   onPlay={() => handleVideoPlay(index)}
                   onPause={() => handleVideoPause(index)}
