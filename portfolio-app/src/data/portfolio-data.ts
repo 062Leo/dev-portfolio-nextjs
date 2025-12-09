@@ -121,8 +121,7 @@ export const portfolioData = {
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
       stats: [
         { icon: "Clock", label: "Entwicklungszeit", value: "1 Monat" },
-        { icon: "Award", label: "Note", value: "1.0" },
-        { icon: "Code", label: "Lines of Code", value: "~1.500" }
+        { icon: "Award", label: "Note", value: "1.0" }
       ]
     },
     {
@@ -147,20 +146,34 @@ export const portfolioData = {
     },
     {
       id: "ml-agent-bachelor",
-      title: "Bachelorarbeit - ML-Agent in Unity",
-      description: "Reinforcement Learning Agent, der Hindernis-Parcours & Rätsel löst. Note 1.0.",
-      longDescription: "Im Rahmen meiner Bachelorarbeit (Note 1.0) habe ich einen ML-Agenten mit Unity ML-Agents trainiert. Der Agent ist in der Lage, komplexe Hindernis-Parcours und Rätsel selbstständig zu lösen.",
+      title: "Bachelorarbeit: ML-Agent in Unity",
+      description: "Reinforcement-Learning-Agent, der dynamische 3D-Parkours und Rätsel in Unity meistert (Note 1,0).",
+      longDescription:"Im Rahmen meiner Bachelorarbeit habe ich einen ML-Agenten mit dem Unity ML-Agents Toolkit in Unity trainiert, der verschiedene dreidimensionale Parkour-Level mit dynamischen Hindernissen bewältigt.\n\nDer Fokus der Arbeit liegt auf der Frage, wie Trainingsstrategien, Curriculum-Design und Domain Randomization gestaltet werden müssen, damit der Agent nicht nur einzelne Trainingsszenarien löst, sondern robuste und generalisierungsfähige Strategien lernt. Das finale Modell erreicht hohe Erfolgsraten in den Trainingsleveln und zeigt zugleich übertragbares Verhalten in einem separaten Generalisierungs-Level.\n\nTechnisch kombiniert das Projekt umfangreiche Raycast- und Vektorbeobachtungen, einen hybriden Aktionsraum (kontinuierliche Bewegung + diskrete Aktionen) sowie einen PPO-Algorithmus mit LSTM-Netzwerk. Ein eigenes Python-Automatisierungsskript steuert Langzeittrainings, passt Hyperparameter dynamisch an und ermöglicht eine detaillierte Auswertung der Ergebnisse mit TensorBoard.",
       image: "/Bilder/dummy.png", // Placeholder
       detailComponent: "",
-      tags: ["Reinforcement Learning", "Unity ML-Agents", "Python", "Research"],
+      tags: ["Reinforcement Learning", "Unity 3D", "ML-Agents", "PPO", "LSTM"],
       features: [
-        "Training eines Agenten",
-        "Lösung von Hindernis-Parcours & Rätseln",
-        "Analyse von Belohnungssystemen"
+        "Training eines ML-Agenten in 13 Parkour-Leveln mit progressiver Komplexität",
+        "Mehere unterschiedliche Varianten für ausgewählte Level",
+        "Umfangreiche Sensorik mit RayPerceptionSensor3D und Vektorbeobachtungen (insgesamt 538 Beobachtungen pro Schritt)",
+        "Hybrider Aktionsraum aus kontinuierlicher Bewegung und diskreten Aktionen (Springen, Rennen)",
+        "Ausgefeilte Reward-Struktur mit Checkpoints, Zeitbonus und Bewegungsoptimierung",
+        "Variantenbasiertes Level-Design zur Förderung von Generalisierung",
+        "Python-Automatisierungsskript zur Steuerung langer Trainingsläufe und dynamischer Hyperparameter",
+        "Auswertung der Trainingsläufe mit TensorBoard (Rewards, Losses, Erfolgsquoten)"
       ],
-      techStack: ["Unity", "ML-Agents", "Python", "TensorFlow"],
+      techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
       demoDownload: "/Download-Demos/Bachelorarbeit_Demo_Windows_Build.zip",
-      githubUrl: "#"
+      githubUrl: "#",
+      stats: [
+        // { icon: "Clock", label: "Entwicklungszeit Projekt", value: "3 Monate" },
+        // { icon: "Clock", label: "Entwicklungszeit schriftliche Arbeit", value: "1.5 Monate" },
+        { icon: "Layers", label: "Trainingslevel", value: "13 Level + 1 Generalisierungslevel" },
+        { icon: "Layers", label: "Parkour-Varianten", value: "31 unterschiedliche Parkours" },
+        { icon: "Target", label: "Erfolgsrate Trainingslevel", value: "ca. 92 %" },
+        { icon: "Star", label: "Erfolgsrate Generalisierungslevel", value: "43–53 %" },
+        { icon: "Award", label: "Note", value: "1.0" },
+      ]
     },
     {
       id: "card-game-mobile",
