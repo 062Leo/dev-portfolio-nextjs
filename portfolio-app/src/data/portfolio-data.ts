@@ -173,6 +173,7 @@ export const portfolioData = {
         { icon: "Target", label: "Erfolgsrate Trainingslevel", value: "ca. 92 %" },
         { icon: "Star", label: "Erfolgsrate Generalisierungslevel", value: "43–53 %" },
         { icon: "Award", label: "Note", value: "1.0" },
+        { icon: "Clock", label: "Trainingsdauer aller Modelle insgesamt", value: "711,17 Stunden" },
       ]
     },
     {
