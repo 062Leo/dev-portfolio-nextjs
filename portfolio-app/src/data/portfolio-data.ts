@@ -172,9 +172,9 @@ export const portfolioData = {
         { icon: "Layers", label: "Parkour-Varianten", value: "31 unterschiedliche Parkours" },
         { icon: "Target", label: "Erfolgsrate Trainingslevel", value: "ca. 92 %" },
         { icon: "Star", label: "Erfolgsrate Generalisierungslevel", value: "43–53 %" },
-        { icon: "Award", label: "Note", value: "1.0" },
-        { icon: "Zap", label: "Trainierte Modelle", value: "ca. 88" },
         { icon: "Clock", label: "Trainingsdauer aller Modelle insgesamt", value: "711,17 Stunden" },
+        { icon: "Zap", label: "Trainierte Modelle", value: "ca. 88" },
+        { icon: "Award", label: "Note", value: "1.0" },
       ]
     },
     {
