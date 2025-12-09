@@ -163,8 +163,8 @@ export const portfolioData = {
         "Auswertung der Trainingsläufe mit TensorBoard (Rewards, Losses, Erfolgsquoten)"
       ],
       techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
-      demoDownload: "/Download-Demos/Bachelorarbeit_Demo_Windows_Build.zip",
-      githubUrl: "#",
+      demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
+      githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
       stats: [
         // { icon: "Clock", label: "Entwicklungszeit Projekt", value: "3 Monate" },
         // { icon: "Clock", label: "Entwicklungszeit schriftliche Arbeit", value: "1.5 Monate" },
