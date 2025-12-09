@@ -20,7 +20,6 @@ export type Project = {
   images?: ProjectImage[]; // New field for multiple images with captions
   tags: string[];
   demoUrl?: string;
-  demoEmbedUrl?: string;
   demoDownload?: string;
   githubUrl?: string;
   features?: string[];
@@ -118,8 +117,7 @@ export const portfolioData = {
         "Dynamische Objektzerstörung und Speicheroptimierung"
       ],
       techStack: ["Unity", "C#", "Physics2D", "Tilemap System"],
-      demoUrl: "/unity-demo/BroforceWebBuild/index.html",
-      demoEmbedUrl: "/unity-demo/BroforceWebBuild/index.html",
+      demoUrl: "/Live-Demos/BroforceWebBuild/index.html",
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
       stats: [
         { icon: "Clock", label: "Entwicklungszeit", value: "1 Monat" },
@@ -144,8 +142,7 @@ export const portfolioData = {
         "Map-Design & ProBuilder"
       ],
       techStack: ["Unity", "C#", "Netcode for GameObjects", "Unity Transport"],
-      demoUrl: "/unity-demo/HuntAndHide_WebGl_Demo_Build/index.html",
-      demoEmbedUrl: "/unity-demo/HuntAndHide_WebGl_Demo_Build/index.html",
+      demoUrl: "/Live-Demos/HuntAndHide_WebGl_Demo_Build/index.html",
       githubUrl: "#"
     },
     {
@@ -162,7 +159,7 @@ export const portfolioData = {
         "Analyse von Belohnungssystemen"
       ],
       techStack: ["Unity", "ML-Agents", "Python", "TensorFlow"],
-      demoUrl: "#",
+      demoDownload: "/Download-Demos/Bachelorarbeit_Demo_Windows_Build.zip",
       githubUrl: "#"
     },
     {
