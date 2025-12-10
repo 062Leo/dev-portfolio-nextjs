@@ -190,16 +190,14 @@ export function DetailPage() {
 
                         <div className="flex flex-wrap gap-4 pt-6">
                             {project.demoUrl && (
-                                <a
-                                    href={project.demoUrl}
-                                    target="_blank"
-                                    rel="noreferrer"
+                                <Link
+                                    href={`/projects/${id}/demo`}
                                     className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
                                     style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
                                 >
                                     <Play className="mr-2 w-5 h-5" />
                                     PLAY DEMO
-                                </a>
+                                </Link>
                             )}
                             {project.demoDownload && (
                                 <a
