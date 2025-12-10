@@ -62,6 +62,25 @@ export type ThemeColorSet = {
     boomforceScreenshotsTitleColor: string;
     boomforceScreenshotsBorder: string;
     boomforceScreenshotsBackground: string;
+    // Demo Component Colors
+    demoBackLinkText: string;
+    demoBackLinkHover: string;
+    demoTitleColor: string;
+    demoTitleGlow: string;
+    demoTextColor: string;
+    demoControlsTitleColor: string;
+    demoControlsHeaderActionColor: string;
+    demoControlsHeaderKeysColor: string;
+    demoControlsHeaderSeparatorColor: string;
+    demoControlsRowSeparatorColor: string;
+    demoControlsActionTextColor: string;
+    demoControlsKeysTextColor: string;
+    demoFrameBorderColor: string;
+    demoFrameBackgroundColor: string;
+    demoButtonGradientStart: string;
+    demoButtonGradientEnd: string;
+    demoButtonTextColor: string;
+    demoButtonShadowColor: string;
     // ProjectsSection Visual Tokens
     projectsSectionTitleColor: string;
     projectsSectionAccentText: string;
@@ -205,6 +224,25 @@ const darkColors: ThemeColorSet = {
     boomforceScreenshotsTitleColor: "rgba(248, 113, 113, 1)",
     boomforceScreenshotsBorder: "rgba(167, 139, 250, 1)",
     boomforceScreenshotsBackground: "rgba(11, 13, 23, 1)",
+    // Demo Component Colors (reusing BoomForce palette)
+    demoBackLinkText: "rgba(167, 139, 250, 1)", // same as boomforceBackLinkText
+    demoBackLinkHover: "rgba(167, 139, 250, 1)", // same as boomforceBackLinkHover
+    demoTitleColor: "rgba(239, 68, 68, 1)", // same as boomforceProjectTitleColor
+    demoTitleGlow: "0 0 15px rgba(180, 162, 234, 0.3), 0 0 25px rgba(104, 80, 172, 0.3)", // same as boomforceProjectTitleGlow
+    demoTextColor: "rgba(213, 220, 232, 1)", // same as boomforceProjectDescriptionText
+    demoControlsTitleColor: "rgba(248, 113, 113, 1)", // same as boomforceFeatureTitleColor
+    demoControlsHeaderActionColor: "rgba(248, 149, 113, 1)", // same as boomforceFeatureTitleColor
+    demoControlsHeaderKeysColor: "rgba(248, 149, 113, 1)", // same as boomforceFeatureTitleColor
+    demoControlsHeaderSeparatorColor: "rgba(167, 139, 250, 1)", // same as boomforceScreenshotsBorder
+    demoControlsRowSeparatorColor: "rgba(167, 139, 250, 1)", // same as boomforceScreenshotsBorder
+    demoControlsActionTextColor: "rgba(213, 220, 232, 1)", // same as boomforceProjectDescriptionText
+    demoControlsKeysTextColor: "rgba(213, 220, 232, 1)", // same as boomforceProjectDescriptionText
+    demoFrameBorderColor: "rgba(167, 139, 250, 1)", // same as boomforceMainImageBorder
+    demoFrameBackgroundColor: "rgba(11, 13, 23, 1)", // same as boomforceMainImageBackground
+    demoButtonGradientStart: "rgba(105, 30, 155, 1)", // same as boomforceDemoBtnGradientStart
+    demoButtonGradientEnd: "rgba(167, 139, 250, .7)", // same as boomforceDemoBtnGradientEnd
+    demoButtonTextColor: "rgba(213, 220, 232, 1)", // same as boomforceDemoBtnTextColor
+    demoButtonShadowColor: "rgba(167, 139, 250, 0.5)", // same as boomforceDemoBtnShadow
     // HomeSection Visual Tokens
     homeSectionBackgroundGradient:
         "radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.35), transparent 45%), radial-gradient(circle at 80% 0%, rgba(167, 139, 250, 0.4), transparent 50%)",

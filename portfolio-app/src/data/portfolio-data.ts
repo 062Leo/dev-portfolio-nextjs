@@ -123,10 +123,10 @@ export const portfolioData = {
       demoUrl: "/Live-Demos/BroforceWebBuild/index.html",
       demoDownload: "",
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
-      demotext: "**Hinweis zur Web-Demo:** In dieser Demo kannst du die zerstörbare Umgebung, physikbasierten Kettenreaktionen und das Zusammenspiel von Fässern, Blöcken und fallenden Steinen direkt ausprobieren. Experimentiere mit verschiedenen Situationen, löse Explosionen aus und beobachte, wie sich die Effekte über das Level ausbreiten.",
+      demotext: "**Hinweis zur Demo:** Zu Beginn siehst du alle Objekttypen. Gehe durch das blaue Portal, um in den Testbereich teleportiert zu werden, in dem du das Verhalten der einzelnen Objekte ausprobieren kannst. Läufst du anschließend weiter nach rechts, gelangst du nach dem Testbereich zu einem weiteren Portal, das dich ins Demolevel bringt. Alternativ kannst du auch einfach nach unten springen, falls du das Portal nicht erreichst. \n\n PS: Auf den fliegenden Fässern kannst du mitreiten, indem du dich auf sie stellst, nachdem du sie mit einem Schuss aktiviert hast.",
       demoControls: [
-        "Links/Rechts: A/D oder Pfeiltasten",
-        "Leitern: W/S oder Pfeiltasten Hoch/Runter",
+        "Links/Rechts: A/D oder Pfeiltasten ⬅️➡️",
+        "Leitern: W/S oder Pfeiltasten ⬆️⬇️",
         "Springen: Leertaste",
         "Schießen: Linke Maustaste"
       ],

@@ -64,7 +64,7 @@ export function DetailPage() {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
                 <h1 className="text-4xl font-bold">Project not found</h1>
-                <Link href="/" className="mt-4 hover:underline" style={{ color: colors.boomforceBackLinkText }}>
+                <Link href="/" className="mt-4 hover:underline" style={{ color: colors.demoBackLinkText }}>
                     Back to Home
                 </Link>
             </div>
@@ -92,9 +92,9 @@ export function DetailPage() {
                         type="button"
                         onClick={() => router.back()}
                         className="mb-8 inline-flex items-center gap-2 transition-colors"
-                        style={{ color: colors.boomforceBackLinkText }}
-                        onMouseEnter={(e) => (e.currentTarget as HTMLButtonElement).style.color = colors.boomforceBackLinkHover}
-                        onMouseLeave={(e) => (e.currentTarget as HTMLButtonElement).style.color = colors.boomforceBackLinkText}
+                        style={{ color: colors.demoBackLinkText }}
+                        onMouseEnter={(e) => (e.currentTarget as HTMLButtonElement).style.color = colors.demoBackLinkHover}
+                        onMouseLeave={(e) => (e.currentTarget as HTMLButtonElement).style.color = colors.demoBackLinkText}
                     >
                         <ArrowLeft size={20} />
                         Back to Project
@@ -105,7 +105,7 @@ export function DetailPage() {
                     <div>
                         <h1
                             className="text-3xl md:text-4xl font-bold font-rubik uppercase"
-                            style={{ color: colors.boomforceProjectTitleColor, textShadow: colors.boomforceProjectTitleGlow }}
+                            style={{ color: colors.demoTitleColor, textShadow: colors.demoTitleGlow }}
                         >
                             {project.title} – Demo
                         </h1>
@@ -113,20 +113,58 @@ export function DetailPage() {
 
                     <div
                         className="text-base md:text-lg leading-relaxed space-y-4"
-                        style={{ color: colors.boomforceProjectDescriptionText }}
+                        style={{ color: colors.demoTextColor }}
                     >
-                        {project.demotext && renderMarkdownText(project.demotext, colors.boomforceProjectDescriptionText)}
-                        <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.boomforceFeatureTitleColor }}>STEUERUNG</h3>
+                        {project.demotext && renderMarkdownText(project.demotext, colors.demoTextColor)}
+                        <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.demoControlsTitleColor }}>STEUERUNG</h3>
                         {project.demoControls && project.demoControls.length > 0 && (
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-sm md:text-base border-collapse">
+                            <div className="inline-block overflow-x-auto max-w-md">
+                                <table className="text-sm md:text-base border-collapse">
+                                    <thead>
+                                        <tr
+                                            style={{ borderBottom: `1px solid ${colors.demoControlsHeaderSeparatorColor}` }}
+                                        >
+                                            <th
+                                                className="py-1 pr-4 font-semibold text-right font-press-start"
+                                                style={{ color: colors.demoControlsHeaderActionColor }}
+                                            >
+                                                Aktion
+                                            </th>
+                                            <th
+                                                className="py-1 pl-4 font-semibold text-left font-press-start"
+                                                style={{
+                                                    borderLeft: `1px solid ${colors.demoControlsHeaderSeparatorColor}`,
+                                                    color: colors.demoControlsHeaderKeysColor,
+                                                }}
+                                            >
+                                                Tasten
+                                            </th>
+                                        </tr>
+                                    </thead>
                                     <tbody>
                                         {project.demoControls.map((control, index) => {
                                             const [action, input] = control.split(":");
                                             return (
-                                                <tr key={index} className="border-b last:border-b-0">
-                                                    <td className="py-1 pr-4 font-semibold">{action}</td>
-                                                    <td className="py-1">{input?.trim()}</td>
+                                                <tr
+                                                    key={index}
+                                                    className="last:border-b-0"
+                                                    style={{ borderBottom: `1px solid ${colors.demoControlsRowSeparatorColor}` }}
+                                                >
+                                                    <td
+                                                        className="py-1 pr-4 font-semibold text-right"
+                                                        style={{ color: colors.demoControlsActionTextColor }}
+                                                    >
+                                                        {action}
+                                                    </td>
+                                                    <td
+                                                        className="py-1 pl-4 text-left"
+                                                        style={{
+                                                            borderLeft: `1px solid ${colors.demoControlsRowSeparatorColor}`,
+                                                            color: colors.demoControlsKeysTextColor,
+                                                        }}
+                                                    >
+                                                        {input?.trim()}
+                                                    </td>
                                                 </tr>
                                             );
                                         })}
@@ -141,8 +179,8 @@ export function DetailPage() {
                             <div
                                 className="w-full rounded-xl overflow-hidden border-2"
                                 style={{
-                                    borderColor: colors.boomforceMainImageBorder,
-                                    backgroundColor: colors.boomforceMainImageBackground,
+                                    borderColor: colors.demoFrameBorderColor,
+                                    backgroundColor: colors.demoFrameBackgroundColor,
                                     height: "80vh",
                                 }}
                             >
@@ -165,9 +203,9 @@ export function DetailPage() {
                                 rel="noreferrer"
                                 className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
                                 style={{
-                                    background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`,
-                                    color: colors.boomforceDemoBtnTextColor,
-                                    boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}`,
+                                    background: `linear-gradient(to right, ${colors.demoButtonGradientStart}, ${colors.demoButtonGradientEnd})`,
+                                    color: colors.demoButtonTextColor,
+                                    boxShadow: `0 0 20px ${colors.demoButtonShadowColor}`,
                                 }}
                             >
                                 <Play className="mr-2 w-5 h-5" />
