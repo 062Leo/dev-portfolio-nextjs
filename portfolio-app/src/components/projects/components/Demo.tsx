@@ -109,27 +109,35 @@ export function DetailPage() {
                         >
                             {project.title} – Demo
                         </h1>
-                        {project.subtitle && project.subtitle.trim() && (
-                            <p
-                                className="mt-2 text-lg font-press-start"
-                                style={{ color: colors.boomforceProjectDescriptionText }}
-                            >
-                                {project.subtitle}
-                            </p>
-                        )}
                     </div>
 
                     <div
-                        className="text-base md:text-lg leading-relaxed"
+                        className="text-base md:text-lg leading-relaxed space-y-4"
                         style={{ color: colors.boomforceProjectDescriptionText }}
                     >
-                        {project.longDescription
-                            ? renderMarkdownText(project.longDescription, colors.boomforceProjectDescriptionText)
-                            : renderMarkdownText(project.description, colors.boomforceProjectDescriptionText)}
+                        {project.demotext && renderMarkdownText(project.demotext, colors.boomforceProjectDescriptionText)}
+                        <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.boomforceFeatureTitleColor }}>STEUERUNG</h3>
+                        {project.demoControls && project.demoControls.length > 0 && (
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm md:text-base border-collapse">
+                                    <tbody>
+                                        {project.demoControls.map((control, index) => {
+                                            const [action, input] = control.split(":");
+                                            return (
+                                                <tr key={index} className="border-b last:border-b-0">
+                                                    <td className="py-1 pr-4 font-semibold">{action}</td>
+                                                    <td className="py-1">{input?.trim()}</td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
                     </div>
 
                     <div className="mt-4">
-                        {project.demoUrl ? (
+                        {project.demoUrl && (
                             <div
                                 className="w-full rounded-xl overflow-hidden border-2"
                                 style={{
@@ -146,10 +154,6 @@ export function DetailPage() {
                                     />
                                 </div>
                             </div>
-                        ) : (
-                            <p style={{ color: colors.boomforceProjectDescriptionText }}>
-                                Für dieses Projekt ist aktuell keine spielbare Web-Demo hinterlegt.
-                            </p>
                         )}
                     </div>
 
