@@ -128,21 +128,22 @@ export const portfolioData = {
       id: "prop-hunt",
       title: "Hide'n Hunt",
       subtitle:"",
-      description: "Asymmetrisches Online-Multiplayer-Spiel, inspiriert von \"Propnight\". Physikbasierte Prop-Bewegung und komplexes Networking.",
-      longDescription: "**Hide'n Hunt** entstand als Projekt für den \"Labor Games\" Kurs meines Studiums. Es ist Prototyp eines asymmetrisches Online-Multiplayer-Spiels, inspiriert von dem Spiel  \"Propnight \". \n\n Mehr Informationen und technische Details  im **README auf GitHub**.",
+      description: "Asymmetrisches 4 vs 1 Online-Multiplayer Survival-Horrorspiel mit Prop-Mechanik, Generatoren-Gameplay und Physik-basierter Prop-Bewegung.",
+      longDescription: "**Hide'n Hunt** entstand als Projekt für den Kurs \"Labor Games\" in meinem Studium. Es ist ein Prototyp eines asymmetrischen 4 vs 1 Online-Multiplayer Survival-Horrorspiels, in dem bis zu vier Überlebende gegen einen Killer antreten.\n\nDie Besonderheit des Spiels ist die **Prop-Mechanik**: Überlebende können sich in nahezu jeden Gegenstand der Umgebung verwandeln, um sich zu verstecken oder den Killer zu täuschen. Das zentrale Spielziel besteht darin, gemeinsam **fünf Generatoren zu reparieren**, um das **Fluchttor** zu öffnen und der Map zu entkommen, während der Killer die Spieler jagt, niederschlägt und auf **Folterstühlen** platziert.\n\nTechnisch legt das Projekt den Fokus auf **Online-Multiplayer** und **Networking** mit Unitys Netcode for GameObjects. Die korrekte Synchronisation von Spielerbewegungen, Prop-Verwandlungen, Interaktionen und dem Wechsel zwischen First- und Third-Person-Perspektive war besonders herausfordernd und erforderte viele Iterationen und Debugging-Runden.\n\nMehr Informationen finden sich im **README auf GitHub**.",
       image: "/Bilder/dummy.png", // Placeholder
       detailComponent: "",
-      tags: ["Unity 3D", "C#", "Netcode for GameObjects", "Multiplayer"],
+      tags: ["Unity 3D", "C#", "Netcode for GameObjects", "Online Multiplayer", "Survival Horror", "Prop Hunt"],
       features: [
-        "Physikbasierte Prop-Bewegung",
-        "FP/TP-Kamera",
-        "Komplexes Multiplayer-Debugging",
-        "Netzwerkarchitektur / State Machines",
-        "Map-Design & ProBuilder"
+        "Asymmetrisches 4 vs 1-Gameplay (4 Survivors vs. 1 Killer)",
+        "Prop-Mechanik: Verwandlung in nahezu jedes Objekt in der Umgebung",
+        "Kooperatives Reparieren von fünf Generatoren zur Flucht",
+        "Escape Door als finales Fluchtziel nach abgeschlossenen Reparaturen",
+        "Physikbasierte Prop-Bewegung mit Forces und Impulsen der Unity-Physikengine",
+        "Survival-Horror-Atmosphäre mit düsterem Setting"
       ],
       techStack: ["Unity", "C#", "Netcode for GameObjects", "Unity Transport"],
       demoUrl: "/Live-Demos/HuntAndHide_WebGl_Demo_Build/index.html",
-      githubUrl: "#"
+      githubUrl: "https://github.com/062Leo/Hide-And-Hunt"
     },
     {
       id: "ml-agent-bachelor",
