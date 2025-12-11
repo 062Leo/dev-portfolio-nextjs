@@ -27,6 +27,7 @@ export type Project = {
   demoUrl?: string;
   demoDownload?: string;
   githubUrl?: string;
+  youtubeLink?: string;
   demotext: string;
   demoControls: string[] | DemoControlsGroup[];
   misctext: string;
@@ -42,9 +43,9 @@ export const portfolioData = {
   personal: {
     firstName: "Leo",
     lastName: "",
-    role: "Softwareentwickler (B.Sc.) - Schwerpunkt Games Engineering",
-    tagline: "Spezialisiert in Unity, C#, .NET",
-    motivation: "Fokus auf Clean Code, Refactoring, qualitativ hochwertige Software. Leidenschaft für Game Dev & Software Engineering.",
+    role: "Softwareentwickler (B.Sc. Softwareentwicklung, Schwerpunkt Games Engineering)",
+    tagline: "Unity, C# und .NET - Fokus auf Games Engineering & sauberen Code",
+    motivation: "Abgeschlossenes Bachelorstudium der Softwareentwicklung (Schwerpunkt Games Engineering) und Praxiserfahrung in C#, .NET und Unity - mit starkem Fokus auf Clean Code, Refactoring und qualitativ hochwertige, wartbare Software.",
     email: "contact@example.com", // Placeholder
     github: "https://github.com/062Leo",
     linkedin: "#", // Placeholder
@@ -52,20 +53,21 @@ export const portfolioData = {
   about: {
     title: "About Me",
     description: [
-      "Ich bin Softwareentwickler mit einem Bachelor of Science in Games Engineering.",
-      "Mein Fokus liegt auf der Entwicklung von qualitativ hochwertiger Software, Clean Code und Refactoring. Ich habe eine Leidenschaft für sowohl Game Development als auch klassisches Software Engineering.",
-      "Ich arbeite gerne mit modernen Technologien und bin immer motiviert, neue Dinge zu lernen."
+      "Ich bin Softwareentwickler mit einem erfolgreich abgeschlossenen Bachelor of Science in Softwareentwicklung (Schwerpunkt Games Engineering) an der Hochschule Heilbronn.",
+      "Im Studium und in praxisnahen Projekten habe ich umfangreiche Erfahrung in der Entwicklung von 2D- und 3D-Spielen mit Unity und C# sowie in der Umsetzung von Web- und Desktopanwendungen gesammelt.",
+      "Dabei habe ich mich intensiv mit Clean Code, Refactoring und der Verbesserung bestehender C#- und .NET-Anwendungen auseinandergesetzt.",
+      "Ich lege großen Wert auf strukturierte Arbeitsweisen, qualitativ hochwertige Software und kontinuierliche Weiterentwicklung - sowohl beruflich als auch persönlich."
     ],
     softSkills: [
-      "Teamfähigkeit",
-      "Analytische & strukturierte Arbeitsweise",
-      "Schnelle Auffassungsgabe",
-      "Lernbereitschaft",
+      "Teamfähigkeit / Kollaboration",
+      "Eigenverantwortliche Arbeitsweise",
+      "Strukturierte und analytische Arbeitsweise",
+      "Lernbereitschaft / Schnelle Auffassungsgabe",
       "Problemlösungskompetenz",
       "Kommunikationsfähigkeit",
       "Agiles Mindset",
       "Hoher Qualitätsanspruch",
-      "Motivation / Begeisterung"
+      "Motivation und Begeisterung"
     ]
   },
   skills: [
@@ -82,7 +84,7 @@ export const portfolioData = {
     { name: "Netcode for GameObjects", level: 75, category: "game engines" },
     { name: "Unity ML-Agents", level: 85, category: "game engines" },
     { name: "Mobile / Android", level: 70, category: "game engines" },
-    { name: "Unity Performance Opt.", level: 80, category: "game engines" },
+    { name: "Unity Performance Optimierung", level: 80, category: "game engines" },
 
     // Frameworks & Tech
     { name: ".NET", level: 90, category: "frameworks & libraries" },
@@ -131,6 +133,7 @@ export const portfolioData = {
       demoUrl: "/Live-Demos/BroforceWebBuild/index.html",
       demoDownload: "",
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
+      youtubeLink: "https://youtu.be/8FqAkE2lDLM",
       demotext: "**Hinweis zur Demo:** Zu Beginn siehst du alle Objekttypen. Gehe durch das blaue Portal, um in den Testbereich teleportiert zu werden, in dem du das Verhalten der einzelnen Objekte ausprobieren kannst. Läufst du anschließend weiter nach rechts, gelangst du nach dem Testbereich zu einem weiteren Portal, das dich ins Demolevel bringt. Alternativ kannst du auch einfach nach unten springen, falls du das Portal nicht erreichst. \n\n PS: Auf den fliegenden Fässern kannst du mitreiten, indem du dich auf sie stellst, nachdem du sie mit einem Schuss aktiviert hast.",
       demoControls: [
         "Links/Rechts: A/D oder Pfeiltasten ⬅️➡️",
@@ -142,7 +145,7 @@ export const portfolioData = {
       misctext: "",
       miscimage: "",
       miscTitle: "",
-      stats: []
+      stats: [ { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" }]
     },
     {
       id: "prop-hunt",
@@ -150,7 +153,7 @@ export const portfolioData = {
       subtitle:"",
       description: "Asymmetrisches 4 vs 1 Online-Multiplayer Survival-Horrorspiel mit Prop-Mechanik, Generatoren-Gameplay und Physik-basierter Prop-Bewegung.",
       longDescription: "**Hide'n Hunt** entstand als Projekt für den Kurs \"Labor Games\" in meinem Studium. Es ist ein Prototyp eines asymmetrischen 4 vs 1 Online-Multiplayer Survival-Horrorspiels, in dem bis zu vier Überlebende gegen einen Killer antreten.\n\nDie Besonderheit des Spiels ist die **Prop-Mechanik**: Überlebende können sich in nahezu jeden Gegenstand der Umgebung verwandeln, um sich zu verstecken oder den Killer zu täuschen. Das zentrale Spielziel besteht darin, gemeinsam **fünf Generatoren zu reparieren**, um das **Fluchttor** zu öffnen und der Map zu entkommen, während der Killer die Spieler jagt, niederschlägt und auf **Folterstühlen** platziert.\n\nTechnisch legt das Projekt den Fokus auf **Online-Multiplayer** und **Networking** mit Unitys Netcode for GameObjects. Die korrekte Synchronisation von Spielerbewegungen, Prop-Verwandlungen, Interaktionen und dem Wechsel zwischen First- und Third-Person-Perspektive war besonders herausfordernd und erforderte viele Iterationen und Debugging-Runden.\n\nMehr Informationen finden sich im **README auf GitHub**.",
-      image: "/Bilder/dummy.png", // Placeholder
+      image: "/Bilder/HideAndHunt/menu.png",
       images: [],
       detailComponent: "",
       videos: [],
@@ -167,6 +170,7 @@ export const portfolioData = {
       demoUrl: "/Live-Demos/HuntAndHide_WebGl_Demo_Build/index.html",
       demoDownload: "",
       githubUrl: "https://github.com/062Leo/Hide-And-Hunt",
+      youtubeLink: "",
       demotext: "Diese Demo-Version zeigt dir die grundlegenden Spielmechaniken, allerdings ohne vollständige Online-Funktionen.\n\n**So startest du die Demo:**\n\n1. Auf **Play** klicken.\n2. Auf **Create Lobby** klicken.\n3. Rolle wählen: **Killer** oder **Survivor**.\n\n",
       demoControls: [
         {
@@ -196,15 +200,20 @@ export const portfolioData = {
       misctext: "Map Legende:\n\n - Rote Linie: Begrenzung der spielbaren Map\n - Gelbe Kreuze: Positionen der Generatoren\n- Grüne Kreuze: Positionen der Death Chairs\n- Oranger Pfeil: Position der Escape Door",
       miscimage: "/Bilder/HideAndHunt/Map.png",
       miscTitle: "Die Map:",
-      stats: []
+      stats: [
+  { icon: "Users", label: "Spielerrollen",   value: "1 Killer, bis zu 4 Survivors" },
+  { icon: "Layers", label: "Spielaufbau",    value: "Asymmetrisches 4v1-Setup" },
+  { icon: "Code",   label: "Umfang",         value: "Kompletter Gameplay-Prototyp" },
+  { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" }
+]
     },
     {
       id: "ml-agent-bachelor",
       title: "Bachelorarbeit: ML-Agent in Unity",
       subtitle: "",
-      description: "Reinforcement-Learning-Agent, der dynamische 3D-Parkours und Rätsel in Unity meistert (Note 1,0).",
+      description: "Reinforcement-Learning-Agent, der mehrere dynamische 3D-Parkours in Unity meistert.",
       longDescription:"Im Rahmen meiner Bachelorarbeit habe ich einen ML-Agenten mit dem Unity ML-Agents Toolkit in Unity trainiert, der verschiedene dreidimensionale Parkour-Level mit dynamischen Hindernissen bewältigt.\n\nDer Fokus der Arbeit liegt auf der Frage, wie Trainingsstrategien, Curriculum-Design und Domain Randomization gestaltet werden müssen, damit der Agent nicht nur einzelne Trainingsszenarien löst, sondern robuste und generalisierungsfähige Strategien lernt. Das finale Modell erreicht hohe Erfolgsraten in den Trainingsleveln und zeigt zugleich übertragbares Verhalten in einem separaten Generalisierungs-Level.\n\nTechnisch kombiniert das Projekt umfangreiche Raycast- und Vektorbeobachtungen, einen hybriden Aktionsraum (kontinuierliche Bewegung + diskrete Aktionen) sowie einen PPO-Algorithmus mit LSTM-Netzwerk. Ein eigenes Python-Automatisierungsskript steuert Langzeittrainings, passt Hyperparameter dynamisch an und ermöglicht eine detaillierte Auswertung der Ergebnisse mit TensorBoard.",
-      image: "/Bilder/dummy.png", // Placeholder
+      image: "/Bilder/BachelorArbeit/BachelorArbeit.png",
       images: [],
       detailComponent: "",
       videos: [],
@@ -223,6 +232,7 @@ export const portfolioData = {
       demoUrl: "",
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
       githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
+      youtubeLink: "https://youtu.be/RrsitJEl0AI",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -235,6 +245,7 @@ export const portfolioData = {
         { icon: "Star", label: "Erfolgsrate Generalisierungslevel", value: "43-53 %" },
         { icon: "Clock", label: "Trainingsdauer aller Modelle insgesamt", value: "711,17 Stunden" },
         { icon: "Zap", label: "Trainierte Modelle", value: "ca. 88" },
+        { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" },
         { icon: "Award", label: "Note", value: "1.0" },
       ]
     },
@@ -259,6 +270,7 @@ export const portfolioData = {
       demoUrl: "#",
       demoDownload: "",
       githubUrl: "#",
+      youtubeLink: "",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -291,6 +303,7 @@ export const portfolioData = {
       demoUrl: "#",
       demoDownload: "",
       githubUrl: "#",
+      youtubeLink: "",
       demotext: "",
       demoControls: [],
       stats: []
@@ -316,6 +329,7 @@ export const portfolioData = {
       demoUrl: "#",
       demoDownload: "",
       githubUrl: "#",
+      youtubeLink: "",
       demotext: "",
       demoControls: [],
       stats: []
@@ -342,6 +356,7 @@ export const portfolioData = {
       demoUrl: "",
       demoDownload: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF/releases/download/releaseV1/GameOfLife.zip",
       githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
+      youtubeLink: "",
       demotext: "",
       demoControls: [],
       misctext: "",
