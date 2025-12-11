@@ -11,7 +11,7 @@ import { useThemeColors, applyThemeColors } from "@/components/colors";
 const navItems = [
   { name: "Home", href: "/" },
   { name: "About", href: "/#about" },
-  { name: "Skills", href: "/#skills" },
+  // { name: "Skills", href: "/#skills" },
   { name: "Projects", href: "/projects" },
   { name: "Contact", href: "/#contact" },
 ];
@@ -95,7 +95,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden space-x-8 md:flex flex-1 ml-170">
+        <div className="hidden space-x-8 md:flex flex-1 ml-190">
           {navItems.map((item) => (
             <Link
               key={item.name}

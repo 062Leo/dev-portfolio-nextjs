@@ -47,8 +47,8 @@ export function ContactSection() {
           Get In <span style={{ color: colors.contactSectionAccentColor }}>Touch</span>
         </h2>
 
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-          <div className="space-y-8">
+        <div className="flex justify-center">
+          {/* <div className="space-y-8">
             <h3 className="text-2xl font-semibold">Contact Information</h3>
 
             <ContactRow
@@ -73,10 +73,10 @@ export function ContactSection() {
               value="Dummy. Du, mmy"
               colors={colors}
             />
-          </div>
+          </div> */}
 
           <div
-            className="rounded-lg p-8 shadow-sm"
+            className="w-full max-w-xl rounded-lg p-8 shadow-sm md:w-3/4 lg:w-2/3"
             style={{
               backgroundColor: colors.contactSectionCardBackground,
               borderColor: colors.contactSectionCardBorder,

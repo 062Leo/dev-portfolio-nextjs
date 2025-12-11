@@ -183,16 +183,7 @@ export function ProjectsShowcase() {
             Check My Personal GitHub <ArrowRight size={16} />
           </a>
         </div>
-        <div className="mt-12 text-center">
-          <a
-            href="https://github.com/LeosGmbH"
-            target="_blank"
-            rel="noreferrer"
-            className="cosmic-button mx-auto flex w-fit items-center gap-2"
-          >
-            Check My GmbH GitHub <ArrowRight size={16} />
-          </a>
-        </div>
+        
       </div>
     </section>
   );

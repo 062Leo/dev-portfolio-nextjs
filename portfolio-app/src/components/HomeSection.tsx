@@ -99,7 +99,7 @@ export function HomeSection() {
             />
             <a
               href="/projects"
-              className="cosmic-button inline-flex items-center justify-center rounded-full px-8 py-3 text-sm font-semibold uppercase tracking-wide"
+              className="cosmic-button inline-flex items-center justify-center rounded-full px-15 py-5 text-l font-semibold uppercase tracking-wide"
               style={{
                 backgroundImage: `linear-gradient(135deg, ${colors.homeSectionButtonGradientStart}, ${colors.homeSectionButtonGradientEnd})`,
                 color: colors.homeSectionButtonText,
