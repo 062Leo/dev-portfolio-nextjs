@@ -39,7 +39,7 @@ export function About() {
               boxShadow: colors.aboutSectionCardShadow,
             }}
           >
-            <h3 className="text-2xl font-semibold">Aspiring Developer</h3>
+            <h3 className="text-2xl font-semibold">Software- und Spiele-Entwickler</h3>
 
             {portfolioData.about.description.map((paragraph, index) => (
               <p key={index}>
@@ -82,26 +82,26 @@ export function About() {
           <div className="grid grid-cols-1 gap-6">
             <InfoCard
               icon={<Code className="h-6 w-6" />}
-              title="Web Development"
-              description="Creating responsive websites and applications with modern frameworks."
+              title="Software Development"
+              description="Entwicklung moderner Anwendungen - von Web-Frontends bis zu Desktop- und Backend-Lösungen - mit Fokus auf sauberer Architektur und wartbarem Code."
               colors={colors}
             />
             <InfoCard
               icon={<Gamepad2 className="h-6 w-6" />}
-              title="Game Engines"
-              description="Developing interactive games and simulations with engines like Unity."
+              title="Game Development"
+              description="Konzeption und Umsetzung von 2D- und 3D-Spielen mit Schwerpunkt Unity und C#, inklusive Projekten zu Multiplayer, KI und physikbasiertem Gameplay."
               colors={colors}
             />
             <InfoCard
               icon={<ChartNoAxesCombined className="h-6 w-6" />}
-              title="Agile Methodologies"
-              description="Applying Scrum and agile practices in collaborative software projects."
+              title="Agile Collaboration"
+              description="Zusammenarbeit in agilen Softwareprojekten mit Scrum, klarer Kommunikation und strukturierter Vorgehensweise von Planung bis Umsetzung."
               colors={colors}
             />
             <InfoCard
               icon={<Briefcase className="h-6 w-6" />}
               title="Professional Mindset"
-              description="Constantly learning and striving to deliver high-quality, maintainable code."
+              description="Hoher Qualitätsanspruch, Clean Code, Refactoring und die Bereitschaft, sich fachlich wie persönlich kontinuierlich weiterzuentwickeln."
               colors={colors}
             />
           </div>

@@ -120,7 +120,7 @@ export function ProjectsShowcase() {
                   </Link>
                 </div>
 
-                <div className="flex justify-center space-x-3 text-primary">
+                {/* <div className="flex justify-center space-x-3 text-primary">
                   {project.demoUrl && (
                     <a
                       href={project.demoUrl}
@@ -167,7 +167,7 @@ export function ProjectsShowcase() {
                       </svg>
                     </a>
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
           ))}

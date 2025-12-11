@@ -10,6 +10,11 @@ export type ProjectStat = {
   value: string;
 };
 
+export type DemoControlsGroup = {
+  title: string;
+  items: string[];
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -22,6 +27,12 @@ export type Project = {
   demoUrl?: string;
   demoDownload?: string;
   githubUrl?: string;
+  youtubeLink?: string;
+  demotext: string;
+  demoControls: string[] | DemoControlsGroup[];
+  misctext: string;
+  miscimage: string;
+  miscTitle: string;
   features?: string[];
   techStack?: string[];
   detailComponent?: "BoomForce" | "Old";
@@ -32,9 +43,9 @@ export const portfolioData = {
   personal: {
     firstName: "Leo",
     lastName: "",
-    role: "Softwareentwickler (B.Sc.) - Schwerpunkt Games Engineering",
-    tagline: "Spezialisiert in Unity, C#, .NET",
-    motivation: "Fokus auf Clean Code, Refactoring, qualitativ hochwertige Software. Leidenschaft für Game Dev & Software Engineering.",
+    role: "Softwareentwickler (B.Sc. Softwareentwicklung, Schwerpunkt Games Engineering)",
+    tagline: "Unity, C# und .NET - Fokus auf Games Engineering & sauberen Code",
+    motivation: "Abgeschlossenes Bachelorstudium der Softwareentwicklung (Schwerpunkt Games Engineering) und Praxiserfahrung in C#, .NET und Unity - mit starkem Fokus auf Clean Code, Refactoring und qualitativ hochwertige, wartbare Software.",
     email: "contact@example.com", // Placeholder
     github: "https://github.com/062Leo",
     linkedin: "#", // Placeholder
@@ -42,20 +53,21 @@ export const portfolioData = {
   about: {
     title: "About Me",
     description: [
-      "Ich bin Softwareentwickler mit einem Bachelor of Science in Games Engineering.",
-      "Mein Fokus liegt auf der Entwicklung von qualitativ hochwertiger Software, Clean Code und Refactoring. Ich habe eine Leidenschaft für sowohl Game Development als auch klassisches Software Engineering.",
-      "Ich arbeite gerne mit modernen Technologien und bin immer motiviert, neue Dinge zu lernen."
+      "Ich bin Softwareentwickler mit einem erfolgreich abgeschlossenen Bachelor of Science in Softwareentwicklung (Schwerpunkt Games Engineering) an der Hochschule Heilbronn.",
+      "Im Studium und in praxisnahen Projekten habe ich umfangreiche Erfahrung in der Entwicklung von 2D- und 3D-Spielen mit Unity und C# sowie in der Umsetzung von Web- und Desktopanwendungen gesammelt.",
+      "Dabei habe ich mich intensiv mit Clean Code, Refactoring und der Verbesserung bestehender C#- und .NET-Anwendungen auseinandergesetzt.",
+      "Ich lege großen Wert auf strukturierte Arbeitsweisen, qualitativ hochwertige Software und kontinuierliche Weiterentwicklung - sowohl beruflich als auch persönlich."
     ],
     softSkills: [
-      "Teamfähigkeit",
-      "Analytische & strukturierte Arbeitsweise",
-      "Schnelle Auffassungsgabe",
-      "Lernbereitschaft",
+      "Teamfähigkeit / Kollaboration",
+      "Eigenverantwortliche Arbeitsweise",
+      "Strukturierte und analytische Arbeitsweise",
+      "Lernbereitschaft / Schnelle Auffassungsgabe",
       "Problemlösungskompetenz",
       "Kommunikationsfähigkeit",
       "Agiles Mindset",
       "Hoher Qualitätsanspruch",
-      "Motivation / Begeisterung"
+      "Motivation und Begeisterung"
     ]
   },
   skills: [
@@ -72,7 +84,7 @@ export const portfolioData = {
     { name: "Netcode for GameObjects", level: 75, category: "game engines" },
     { name: "Unity ML-Agents", level: 85, category: "game engines" },
     { name: "Mobile / Android", level: 70, category: "game engines" },
-    { name: "Unity Performance Opt.", level: 80, category: "game engines" },
+    { name: "Unity Performance Optimierung", level: 80, category: "game engines" },
 
     // Frameworks & Tech
     { name: ".NET", level: 90, category: "frameworks & libraries" },
@@ -99,7 +111,8 @@ export const portfolioData = {
       description: "2D-Side-Scrolling-Shooter mit zerstörbarer Umgebung, Kettenreaktions-Engine und physikbasiertem Explosionssystem.",
       longDescription: "**BoomForce** entstand als Projekt für den Game Engines-Kurs meines Studiums. Ich habe den Prototyp eines physikbasiertes 2D-Side-Scrolling-Shooters entwickelt, das sich auf **zerstörbare Umgebungen** und **komplexe Kettenreaktionen** konzentriert.\n\nDas Spiel demonstriert fortgeschrittene Spielmechaniken: Ein **ausgefeiltes Explosionssystem** berechnet Schäden basierend auf Nähe und Objekttyp. Ein **robustes State-Management** verwaltet mehrere gleichzeitige Kettenreaktionen ohne Performance-Probleme.\n\nSpieler interagieren mit einer dynamischen Welt aus **zerstörbaren Blöcken**, **fallenden Steinen** und **verschiedenen Fasstypen** - jedes mit eigenen Explosionsradien und Brandeffekten. Das Projekt zeigt tiefes Verständnis für **Physik-Systeme**, **Event-Handling** und **Optimierungstechniken**.\n\n Mehr Informationen und technische Details  im **README auf GitHub**.",
       image: "/Bilder/BoomForce/BoomForce.png",
-      detailComponent: "BoomForce",
+      images: [],
+      detailComponent: "",
       videos: [
         { url: "/Videos/BoomForce/KettenReaktionen.mp4", caption: "Kettenreaktion in Aktion:\n Mehrere Explosionen lösen sich gegenseitig aus und erzeugen eine Kaskade von Zerstörung." },
         { url: "/Videos/BoomForce/Steine.mp4", caption: "Fallende Steine:\n\n Auslösebedingungen:\nTreffer durch Kugeln; Feuerkontakt; Kollision mit Spieler;\n\n Verhalten:\n Fällt, wenn nichts drunter ist; Fällt, wenn nur ein Nachber-Block vorhanden ist." },
@@ -118,57 +131,134 @@ export const portfolioData = {
       ],
       techStack: ["Unity", "C#", "Physics2D", "Tilemap System"],
       demoUrl: "/Live-Demos/BroforceWebBuild/index.html",
+      demoDownload: "",
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
-      stats: [
-        { icon: "Clock", label: "Entwicklungszeit", value: "1 Monat" },
-        { icon: "Award", label: "Note", value: "1.0" },
-        { icon: "Code", label: "Lines of Code", value: "~1.500" }
-      ]
+      youtubeLink: "https://youtu.be/8FqAkE2lDLM",
+      demotext: "**Hinweis zur Demo:** Zu Beginn siehst du alle Objekttypen. Gehe durch das blaue Portal, um in den Testbereich teleportiert zu werden, in dem du das Verhalten der einzelnen Objekte ausprobieren kannst. Läufst du anschließend weiter nach rechts, gelangst du nach dem Testbereich zu einem weiteren Portal, das dich ins Demolevel bringt. Alternativ kannst du auch einfach nach unten springen, falls du das Portal nicht erreichst. \n\n PS: Auf den fliegenden Fässern kannst du mitreiten, indem du dich auf sie stellst, nachdem du sie mit einem Schuss aktiviert hast.",
+      demoControls: [
+        "Links/Rechts: A/D oder Pfeiltasten ⬅️➡️",
+        "Leitern: W/S oder Pfeiltasten ⬆️⬇️",
+        "Springen: Leertaste",
+        "Schießen: Linke Maustaste",
+        "Menü öffnen: Tab"
+      ],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [ { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" }]
     },
     {
       id: "prop-hunt",
       title: "Hide'n Hunt",
       subtitle:"",
-      description: "Asymmetrisches Online-Multiplayer-Spiel, inspiriert von \"Propnight\". Physikbasierte Prop-Bewegung und komplexes Networking.",
-      longDescription: "**Hide'n Hunt** entstand als Projekt für den \"Labor Games\" Kurs meines Studiums. Es ist Prototyp eines asymmetrisches Online-Multiplayer-Spiels, inspiriert von dem Spiel  \"Propnight \". \n\n Mehr Informationen und technische Details  im **README auf GitHub**.",
-      image: "/Bilder/dummy.png", // Placeholder
+      description: "Asymmetrisches 4 vs 1 Online-Multiplayer Survival-Horrorspiel mit Prop-Mechanik, Generatoren-Gameplay und Physik-basierter Prop-Bewegung.",
+      longDescription: "**Hide'n Hunt** entstand als Projekt für den Kurs \"Labor Games\" in meinem Studium. Es ist ein Prototyp eines asymmetrischen 4 vs 1 Online-Multiplayer Survival-Horrorspiels, in dem bis zu vier Überlebende gegen einen Killer antreten.\n\nDie Besonderheit des Spiels ist die **Prop-Mechanik**: Überlebende können sich in nahezu jeden Gegenstand der Umgebung verwandeln, um sich zu verstecken oder den Killer zu täuschen. Das zentrale Spielziel besteht darin, gemeinsam **fünf Generatoren zu reparieren**, um das **Fluchttor** zu öffnen und der Map zu entkommen, während der Killer die Spieler jagt, niederschlägt und auf **Folterstühlen** platziert.\n\nTechnisch legt das Projekt den Fokus auf **Online-Multiplayer** und **Networking** mit Unitys Netcode for GameObjects. Die korrekte Synchronisation von Spielerbewegungen, Prop-Verwandlungen, Interaktionen und dem Wechsel zwischen First- und Third-Person-Perspektive war besonders herausfordernd und erforderte viele Iterationen und Debugging-Runden.\n\nMehr Informationen finden sich im **README auf GitHub**.",
+      image: "/Bilder/HideAndHunt/menu.png",
+      images: [],
       detailComponent: "",
-      tags: ["Unity 3D", "C#", "Netcode for GameObjects", "Multiplayer"],
+      videos: [],
+      tags: ["Unity 3D", "C#", "Netcode for GameObjects", "Online Multiplayer", "Survival Horror", "Prop Hunt"],
       features: [
-        "Physikbasierte Prop-Bewegung",
-        "FP/TP-Kamera",
-        "Komplexes Multiplayer-Debugging",
-        "Netzwerkarchitektur / State Machines",
-        "Map-Design & ProBuilder"
+        "Asymmetrisches 4 vs 1-Gameplay (4 Survivors vs. 1 Killer)",
+        "Prop-Mechanik: Verwandlung in nahezu jedes Objekt in der Umgebung",
+        "Kooperatives Reparieren von fünf Generatoren zur Flucht",
+        "Escape Door als finales Fluchtziel nach abgeschlossenen Reparaturen",
+        "Physikbasierte Prop-Bewegung mit Forces und Impulsen der Unity-Physikengine",
+        "Survival-Horror-Atmosphäre mit düsterem Setting"
       ],
       techStack: ["Unity", "C#", "Netcode for GameObjects", "Unity Transport"],
       demoUrl: "/Live-Demos/HuntAndHide_WebGl_Demo_Build/index.html",
-      githubUrl: "#"
+      demoDownload: "",
+      githubUrl: "https://github.com/062Leo/Hide-And-Hunt",
+      youtubeLink: "",
+      demotext: "Diese Demo-Version zeigt dir die grundlegenden Spielmechaniken, allerdings ohne vollständige Online-Funktionen.\n\n**So startest du die Demo:**\n\n1. Auf **Play** klicken.\n2. Auf **Create Lobby** klicken.\n3. Rolle wählen: **Killer** oder **Survivor**.\n\n",
+      demoControls: [
+        {
+          title: "Survivor",
+          items: [
+            "Bewegen: WASD",
+            "Sprinten: LShift",
+            "Springen: Space",
+            "Verwandeln in Objekt: Linke Maustaste",
+            "Zurück in Mensch verwandeln: Rechte Maustaste",
+            "Aufrichten als Prop: LShift",
+            "Sprung / Doppelsprung als Prop: Space",
+            "Interaktion (Generator reparieren, heilen, Escape Door öffnen): E",
+          ],
+        },
+        {
+          title: "Killer",
+          items: [
+            "Bewegen: WASD",
+            "Sprinten: LShift",
+            "Springen: Space",
+            "Angreifen: Linke Maustaste",
+            "Survivor aufheben/fallenlassen/in Death Chair setzen: Rechte Maustaste",
+          ],
+        },
+      ],
+      misctext: "Map Legende:\n\n - Rote Linie: Begrenzung der spielbaren Map\n - Gelbe Kreuze: Positionen der Generatoren\n- Grüne Kreuze: Positionen der Death Chairs\n- Oranger Pfeil: Position der Escape Door",
+      miscimage: "/Bilder/HideAndHunt/Map.png",
+      miscTitle: "Die Map:",
+      stats: [
+  { icon: "Users", label: "Spielerrollen",   value: "1 Killer, bis zu 4 Survivors" },
+  { icon: "Layers", label: "Spielaufbau",    value: "Asymmetrisches 4v1-Setup" },
+  { icon: "Code",   label: "Umfang",         value: "Kompletter Gameplay-Prototyp" },
+  { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" }
+]
     },
     {
       id: "ml-agent-bachelor",
-      title: "Bachelorarbeit - ML-Agent in Unity",
-      description: "Reinforcement Learning Agent, der Hindernis-Parcours & Rätsel löst. Note 1.0.",
-      longDescription: "Im Rahmen meiner Bachelorarbeit (Note 1.0) habe ich einen ML-Agenten mit Unity ML-Agents trainiert. Der Agent ist in der Lage, komplexe Hindernis-Parcours und Rätsel selbstständig zu lösen.",
-      image: "/Bilder/dummy.png", // Placeholder
+      title: "Bachelorarbeit: ML-Agent in Unity",
+      subtitle: "",
+      description: "Reinforcement-Learning-Agent, der mehrere dynamische 3D-Parkours in Unity meistert.",
+      longDescription:"Im Rahmen meiner Bachelorarbeit habe ich einen ML-Agenten mit dem Unity ML-Agents Toolkit in Unity trainiert, der verschiedene dreidimensionale Parkour-Level mit dynamischen Hindernissen bewältigt.\n\nDer Fokus der Arbeit liegt auf der Frage, wie Trainingsstrategien, Curriculum-Design und Domain Randomization gestaltet werden müssen, damit der Agent nicht nur einzelne Trainingsszenarien löst, sondern robuste und generalisierungsfähige Strategien lernt. Das finale Modell erreicht hohe Erfolgsraten in den Trainingsleveln und zeigt zugleich übertragbares Verhalten in einem separaten Generalisierungs-Level.\n\nTechnisch kombiniert das Projekt umfangreiche Raycast- und Vektorbeobachtungen, einen hybriden Aktionsraum (kontinuierliche Bewegung + diskrete Aktionen) sowie einen PPO-Algorithmus mit LSTM-Netzwerk. Ein eigenes Python-Automatisierungsskript steuert Langzeittrainings, passt Hyperparameter dynamisch an und ermöglicht eine detaillierte Auswertung der Ergebnisse mit TensorBoard.",
+      image: "/Bilder/BachelorArbeit/BachelorArbeit.png",
+      images: [],
       detailComponent: "",
-      tags: ["Reinforcement Learning", "Unity ML-Agents", "Python", "Research"],
+      videos: [],
+      tags: ["Reinforcement Learning", "Unity 3D", "ML-Agents", "PPO", "LSTM"],
       features: [
-        "Training eines Agenten",
-        "Lösung von Hindernis-Parcours & Rätseln",
-        "Analyse von Belohnungssystemen"
+        "Training eines ML-Agenten in 13 Parkour-Leveln mit progressiver Komplexität",
+        "Mehere unterschiedliche Varianten für ausgewählte Level",
+        "Umfangreiche Sensorik mit RayPerceptionSensor3D und Vektorbeobachtungen (insgesamt 538 Beobachtungen pro Schritt)",
+        "Hybrider Aktionsraum aus kontinuierlicher Bewegung und diskreten Aktionen (Springen, Rennen)",
+        "Ausgefeilte Reward-Struktur mit Checkpoints, Zeitbonus und Bewegungsoptimierung",
+        "Variantenbasiertes Level-Design zur Förderung von Generalisierung",
+        "Python-Automatisierungsskript zur Steuerung langer Trainingsläufe und dynamischer Hyperparameter",
+        "Auswertung der Trainingsläufe mit TensorBoard (Rewards, Losses, Erfolgsquoten)"
       ],
-      techStack: ["Unity", "ML-Agents", "Python", "TensorFlow"],
-      demoDownload: "/Download-Demos/Bachelorarbeit_Demo_Windows_Build.zip",
-      githubUrl: "#"
+      techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
+      demoUrl: "",
+      demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
+      githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
+      youtubeLink: "https://youtu.be/RrsitJEl0AI",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Trainingslevel", value: "13 Level + 1 Generalisierungslevel" },
+        { icon: "Layers", label: "Parkour-Varianten", value: "31 unterschiedliche Parkours" },
+        { icon: "Target", label: "Erfolgsrate Trainingslevel", value: "ca. 92 %" },
+        { icon: "Star", label: "Erfolgsrate Generalisierungslevel", value: "43-53 %" },
+        { icon: "Clock", label: "Trainingsdauer aller Modelle insgesamt", value: "711,17 Stunden" },
+        { icon: "Zap", label: "Trainierte Modelle", value: "ca. 88" },
+        { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" },
+        { icon: "Award", label: "Note", value: "1.0" },
+      ]
     },
     {
       id: "card-game-mobile",
       title: "2D Online Multiplayer Mobile Kartenspiel",
+      subtitle: "",
       description: "Privatprojekt mit Unity, C# und Photon PUN 2 für Android.",
       longDescription: "Ein 2D Online Multiplayer Kartenspiel für Mobile (Android), entwickelt als Privatprojekt. Es nutzt Photon PUN 2 für den Multiplayer-Part und bietet eine optimierte Mobile UI/UX.",
       image: "/Bilder/dummy.png", // Placeholder
+      images: [],
       detailComponent: "",
+      videos: [],
       tags: ["Unity 2D", "Photon PUN 2", "Android", "Mobile"],
       features: [
         "Online Multiplayer",
@@ -178,20 +268,30 @@ export const portfolioData = {
       ],
       techStack: ["Unity", "C#", "Photon PUN 2"],
       demoUrl: "#",
-      githubUrl: "#"
+      demoDownload: "",
+      githubUrl: "#",
+      youtubeLink: "",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: []
     },
     {
       id: "buga23-web",
       title: "BUGA23 Interaktive Webanwendung",
+      subtitle: "",
       description: "Java Backend und Flutter Frontend für eine reale Messe.",
       longDescription: "Eine interaktive Webanwendung für die BUGA23. Das System besteht aus einem Java Backend und einem Flutter Frontend, containerisiert mit Docker.",
       image: "/Bilder/dummy.png",
-      detailComponent: "",
       images: [
         { url: "/Bilder/dummy.png" },
         { url: "/projects/dummy2.png", caption: "Benutzeroberfläche der Webanwendung" },
         { url: "/projects/dummy3.png", caption: "Architekturübersicht" }
       ],
+      detailComponent: "",
+      videos: [],
       tags: ["Java", "Flutter", "Docker", "MariaDB"],
       features: [
         "Java Backend",
@@ -201,15 +301,23 @@ export const portfolioData = {
       ],
       techStack: ["Java", "Flutter", "Dart", "MariaDB", "Docker"],
       demoUrl: "#",
-      githubUrl: "#"
+      demoDownload: "",
+      githubUrl: "#",
+      youtubeLink: "",
+      demotext: "",
+      demoControls: [],
+      stats: []
     },
     {
       id: "oware-bot",
       title: "Oware Spiel + ML-Bot",
+      subtitle: "",
       description: "C#, .NET, Blazor Anwendung mit ML-Gegner.",
       longDescription: "Ein Oware Spiel, entwickelt als Praktikumsprojekt. Es verfügt über einen ML-basierten Bot-Gegner und wurde mit C#, .NET und Blazor umgesetzt.",
       image: "/Bilder/dummy.png", // Placeholder
+      images: [],
       detailComponent: "",
+      videos: [],
       tags: ["C#", ".NET", "Blazor", "ML"],
       features: [
         "ML-Algorithmus für Bot-Gegner",
@@ -219,26 +327,42 @@ export const portfolioData = {
       ],
       techStack: ["C#", ".NET", "Blazor", "SQL", "Azure"],
       demoUrl: "#",
-      githubUrl: "#"
+      demoDownload: "",
+      githubUrl: "#",
+      youtubeLink: "",
+      demotext: "",
+      demoControls: [],
+      stats: []
     },
     {
       id: "game-of-life",
       title: "Conway's Game of Life",
+      subtitle: "",
       description: "Desktop-Anwendung zur Simulation von Conways Game of Life.",
       longDescription:
         "Eine interaktive Desktop-Anwendung für Conways Game of Life. Sie bietet einen freies Zeichen Modus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Canvasgrößen- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
       image: "/Bilder/dummy.png",
+      images: [],
       detailComponent: "",
+      videos: [],
       tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
       features: [
         "Freies Zeichnen und Prefab-Modus für Zellkonfigurationen",
-       "Umschaltbares Dark/Light Theme",
-       "Pinsel- und Canvasgrößen Zoom-Regler für präzises Editing",
-       "Anpassbare Simulationsgeschwindigkeit mit Start/Stopp-Steuerung"
+        "Umschaltbares Dark/Light Theme",
+        "Pinsel- und Canvasgrößen Zoom-Regler für präzises Editing",
+        "Anpassbare Simulationsgeschwindigkeit mit Start/Stopp-Steuerung"
       ],
       techStack: ["C#", ".NET", "WPF", "XAML"],
+      demoUrl: "",
       demoDownload: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF/releases/download/releaseV1/GameOfLife.zip",
-      githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF"
+      githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
+      youtubeLink: "",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: []
     }
   ]
 };
