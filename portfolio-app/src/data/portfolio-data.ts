@@ -10,6 +10,11 @@ export type ProjectStat = {
   value: string;
 };
 
+export type DemoControlsGroup = {
+  title: string;
+  items: string[];
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -23,7 +28,10 @@ export type Project = {
   demoDownload?: string;
   githubUrl?: string;
   demotext: string;
-  demoControls: string[];
+  demoControls: string[] | DemoControlsGroup[];
+  misctext: string;
+  miscimage: string;
+  miscTitle: string;
   features?: string[];
   techStack?: string[];
   detailComponent?: "BoomForce" | "Old";
@@ -128,12 +136,13 @@ export const portfolioData = {
         "Links/Rechts: A/D oder Pfeiltasten ⬅️➡️",
         "Leitern: W/S oder Pfeiltasten ⬆️⬇️",
         "Springen: Leertaste",
-        "Schießen: Linke Maustaste"
+        "Schießen: Linke Maustaste",
+        "Menü öffnen: Tab"
       ],
-      stats: [
-        { icon: "Clock", label: "Entwicklungszeit", value: "1 Monat" },
-        { icon: "Award", label: "Note", value: "1.0" }
-      ]
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: []
     },
     {
       id: "prop-hunt",
@@ -158,8 +167,35 @@ export const portfolioData = {
       demoUrl: "/Live-Demos/HuntAndHide_WebGl_Demo_Build/index.html",
       demoDownload: "",
       githubUrl: "https://github.com/062Leo/Hide-And-Hunt",
-      demotext: "",
-      demoControls: [],
+      demotext: "Diese Demo-Version zeigt dir die grundlegenden Spielmechaniken, allerdings ohne vollständige Online-Funktionen.\n\n**So startest du die Demo:**\n\n1. Auf **Play** klicken.\n2. Auf **Create Lobby** klicken.\n3. Rolle wählen: **Killer** oder **Survivor**.\n\n",
+      demoControls: [
+        {
+          title: "Survivor",
+          items: [
+            "Bewegen: WASD",
+            "Sprinten: LShift",
+            "Springen: Space",
+            "Verwandeln in Objekt: Linke Maustaste",
+            "Zurück in Mensch verwandeln: Rechte Maustaste",
+            "Aufrichten als Prop: LShift",
+            "Sprung / Doppelsprung als Prop: Space",
+            "Interaktion (Generator reparieren, heilen, Escape Door öffnen): E",
+          ],
+        },
+        {
+          title: "Killer",
+          items: [
+            "Bewegen: WASD",
+            "Sprinten: LShift",
+            "Springen: Space",
+            "Angreifen: Linke Maustaste",
+            "Survivor aufheben/fallenlassen/in Death Chair setzen: Rechte Maustaste",
+          ],
+        },
+      ],
+      misctext: "Map Legende:\n\n - Rote Linie: Begrenzung der spielbaren Map\n - Gelbe Kreuze: Positionen der Generatoren\n- Grüne Kreuze: Positionen der Death Chairs\n- Oranger Pfeil: Position der Escape Door",
+      miscimage: "/Bilder/HideAndHunt/Map.png",
+      miscTitle: "Die Map:",
       stats: []
     },
     {
@@ -189,11 +225,14 @@ export const portfolioData = {
       githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
       demotext: "",
       demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
       stats: [
         { icon: "Layers", label: "Trainingslevel", value: "13 Level + 1 Generalisierungslevel" },
         { icon: "Layers", label: "Parkour-Varianten", value: "31 unterschiedliche Parkours" },
         { icon: "Target", label: "Erfolgsrate Trainingslevel", value: "ca. 92 %" },
-        { icon: "Star", label: "Erfolgsrate Generalisierungslevel", value: "43–53 %" },
+        { icon: "Star", label: "Erfolgsrate Generalisierungslevel", value: "43-53 %" },
         { icon: "Clock", label: "Trainingsdauer aller Modelle insgesamt", value: "711,17 Stunden" },
         { icon: "Zap", label: "Trainierte Modelle", value: "ca. 88" },
         { icon: "Award", label: "Note", value: "1.0" },
@@ -222,6 +261,9 @@ export const portfolioData = {
       githubUrl: "#",
       demotext: "",
       demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
       stats: []
     },
     {
@@ -302,6 +344,9 @@ export const portfolioData = {
       githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
       demotext: "",
       demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
       stats: []
     }
   ]

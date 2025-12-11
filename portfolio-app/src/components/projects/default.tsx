@@ -26,21 +26,30 @@ const renderMarkdownText = (text: string, color: string) => {
     
     // Split by double newlines to create paragraphs
     const paragraphs = text.split('\n\n');
-    
-    return paragraphs.map((paragraph, pIndex) => (
-        <p key={pIndex} className="mb-4 last:mb-0">
-            {paragraph.split(/(\*\*.*?\*\*)/g).map((part, index) => {
-                if (part.startsWith('**') && part.endsWith('**')) {
-                    return (
-                        <strong key={index} style={{ color }}>
-                            {part.slice(2, -2)}
-                        </strong>
-                    );
-                }
-                return <span key={index} style={{ color }}>{part}</span>;
-            })}
-        </p>
-    ));
+
+    return paragraphs.map((paragraph, pIndex) => {
+        const lines = paragraph.split('\n');
+
+        return (
+            <p key={pIndex} className="mb-4 last:mb-0">
+                {lines.map((line, lineIndex) => (
+                    <span key={lineIndex}>
+                        {line.split(/(\*\*.*?\*\*)/g).map((part, index) => {
+                            if (part.startsWith('**') && part.endsWith('**')) {
+                                return (
+                                    <strong key={index} style={{ color }}>
+                                        {part.slice(2, -2)}
+                                    </strong>
+                                );
+                            }
+                            return <span key={index} style={{ color }}>{part}</span>;
+                        })}
+                        {lineIndex < lines.length - 1 && <br />}
+                    </span>
+                ))}
+            </p>
+        );
+    });
 };
 
 export function DetailPage() {
