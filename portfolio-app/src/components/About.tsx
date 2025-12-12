@@ -89,7 +89,7 @@ export function About() {
             <InfoCard
               icon={<Gamepad2 className="h-6 w-6" />}
               title="Game Development"
-              description="Konzeption und Umsetzung von 2D- und 3D-Spielen mit Schwerpunkt Unity und C#, inklusive Projekten zu Multiplayer, KI und physikbasiertem Gameplay."
+              description="Konzeption und Umsetzung von 2D- und 3D-Spielen mit Schwerpunkt Unity und C#, inklusive Projekten zu Multiplayer, KI, physikbasiertem Gameplay, Mobile-Entwicklung und Monetarisierungsstrategien."
               colors={colors}
             />
             <InfoCard
