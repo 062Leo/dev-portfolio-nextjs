@@ -219,6 +219,7 @@ export function DetailPage() {
 
                         {/* Details Section with Videos */}
                         <ProjectVideos 
+                            videoBig={project.videoBig}
                             videos={project.videos}
                             colors={{
                                 boomforceScreenshotsTitleColor: colors.boomforceScreenshotsTitleColor,

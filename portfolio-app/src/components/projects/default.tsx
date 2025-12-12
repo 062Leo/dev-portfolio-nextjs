@@ -231,22 +231,12 @@ export function DetailPage() {
                                     VIEW CODE
                                 </a>
                             )}
-                            {project.youtubeLink && (
-                                <a
-                                    href={project.youtubeLink}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
-                                    style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
-                                >
-                                    <Youtube className="mr-2 w-5 h-5" />
-                                    WATCH VIDEO
-                                </a>
-                            )}
+                            
                         </div>
 
                         {/* Details Section with Videos */}
                         <ProjectVideos 
+                            videoBig={project.videoBig}
                             videos={project.videos}
                             colors={{
                                 boomforceScreenshotsTitleColor: colors.boomforceScreenshotsTitleColor,
