@@ -27,7 +27,7 @@ export type Project = {
   demoUrl?: string;
   demoDownload?: string;
   githubUrl?: string;
-  youtubeLink?: string;
+  videoBig?: string;
   demotext: string;
   demoControls: string[] | DemoControlsGroup[];
   misctext: string;
@@ -111,7 +111,7 @@ export const portfolioData = {
       description: "2D-Side-Scrolling-Shooter mit zerstörbarer Umgebung, Kettenreaktions-Engine und physikbasiertem Explosionssystem.",
       longDescription: "**BoomForce** entstand als Projekt für den Game Engines-Kurs meines Studiums. Ich habe den Prototyp eines physikbasiertes 2D-Side-Scrolling-Shooters entwickelt, das sich auf **zerstörbare Umgebungen** und **komplexe Kettenreaktionen** konzentriert.\n\nDas Spiel demonstriert fortgeschrittene Spielmechaniken: Ein **ausgefeiltes Explosionssystem** berechnet Schäden basierend auf Nähe und Objekttyp. Ein **robustes State-Management** verwaltet mehrere gleichzeitige Kettenreaktionen ohne Performance-Probleme.\n\nSpieler interagieren mit einer dynamischen Welt aus **zerstörbaren Blöcken**, **fallenden Steinen** und **verschiedenen Fasstypen** - jedes mit eigenen Explosionsradien und Brandeffekten. Das Projekt zeigt tiefes Verständnis für **Physik-Systeme**, **Event-Handling** und **Optimierungstechniken**.\n\n Mehr Informationen und technische Details  im **README auf GitHub**.",
       image: "/Bilder/BoomForce/BoomForce.png",
-      images: [],
+      images: [] as ProjectImage[],
       detailComponent: "",
       videos: [
         { url: "/Videos/BoomForce/KettenReaktionen.mp4", caption: "Kettenreaktion in Aktion:\n Mehrere Explosionen lösen sich gegenseitig aus und erzeugen eine Kaskade von Zerstörung." },
@@ -133,7 +133,7 @@ export const portfolioData = {
       demoUrl: "/Live-Demos/BroforceWebBuild/index.html",
       demoDownload: "",
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
-      youtubeLink: "https://youtu.be/8FqAkE2lDLM",
+      videoBig: "/Videos/Big/BroforceShowcase.mp4",
       demotext: "**Hinweis zur Demo:** Zu Beginn siehst du alle Objekttypen. Gehe durch das blaue Portal, um in den Testbereich teleportiert zu werden, in dem du das Verhalten der einzelnen Objekte ausprobieren kannst. Läufst du anschließend weiter nach rechts, gelangst du nach dem Testbereich zu einem weiteren Portal, das dich ins Demolevel bringt. Alternativ kannst du auch einfach nach unten springen, falls du das Portal nicht erreichst. \n\n PS: Auf den fliegenden Fässern kannst du mitreiten, indem du dich auf sie stellst, nachdem du sie mit einem Schuss aktiviert hast.",
       demoControls: [
         "Links/Rechts: A/D oder Pfeiltasten ⬅️➡️",
@@ -154,7 +154,7 @@ export const portfolioData = {
       description: "Asymmetrisches 4 vs 1 Online-Multiplayer Survival-Horrorspiel mit Prop-Mechanik, Generatoren-Gameplay und Physik-basierter Prop-Bewegung.",
       longDescription: "**Hide'n Hunt** entstand als Projekt für den Kurs \"Labor Games\" in meinem Studium. Es ist ein Prototyp eines asymmetrischen 4 vs 1 Online-Multiplayer Survival-Horrorspiels, in dem bis zu vier Überlebende gegen einen Killer antreten.\n\nDie Besonderheit des Spiels ist die **Prop-Mechanik**: Überlebende können sich in nahezu jeden Gegenstand der Umgebung verwandeln, um sich zu verstecken oder den Killer zu täuschen. Das zentrale Spielziel besteht darin, gemeinsam **fünf Generatoren zu reparieren**, um das **Fluchttor** zu öffnen und der Map zu entkommen, während der Killer die Spieler jagt, niederschlägt und auf **Folterstühlen** platziert.\n\nTechnisch legt das Projekt den Fokus auf **Online-Multiplayer** und **Networking** mit Unitys Netcode for GameObjects. Die korrekte Synchronisation von Spielerbewegungen, Prop-Verwandlungen, Interaktionen und dem Wechsel zwischen First- und Third-Person-Perspektive war besonders herausfordernd und erforderte viele Iterationen und Debugging-Runden.\n\nMehr Informationen finden sich im **README auf GitHub**.",
       image: "/Bilder/HideAndHunt/menu.png",
-      images: [],
+      images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
       tags: ["Unity 3D", "C#", "Netcode for GameObjects", "Online Multiplayer", "Survival Horror", "Prop Hunt"],
@@ -170,7 +170,7 @@ export const portfolioData = {
       demoUrl: "/Live-Demos/HuntAndHide_WebGl_Demo_Build/index.html",
       demoDownload: "",
       githubUrl: "https://github.com/062Leo/Hide-And-Hunt",
-      youtubeLink: "",
+      videoBig: "/Videos/Big/HideAndHuntShowcaseFinal.mp4",
       demotext: "Diese Demo-Version zeigt dir die grundlegenden Spielmechaniken, allerdings ohne vollständige Online-Funktionen.\n\n**So startest du die Demo:**\n\n1. Auf **Play** klicken.\n2. Auf **Create Lobby** klicken.\n3. Rolle wählen: **Killer** oder **Survivor**.\n\n",
       demoControls: [
         {
@@ -214,7 +214,7 @@ export const portfolioData = {
       description: "Reinforcement-Learning-Agent, der mehrere dynamische 3D-Parkours in Unity meistert.",
       longDescription:"Im Rahmen meiner Bachelorarbeit habe ich einen ML-Agenten mit dem Unity ML-Agents Toolkit in Unity trainiert, der verschiedene dreidimensionale Parkour-Level mit dynamischen Hindernissen bewältigt.\n\nDer Fokus der Arbeit liegt auf der Frage, wie Trainingsstrategien, Curriculum-Design und Domain Randomization gestaltet werden müssen, damit der Agent nicht nur einzelne Trainingsszenarien löst, sondern robuste und generalisierungsfähige Strategien lernt. Das finale Modell erreicht hohe Erfolgsraten in den Trainingsleveln und zeigt zugleich übertragbares Verhalten in einem separaten Generalisierungs-Level.\n\nTechnisch kombiniert das Projekt umfangreiche Raycast- und Vektorbeobachtungen, einen hybriden Aktionsraum (kontinuierliche Bewegung + diskrete Aktionen) sowie einen PPO-Algorithmus mit LSTM-Netzwerk. Ein eigenes Python-Automatisierungsskript steuert Langzeittrainings, passt Hyperparameter dynamisch an und ermöglicht eine detaillierte Auswertung der Ergebnisse mit TensorBoard.",
       image: "/Bilder/BachelorArbeit/BachelorArbeit.png",
-      images: [],
+      images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
       tags: ["Reinforcement Learning", "Unity 3D", "ML-Agents", "PPO", "LSTM"],
@@ -232,7 +232,7 @@ export const portfolioData = {
       demoUrl: "",
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
       githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
-      youtubeLink: "https://youtu.be/RrsitJEl0AI",
+      videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -257,7 +257,7 @@ export const portfolioData = {
       longDescription:
         "Eine interaktive Desktop-Anwendung für Conways Game of Life. Sie bietet einen freies Zeichen Modus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Canvasgrößen- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
       image: "/Bilder/dummy.png",
-      images: [],
+      images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
       tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
@@ -271,7 +271,7 @@ export const portfolioData = {
       demoUrl: "",
       demoDownload: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF/releases/download/releaseV1/GameOfLife.zip",
       githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
-      youtubeLink: "",
+      videoBig: "/Videos/Big/GameOfLife.mp4",
       demotext: "",
       demoControls: [],
       misctext: "",
