@@ -85,11 +85,12 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videos, colors }) => {
       >
         DETAILS
       </h3>
-      <div>
+      <div className="space-y-8 md:space-y-10">
         {videos.filter(isValidVideo).map((video, index) => (
           <div 
             key={index} 
-            className={`relative flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8 group`}
+            className={`relative flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 md:gap-8 p-4 rounded-lg group`}
+            style={{ backgroundColor: 'rgba(72, 51, 95, 0.25)5)' }}
           >
             {/* Connecting line */}
             <div 

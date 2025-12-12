@@ -183,7 +183,6 @@ export function ProjectsShowcase() {
             Check My Personal GitHub <ArrowRight size={16} />
           </a>
         </div>
-        
       </div>
     </section>
   );
