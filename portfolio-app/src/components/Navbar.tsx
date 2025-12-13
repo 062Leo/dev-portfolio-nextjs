@@ -155,7 +155,7 @@ export function Navbar() {
               />
               <div className="relative h-6 w-6 overflow-hidden rounded-full z-10">
                 <Image
-                  src={language === 'de' ? "/unity-demo/Icons/de_flag.png" : "/unity-demo/Icons/en_flag.png"}
+                  src={language === 'de' ? "/Icons/de_flag.png" : "/Icons/en_flag.png"}
                   alt={language === 'de' ? "Deutsch" : "English"}
                   fill
                   className="transition-opacity duration-300 object-cover"
