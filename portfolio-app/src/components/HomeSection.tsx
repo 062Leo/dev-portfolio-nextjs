@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArrowDown } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
+import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { useThemeColors } from "@/components/colors";
 
 const hoverText = " onClick={reload}";
@@ -10,12 +11,21 @@ const hoverText = " onClick={reload}";
 export function HomeSection() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isReady, setIsReady] = useState(false);
+  const [currentPortfolioData, setCurrentPortfolioData] = useState(portfolioData);
   const colors = useThemeColors(isDarkMode);
 
   useEffect(() => {
     const storedTheme = window.localStorage.getItem("theme");
     const isDark = storedTheme ? storedTheme === "dark" : true;
     setIsDarkMode(isDark);
+
+    const storedLanguage = window.localStorage.getItem("language");
+    if (storedLanguage === "en") {
+      setCurrentPortfolioData(portfolioDataEn);
+    } else {
+      setCurrentPortfolioData(portfolioData);
+    }
+
     setIsReady(true);
   }, []);
 
@@ -65,7 +75,7 @@ export function HomeSection() {
                   onClick={reload}
                   className="relative inline-flex items-baseline cursor-pointer select-none bg-transparent border-0 p-0 text-current group"
                 >
-                  <span>{portfolioData.personal.firstName}</span>
+                  <span>{currentPortfolioData.personal.firstName}</span>
                   <span className="inline-flex overflow-hidden max-w-0 transition-[max-width] duration-300 ease-out group-hover:max-w-[30rem]">
                     {hoverText.split("").map((char, index) => (
                       <span
@@ -82,14 +92,14 @@ export function HomeSection() {
               <span style={{ color: colors.homeSectionSeparator }}>{' /'}</span>
               <span style={{ color: colors.homeSectionBracketText }}>&gt;</span>
             </span>
-            <span className="opacity-0 animate-fade-in-delay-2"> {portfolioData.personal.lastName}</span>
+            <span className="opacity-0 animate-fade-in-delay-2"> {currentPortfolioData.personal.lastName}</span>
           </h1>
 
           <p
             className="mx-auto text-lg opacity-0 animate-fade-in-delay-3 md:text-xl"
             style={{ color: colors.homeSectionDescriptionText }}
           >
-            {portfolioData.personal.role}
+            {currentPortfolioData.personal.role}
           </p>
 
           <div className="flex flex-col items-center gap-3 pt-4 opacity-0 animate-fade-in-delay-4">

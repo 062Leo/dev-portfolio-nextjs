@@ -4,15 +4,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ArrowRight, Download, ExternalLink } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
+import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
-
-const projects = portfolioData.projects;
-
-
-
 export function ProjectsShowcase() {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [projects, setProjects] = useState(portfolioData.projects);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -23,9 +21,21 @@ export function ProjectsShowcase() {
     if (storedTheme) {
       setIsDarkMode(storedTheme === "dark");
     }
+
+    const storedLanguage = window.localStorage.getItem("language");
+    if (storedLanguage === "en") {
+      setProjects(portfolioDataEn.projects);
+    } else {
+      setProjects(portfolioData.projects);
+    }
+    setIsReady(true);
   }, []);
 
   const colors = useThemeColors(isDarkMode);
+
+  if (!isReady) {
+    return null;
+  }
 
   return (
     <section className="relative px-4 py-24">
