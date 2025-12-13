@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { portfolioData } from "@/data/portfolio-data";
+import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { useThemeColors } from "@/components/colors";
 
 type SkillCategory = "all" | "languages" | "frameworks & libraries" | "devOps & tools" | "game engines";
@@ -13,8 +14,6 @@ type Skill = {
   level: number;
   category: SkillCategory;
 };
-
-const skills: Skill[] = portfolioData.skills as Skill[];
 
 const categories: SkillCategory[] = [
   "all",
@@ -27,6 +26,8 @@ const categories: SkillCategory[] = [
 export function SkillsSection() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [activeCategory, setActiveCategory] = useState<SkillCategory>("all");
+  const [skills, setSkills] = useState<Skill[]>(portfolioData.skills as Skill[]);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -37,9 +38,21 @@ export function SkillsSection() {
     if (storedTheme) {
       setIsDarkMode(storedTheme === "dark");
     }
+
+    const storedLanguage = window.localStorage.getItem("language");
+    if (storedLanguage === "en") {
+      setSkills(portfolioDataEn.skills as Skill[]);
+    } else {
+      setSkills(portfolioData.skills as Skill[]);
+    }
+    setIsReady(true);
   }, []);
 
   const colors = useThemeColors(isDarkMode);
+
+  if (!isReady) {
+    return null;
+  }
 
   const filteredSkills = useMemo(() => {
     if (activeCategory === "all") {

@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { portfolioData, type DemoControlsGroup } from "@/data/portfolio-data";
+import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { ArrowLeft,  Play,  Clock, Star, Code, Zap, Users, Target, Award, Layers } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
@@ -69,15 +70,24 @@ export function DetailPage() {
     const id = params.id as string;
     const [isDarkMode, setIsDarkMode] = useState(true);
     const [isReady, setIsReady] = useState(false);
+    const [language, setLanguage] = useState<"de" | "en">("de");
+    const [project, setProject] = useState<(typeof portfolioData.projects)[number] | null>(null);
 
     useEffect(() => {
         const storedTheme = window.localStorage.getItem("theme");
         const isDark = storedTheme ? storedTheme === "dark" : true;
         setIsDarkMode(isDark);
-        setIsReady(true);
-    }, []);
 
-    const project = portfolioData.projects.find((p) => p.id === id);
+        const storedLanguage = window.localStorage.getItem("language");
+        const nextLanguage = storedLanguage === "en" ? "en" : "de";
+        setLanguage(nextLanguage);
+
+        const data = nextLanguage === "en" ? portfolioDataEn : portfolioData;
+        const foundProject = data.projects.find((p) => p.id === id) || null;
+        setProject(foundProject);
+
+        setIsReady(true);
+    }, [id]);
     const colors = useThemeColors(isDarkMode);
 
     // Early return if project is not found
@@ -131,7 +141,7 @@ export function DetailPage() {
                         onMouseLeave={(e) => (e.currentTarget as HTMLButtonElement).style.color = colors.demoBackLinkText}
                     >
                         <ArrowLeft size={20} />
-                        Back to Project
+                        {language === "en" ? "Back to Project" : "Zurück zum Projekt"}
                     </button>
                 </div>
 
@@ -182,7 +192,12 @@ export function DetailPage() {
                     >
                         {hasDemoControls && (
                             <>
-                                <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.demoControlsTitleColor }}>STEUERUNG</h3>
+                                <h3
+                                    className="mb-4 text-xl font-semibold font-press-start"
+                                    style={{ color: colors.demoControlsTitleColor }}
+                                >
+                                    {language === "en" ? "CONTROLS" : "STEUERUNG"}
+                                </h3>
                                 {groupedControls ? (
                                     <div className="flex flex-col md:flex-row gap-8">
                                         {groupedControls.map((group: DemoControlsGroup, groupIndex: number) => (
@@ -205,7 +220,7 @@ export function DetailPage() {
                                                                 className="py-1 pr-4 font-semibold text-right font-press-start"
                                                                 style={{ color: colors.demoControlsHeaderKeysColor }}
                                                             >
-                                                                Tasten
+                                                                {language === "en" ? "Keys" : "Tasten"}
                                                             </th>
                                                             <th
                                                                 className="py-1 pl-4 font-semibold text-left font-press-start"
@@ -214,7 +229,7 @@ export function DetailPage() {
                                                                     color: colors.demoControlsHeaderActionColor,
                                                                 }}
                                                             >
-                                                                Aktion
+                                                                {language === "en" ? "Action" : "Aktion"}
                                                             </th>
                                                         </tr>
                                                     </thead>
@@ -262,7 +277,7 @@ export function DetailPage() {
                                                             className="py-1 pr-4 font-semibold text-right font-press-start"
                                                             style={{ color: colors.demoControlsHeaderKeysColor }}
                                                         >
-                                                            Tasten
+                                                            {language === "en" ? "Keys" : "Tasten"}
                                                         </th>
                                                         <th
                                                             className="py-1 pl-4 font-semibold text-left font-press-start"
@@ -271,7 +286,7 @@ export function DetailPage() {
                                                                 color: colors.demoControlsHeaderActionColor,
                                                             }}
                                                         >
-                                                            Aktion
+                                                            {language === "en" ? "Action" : "Aktion"}
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -359,7 +374,7 @@ export function DetailPage() {
                                 }}
                             >
                                 <Play className="mr-2 w-5 h-5" />
-                                DEMO IM NEUEN TAB ÖFFNEN
+                                {language === "en" ? "OPEN DEMO IN NEW TAB" : "DEMO IM NEUEN TAB ÖFFNEN"}
                             </a>
                         </div>
                     )}

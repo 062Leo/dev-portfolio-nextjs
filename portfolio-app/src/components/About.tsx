@@ -3,10 +3,13 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Briefcase, ChartNoAxesCombined, Code, Gamepad2 } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
+import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { useThemeColors, type ThemeColorSet } from "@/components/colors";
 
 export function About() {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [currentPortfolioData, setCurrentPortfolioData] = useState(portfolioData);
+  const [isReady, setIsReady] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
@@ -16,9 +19,21 @@ export function About() {
     if (storedTheme) {
       setIsDarkMode(storedTheme === "dark");
     }
+
+    const storedLanguage = window.localStorage.getItem("language");
+    if (storedLanguage === "en") {
+      setCurrentPortfolioData(portfolioDataEn);
+    } else {
+      setCurrentPortfolioData(portfolioData);
+    }
+    setIsReady(true);
   }, []);
 
   const colors = useThemeColors(isDarkMode);
+
+  if (!isReady) {
+    return null;
+  }
 
   return (
     <section id="about" className="relative px-4 py-24">
@@ -41,7 +56,7 @@ export function About() {
           >
             <h3 className="text-2xl font-semibold">Software- und Spiele-Entwickler</h3>
 
-            {portfolioData.about.description.map((paragraph, index) => (
+            {currentPortfolioData.about.description.map((paragraph, index) => (
               <p key={index}>
                 {paragraph}
               </p>

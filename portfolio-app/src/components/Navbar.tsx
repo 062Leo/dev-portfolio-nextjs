@@ -20,7 +20,8 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [language, setLanguage] = useState<'de' | 'en'>('de');
+  const [language, setLanguage] = useState<"de" | "en">("de");
+  const [isReady, setIsReady] = useState(false);
   const colors = useThemeColors(isDarkMode);
 
   useEffect(() => {
@@ -57,6 +58,19 @@ export function Navbar() {
     applyThemeColors(storedTheme === "dark" || !storedTheme);
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const storedLanguage = window.localStorage.getItem("language");
+    if (storedLanguage === "de" || storedLanguage === "en") {
+      setLanguage(storedLanguage);
+    }
+
+    setIsReady(true);
+  }, []);
+
   const toggleTheme = () => {
     setIsDarkMode((prev) => !prev);
     const newTheme = !isDarkMode ? "dark" : "light";
@@ -66,8 +80,21 @@ export function Navbar() {
   };
 
   const toggleLanguage = () => {
-    setLanguage((prev) => (prev === 'de' ? 'en' : 'de'));
+    setLanguage((prev) => {
+      const next = prev === "de" ? "en" : "de";
+
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("language", next);
+        window.location.reload();
+      }
+
+      return next;
+    });
   };
+
+  if (!isReady) {
+    return null;
+  }
 
   return (
     <nav
