@@ -175,9 +175,7 @@ export function DetailPage() {
                             </div>
                         )}
                     </div>
-                    <iframe frameBorder="0" src="https://itch.io/embed/4120239?border_width=3&amp;bg_color=11001f&amp;fg_color=ffffff&amp;border_color=ff5959" width="556" height="171"><a href="https://062leo.itch.io/boomforce">BoomForce by 062leo</a></iframe>
-              
-
+                    
 
 
 
