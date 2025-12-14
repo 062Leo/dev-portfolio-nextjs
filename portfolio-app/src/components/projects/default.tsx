@@ -100,7 +100,6 @@ export function DetailPage() {
     return (
         <>
             <style jsx global>{`
-                @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik+Mono+One&display=swap');
                 .font-rubik { font-family: 'Rubik Mono One', sans-serif; }
                 .font-press-start { font-family: 'Press Start 2P', cursive; }
             `}</style>
