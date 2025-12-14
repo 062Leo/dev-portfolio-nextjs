@@ -8,14 +8,6 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useThemeColors, applyThemeColors } from "@/components/colors";
 
-const navItems = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/#about" },
-  // { name: "Skills", href: "/#skills" },
-  { name: "Projects", href: "/projects" },
-  { name: "Contact", href: "/#contact" },
-];
-
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -95,6 +87,23 @@ export function Navbar() {
   if (!isReady) {
     return null;
   }
+
+  const navItems =
+    language === "de"
+      ? [
+          { name: "Home", href: "/" },
+          { name: "Über mich", href: "/#about" },
+          // { name: "Skills", href: "/#skills" },
+          { name: "Projekte", href: "/projects" },
+          { name: "Kontakt", href: "/#contact" },
+        ]
+      : [
+          { name: "Home", href: "/" },
+          { name: "About", href: "/#about" },
+          // { name: "Skills", href: "/#skills" },
+          { name: "Projects", href: "/projects" },
+          { name: "Contact", href: "/#contact" },
+        ];
 
   return (
     <nav

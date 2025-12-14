@@ -115,7 +115,7 @@ export function DetailPage() {
                         onMouseLeave={(e) => e.currentTarget.style.color = colors.boomforceBackLinkText}
                     >
                         <ArrowLeft size={20} />
-                        Back to Projects
+                        {language === "de" ? "Zurück zur Projektübersicht" : "Back to Projects"}
                     </Link>
                 </div>
 
@@ -215,7 +215,7 @@ export function DetailPage() {
                                     style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
                                 >
                                     <Play className="mr-2 w-5 h-5" />
-                                    PLAY DEMO
+                                    {language === "de" ? "DEMO SPIELEN" : "PLAY DEMO"}
                                 </Link>
                             )}
                             {project.demoDownload && (
@@ -226,7 +226,7 @@ export function DetailPage() {
                                 style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
                                 >
                                     <Download className="mr-2 w-5 h-5" />
-                                    DOWNLOAD DEMO
+                                    {language === "de" ? "DEMO HERUNTERLADEN" : "DOWNLOAD DEMO"}
                                 </a>
                             )}
                              {project.githubUrl && (
@@ -238,7 +238,7 @@ export function DetailPage() {
                                  style={{ border: `1px solid ${colors.boomforceViewCodeBtnBorder}`, color: colors.boomforceViewCodeBtnText, boxShadow: `0 0 20px ${colors.boomforceViewCodeBtnShadow}` }}
                                  >
                                     <Github className="w-5 h-5" />
-                                    VIEW CODE
+                                    {language === "de" ? "CODE ANSEHEN" : "VIEW CODE"}
                                 </a>
                             )}
                             

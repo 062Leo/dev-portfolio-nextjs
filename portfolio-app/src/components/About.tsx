@@ -10,6 +10,7 @@ export function About() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [currentPortfolioData, setCurrentPortfolioData] = useState(portfolioData);
   const [isReady, setIsReady] = useState(false);
+  const [language, setLanguage] = useState<"de" | "en">("de");
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
@@ -22,8 +23,10 @@ export function About() {
 
     const storedLanguage = window.localStorage.getItem("language");
     if (storedLanguage === "en") {
+      setLanguage("en");
       setCurrentPortfolioData(portfolioDataEn);
     } else {
+      setLanguage("de");
       setCurrentPortfolioData(portfolioData);
     }
     setIsReady(true);
@@ -42,7 +45,15 @@ export function About() {
           className="mb-12 text-center text-3xl font-bold md:text-4xl"
           style={{ color: colors.aboutSectionTitleColor }}
         >
-          About <span style={{ color: colors.aboutSectionAccentColor }}>Me</span>
+          {language === "de" ? (
+            <>
+              Über <span style={{ color: colors.aboutSectionAccentColor }}>mich</span>
+            </>
+          ) : (
+            <>
+              About <span style={{ color: colors.aboutSectionAccentColor }}>Me</span>
+            </>
+          )}
         </h2>
 
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
@@ -54,7 +65,9 @@ export function About() {
               boxShadow: colors.aboutSectionCardShadow,
             }}
           >
-            <h3 className="text-2xl font-semibold">Software- und Spiele-Entwickler</h3>
+            <h3 className="text-2xl font-semibold">
+              {language === "de" ? "Software- und Spiele-Entwickler" : "Software and Game Developer"}
+            </h3>
 
             {currentPortfolioData.about.description.map((paragraph, index) => (
               <p key={index}>
@@ -62,34 +75,17 @@ export function About() {
               </p>
             ))}
 
-
-
-
-
             <div className="flex flex-col justify-center gap-4 pt-4 sm:flex-row">
               <a
-              href="#contact"
-              className="cosmic-button inline-flex items-center justify-center rounded-full px-8 py-3 text-sm font-semibold uppercase tracking-wide"
-              style={{
-                backgroundImage: `linear-gradient(135deg, ${colors.aboutMe_GetInTouchButton_G_Start}, ${colors.aboutMe_GetInTouchButton_G_End})`,
-                color: colors.aboutMe_GetInTouchButton_Text,
-                boxShadow: colors.aboutMe_GetInTouchButton_Glow,
-              }}
-            >
-              Get In Touch
-            </a>
-
-              <a
-                href="#"
-                className="rounded-full border-3 border-primary px-6 py-2 font-bold outline outline-2 transition-colors duration-300"
+                href="#contact"
+                className="cosmic-button inline-flex items-center justify-center rounded-full px-8 py-3 text-sm font-semibold uppercase tracking-wide"
                 style={{
-                  borderColor: colors.aboutSectionCardBorder,
-                  color: colors.aboutSectionTitleColor,
-                  outlineColor: colors.aboutSectionIconBackground,
-                  backgroundColor: "transparent",
+                  backgroundImage: `linear-gradient(135deg, ${colors.aboutMe_GetInTouchButton_G_Start}, ${colors.aboutMe_GetInTouchButton_G_End})`,
+                  color: colors.aboutMe_GetInTouchButton_Text,
+                  boxShadow: colors.aboutMe_GetInTouchButton_Glow,
                 }}
               >
-                Download CV
+                {language === "de" ? "Kontakt aufnehmen" : "Get In Touch"}
               </a>
             </div>
           </div>
@@ -97,26 +93,44 @@ export function About() {
           <div className="grid grid-cols-1 gap-6">
             <InfoCard
               icon={<Code className="h-6 w-6" />}
-              title="Software Development"
-              description="Entwicklung moderner Anwendungen - von Web-Frontends bis zu Desktop- und Backend-Lösungen - mit Fokus auf sauberer Architektur und wartbarem Code."
+              title={
+                language === "de" ? "Software Development" : "Software Development"
+              }
+              description={
+                language === "de"
+                  ? "Entwicklung moderner Anwendungen – von Web-Frontends bis zu Desktop- und Backend-Lösungen – mit Fokus auf sauberer Architektur und wartbarem Code."
+                  : "Development of modern applications – from web frontends to desktop and backend solutions – with a focus on clean architecture and maintainable code."
+              }
               colors={colors}
             />
             <InfoCard
               icon={<Gamepad2 className="h-6 w-6" />}
-              title="Game Development"
-              description="Konzeption und Umsetzung von 2D- und 3D-Spielen mit Schwerpunkt Unity und C#, inklusive Projekten zu Multiplayer, KI, physikbasiertem Gameplay, Mobile-Entwicklung und Monetarisierungsstrategien."
+              title={language === "de" ? "Game Development" : "Game Development"}
+              description={
+                language === "de"
+                  ? "Konzeption und Umsetzung von 2D- und 3D-Spielen mit Schwerpunkt Unity und C#, inklusive Projekten zu Multiplayer, KI, physikbasiertem Gameplay, Mobile-Entwicklung und Monetarisierungsstrategien."
+                  : "Concept and implementation of 2D and 3D games with a focus on Unity and C#, including projects on multiplayer, AI, physics-based gameplay, mobile development and monetisation strategies."
+              }
               colors={colors}
             />
             <InfoCard
               icon={<ChartNoAxesCombined className="h-6 w-6" />}
-              title="Agile Collaboration"
-              description="Zusammenarbeit in agilen Softwareprojekten mit Scrum, klarer Kommunikation und strukturierter Vorgehensweise von Planung bis Umsetzung."
+              title={language === "de" ? "Agile Collaboration" : "Agile Collaboration"}
+              description={
+                language === "de"
+                  ? "Zusammenarbeit in agilen Softwareprojekten mit Scrum, klarer Kommunikation und strukturierter Vorgehensweise von Planung bis Umsetzung."
+                  : "Collaboration in agile software projects using Scrum, clear communication and a structured approach from planning to implementation."
+              }
               colors={colors}
             />
             <InfoCard
               icon={<Briefcase className="h-6 w-6" />}
-              title="Professional Mindset"
-              description="Hoher Qualitätsanspruch, Clean Code, Refactoring und die Bereitschaft, sich fachlich wie persönlich kontinuierlich weiterzuentwickeln."
+              title={language === "de" ? "Professional Mindset" : "Professional Mindset"}
+              description={
+                language === "de"
+                  ? "Hoher Qualitätsanspruch, Clean Code, Refactoring und die Bereitschaft, sich fachlich wie persönlich kontinuierlich weiterzuentwickeln."
+                  : "High quality standards, clean code, refactoring and the willingness to continuously develop both professionally and personally."
+              }
               colors={colors}
             />
           </div>

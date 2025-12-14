@@ -46,9 +46,7 @@ export const portfolioData = {
     role: "Softwareentwickler (B.Sc. Softwareentwicklung, Schwerpunkt Games Engineering)",
     tagline: "Unity, C# und .NET - Fokus auf Games Engineering & sauberen Code",
     motivation: "Abgeschlossenes Bachelorstudium der Softwareentwicklung (Schwerpunkt Games Engineering) und Praxiserfahrung in C#, .NET und Unity - mit starkem Fokus auf Clean Code, Refactoring und qualitativ hochwertige, wartbare Software.",
-    email: "contact@example.com", // Placeholder
     github: "https://github.com/062Leo",
-    linkedin: "#", // Placeholder
   },
   about: {
     title: "About Me",
@@ -70,39 +68,6 @@ export const portfolioData = {
       "Motivation und Begeisterung"
     ]
   },
-  skills: [
-    // Languages
-    { name: "C#", level: 95, category: "languages" },
-    { name: "Java", level: 90, category: "languages" },
-    { name: "JavaScript/TypeScript", level: 85, category: "languages" },
-    { name: "HTML/CSS", level: 80, category: "languages" },
-    { name: "C", level: 50, category: "languages" },
-    
-    // Game Dev
-    { name: "Unity", level: 95, category: "game engines" },
-    { name: "Photon PUN 2", level: 80, category: "game engines" },
-    { name: "Netcode for GameObjects", level: 75, category: "game engines" },
-    { name: "Unity ML-Agents", level: 85, category: "game engines" },
-    { name: "Mobile / Android", level: 70, category: "game engines" },
-    { name: "Unity Performance Optimierung", level: 80, category: "game engines" },
-
-    // Frameworks & Tech
-    { name: ".NET", level: 90, category: "frameworks & libraries" },
-    { name: "Blazor", level: 70, category: "frameworks & libraries" },
-    { name: "Flutter", level: 65, category: "frameworks & libraries" },
-    { name: "Angular", level: 60, category: "frameworks & libraries" },
-    { name: "MariaDB", level: 70, category: "frameworks & libraries" },
-    { name: "Docker", level: 60, category: "devOps & tools" },
-    { name: "REST APIs", level: 80, category: "frameworks & libraries" },
-
-    // Tools
-    { name: "Git", level: 90, category: "devOps & tools" },
-    { name: "GitHub / GitLab", level: 85, category: "devOps & tools" },
-    { name: "Azure DevOps (CI/CD)", level: 75, category: "devOps & tools" },
-    { name: "Jenkins", level: 60, category: "devOps & tools" },
-    { name: "Jira / Confluence", level: 80, category: "devOps & tools" },
-    { name: "Scrum / Agile", level: 85, category: "devOps & tools" },
-  ],
   projects: [
     {
       id: "broforce-clone",
