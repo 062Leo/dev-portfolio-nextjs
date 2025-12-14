@@ -5,30 +5,19 @@ import { Briefcase, ChartNoAxesCombined, Code, Gamepad2 } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { useThemeColors, type ThemeColorSet } from "@/components/colors";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function About() {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [currentPortfolioData, setCurrentPortfolioData] = useState(portfolioData);
   const [isReady, setIsReady] = useState(false);
-  const [language, setLanguage] = useState<"de" | "en">("de");
+  const { language } = useLanguage();
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
 
-    const storedTheme = window.localStorage.getItem("theme");
-    if (storedTheme) {
-      setIsDarkMode(storedTheme === "dark");
-    }
-
-    const storedLanguage = window.localStorage.getItem("language");
-    if (storedLanguage === "en") {
-      setLanguage("en");
-      setCurrentPortfolioData(portfolioDataEn);
-    } else {
-      setLanguage("de");
-      setCurrentPortfolioData(portfolioData);
-    }
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(prefersDark);
     setIsReady(true);
   }, []);
 
@@ -37,6 +26,8 @@ export function About() {
   if (!isReady) {
     return null;
   }
+
+  const currentPortfolioData = language === "en" ? portfolioDataEn : portfolioData;
 
   return (
     <section id="about" className="relative px-4 py-24">

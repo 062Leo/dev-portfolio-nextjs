@@ -1,20 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function Footer() {
-  const [language, setLanguage] = useState<"de" | "en">("de");
+  const { language } = useLanguage();
 
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
-    }
-
-    const storedLanguage = window.localStorage.getItem("language");
-    if (storedLanguage === "en") {
-      setLanguage("en");
-    } else {
-      setLanguage("de");
     }
   }, []);
 

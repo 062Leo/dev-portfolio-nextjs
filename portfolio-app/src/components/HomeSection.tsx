@@ -5,29 +5,19 @@ import { ArrowDown } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { useThemeColors } from "@/components/colors";
+import { useLanguage } from "@/context/LanguageContext";
 
 const hoverText = " onClick={reload}";
 
 export function HomeSection() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isReady, setIsReady] = useState(false);
-  const [currentPortfolioData, setCurrentPortfolioData] = useState(portfolioData);
-  const [language, setLanguage] = useState<"de" | "en">("de");
+  const { language } = useLanguage();
   const colors = useThemeColors(isDarkMode);
 
   useEffect(() => {
-    const storedTheme = window.localStorage.getItem("theme");
-    const isDark = storedTheme ? storedTheme === "dark" : true;
-    setIsDarkMode(isDark);
-
-    const storedLanguage = window.localStorage.getItem("language");
-    if (storedLanguage === "en") {
-      setLanguage("en");
-      setCurrentPortfolioData(portfolioDataEn);
-    } else {
-      setLanguage("de");
-      setCurrentPortfolioData(portfolioData);
-    }
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(prefersDark);
 
     setIsReady(true);
   }, []);
@@ -40,12 +30,14 @@ export function HomeSection() {
   };
 
   const reload = () => {
-    window.location.reload();
+    // bewusst keine Persistenz oder Reload, nur ein Gag-Text in der UI
   };
 
   if (!isReady) {
     return null;
   }
+
+  const currentPortfolioData = language === "en" ? portfolioDataEn : portfolioData;
 
   return (
     <section

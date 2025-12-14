@@ -7,30 +7,20 @@ import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
+import { useLanguage } from "@/context/LanguageContext";
+
 export function ProjectsShowcase() {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [projects, setProjects] = useState(portfolioData.projects);
   const [isReady, setIsReady] = useState(false);
-  const [language, setLanguage] = useState<"de" | "en">("de");
+  const { language } = useLanguage();
 
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
 
-    const storedTheme = window.localStorage.getItem("theme");
-    if (storedTheme) {
-      setIsDarkMode(storedTheme === "dark");
-    }
-
-    const storedLanguage = window.localStorage.getItem("language");
-    if (storedLanguage === "en") {
-      setLanguage("en");
-      setProjects(portfolioDataEn.projects);
-    } else {
-      setLanguage("de");
-      setProjects(portfolioData.projects);
-    }
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(prefersDark);
     setIsReady(true);
   }, []);
 
@@ -39,6 +29,8 @@ export function ProjectsShowcase() {
   if (!isReady) {
     return null;
   }
+
+  const projects = (language === "en" ? portfolioDataEn : portfolioData).projects;
 
   return (
     <section className="relative px-4 py-24">
@@ -57,7 +49,7 @@ export function ProjectsShowcase() {
             </>
           )}
         </h2>
-        <p className="mx-auto mb-12 max-w-2xl text-center" style={{ color: colors.projectsSectionSubtitleColor }}>
+        <p className="mx-auto mb-12 max-w-3xl text-center" style={{ color: colors.projectsSectionSubtitleColor }}>
           {language === "de"
             ? "Hier sind einige meiner aktuellen Projekte, die Design, Performance und sauberen Code verbinden."
             : "Here are some of my recent projects that combine design, performance, and clean code."}

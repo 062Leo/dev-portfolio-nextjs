@@ -7,13 +7,13 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 import { useThemeColors, applyThemeColors } from "@/components/colors";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [language, setLanguage] = useState<"de" | "en">("de");
-  const [isReady, setIsReady] = useState(false);
+  const { language, setLanguage } = useLanguage();
   const colors = useThemeColors(isDarkMode);
 
   useEffect(() => {
@@ -43,50 +43,27 @@ export function Navbar() {
       return;
     }
 
-    const storedTheme = window.localStorage.getItem("theme");
-    if (storedTheme) {
-      setIsDarkMode(storedTheme === "dark");
-    }
-    applyThemeColors(storedTheme === "dark" || !storedTheme);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    const storedLanguage = window.localStorage.getItem("language");
-    if (storedLanguage === "de" || storedLanguage === "en") {
-      setLanguage(storedLanguage);
-    }
-
-    setIsReady(true);
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(prefersDark);
+    applyThemeColors(prefersDark);
   }, []);
 
   const toggleTheme = () => {
-    setIsDarkMode((prev) => !prev);
-    const newTheme = !isDarkMode ? "dark" : "light";
-    document.documentElement.classList.toggle("dark");
-    window.localStorage.setItem("theme", newTheme);
-    applyThemeColors(!isDarkMode);
-  };
-
-  const toggleLanguage = () => {
-    setLanguage((prev) => {
-      const next = prev === "de" ? "en" : "de";
-
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("language", next);
-        window.location.reload();
+    setIsDarkMode((prev) => {
+      const next = !prev;
+      if (next) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
       }
-
+      applyThemeColors(next);
       return next;
     });
   };
 
-  if (!isReady) {
-    return null;
-  }
+  const toggleLanguage = () => {
+    setLanguage(language === "de" ? "en" : "de");
+  };
 
   const navItems =
     language === "de"
