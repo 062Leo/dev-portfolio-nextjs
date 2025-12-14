@@ -143,6 +143,7 @@ export function Navbar() {
                 <Image
                   src={language === 'de' ? "/Icons/de_flag.png" : "/Icons/en_flag.png"}
                   alt={language === 'de' ? "Deutsch" : "English"}
+                  sizes="(max-width: 768px) 24px, 24px"
                   fill
                   className="transition-opacity duration-300 object-cover"
                   priority
