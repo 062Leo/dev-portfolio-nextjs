@@ -12,6 +12,7 @@ export function HomeSection() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isReady, setIsReady] = useState(false);
   const [currentPortfolioData, setCurrentPortfolioData] = useState(portfolioData);
+  const [language, setLanguage] = useState<"de" | "en">("de");
   const colors = useThemeColors(isDarkMode);
 
   useEffect(() => {
@@ -21,8 +22,10 @@ export function HomeSection() {
 
     const storedLanguage = window.localStorage.getItem("language");
     if (storedLanguage === "en") {
+      setLanguage("en");
       setCurrentPortfolioData(portfolioDataEn);
     } else {
+      setLanguage("de");
       setCurrentPortfolioData(portfolioData);
     }
 
@@ -66,7 +69,7 @@ export function HomeSection() {
               textShadow: colors.homeSectionTitleGlow,
             }}
           >
-            <span>Hi, I&apos;m </span>
+            <span>{language === "de" ? "Hallo, ich bin " : "Hi, I'm "}</span>
             <span className="inline-flex items-baseline">
               <span style={{ color: colors.homeSectionBracketText }}>&lt;</span>
               <span className="relative inline-flex items-baseline">
@@ -116,7 +119,7 @@ export function HomeSection() {
                 boxShadow: colors.homeSectionBorderGlow,
               }}
             >
-              View My Work
+              {language === "de" ? "Meine Projekte" : "View My Work"}
             </a>
           </div>
         </div>
@@ -127,7 +130,7 @@ export function HomeSection() {
         className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center animate-bounce"
         style={{ color: colors.homeSectionTitleColor }}
       >
-        <span className="mb-1 select-none text-sm">Scroll</span>
+        <span className="mb-1 select-none text-sm">{language === "de" ? "Scrollen" : "Scroll"}</span>
         <ArrowDown className="h-5 w-5" />
       </button>
     </section>

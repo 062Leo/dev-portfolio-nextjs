@@ -11,6 +11,7 @@ export function ProjectsShowcase() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [projects, setProjects] = useState(portfolioData.projects);
   const [isReady, setIsReady] = useState(false);
+  const [language, setLanguage] = useState<"de" | "en">("de");
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -24,8 +25,10 @@ export function ProjectsShowcase() {
 
     const storedLanguage = window.localStorage.getItem("language");
     if (storedLanguage === "en") {
+      setLanguage("en");
       setProjects(portfolioDataEn.projects);
     } else {
+      setLanguage("de");
       setProjects(portfolioData.projects);
     }
     setIsReady(true);
@@ -44,10 +47,20 @@ export function ProjectsShowcase() {
           className="mb-4 text-center text-3xl font-bold md:text-4xl"
           style={{ color: colors.projectsSectionTitleColor }}
         >
-          Featured <span style={{ color: colors.projectsSectionAccentText }}>Projects</span>
+          {language === "de" ? (
+            <>
+              Ausgewählte <span style={{ color: colors.projectsSectionAccentText }}>Projekte</span>
+            </>
+          ) : (
+            <>
+              Featured <span style={{ color: colors.projectsSectionAccentText }}>Projects</span>
+            </>
+          )}
         </h2>
         <p className="mx-auto mb-12 max-w-2xl text-center" style={{ color: colors.projectsSectionSubtitleColor }}>
-          Here are some of my recent projects that combine design, performance, and clean code.
+          {language === "de"
+            ? "Hier sind einige meiner aktuellen Projekte, die Design, Performance und sauberen Code verbinden."
+            : "Here are some of my recent projects that combine design, performance, and clean code."}
         </p>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
@@ -125,7 +138,7 @@ export function ProjectsShowcase() {
                     className="inline-flex items-center gap-1 text-sm font-semibold transition-colors"
                     style={{ color: colors.projectsSectionLinkColor }}
                   >
-                    View more Details
+                    {language === "de" ? "Mehr Details anzeigen" : "View more Details"}
                     <ArrowRight className="h-4 w-4" style={{ color: colors.projectsSectionLinkColor }} />
                   </Link>
                 </div>
@@ -190,7 +203,8 @@ export function ProjectsShowcase() {
             rel="noreferrer"
             className="cosmic-button mx-auto flex w-fit items-center gap-2"
           >
-            Check My Personal GitHub <ArrowRight size={16} />
+            {language === "de" ? "Mein GitHub-Profil ansehen" : "Check My Personal GitHub"}
+            <ArrowRight size={16} />
           </a>
         </div>
       </div>

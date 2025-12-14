@@ -281,7 +281,7 @@ const darkColors: ThemeColorSet = {
     contactSectionAccentColor: "rgba(248, 113, 113, 1)",
     contactSectionIconBackground: "rgba(139, 92, 246, 0.1)",
     contactSectionIconColor: "rgba(239, 68, 68, 1)",
-    contactSectionCardBackground: "rgba(11, 13, 23, 0.95)",
+    contactSectionCardBackground: "rgba(11, 13, 23, 0.45)",
     contactSectionCardBorder: "rgba(167, 139, 250, 0.6)",
     contactSectionCardShadow: "0 25px 60px rgba(167, 139, 250, 0.35)",
     contactSectionSubmitBtnGradientStart: "rgba(105, 30, 155, 1)",

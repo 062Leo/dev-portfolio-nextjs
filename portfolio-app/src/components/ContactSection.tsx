@@ -10,6 +10,7 @@ export function ContactSection() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [language, setLanguage] = useState<"de" | "en">("de");
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -20,9 +21,18 @@ export function ContactSection() {
     if (storedTheme) {
       setIsDarkMode(storedTheme === "dark");
     }
+
+    const storedLanguage = window.localStorage.getItem("language");
+    if (storedLanguage === "en") {
+      setLanguage("en");
+    } else {
+      setLanguage("de");
+    }
   }, []);
 
   const colors = useThemeColors(isDarkMode);
+
+  const isFormEnabled = false;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,78 +54,37 @@ export function ContactSection() {
           className="mb-13 text-center text-3xl font-bold md:text-4xl"
           style={{ color: colors.contactSectionTitleColor }}
         >
-          Get In <span style={{ color: colors.contactSectionAccentColor }}>Touch</span>
+          {language === "de" ? (
+            <>
+              Kontakt <span style={{ color: colors.contactSectionAccentColor }}>aufnehmen</span>
+            </>
+          ) : (
+            <>
+              Get In <span style={{ color: colors.contactSectionAccentColor }}>Touch</span>
+            </>
+          )}
         </h2>
 
         <div className="flex justify-center">
-          {/* <div className="space-y-8">
-            <h3 className="text-2xl font-semibold">Contact Information</h3>
-
-            <ContactRow
-              icon={<Mail className="h-8 w-8" />}
-              title="Email"
-              value="mail@gmail.com"
-              href="mailto:mail@gmail.com"
-              colors={colors}
-            />
-
-            <ContactRow
-              icon={<Phone className="h-8 w-8" />}
-              title="Phone"
-              value="+49 12345678"
-              href="tel:+4912345678"
-              colors={colors}
-            />
-
-            <ContactRow
-              icon={<MapPin className="h-8 w-8" />}
-              title="Location"
-              value="Dummy. Du, mmy"
-              colors={colors}
-            />
-          </div> */}
-
+         
           <div
-            className="w-full max-w-xl rounded-lg p-8 shadow-sm md:w-3/4 lg:w-2/3"
+            className="relative w-full max-w-xl rounded-lg p-8 shadow-sm md:w-3/4 lg:h-[calc(100%*2)] lg:w-2/3"
             style={{
               backgroundColor: colors.contactSectionCardBackground,
               borderColor: colors.contactSectionCardBorder,
               boxShadow: colors.contactSectionCardShadow,
             }}
           >
-            <h3 className="mb-6 text-2xl font-semibold">Send a Message</h3>
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              <InputField id="name" label="Your Name" placeholder="Enter your Name" required colors={colors} />
-              <InputField
-                id="email"
-                type="email"
-                label="Your Email"
-                placeholder="Enter your Email"
-                required
-                colors={colors}
-              />
-              <TextareaField
-                id="message"
-                label="Your Message"
-                placeholder="Hello, I'd like to talk about ..."
-                required
-                colors={colors}
-              />
+            <div className="pointer-events-none opacity-60">
+            </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="cosmic-button flex w-full items-center justify-center gap-2 disabled:opacity-70"
-                style={{
-                  backgroundImage: `linear-gradient(135deg, ${colors.contactSectionSubmitBtnGradientStart}, ${colors.contactSectionSubmitBtnGradientEnd})`,
-                  color: colors.contactSectionSubmitBtnText,
-                  boxShadow: colors.contactSectionSubmitBtnGlow,
-                }}
-              >
-                {isSubmitting ? "Sending ..." : "Send Message"}
-                <Send size={16} />
-              </button>
-            </form>
+            {!isFormEnabled && (
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <div className="rounded-full border px-6 py-2 text-sm font-semibold uppercase tracking-wide">
+                  {language === "de" ? "Bald verfügbar" : "Coming Soon"}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

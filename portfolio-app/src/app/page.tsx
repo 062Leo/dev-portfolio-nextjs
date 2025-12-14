@@ -3,7 +3,6 @@ import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 import { HomeSection } from "@/components/HomeSection";
 import { Navbar } from "@/components/Navbar";
-import { SkillsSection } from "@/components/SkillsSection";
 import { NetworkBackground } from "@/components/NetworkBackground";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -15,7 +14,6 @@ export default function Home() {
       <main className="relative z-10">
         <HomeSection />
         <About />
-        {/* <SkillsSection /> */}
         <ContactSection />
       </main>
       <div className="relative z-10">
