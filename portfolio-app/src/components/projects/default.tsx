@@ -7,6 +7,7 @@ import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { ArrowLeft, Github, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Youtube } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
+import { useLanguage } from "@/context/LanguageContext";
 import ProjectVideos from "./components/ProjectVideos";
 
 // Icon map for dynamic stat rendering
@@ -58,24 +59,19 @@ export function DetailPage() {
     const id = params.id as string;
     const [isDarkMode, setIsDarkMode] = useState(true);
     const [isReady, setIsReady] = useState(false);
-    const [language, setLanguage] = useState<"de" | "en">("de");
+    const { language } = useLanguage();
     const [project, setProject] = useState<(typeof portfolioData.projects)[number] | null>(null);
 
     useEffect(() => {
-        const storedTheme = window.localStorage.getItem("theme");
-        const isDark = storedTheme ? storedTheme === "dark" : true;
-        setIsDarkMode(isDark);
+        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        setIsDarkMode(prefersDark);
 
-        const storedLanguage = window.localStorage.getItem("language");
-        const nextLanguage = storedLanguage === "en" ? "en" : "de";
-        setLanguage(nextLanguage);
-
-        const data = nextLanguage === "en" ? portfolioDataEn : portfolioData;
+        const data = language === "en" ? portfolioDataEn : portfolioData;
         const foundProject = data.projects.find((p) => p.id === id) || null;
         setProject(foundProject);
 
         setIsReady(true);
-    }, [id]);
+    }, [id, language]);
     const colors = useThemeColors(isDarkMode);
 
     // Early return if project is not found

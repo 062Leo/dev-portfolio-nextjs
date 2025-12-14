@@ -5,29 +5,21 @@ import { useEffect, useState } from "react";
 
 import { useToast } from "@/hooks/use-toast";
 import { ThemeColorSet, useThemeColors } from "@/components/colors";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function ContactSection() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [language, setLanguage] = useState<"de" | "en">("de");
+  const { language } = useLanguage();
 
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
 
-    const storedTheme = window.localStorage.getItem("theme");
-    if (storedTheme) {
-      setIsDarkMode(storedTheme === "dark");
-    }
-
-    const storedLanguage = window.localStorage.getItem("language");
-    if (storedLanguage === "en") {
-      setLanguage("en");
-    } else {
-      setLanguage("de");
-    }
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(prefersDark);
   }, []);
 
   const colors = useThemeColors(isDarkMode);
@@ -68,7 +60,7 @@ export function ContactSection() {
         <div className="flex justify-center">
          
           <div
-            className="relative w-full max-w-xl rounded-lg p-8 shadow-sm md:w-3/4 lg:h-[calc(100%*2)] lg:w-2/3"
+            className="relative w-full max-w-xl rounded-lg p-8 shadow-sm md:w-3/4 lg:w-2/3"
             style={{
               backgroundColor: colors.contactSectionCardBackground,
               borderColor: colors.contactSectionCardBorder,
