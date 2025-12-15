@@ -1,41 +1,30 @@
 "use client";
 
-import { Mail, MapPin, Phone, Send } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { useToast } from "@/hooks/use-toast";
-import { ThemeColorSet, useThemeColors } from "@/components/colors";
+import { useThemeColors } from "@/components/colors";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function ContactSection() {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+  const { language } = useLanguage();
 
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
 
-    const storedTheme = window.localStorage.getItem("theme");
-    if (storedTheme) {
-      setIsDarkMode(storedTheme === "dark");
-    }
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(prefersDark);
+    setIsReady(true);
   }, []);
 
   const colors = useThemeColors(isDarkMode);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsSubmitting(true);
-
-    setTimeout(() => {
-      toast({
-        title: "Message sent!",
-        description: "Thank you for your message. I'll get back to you soon.",
-      });
-      setIsSubmitting(false);
-    }, 1500);
-  };
+  if (!isReady) {
+    return null;
+  }
 
   return (
     <section id="contact" className="relative px-4 py-24">
@@ -44,179 +33,38 @@ export function ContactSection() {
           className="mb-13 text-center text-3xl font-bold md:text-4xl"
           style={{ color: colors.contactSectionTitleColor }}
         >
-          Get In <span style={{ color: colors.contactSectionAccentColor }}>Touch</span>
+          {language === "de" ? (
+            <>
+              Kontakt <span style={{ color: colors.contactSectionAccentColor }}>aufnehmen</span>
+            </>
+          ) : (
+            <>
+              Get In <span style={{ color: colors.contactSectionAccentColor }}>Touch</span>
+            </>
+          )}
         </h2>
 
         <div className="flex justify-center">
-          {/* <div className="space-y-8">
-            <h3 className="text-2xl font-semibold">Contact Information</h3>
-
-            <ContactRow
-              icon={<Mail className="h-8 w-8" />}
-              title="Email"
-              value="mail@gmail.com"
-              href="mailto:mail@gmail.com"
-              colors={colors}
-            />
-
-            <ContactRow
-              icon={<Phone className="h-8 w-8" />}
-              title="Phone"
-              value="+49 12345678"
-              href="tel:+4912345678"
-              colors={colors}
-            />
-
-            <ContactRow
-              icon={<MapPin className="h-8 w-8" />}
-              title="Location"
-              value="Dummy. Du, mmy"
-              colors={colors}
-            />
-          </div> */}
-
+         
           <div
-            className="w-full max-w-xl rounded-lg p-8 shadow-sm md:w-3/4 lg:w-2/3"
+            className="relative w-full max-w-xl rounded-lg p-13 shadow-sm  md:w-3/4 lg:w-2/3"
             style={{
               backgroundColor: colors.contactSectionCardBackground,
               borderColor: colors.contactSectionCardBorder,
               boxShadow: colors.contactSectionCardShadow,
             }}
           >
-            <h3 className="mb-6 text-2xl font-semibold">Send a Message</h3>
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              <InputField id="name" label="Your Name" placeholder="Enter your Name" required colors={colors} />
-              <InputField
-                id="email"
-                type="email"
-                label="Your Email"
-                placeholder="Enter your Email"
-                required
-                colors={colors}
-              />
-              <TextareaField
-                id="message"
-                label="Your Message"
-                placeholder="Hello, I'd like to talk about ..."
-                required
-                colors={colors}
-              />
+            <div className="pointer-events-none opacity-60">
+            </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="cosmic-button flex w-full items-center justify-center gap-2 disabled:opacity-70"
-                style={{
-                  backgroundImage: `linear-gradient(135deg, ${colors.contactSectionSubmitBtnGradientStart}, ${colors.contactSectionSubmitBtnGradientEnd})`,
-                  color: colors.contactSectionSubmitBtnText,
-                  boxShadow: colors.contactSectionSubmitBtnGlow,
-                }}
-              >
-                {isSubmitting ? "Sending ..." : "Send Message"}
-                <Send size={16} />
-              </button>
-            </form>
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <div className="rounded-full border px-5 py-2 text-l font-semibold uppercase tracking-wide">
+                {language === "de" ? "Bald verfügbar" : "Coming Soon"}
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-type ContactRowProps = {
-  icon: React.ReactNode;
-  title: string;
-  value: string;
-  href?: string;
-  colors: ThemeColorSet;
-};
-
-function ContactRow({ icon, title, value, href, colors }: ContactRowProps) {
-  const Wrapper = href ? "a" : "p";
-
-  return (
-    <div className="flex items-start gap-4">
-      <div
-        className="rounded-full p-3"
-        style={{
-          backgroundColor: colors.contactSectionIconBackground,
-          color: colors.contactSectionIconColor,
-        }}
-      >
-        {icon}
-      </div>
-      <div className="flex flex-col items-start">
-        <h4 className="font-medium">{title}</h4>
-        <Wrapper
-          {...(href ? { href, target: href.startsWith("http") ? "_blank" : undefined } : {})}
-          className="transition-colors duration-300"
-          style={{ color: colors.contactSectionTitleColor }}
-        >
-          {value}
-        </Wrapper>
-      </div>
-    </div>
-  );
-}
-
-type InputFieldProps = {
-  id: string;
-  label: string;
-  placeholder?: string;
-  required?: boolean;
-  type?: string;
-  colors: ThemeColorSet;
-};
-
-function InputField({ id, label, placeholder, required, type = "text", colors }: InputFieldProps) {
-  return (
-    <div>
-      <label htmlFor={id} className="mb-2 block text-sm font-medium">
-        {label}
-      </label>
-      <input
-        id={id}
-        name={id}
-        type={type}
-        required={required}
-        placeholder={placeholder}
-        className="w-full rounded-md border px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/40"
-        style={{
-          backgroundColor: colors.background,
-          borderColor: colors.border,
-          color: colors.textPrimary,
-        }}
-      />
-    </div>
-  );
-}
-
-type TextareaFieldProps = {
-  id: string;
-  label: string;
-  placeholder?: string;
-  required?: boolean;
-  colors: ThemeColorSet;
-};
-
-function TextareaField({ id, label, placeholder, required, colors }: TextareaFieldProps) {
-  return (
-    <div>
-      <label htmlFor={id} className="mb-2 block text-sm font-medium">
-        {label}
-      </label>
-      <textarea
-        id={id}
-        name={id}
-        required={required}
-        placeholder={placeholder}
-        className="h-32 w-full rounded-md border px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/40"
-        style={{
-          backgroundColor: colors.background,
-          borderColor: colors.border,
-          color: colors.textPrimary,
-        }}
-      />
-    </div>
   );
 }

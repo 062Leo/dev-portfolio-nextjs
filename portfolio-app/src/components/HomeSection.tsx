@@ -5,26 +5,19 @@ import { ArrowDown } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { useThemeColors } from "@/components/colors";
+import { useLanguage } from "@/context/LanguageContext";
 
 const hoverText = " onClick={reload}";
 
 export function HomeSection() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isReady, setIsReady] = useState(false);
-  const [currentPortfolioData, setCurrentPortfolioData] = useState(portfolioData);
+  const { language } = useLanguage();
   const colors = useThemeColors(isDarkMode);
 
   useEffect(() => {
-    const storedTheme = window.localStorage.getItem("theme");
-    const isDark = storedTheme ? storedTheme === "dark" : true;
-    setIsDarkMode(isDark);
-
-    const storedLanguage = window.localStorage.getItem("language");
-    if (storedLanguage === "en") {
-      setCurrentPortfolioData(portfolioDataEn);
-    } else {
-      setCurrentPortfolioData(portfolioData);
-    }
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(prefersDark);
 
     setIsReady(true);
   }, []);
@@ -37,12 +30,16 @@ export function HomeSection() {
   };
 
   const reload = () => {
-    window.location.reload();
+    if (typeof window !== "undefined") {
+      window.location.reload();
+    }
   };
 
   if (!isReady) {
     return null;
   }
+
+  const currentPortfolioData = language === "en" ? portfolioDataEn : portfolioData;
 
   return (
     <section
@@ -66,7 +63,7 @@ export function HomeSection() {
               textShadow: colors.homeSectionTitleGlow,
             }}
           >
-            <span>Hi, I&apos;m </span>
+            <span>{language === "de" ? "Hallo, ich bin " : "Hi, I'm "}</span>
             <span className="inline-flex items-baseline">
               <span style={{ color: colors.homeSectionBracketText }}>&lt;</span>
               <span className="relative inline-flex items-baseline">
@@ -116,7 +113,7 @@ export function HomeSection() {
                 boxShadow: colors.homeSectionBorderGlow,
               }}
             >
-              View My Work
+              {language === "de" ? "Meine Projekte" : "View My Work"}
             </a>
           </div>
         </div>
@@ -127,7 +124,7 @@ export function HomeSection() {
         className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center animate-bounce"
         style={{ color: colors.homeSectionTitleColor }}
       >
-        <span className="mb-1 select-none text-sm">Scroll</span>
+        <span className="mb-1 select-none text-sm">{language === "de" ? "Scrollen" : "Scroll"}</span>
         <ArrowDown className="h-5 w-5" />
       </button>
     </section>

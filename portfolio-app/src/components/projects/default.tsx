@@ -1,12 +1,12 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { ArrowLeft, Github, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Youtube } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
+import { useLanguage } from "@/context/LanguageContext";
 import ProjectVideos from "./components/ProjectVideos";
 
 // Icon map for dynamic stat rendering
@@ -53,30 +53,29 @@ const renderMarkdownText = (text: string, color: string) => {
     });
 };
 
-export function DetailPage() {
-    const params = useParams();
-    const id = params.id as string;
+export function DetailPage({ id }: { id: string }) {
     const [isDarkMode, setIsDarkMode] = useState(true);
     const [isReady, setIsReady] = useState(false);
-    const [language, setLanguage] = useState<"de" | "en">("de");
+    const [showDialog, setShowDialog] = useState(false);
+    const [pendingUrl, setPendingUrl] = useState<string | null>(null);
+    const { language } = useLanguage();
     const [project, setProject] = useState<(typeof portfolioData.projects)[number] | null>(null);
 
     useEffect(() => {
-        const storedTheme = window.localStorage.getItem("theme");
-        const isDark = storedTheme ? storedTheme === "dark" : true;
-        setIsDarkMode(isDark);
+        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        setIsDarkMode(prefersDark);
 
-        const storedLanguage = window.localStorage.getItem("language");
-        const nextLanguage = storedLanguage === "en" ? "en" : "de";
-        setLanguage(nextLanguage);
-
-        const data = nextLanguage === "en" ? portfolioDataEn : portfolioData;
+        const data = language === "en" ? portfolioDataEn : portfolioData;
         const foundProject = data.projects.find((p) => p.id === id) || null;
         setProject(foundProject);
 
         setIsReady(true);
-    }, [id]);
+    }, [id, language]);
     const colors = useThemeColors(isDarkMode);
+
+    if (!isReady) {
+        return null;
+    }
 
     // Early return if project is not found
     if (!project) {
@@ -90,17 +89,12 @@ export function DetailPage() {
         );
     }
 
-    if (!isReady) {
-        return null;
-    }
-
     // Dynamic stats from project data
     const showStats = project.stats && project.stats.length > 0;
 
     return (
         <>
             <style jsx global>{`
-                @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik+Mono+One&display=swap');
                 .font-rubik { font-family: 'Rubik Mono One', sans-serif; }
                 .font-press-start { font-family: 'Press Start 2P', cursive; }
             `}</style>
@@ -115,7 +109,7 @@ export function DetailPage() {
                         onMouseLeave={(e) => e.currentTarget.style.color = colors.boomforceBackLinkText}
                     >
                         <ArrowLeft size={20} />
-                        Back to Projects
+                        {language === "de" ? "Zurück zur Projektübersicht" : "Back to Projects"}
                     </Link>
                 </div>
 
@@ -149,7 +143,7 @@ export function DetailPage() {
                         <div className="aspect-video w-full max-w-4xl rounded-xl overflow-hidden border-2" style={{ borderColor: colors.boomforceMainImageBorder, backgroundColor: colors.boomforceMainImageBackground }}>
                             {/* Use project.image if available, otherwise a placeholder or the first image from images array */}
                             <img
-                                src={project.image || (project.images && project.images[0]?.url) || "/api/placeholder/800/450"}
+                                src={project.image || (project.images && project.images[0]?.url) || "/Bilder/dummy.png"}
                                 alt={project.title}
                                 className="w-full h-full object-cover"
                             />
@@ -208,40 +202,44 @@ export function DetailPage() {
                         </div>
 
                         <div className="flex flex-wrap gap-4 pt-6">
-                            {project.demoUrl && (
+                            {project.demoLink && (
                                 <Link
                                     href={`/projects/${id}/demo`}
                                     className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
                                     style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
                                 >
                                     <Play className="mr-2 w-5 h-5" />
-                                    PLAY DEMO
+                                    {language === "de" ? "DEMO SPIELEN" : "PLAY DEMO"}
                                 </Link>
                             )}
                             {project.demoDownload && (
-                                <a
-                                href={project.demoDownload}
-                                download
-                                className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
-                                style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
+                                <button
+                                    type="button"
+                                    className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
+                                    style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
+                                    onClick={() => {
+                                        setPendingUrl(project.demoDownload as string);
+                                        setShowDialog(true);
+                                    }}
                                 >
                                     <Download className="mr-2 w-5 h-5" />
-                                    DOWNLOAD DEMO
-                                </a>
+                                    {language === "de" ? "DEMO HERUNTERLADEN" : "DOWNLOAD DEMO"}
+                                </button>
                             )}
-                             {project.githubUrl && (
-                                 <a
-                                 href={project.githubUrl}
-                                 target="_blank"
-                                 rel="noreferrer"
-                                 className="flex items-center gap-2 rounded-lg px-6 py-3 transition-all transform hover:scale-105 shadow-lg"
-                                 style={{ border: `1px solid ${colors.boomforceViewCodeBtnBorder}`, color: colors.boomforceViewCodeBtnText, boxShadow: `0 0 20px ${colors.boomforceViewCodeBtnShadow}` }}
-                                 >
+                            {project.githubUrl && (
+                                <button
+                                    type="button"
+                                    className="flex items-center gap-2 rounded-lg px-6 py-3 transition-all transform hover:scale-105 shadow-lg"
+                                    style={{ border: `1px solid ${colors.boomforceViewCodeBtnBorder}`, color: colors.boomforceViewCodeBtnText, boxShadow: `0 0 20px ${colors.boomforceViewCodeBtnShadow}` }}
+                                    onClick={() => {
+                                        setPendingUrl(project.githubUrl as string);
+                                        setShowDialog(true);
+                                    }}
+                                >
                                     <Github className="w-5 h-5" />
-                                    VIEW CODE
-                                </a>
+                                    {language === "de" ? "CODE ANSEHEN" : "VIEW CODE"}
+                                </button>
                             )}
-                            
                         </div>
 
                         {/* Details Section with Videos */}
@@ -257,6 +255,56 @@ export function DetailPage() {
                         />
                     </div>
                 </div>
+                {showDialog && pendingUrl && (
+                    <div
+                        role="dialog"
+                        aria-modal="true"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+                    >
+                        <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
+                            <h2 className="mb-6 text-4xl font-semibold">
+                                {language === "en" ? "External link" : "Externer Link"}
+                            </h2>
+                            <p className="mb-4 text-2xl">
+                                {language === "en"
+                                     ? "You are about to leave this website and will be redirected to an external platform (GitHub)."
+                                     : "Sie verlassen diese Website und werden auf eine externe Plattform (GitHub) weitergeleitet."}
+                            </p>
+                            <p className="mb-10 text-2xl">
+                                {language === "en"
+                                      ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
+                                      : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
+                            </p>
+                            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                                <button
+                                    type="button"
+                                    className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-background hover:bg-muted hover:shadow-lg hover:-translate-y-[2px] hover:border-foreground/60 transition-all duration-150"
+                                    onClick={() => {
+                                        setShowDialog(false);
+                                        setPendingUrl(null);
+                                    }}
+                                >
+                                    {language === "en" ? "Cancel" : "Abbrechen"}
+                                </button>
+                                <button
+                                    type="button"
+                                    className="rounded-md px-4 py-2 text-xl font-semibold bg-foreground text-background hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-foreground/70 transition-all duration-150"
+                                    onClick={() => {
+                                        const url = pendingUrl;
+                                        setShowDialog(false);
+                                        setPendingUrl(null);
+                                        if (url) {
+                                            window.open(url, "_blank", "noopener,noreferrer");
+                                        }
+                                    }}
+                                >
+                                    {language === "en" ? "Continue" : "Fortfahren"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
             </main>
         </>
     );

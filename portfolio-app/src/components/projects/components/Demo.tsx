@@ -1,12 +1,12 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { portfolioData, type DemoControlsGroup } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { ArrowLeft,  Play,  Clock, Star, Code, Zap, Users, Target, Award, Layers } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Icon map for dynamic stat rendering
 const iconMap = {
@@ -64,31 +64,28 @@ const isGroupedControls = (
     );
 };
 
-export function DetailPage() {
-    const params = useParams();
-    const router = useRouter();
-    const id = params.id as string;
+export function DetailPage({ id }: { id: string }) {
     const [isDarkMode, setIsDarkMode] = useState(true);
     const [isReady, setIsReady] = useState(false);
-    const [language, setLanguage] = useState<"de" | "en">("de");
+    const [showDialog, setShowDialog] = useState(false);
+    const { language } = useLanguage();
     const [project, setProject] = useState<(typeof portfolioData.projects)[number] | null>(null);
 
     useEffect(() => {
-        const storedTheme = window.localStorage.getItem("theme");
-        const isDark = storedTheme ? storedTheme === "dark" : true;
-        setIsDarkMode(isDark);
+        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        setIsDarkMode(prefersDark);
 
-        const storedLanguage = window.localStorage.getItem("language");
-        const nextLanguage = storedLanguage === "en" ? "en" : "de";
-        setLanguage(nextLanguage);
-
-        const data = nextLanguage === "en" ? portfolioDataEn : portfolioData;
+        const data = language === "en" ? portfolioDataEn : portfolioData;
         const foundProject = data.projects.find((p) => p.id === id) || null;
         setProject(foundProject);
 
         setIsReady(true);
-    }, [id]);
+    }, [id, language]);
     const colors = useThemeColors(isDarkMode);
+
+    if (!isReady) {
+        return null;
+    }
 
     // Early return if project is not found
     if (!project) {
@@ -100,10 +97,6 @@ export function DetailPage() {
                 </Link>
             </div>
         );
-    }
-
-    if (!isReady) {
-        return null;
     }
 
     // Dynamic stats from project data
@@ -125,24 +118,22 @@ export function DetailPage() {
     return (
         <>
             <style jsx global>{`
-                @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik+Mono+One&display=swap');
                 .font-rubik { font-family: 'Rubik Mono One', sans-serif; }
                 .font-press-start { font-family: 'Press Start 2P', cursive; }
             `}</style>
 
             <main className="relative z-10 container mx-auto max-w-5xl px-4 py-24">
                 <div className="mb-8">
-                    <button
-                        type="button"
-                        onClick={() => router.back()}
+                    <Link
+                        href={`/projects/${id}`}
                         className="mb-8 inline-flex items-center gap-2 transition-colors"
                         style={{ color: colors.demoBackLinkText }}
-                        onMouseEnter={(e) => (e.currentTarget as HTMLButtonElement).style.color = colors.demoBackLinkHover}
-                        onMouseLeave={(e) => (e.currentTarget as HTMLButtonElement).style.color = colors.demoBackLinkText}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = colors.demoBackLinkHover)}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = colors.demoBackLinkText)}
                     >
                         <ArrowLeft size={20} />
                         {language === "en" ? "Back to Project" : "Zurück zum Projekt"}
-                    </button>
+                    </Link>
                 </div>
 
                 <div className="space-y-8">
@@ -160,30 +151,42 @@ export function DetailPage() {
                         {project.demotext && renderMarkdownText(project.demotext, colors.demoTextColor)}
                     </div>
 
-                     <div className="mt-4">
-                        {project.demoUrl && (
-                            <div
-                                className="w-full rounded-xl overflow-hidden border-2"
+
+
+
+                    <div className="mt-4">
+
+                        {/* border_width: 5
+                        bg_color: #1c055b
+                        fg_color: #ffffff
+                        link_color: #e86e6e
+                        border_color: #ec5261
+                        iframe_width: 560
+                        iframe_height: 175 */}
+                        {project.demoImage && (
+                            <button
+                                type="button"
+                                className="w-full rounded-xl overflow-hidden border-2 cursor-pointer block"
                                 style={{
                                     borderColor: colors.demoFrameBorderColor,
                                     backgroundColor: colors.demoFrameBackgroundColor,
-                                    height: "80vh",
+                                }}
+                                onClick={() => {
+                                    if (project.demoLink) {
+                                        setShowDialog(true);
+                                    }
                                 }}
                             >
                                 <div className="w-full h-full">
-                                    <iframe
-                                        src={project.demoUrl}
-                                        className="w-full h-full border-0"
-                                        allowFullScreen
+                                    <img
+                                        src={project.demoImage}
+                                        alt={project.title}
+                                        className="w-full h-auto"
                                     />
                                 </div>
-                            </div>
+                            </button>
                         )}
                     </div>
-
-
-
-
 
 
                           <div
@@ -359,26 +362,51 @@ export function DetailPage() {
                             )}
                         </div>
                     )}
-
-                    {project.demoUrl && (
-                        <div className="flex flex-wrap gap-4 pt-4">
-                            <a
-                                href={project.demoUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
-                                style={{
-                                    background: `linear-gradient(to right, ${colors.demoButtonGradientStart}, ${colors.demoButtonGradientEnd})`,
-                                    color: colors.demoButtonTextColor,
-                                    boxShadow: `0 0 20px ${colors.demoButtonShadowColor}`,
-                                }}
-                            >
-                                <Play className="mr-2 w-5 h-5" />
-                                {language === "en" ? "OPEN DEMO IN NEW TAB" : "DEMO IM NEUEN TAB ÖFFNEN"}
-                            </a>
-                        </div>
-                    )}
+                    
                 </div>
+
+                {showDialog && project.demoLink && (
+                    <div
+                        role="dialog"
+                        aria-modal="true"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+                    >
+                        <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
+                            <h2 className="mb-6 text-4xl font-semibold">
+                                {language === "en" ? "External link" : "Externer Link"}
+                            </h2>
+                            <p className="mb-4 text-2xl">
+                                {language === "en"
+                                    ? "You are about to leave this website and will be redirected to an external platform (itch.io)."
+                                    : "Sie verlassen diese Website und werden auf eine externe Plattform (itch.io) weitergeleitet."}
+                            </p>
+                            <p className="mb-10 text-2xl">
+                                {language === "en"
+                                    ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
+                                    : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
+                            </p>
+                            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                                <button
+                                    type="button"
+                                    className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-background hover:bg-muted hover:shadow-lg hover:-translate-y-[2px] hover:border-foreground/60 transition-all duration-150"
+                                    onClick={() => setShowDialog(false)}
+                                >
+                                    {language === "en" ? "Cancel" : "Abbrechen"}
+                                </button>
+                                <button
+                                    type="button"
+                                    className="rounded-md px-4 py-2 text-xl font-semibold bg-foreground text-background hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-foreground/70 transition-all duration-150"
+                                    onClick={() => {
+                                        setShowDialog(false);
+                                        window.location.href = project.demoLink as string;
+                                    }}
+                                >
+                                    {language === "en" ? "Continue to itch.io" : "Weiter zu itch.io"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </main>
         </>
     );

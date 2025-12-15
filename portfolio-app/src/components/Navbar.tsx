@@ -7,21 +7,13 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 import { useThemeColors, applyThemeColors } from "@/components/colors";
-
-const navItems = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/#about" },
-  // { name: "Skills", href: "/#skills" },
-  { name: "Projects", href: "/projects" },
-  { name: "Contact", href: "/#contact" },
-];
+import { useLanguage } from "@/context/LanguageContext";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [language, setLanguage] = useState<"de" | "en">("de");
-  const [isReady, setIsReady] = useState(false);
+  const { language, setLanguage } = useLanguage();
   const colors = useThemeColors(isDarkMode);
 
   useEffect(() => {
@@ -51,50 +43,46 @@ export function Navbar() {
       return;
     }
 
-    const storedTheme = window.localStorage.getItem("theme");
-    if (storedTheme) {
-      setIsDarkMode(storedTheme === "dark");
-    }
-    applyThemeColors(storedTheme === "dark" || !storedTheme);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    const storedLanguage = window.localStorage.getItem("language");
-    if (storedLanguage === "de" || storedLanguage === "en") {
-      setLanguage(storedLanguage);
-    }
-
-    setIsReady(true);
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(prefersDark);
+    applyThemeColors(prefersDark);
   }, []);
 
   const toggleTheme = () => {
-    setIsDarkMode((prev) => !prev);
-    const newTheme = !isDarkMode ? "dark" : "light";
-    document.documentElement.classList.toggle("dark");
-    window.localStorage.setItem("theme", newTheme);
-    applyThemeColors(!isDarkMode);
-  };
-
-  const toggleLanguage = () => {
-    setLanguage((prev) => {
-      const next = prev === "de" ? "en" : "de";
-
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("language", next);
-        window.location.reload();
+    setIsDarkMode((prev) => {
+      const next = !prev;
+      if (next) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
       }
-
+      applyThemeColors(next);
       return next;
     });
   };
 
-  if (!isReady) {
-    return null;
-  }
+  const toggleLanguage = () => {
+    setLanguage(language === "de" ? "en" : "de");
+  };
+
+  const contactHref = "/#contact";
+
+  const navItems =
+    language === "de"
+      ? [
+          { name: "Home", href: "/" },
+          { name: "Über mich", href: "/#about" },
+          // { name: "Skills", href: "/#skills" },
+          { name: "Projekte", href: "/projects" },
+          { name: "Kontakt", href: contactHref },
+        ]
+      : [
+          { name: "Home", href: "/" },
+          { name: "About", href: "/#about" },
+          // { name: "Skills", href: "/#skills" },
+          { name: "Projects", href: "/projects" },
+          { name: "Contact", href: contactHref },
+        ];
 
   return (
     <nav
@@ -155,8 +143,9 @@ export function Navbar() {
               />
               <div className="relative h-6 w-6 overflow-hidden rounded-full z-10">
                 <Image
-                  src={language === 'de' ? "/unity-demo/Icons/de_flag.png" : "/unity-demo/Icons/en_flag.png"}
+                  src={language === 'de' ? "/Icons/de_flag.png" : "/Icons/en_flag.png"}
                   alt={language === 'de' ? "Deutsch" : "English"}
+                  sizes="(max-width: 768px) 24px, 24px"
                   fill
                   className="transition-opacity duration-300 object-cover"
                   priority
@@ -164,18 +153,7 @@ export function Navbar() {
               </div>
             </div>
           </button>
-          {/* Theme Toggle Button */}
-          <button
-            onClick={toggleTheme}
-            className="z-50 rounded-full transition-colors duration-300 focus:outline-none"
-            aria-label="Toggle theme"
-          >
-            {isDarkMode ? (
-              <Sun className="h-6 w-6" style={{ color: colors.navbarLinkText }} />
-            ) : (
-              <Moon className="h-6 w-6" style={{ color: colors.navbarLinkText }} />
-            )}
-          </button>
+         
         </div>
 
        

@@ -24,7 +24,8 @@ export type Project = {
   image: string; // Kept for backward compatibility as the main image
   images?: ProjectImage[]; // New field for multiple images with captions
   tags: string[];
-  demoUrl?: string;
+  demoLink?: string;
+  demoImage?: string;
   demoDownload?: string;
   githubUrl?: string;
   videoBig?: string;
@@ -46,9 +47,7 @@ export const portfolioData = {
     role: "Softwareentwickler (B.Sc. Softwareentwicklung, Schwerpunkt Games Engineering)",
     tagline: "Unity, C# und .NET - Fokus auf Games Engineering & sauberen Code",
     motivation: "Abgeschlossenes Bachelorstudium der Softwareentwicklung (Schwerpunkt Games Engineering) und Praxiserfahrung in C#, .NET und Unity - mit starkem Fokus auf Clean Code, Refactoring und qualitativ hochwertige, wartbare Software.",
-    email: "contact@example.com", // Placeholder
     github: "https://github.com/062Leo",
-    linkedin: "#", // Placeholder
   },
   about: {
     title: "About Me",
@@ -70,39 +69,6 @@ export const portfolioData = {
       "Motivation und Begeisterung"
     ]
   },
-  skills: [
-    // Languages
-    { name: "C#", level: 95, category: "languages" },
-    { name: "Java", level: 90, category: "languages" },
-    { name: "JavaScript/TypeScript", level: 85, category: "languages" },
-    { name: "HTML/CSS", level: 80, category: "languages" },
-    { name: "C", level: 50, category: "languages" },
-    
-    // Game Dev
-    { name: "Unity", level: 95, category: "game engines" },
-    { name: "Photon PUN 2", level: 80, category: "game engines" },
-    { name: "Netcode for GameObjects", level: 75, category: "game engines" },
-    { name: "Unity ML-Agents", level: 85, category: "game engines" },
-    { name: "Mobile / Android", level: 70, category: "game engines" },
-    { name: "Unity Performance Optimierung", level: 80, category: "game engines" },
-
-    // Frameworks & Tech
-    { name: ".NET", level: 90, category: "frameworks & libraries" },
-    { name: "Blazor", level: 70, category: "frameworks & libraries" },
-    { name: "Flutter", level: 65, category: "frameworks & libraries" },
-    { name: "Angular", level: 60, category: "frameworks & libraries" },
-    { name: "MariaDB", level: 70, category: "frameworks & libraries" },
-    { name: "Docker", level: 60, category: "devOps & tools" },
-    { name: "REST APIs", level: 80, category: "frameworks & libraries" },
-
-    // Tools
-    { name: "Git", level: 90, category: "devOps & tools" },
-    { name: "GitHub / GitLab", level: 85, category: "devOps & tools" },
-    { name: "Azure DevOps (CI/CD)", level: 75, category: "devOps & tools" },
-    { name: "Jenkins", level: 60, category: "devOps & tools" },
-    { name: "Jira / Confluence", level: 80, category: "devOps & tools" },
-    { name: "Scrum / Agile", level: 85, category: "devOps & tools" },
-  ],
   projects: [
     {
       id: "broforce-clone",
@@ -130,7 +96,8 @@ export const portfolioData = {
         "Dynamische Objektzerstörung und Speicheroptimierung"
       ],
       techStack: ["Unity", "C#", "Physics2D", "Tilemap System"],
-      demoUrl: "/Live-Demos/BroforceWebBuild/index.html",
+      demoLink: "https://062leo.itch.io/boomforce",
+      demoImage: "/Bilder/BoomForce/demo.png",
       demoDownload: "",
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
       videoBig: "/Videos/Big/BroforceShowcase.mp4",
@@ -167,7 +134,8 @@ export const portfolioData = {
         "Survival-Horror-Atmosphäre mit düsterem Setting"
       ],
       techStack: ["Unity", "C#", "Netcode for GameObjects", "Unity Transport"],
-      demoUrl: "/Live-Demos/HuntAndHide_WebGl_Demo_Build/index.html",
+      demoLink: "https://062leo.itch.io/hunt-and-hide",
+      demoImage: "/Bilder/HideAndHunt/demo.png",
       demoDownload: "",
       githubUrl: "https://github.com/062Leo/Hide-And-Hunt",
       videoBig: "/Videos/Big/HideAndHuntShowcaseFinal.mp4",
@@ -229,7 +197,8 @@ export const portfolioData = {
         "Auswertung der Trainingsläufe mit TensorBoard (Rewards, Losses, Erfolgsquoten)"
       ],
       techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
-      demoUrl: "",
+      demoLink: "",
+      demoImage: "",
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
       githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
       videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
@@ -256,7 +225,7 @@ export const portfolioData = {
       description: "Desktop-Anwendung zur Simulation von Conways Game of Life.",
       longDescription:
         "Eine interaktive Desktop-Anwendung für Conways Game of Life. Sie bietet einen freies Zeichen Modus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Canvasgrößen- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
-      image: "/Bilder/dummy.png",
+      image: "/Bilder/GameOfLife/GameOfLife.png",
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
@@ -268,8 +237,9 @@ export const portfolioData = {
         "Anpassbare Simulationsgeschwindigkeit mit Start/Stopp-Steuerung"
       ],
       techStack: ["C#", ".NET", "WPF", "XAML"],
-      demoUrl: "",
-      demoDownload: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF/releases/download/releaseV1/GameOfLife.zip",
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
       githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
       videoBig: "/Videos/Big/GameOfLife.mp4",
       demotext: "",
@@ -278,6 +248,40 @@ export const portfolioData = {
       miscimage: "",
       miscTitle: "",
       stats: []
+    },
+    {
+      id: "coming-soon",
+      title: "Bald verfügbar",
+      subtitle: "",
+      description:
+        "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
+      longDescription:
+        "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentieren.",
+      image: "/Bilder/dummy.png",
+      images: [] as ProjectImage[],
+      detailComponent: "",
+      videos: [],
+      tags: ["Bald verfügbar", "Portfolio", "Mehr Projekte"],
+      features: [
+        "Platzhalter für zukünftige Projekte",
+        "In Vorbereitung"
+      ],
+      techStack: ["Noch geheim"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "",
+      videoBig: "",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Kategorie", value: "Streng Geheim" },
+        { icon: "Clock", label: "Zeitplan", value: "Bald verfügbar" }
+        
+      ]
     }
   ]
 };
