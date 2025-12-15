@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Menu, X, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { useThemeColors, applyThemeColors } from "@/components/colors";
@@ -14,6 +15,7 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const { language, setLanguage } = useLanguage();
+  const pathname = usePathname();
   const colors = useThemeColors(isDarkMode);
 
   useEffect(() => {
@@ -65,6 +67,8 @@ export function Navbar() {
     setLanguage(language === "de" ? "en" : "de");
   };
 
+  const contactHref = pathname === "/" ? "#contact" : "/#contact";
+
   const navItems =
     language === "de"
       ? [
@@ -72,14 +76,14 @@ export function Navbar() {
           { name: "Über mich", href: "/#about" },
           // { name: "Skills", href: "/#skills" },
           { name: "Projekte", href: "/projects" },
-          { name: "Kontakt", href: "/#contact" },
+          { name: "Kontakt", href: contactHref },
         ]
       : [
           { name: "Home", href: "/" },
           { name: "About", href: "/#about" },
           // { name: "Skills", href: "/#skills" },
           { name: "Projects", href: "/projects" },
-          { name: "Contact", href: "/#contact" },
+          { name: "Contact", href: contactHref },
         ];
 
   return (
