@@ -24,7 +24,8 @@ export type Project = {
   image: string; // Kept for backward compatibility as the main image
   images?: ProjectImage[]; // New field for multiple images with captions
   tags: string[];
-  demoUrl?: string;
+  demoLink?: string;
+  demoImage?: string;
   demoDownload?: string;
   githubUrl?: string;
   videoBig?: string;
@@ -114,7 +115,8 @@ export const portfolioData = {
         "Dynamic object destruction and memory optimization",
       ],
       techStack: ["Unity", "C#", "Physics2D", "Tilemap System"],
-      demoUrl: "/Live-Demos/BroforceWebBuild/index.html",
+      demoLink: "https://062leo.itch.io/boomforce",
+      demoImage: "/Bilder/BoomForce/demo.png",
       demoDownload: "",
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
       videoBig: "/Videos/Big/BroforceShowcase.mp4",
@@ -154,7 +156,8 @@ export const portfolioData = {
         "Survival horror atmosphere with dark setting",
       ],
       techStack: ["Unity", "C#", "Netcode for GameObjects", "Unity Transport"],
-      demoUrl: "/Live-Demos/HuntAndHide_WebGl_Demo_Build/index.html",
+      demoLink: "https://062leo.itch.io/hunt-and-hide",
+      demoImage: "/Bilder/HideAndHunt/demo.png",
       demoDownload: "",
       githubUrl: "https://github.com/062Leo/Hide-And-Hunt",
       videoBig: "/Videos/Big/HideAndHuntShowcaseFinal.mp4",
@@ -220,7 +223,8 @@ export const portfolioData = {
         "Evaluation of training runs with TensorBoard (rewards, losses, success rates)",
       ],
       techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
-      demoUrl: "",
+      demoLink: "",
+      demoImage: "",
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
       githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
       videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
@@ -259,7 +263,8 @@ export const portfolioData = {
         "Adjustable simulation speed with start/stop controls",
       ],
       techStack: ["C#", ".NET", "WPF", "XAML"],
-      demoUrl: "",
+      demoLink: "",
+      demoImage: "",
       demoDownload: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF/releases/download/releaseV1/GameOfLife.zip",
       githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
       videoBig: "/Videos/Big/GameOfLife.mp4",

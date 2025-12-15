@@ -203,7 +203,7 @@ export function DetailPage() {
                         </div>
 
                         <div className="flex flex-wrap gap-4 pt-6">
-                            {project.demoUrl && (
+                            {project.demoLink && (
                                 <Link
                                     href={`/projects/${id}/demo`}
                                     className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"

@@ -155,30 +155,41 @@ export function DetailPage() {
                         {project.demotext && renderMarkdownText(project.demotext, colors.demoTextColor)}
                     </div>
 
-                     <div className="mt-4">
-                        {project.demoUrl && (
+
+
+
+                    <div className="mt-4">
+
+                        {/* border_width: 5
+                        bg_color: #1c055b
+                        fg_color: #ffffff
+                        link_color: #e86e6e
+                        border_color: #ec5261
+                        iframe_width: 560
+                        iframe_height: 175 */}
+                        {project.demoImage && (
                             <div
-                                className="w-full rounded-xl overflow-hidden border-2"
+                                className="w-full rounded-xl overflow-hidden border-2 cursor-pointer"
                                 style={{
                                     borderColor: colors.demoFrameBorderColor,
                                     backgroundColor: colors.demoFrameBackgroundColor,
-                                    height: "80vh",
+                                }}
+                                onClick={() => {
+                                    if (project.demoLink) {
+                                        window.open(project.demoLink, "_blank", "noopener,noreferrer");
+                                    }
                                 }}
                             >
                                 <div className="w-full h-full">
-                                    <iframe
-                                        src={project.demoUrl}
-                                        className="w-full h-full border-0"
-                                        allowFullScreen
+                                    <img
+                                        src={project.demoImage}
+                                        alt={project.title}
+                                        className="w-full h-auto"
                                     />
                                 </div>
                             </div>
                         )}
                     </div>
-                    
-
-
-
 
 
                           <div
@@ -355,10 +366,10 @@ export function DetailPage() {
                         </div>
                     )}
 
-                    {project.demoUrl && (
+                    {project.demoLink && (
                         <div className="flex flex-wrap gap-4 pt-4">
                             <a
-                                href={project.demoUrl}
+                                href={project.demoLink}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"

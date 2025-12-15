@@ -24,7 +24,8 @@ export type Project = {
   image: string; // Kept for backward compatibility as the main image
   images?: ProjectImage[]; // New field for multiple images with captions
   tags: string[];
-  demoUrl?: string;
+  demoLink?: string;
+  demoImage?: string;
   demoDownload?: string;
   githubUrl?: string;
   youtubeLink?: string;
@@ -59,7 +60,8 @@ export const otherProjects = {
         "Komplexe Kartenlogik"
       ],
       techStack: ["Unity", "C#", "Photon PUN 2"],
-      demoUrl: "#",
+      demoLink: "",
+      demoImage: "",
       demoDownload: "",
       githubUrl: "#",
       youtubeLink: "",
@@ -92,7 +94,8 @@ export const otherProjects = {
         "Docker Containerisierung"
       ],
       techStack: ["Java", "Flutter", "Dart", "MariaDB", "Docker"],
-      demoUrl: "#",
+      demoLink: "",
+      demoImage: "",
       demoDownload: "",
       githubUrl: "#",
       youtubeLink: "",
@@ -147,7 +150,8 @@ export const otherProjects = {
         "Web UI"
       ],
       techStack: ["C#", ".NET", "Blazor", "SQL", "Azure"],
-      demoUrl: "#",
+      demoLink: "",
+      demoImage: "",
       demoDownload: "",
       githubUrl: "#",
       youtubeLink: "",
@@ -174,7 +178,8 @@ export const otherProjects = {
         "Anpassbare Simulationsgeschwindigkeit mit Start/Stopp-Steuerung"
       ],
       techStack: ["C#", ".NET", "WPF", "XAML"],
-      demoUrl: "",
+      demoLink: "",
+      demoImage: "",
       demoDownload: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF/releases/download/releaseV1/GameOfLife.zip",
       githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
       youtubeLink: "",
