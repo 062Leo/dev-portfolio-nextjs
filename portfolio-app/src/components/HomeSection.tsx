@@ -30,7 +30,9 @@ export function HomeSection() {
   };
 
   const reload = () => {
-    // bewusst keine Persistenz oder Reload, nur ein Gag-Text in der UI
+    if (typeof window !== "undefined") {
+      window.location.reload();
+    }
   };
 
   if (!isReady) {

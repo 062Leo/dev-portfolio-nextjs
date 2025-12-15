@@ -89,8 +89,8 @@ export function About() {
               }
               description={
                 language === "de"
-                  ? "Entwicklung moderner Anwendungen – von Web-Frontends bis zu Desktop- und Backend-Lösungen – mit Fokus auf sauberer Architektur und wartbarem Code."
-                  : "Development of modern applications – from web frontends to desktop and backend solutions – with a focus on clean architecture and maintainable code."
+                  ? "Entwicklung moderner Anwendungen - von Web-Frontends bis zu Desktop- und Backend-Lösungen - mit Fokus auf sauberer Architektur und wartbarem Code."
+                  : "Development of modern applications - from web frontends to desktop and backend solutions - with a focus on clean architecture and maintainable code."
               }
               colors={colors}
             />

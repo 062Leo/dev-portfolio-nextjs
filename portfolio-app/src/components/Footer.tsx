@@ -1,16 +1,22 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function Footer() {
   const { language } = useLanguage();
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
+    setIsReady(true);
   }, []);
+
+  if (!isReady) {
+    return null;
+  }
 
   return (
     <footer className="px-4 pb-6 pt-12 text-center text-sm text-foreground/70">

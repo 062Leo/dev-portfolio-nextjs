@@ -7,6 +7,7 @@ import { useLanguage } from "@/context/LanguageContext";
 
 export function ContactSection() {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isReady, setIsReady] = useState(false);
   const { language } = useLanguage();
 
   useEffect(() => {
@@ -16,9 +17,14 @@ export function ContactSection() {
 
     const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
     setIsDarkMode(prefersDark);
+    setIsReady(true);
   }, []);
 
   const colors = useThemeColors(isDarkMode);
+
+  if (!isReady) {
+    return null;
+  }
 
   return (
     <section id="contact" className="relative px-4 py-24">
@@ -41,7 +47,7 @@ export function ContactSection() {
         <div className="flex justify-center">
          
           <div
-            className="relative w-full max-w-xl rounded-lg p-8 shadow-sm md:w-3/4 lg:w-2/3"
+            className="relative w-full max-w-xl rounded-lg p-13 shadow-sm  md:w-3/4 lg:w-2/3"
             style={{
               backgroundColor: colors.contactSectionCardBackground,
               borderColor: colors.contactSectionCardBorder,
@@ -52,7 +58,7 @@ export function ContactSection() {
             </div>
 
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-              <div className="rounded-full border px-6 py-2 text-sm font-semibold uppercase tracking-wide">
+              <div className="rounded-full border px-5 py-2 text-l font-semibold uppercase tracking-wide">
                 {language === "de" ? "Bald verfügbar" : "Coming Soon"}
               </div>
             </div>

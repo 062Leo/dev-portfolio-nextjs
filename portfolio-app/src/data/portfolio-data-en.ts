@@ -251,7 +251,7 @@ export const portfolioData = {
       description: "Desktop application for simulating Conway's Game of Life.",
       longDescription:
         "An interactive desktop application for Conway's Game of Life. It offers a free drawing mode and prefab placement, supports theme switching, variable brush sizes as well as flexible canvas size and speed settings, implemented with C#, .NET and WPF.",
-      image: "/Bilder/dummy.png",
+      image: "/Bilder/GameOfLife/GameOfLife.png",
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
@@ -265,7 +265,7 @@ export const portfolioData = {
       techStack: ["C#", ".NET", "WPF", "XAML"],
       demoLink: "",
       demoImage: "",
-      demoDownload: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF/releases/download/releaseV1/GameOfLife.zip",
+      demoDownload: "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
       githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
       videoBig: "/Videos/Big/GameOfLife.mp4",
       demotext: "",

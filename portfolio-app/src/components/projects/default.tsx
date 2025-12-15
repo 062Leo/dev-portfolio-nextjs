@@ -56,6 +56,8 @@ const renderMarkdownText = (text: string, color: string) => {
 export function DetailPage({ id }: { id: string }) {
     const [isDarkMode, setIsDarkMode] = useState(true);
     const [isReady, setIsReady] = useState(false);
+    const [showDialog, setShowDialog] = useState(false);
+    const [pendingUrl, setPendingUrl] = useState<string | null>(null);
     const { language } = useLanguage();
     const [project, setProject] = useState<(typeof portfolioData.projects)[number] | null>(null);
 
@@ -211,29 +213,33 @@ export function DetailPage({ id }: { id: string }) {
                                 </Link>
                             )}
                             {project.demoDownload && (
-                                <a
-                                href={project.demoDownload}
-                                download
-                                className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
-                                style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
+                                <button
+                                    type="button"
+                                    className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
+                                    style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
+                                    onClick={() => {
+                                        setPendingUrl(project.demoDownload as string);
+                                        setShowDialog(true);
+                                    }}
                                 >
                                     <Download className="mr-2 w-5 h-5" />
                                     {language === "de" ? "DEMO HERUNTERLADEN" : "DOWNLOAD DEMO"}
-                                </a>
+                                </button>
                             )}
-                             {project.githubUrl && (
-                                 <a
-                                 href={project.githubUrl}
-                                 target="_blank"
-                                 rel="noreferrer"
-                                 className="flex items-center gap-2 rounded-lg px-6 py-3 transition-all transform hover:scale-105 shadow-lg"
-                                 style={{ border: `1px solid ${colors.boomforceViewCodeBtnBorder}`, color: colors.boomforceViewCodeBtnText, boxShadow: `0 0 20px ${colors.boomforceViewCodeBtnShadow}` }}
-                                 >
+                            {project.githubUrl && (
+                                <button
+                                    type="button"
+                                    className="flex items-center gap-2 rounded-lg px-6 py-3 transition-all transform hover:scale-105 shadow-lg"
+                                    style={{ border: `1px solid ${colors.boomforceViewCodeBtnBorder}`, color: colors.boomforceViewCodeBtnText, boxShadow: `0 0 20px ${colors.boomforceViewCodeBtnShadow}` }}
+                                    onClick={() => {
+                                        setPendingUrl(project.githubUrl as string);
+                                        setShowDialog(true);
+                                    }}
+                                >
                                     <Github className="w-5 h-5" />
                                     {language === "de" ? "CODE ANSEHEN" : "VIEW CODE"}
-                                </a>
+                                </button>
                             )}
-                            
                         </div>
 
                         {/* Details Section with Videos */}
@@ -249,6 +255,56 @@ export function DetailPage({ id }: { id: string }) {
                         />
                     </div>
                 </div>
+                {showDialog && pendingUrl && (
+                    <div
+                        role="dialog"
+                        aria-modal="true"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+                    >
+                        <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
+                            <h2 className="mb-6 text-4xl font-semibold">
+                                {language === "en" ? "External link" : "Externer Link"}
+                            </h2>
+                            <p className="mb-4 text-2xl">
+                                {language === "en"
+                                     ? "You are about to leave this website and will be redirected to an external platform (GitHub)."
+                                     : "Sie verlassen diese Website und werden auf eine externe Plattform (GitHub) weitergeleitet."}
+                            </p>
+                            <p className="mb-10 text-2xl">
+                                {language === "en"
+                                      ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
+                                      : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
+                            </p>
+                            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                                <button
+                                    type="button"
+                                    className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-background hover:bg-muted hover:shadow-lg hover:-translate-y-[2px] hover:border-foreground/60 transition-all duration-150"
+                                    onClick={() => {
+                                        setShowDialog(false);
+                                        setPendingUrl(null);
+                                    }}
+                                >
+                                    {language === "en" ? "Cancel" : "Abbrechen"}
+                                </button>
+                                <button
+                                    type="button"
+                                    className="rounded-md px-4 py-2 text-xl font-semibold bg-foreground text-background hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-foreground/70 transition-all duration-150"
+                                    onClick={() => {
+                                        const url = pendingUrl;
+                                        setShowDialog(false);
+                                        setPendingUrl(null);
+                                        if (url) {
+                                            window.open(url, "_blank", "noopener,noreferrer");
+                                        }
+                                    }}
+                                >
+                                    {language === "en" ? "Continue" : "Fortfahren"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
             </main>
         </>
     );

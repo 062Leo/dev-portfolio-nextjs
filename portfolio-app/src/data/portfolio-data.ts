@@ -225,7 +225,7 @@ export const portfolioData = {
       description: "Desktop-Anwendung zur Simulation von Conways Game of Life.",
       longDescription:
         "Eine interaktive Desktop-Anwendung für Conways Game of Life. Sie bietet einen freies Zeichen Modus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Canvasgrößen- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
-      image: "/Bilder/dummy.png",
+      image: "/Bilder/GameOfLife/GameOfLife.png",
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
@@ -239,7 +239,7 @@ export const portfolioData = {
       techStack: ["C#", ".NET", "WPF", "XAML"],
       demoLink: "",
       demoImage: "",
-      demoDownload: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF/releases/download/releaseV1/GameOfLife.zip",
+      demoDownload: "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
       githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
       videoBig: "/Videos/Big/GameOfLife.mp4",
       demotext: "",
@@ -248,6 +248,40 @@ export const portfolioData = {
       miscimage: "",
       miscTitle: "",
       stats: []
+    },
+    {
+      id: "coming-soon",
+      title: "Bald verfügbar",
+      subtitle: "",
+      description:
+        "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
+      longDescription:
+        "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentieren.",
+      image: "/Bilder/dummy.png",
+      images: [] as ProjectImage[],
+      detailComponent: "",
+      videos: [],
+      tags: ["Bald verfügbar", "Portfolio", "Mehr Projekte"],
+      features: [
+        "Platzhalter für zukünftige Projekte",
+        "In Vorbereitung"
+      ],
+      techStack: ["Noch geheim"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "",
+      videoBig: "",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Kategorie", value: "Streng Geheim" },
+        { icon: "Clock", label: "Zeitplan", value: "Bald verfügbar" }
+        
+      ]
     }
   ]
 };

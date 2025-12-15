@@ -95,6 +95,10 @@ export type ThemeColorSet = {
     projectsSectionLinkHover: string;
     projectsSectionIconColor: string;
     projectsSectionDivider: string;
+    projectsSection_GH_Start: string;
+    projectsSection_GH_End: string;
+    projectsSection_GH_Text: string;
+    projectsSection_GH_Glow: string;
 
     // Navbar Colors
     navbarTitleColor: string;
@@ -268,6 +272,10 @@ const darkColors: ThemeColorSet = {
     projectsSectionLinkHover: "rgba(239, 68, 68, 0.8)",
     projectsSectionIconColor: "rgba(78, 167, 197, 1)",
     projectsSectionDivider: "rgba(167, 139, 250, 0.3)",
+    projectsSection_GH_Start: "rgba(87, 8, 139, 1)",
+    projectsSection_GH_End: "rgba(39, 5, 141, 0.7)",
+    projectsSection_GH_Text: "rgba(213, 220, 232, 1)",
+    projectsSection_GH_Glow: "0 0 20px rgba(167, 139, 250, 0.5)",
 
     navbarTitleColor: "rgba(213, 220, 232, 1)",
     navbarTitleGlow: "0 0 15px rgba(180, 162, 234, 0.3), 0 0 25px rgba(104, 80, 172, 0.3)",

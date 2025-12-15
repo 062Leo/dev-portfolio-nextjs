@@ -24,7 +24,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     }
 
     const navigatorLanguage = navigator.language || "de";
-    const initialLanguage: SupportedLanguage = navigatorLanguage.toLowerCase().startsWith("en") ? "en" : "de";
+    const initialLanguage: SupportedLanguage = navigatorLanguage.toLowerCase().startsWith("de") ? "de" : "en";
     setLanguage(initialLanguage);
   }, []);
 
