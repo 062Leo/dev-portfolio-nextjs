@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Menu, X, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { useThemeColors, applyThemeColors } from "@/components/colors";
@@ -15,7 +14,6 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const { language, setLanguage } = useLanguage();
-  const pathname = usePathname();
   const colors = useThemeColors(isDarkMode);
 
   useEffect(() => {
@@ -67,7 +65,7 @@ export function Navbar() {
     setLanguage(language === "de" ? "en" : "de");
   };
 
-  const contactHref = pathname === "/" ? "#contact" : "/#contact";
+  const contactHref = "/#contact";
 
   const navItems =
     language === "de"
@@ -155,18 +153,7 @@ export function Navbar() {
               </div>
             </div>
           </button>
-          {/* Theme Toggle Button */}
-          <button
-            onClick={toggleTheme}
-            className="z-50 rounded-full transition-colors duration-300 focus:outline-none"
-            aria-label="Toggle theme"
-          >
-            {isDarkMode ? (
-              <Sun className="h-6 w-6" style={{ color: colors.navbarLinkText }} />
-            ) : (
-              <Moon className="h-6 w-6" style={{ color: colors.navbarLinkText }} />
-            )}
-          </button>
+         
         </div>
 
        

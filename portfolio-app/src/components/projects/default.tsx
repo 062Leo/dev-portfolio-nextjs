@@ -1,6 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
@@ -54,9 +53,7 @@ const renderMarkdownText = (text: string, color: string) => {
     });
 };
 
-export function DetailPage() {
-    const params = useParams();
-    const id = params.id as string;
+export function DetailPage({ id }: { id: string }) {
     const [isDarkMode, setIsDarkMode] = useState(true);
     const [isReady, setIsReady] = useState(false);
     const { language } = useLanguage();
@@ -74,6 +71,10 @@ export function DetailPage() {
     }, [id, language]);
     const colors = useThemeColors(isDarkMode);
 
+    if (!isReady) {
+        return null;
+    }
+
     // Early return if project is not found
     if (!project) {
         return (
@@ -84,10 +85,6 @@ export function DetailPage() {
                 </Link>
             </div>
         );
-    }
-
-    if (!isReady) {
-        return null;
     }
 
     // Dynamic stats from project data
@@ -144,7 +141,7 @@ export function DetailPage() {
                         <div className="aspect-video w-full max-w-4xl rounded-xl overflow-hidden border-2" style={{ borderColor: colors.boomforceMainImageBorder, backgroundColor: colors.boomforceMainImageBackground }}>
                             {/* Use project.image if available, otherwise a placeholder or the first image from images array */}
                             <img
-                                src={project.image || (project.images && project.images[0]?.url) || "/api/placeholder/800/450"}
+                                src={project.image || (project.images && project.images[0]?.url) || "/Bilder/dummy.png"}
                                 alt={project.title}
                                 className="w-full h-full object-cover"
                             />

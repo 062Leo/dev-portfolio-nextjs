@@ -4,9 +4,14 @@ import { NetworkBackground } from "@/components/NetworkBackground";
 import { portfolioData } from "@/data/portfolio-data";
 import { DetailPage as DefaultDetailPage } from "@/components/projects/default";
 
+export function generateStaticParams() {
+  return portfolioData.projects.map((project) => ({
+    id: project.id,
+  }));
+}
+
 export default async function ProjectsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const project = portfolioData.projects.find((p) => p.id === id);
 
   // Aktuell wird immer die DefaultDetailPage verwendet
   const DetailComponent = DefaultDetailPage;
@@ -17,7 +22,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ id: s
       <Navbar />
 
       <main className="relative z-10">
-        <DetailComponent />
+        <DetailComponent id={id} />
       </main>
 
       <div className="relative z-10">
