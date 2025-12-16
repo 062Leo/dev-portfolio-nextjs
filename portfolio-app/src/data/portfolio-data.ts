@@ -71,6 +71,49 @@ export const portfolioData = {
   },
   projects: [
     {
+      id: "ml-agent-bachelor",
+      title: "Bachelorarbeit: ML-Agent in Unity",
+      subtitle: "",
+      description: "Reinforcement-Learning-Agent, der mehrere dynamische 3D-Parkours in Unity meistert.",
+      longDescription:"Im Rahmen meiner Bachelorarbeit habe ich einen ML-Agenten mit dem Unity ML-Agents Toolkit in Unity trainiert, der verschiedene dreidimensionale Parkour-Level mit dynamischen Hindernissen bewältigt.\n\nDer Fokus der Arbeit liegt auf der Frage, wie Trainingsstrategien, Curriculum-Design und Domain Randomization gestaltet werden müssen, damit der Agent nicht nur einzelne Trainingsszenarien löst, sondern robuste und generalisierungsfähige Strategien lernt. Das finale Modell erreicht hohe Erfolgsraten in den Trainingsleveln und zeigt zugleich übertragbares Verhalten in einem separaten Generalisierungs-Level.\n\nTechnisch kombiniert das Projekt umfangreiche Raycast- und Vektorbeobachtungen, einen hybriden Aktionsraum (kontinuierliche Bewegung + diskrete Aktionen) sowie einen PPO-Algorithmus mit LSTM-Netzwerk. Ein eigenes Python-Automatisierungsskript steuert Langzeittrainings, passt Hyperparameter dynamisch an und ermöglicht eine detaillierte Auswertung der Ergebnisse mit TensorBoard.",
+      image: "/Bilder/BachelorArbeit/BachelorArbeit.png",
+      images: [] as ProjectImage[],
+      detailComponent: "",
+      videos: [],
+      tags: ["Reinforcement Learning", "Unity 3D", "ML-Agents", "PPO", "LSTM"],
+      features: [
+        "Training eines ML-Agenten in 13 Parkour-Leveln mit progressiver Komplexität",
+        "Mehere unterschiedliche Varianten für ausgewählte Level",
+        "Umfangreiche Sensorik mit RayPerceptionSensor3D und Vektorbeobachtungen (insgesamt 538 Beobachtungen pro Schritt)",
+        "Hybrider Aktionsraum aus kontinuierlicher Bewegung und diskreten Aktionen (Springen, Rennen)",
+        "Ausgefeilte Reward-Struktur mit Checkpoints, Zeitbonus und Bewegungsoptimierung",
+        "Variantenbasiertes Level-Design zur Förderung von Generalisierung",
+        "Python-Automatisierungsskript zur Steuerung langer Trainingsläufe und dynamischer Hyperparameter",
+        "Auswertung der Trainingsläufe mit TensorBoard (Rewards, Losses, Erfolgsquoten)"
+      ],
+      techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
+      githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
+      videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Trainingslevel", value: "13 Level + 1 Generalisierungslevel" },
+        { icon: "Layers", label: "Parkour-Varianten", value: "31 unterschiedliche Parkours" },
+        { icon: "Target", label: "Erfolgsrate Trainingslevel", value: "ca. 92 %" },
+        { icon: "Star", label: "Erfolgsrate Generalisierungslevel", value: "43-53 %" },
+        { icon: "Clock", label: "Trainingsdauer aller Modelle insgesamt", value: "711,17 Stunden" },
+        { icon: "Zap", label: "Trainierte Modelle", value: "ca. 88" },
+        { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" },
+        { icon: "Award", label: "Note", value: "1.0" },
+      ]
+    },
+    {
       id: "broforce-clone",
       title: "BoomForce",
       subtitle:"(Broforce Klon)",
@@ -175,49 +218,7 @@ export const portfolioData = {
   { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" }
 ]
     },
-    {
-      id: "ml-agent-bachelor",
-      title: "Bachelorarbeit: ML-Agent in Unity",
-      subtitle: "",
-      description: "Reinforcement-Learning-Agent, der mehrere dynamische 3D-Parkours in Unity meistert.",
-      longDescription:"Im Rahmen meiner Bachelorarbeit habe ich einen ML-Agenten mit dem Unity ML-Agents Toolkit in Unity trainiert, der verschiedene dreidimensionale Parkour-Level mit dynamischen Hindernissen bewältigt.\n\nDer Fokus der Arbeit liegt auf der Frage, wie Trainingsstrategien, Curriculum-Design und Domain Randomization gestaltet werden müssen, damit der Agent nicht nur einzelne Trainingsszenarien löst, sondern robuste und generalisierungsfähige Strategien lernt. Das finale Modell erreicht hohe Erfolgsraten in den Trainingsleveln und zeigt zugleich übertragbares Verhalten in einem separaten Generalisierungs-Level.\n\nTechnisch kombiniert das Projekt umfangreiche Raycast- und Vektorbeobachtungen, einen hybriden Aktionsraum (kontinuierliche Bewegung + diskrete Aktionen) sowie einen PPO-Algorithmus mit LSTM-Netzwerk. Ein eigenes Python-Automatisierungsskript steuert Langzeittrainings, passt Hyperparameter dynamisch an und ermöglicht eine detaillierte Auswertung der Ergebnisse mit TensorBoard.",
-      image: "/Bilder/BachelorArbeit/BachelorArbeit.png",
-      images: [] as ProjectImage[],
-      detailComponent: "",
-      videos: [],
-      tags: ["Reinforcement Learning", "Unity 3D", "ML-Agents", "PPO", "LSTM"],
-      features: [
-        "Training eines ML-Agenten in 13 Parkour-Leveln mit progressiver Komplexität",
-        "Mehere unterschiedliche Varianten für ausgewählte Level",
-        "Umfangreiche Sensorik mit RayPerceptionSensor3D und Vektorbeobachtungen (insgesamt 538 Beobachtungen pro Schritt)",
-        "Hybrider Aktionsraum aus kontinuierlicher Bewegung und diskreten Aktionen (Springen, Rennen)",
-        "Ausgefeilte Reward-Struktur mit Checkpoints, Zeitbonus und Bewegungsoptimierung",
-        "Variantenbasiertes Level-Design zur Förderung von Generalisierung",
-        "Python-Automatisierungsskript zur Steuerung langer Trainingsläufe und dynamischer Hyperparameter",
-        "Auswertung der Trainingsläufe mit TensorBoard (Rewards, Losses, Erfolgsquoten)"
-      ],
-      techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
-      demoLink: "",
-      demoImage: "",
-      demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
-      githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
-      videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
-      demotext: "",
-      demoControls: [],
-      misctext: "",
-      miscimage: "",
-      miscTitle: "",
-      stats: [
-        { icon: "Layers", label: "Trainingslevel", value: "13 Level + 1 Generalisierungslevel" },
-        { icon: "Layers", label: "Parkour-Varianten", value: "31 unterschiedliche Parkours" },
-        { icon: "Target", label: "Erfolgsrate Trainingslevel", value: "ca. 92 %" },
-        { icon: "Star", label: "Erfolgsrate Generalisierungslevel", value: "43-53 %" },
-        { icon: "Clock", label: "Trainingsdauer aller Modelle insgesamt", value: "711,17 Stunden" },
-        { icon: "Zap", label: "Trainierte Modelle", value: "ca. 88" },
-        { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" },
-        { icon: "Award", label: "Note", value: "1.0" },
-      ]
-    },
+    
     {
       id: "game-of-life",
       title: "Conway's Game of Life",
@@ -247,7 +248,7 @@ export const portfolioData = {
       misctext: "",
       miscimage: "",
       miscTitle: "",
-      stats: []
+      stats: [{ icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" },]
     },
     {
       id: "coming-soon",
