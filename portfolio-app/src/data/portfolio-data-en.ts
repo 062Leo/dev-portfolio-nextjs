@@ -72,6 +72,51 @@ export const portfolioData = {
   },
   projects: [
     {
+      id: "ml-agent-bachelor",
+      title: "Bachelor's Thesis: ML Agent in Unity",
+      subtitle: "",
+      description:
+        "Reinforcement learning agent that masters several dynamic 3D parkours in Unity.",
+      longDescription:
+        "As part of my bachelor's thesis I trained an ML agent with the Unity ML-Agents Toolkit in Unity that masters various three-dimensional parkour levels with dynamic obstacles.\n\nThe focus of the thesis is on how training strategies, curriculum design and domain randomization must be structured so that the agent not only solves individual training scenarios but learns robust and generalizable strategies. The final model achieves high success rates in the training levels and at the same time shows transferable behaviour in a separate generalization level.\n\nTechnically, the project combines extensive raycast and vector observations, a hybrid action space (continuous movement + discrete actions) and a PPO algorithm with an LSTM network. A custom Python automation script controls long-term training runs, dynamically adjusts hyperparameters and enables a detailed evaluation of the results with TensorBoard.",
+      image: "/Bilder/BachelorArbeit/BachelorArbeit.png",
+      images: [] as ProjectImage[],
+      detailComponent: "",
+      videos: [],
+      tags: ["Reinforcement Learning", "Unity 3D", "ML-Agents", "PPO", "LSTM"],
+      features: [
+        "Training an ML agent in 13 parkour levels with progressive complexity",
+        "Several different variants for selected levels",
+        "Extensive sensing with RayPerceptionSensor3D and vector observations (a total of 538 observations per step)",
+        "Hybrid action space consisting of continuous movement and discrete actions (jumping, running)",
+        "Sophisticated reward structure with checkpoints, time bonus and movement optimization",
+        "Variant-based level design to promote generalization",
+        "Python automation script for controlling long training runs and dynamic hyperparameters",
+        "Evaluation of training runs with TensorBoard (rewards, losses, success rates)",
+      ],
+      techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
+      githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
+      videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Training levels", value: "13 levels + 1 generalization level" },
+        { icon: "Layers", label: "Parkour variants", value: "31 different parkours" },
+        { icon: "Target", label: "Success rate training levels", value: "approx. 92 %" },
+        { icon: "Star", label: "Success rate generalization level", value: "43-53 %" },
+        { icon: "Clock", label: "Total training time of all models", value: "711.17 hours" },
+        { icon: "Zap", label: "Trained models", value: "approx. 88" },
+        { icon: "Star", label: "Development", value: "Solo project" },
+        { icon: "Award", label: "Grade", value: "1.0" },
+      ]
+    },
+    {
       id: "broforce-clone",
       title: "BoomForce",
       subtitle: "(Broforce clone)",
@@ -199,51 +244,7 @@ export const portfolioData = {
         { icon: "Star", label: "Development", value: "Solo project" },
       ]
     },
-    {
-      id: "ml-agent-bachelor",
-      title: "Bachelor's Thesis: ML Agent in Unity",
-      subtitle: "",
-      description:
-        "Reinforcement learning agent that masters several dynamic 3D parkours in Unity.",
-      longDescription:
-        "As part of my bachelor's thesis I trained an ML agent with the Unity ML-Agents Toolkit in Unity that masters various three-dimensional parkour levels with dynamic obstacles.\n\nThe focus of the thesis is on how training strategies, curriculum design and domain randomization must be structured so that the agent not only solves individual training scenarios but learns robust and generalizable strategies. The final model achieves high success rates in the training levels and at the same time shows transferable behaviour in a separate generalization level.\n\nTechnically, the project combines extensive raycast and vector observations, a hybrid action space (continuous movement + discrete actions) and a PPO algorithm with an LSTM network. A custom Python automation script controls long-term training runs, dynamically adjusts hyperparameters and enables a detailed evaluation of the results with TensorBoard.",
-      image: "/Bilder/BachelorArbeit/BachelorArbeit.png",
-      images: [] as ProjectImage[],
-      detailComponent: "",
-      videos: [],
-      tags: ["Reinforcement Learning", "Unity 3D", "ML-Agents", "PPO", "LSTM"],
-      features: [
-        "Training an ML agent in 13 parkour levels with progressive complexity",
-        "Several different variants for selected levels",
-        "Extensive sensing with RayPerceptionSensor3D and vector observations (a total of 538 observations per step)",
-        "Hybrid action space consisting of continuous movement and discrete actions (jumping, running)",
-        "Sophisticated reward structure with checkpoints, time bonus and movement optimization",
-        "Variant-based level design to promote generalization",
-        "Python automation script for controlling long training runs and dynamic hyperparameters",
-        "Evaluation of training runs with TensorBoard (rewards, losses, success rates)",
-      ],
-      techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
-      demoLink: "",
-      demoImage: "",
-      demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
-      githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
-      videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
-      demotext: "",
-      demoControls: [],
-      misctext: "",
-      miscimage: "",
-      miscTitle: "",
-      stats: [
-        { icon: "Layers", label: "Training levels", value: "13 levels + 1 generalization level" },
-        { icon: "Layers", label: "Parkour variants", value: "31 different parkours" },
-        { icon: "Target", label: "Success rate training levels", value: "approx. 92 %" },
-        { icon: "Star", label: "Success rate generalization level", value: "43-53 %" },
-        { icon: "Clock", label: "Total training time of all models", value: "711.17 hours" },
-        { icon: "Zap", label: "Trained models", value: "approx. 88" },
-        { icon: "Star", label: "Development", value: "Solo project" },
-        { icon: "Award", label: "Grade", value: "1.0" },
-      ]
-    },
+    
     {
       id: "game-of-life",
       title: "Conway's Game of Life",
@@ -273,7 +274,40 @@ export const portfolioData = {
       misctext: "",
       miscimage: "",
       miscTitle: "",
-      stats: []
+      stats: [{ icon: "Star", label: "Development", value: "Solo project" }]
+    },
+    {
+      id: "coming-soon",
+      title: "Coming soon",
+      subtitle: "",
+      description:
+        "This project is still secret - more information coming soon.",
+      longDescription:
+        "This entry is a placeholder. In the future, additional projects will be presented here.",
+      image: "/Bilder/dummy.png",
+      images: [] as ProjectImage[],
+      detailComponent: "",
+      videos: [],
+      tags: ["Coming soon", "Portfolio", "More projects"],
+      features: [
+        "Placeholder for future projects",
+        "In preparation"
+      ],
+      techStack: ["Still secret"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "",
+      videoBig: "",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Category", value: "Top secret" },
+        { icon: "Clock", label: "Schedule", value: "Coming soon" }
+      ]
     }
   ]
 };
