@@ -393,16 +393,19 @@ export function DetailPage({ id }: { id: string }) {
                                 >
                                     {language === "en" ? "Cancel" : "Abbrechen"}
                                 </button>
-                                <button
-                                    type="button"
-                                    className="rounded-md px-4 py-2 text-xl font-semibold bg-foreground text-background hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-foreground/70 transition-all duration-150"
+                                <a
+                                    href={project.demoLink as string}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center rounded-md px-4 py-2 text-xl font-semibold bg-foreground text-background hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-foreground/70 transition-all duration-150"
                                     onClick={() => {
                                         setShowDialog(false);
-                                        window.location.href = project.demoLink as string;
                                     }}
                                 >
                                     {language === "en" ? "Continue to itch.io" : "Weiter zu itch.io"}
-                                </button>
+                                </a>
+
+                                
                             </div>
                         </div>
                     </div>
