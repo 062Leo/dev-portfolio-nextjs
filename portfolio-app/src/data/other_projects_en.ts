@@ -45,28 +45,28 @@ export const otherProjects = {
 {
       id: "kryptodash",
       title: "KryptoDash",
-      subtitle: "Zentrales Crypto-Dashboard mit Lern- und Tradingplattform",
+      subtitle: "Central crypto dashboard with learning and trading platform",
       description:
-        "Fullstack-Projekt mit Angular-Frontend und Django-Backend, das Krypto-Bestände und Kurse verschiedener Börsen in einem Dashboard bündelt.",
+        "Full-stack project with an Angular frontend and a Django backend that consolidates crypto holdings and prices from different exchanges in a single dashboard.",
       longDescription:
-        "KryptoDash ist eine Fullstack-Anwendung, die verschiedene Crypto-Börsen wie Binance, KuCoin, Bitget und Coinbase über API-Keys verbindet. Nutzer erhalten ein zentrales Dashboard mit Live-Kursen, Wallet-Übersicht als Kreisdiagramm und integrierten TradingView-Charts für Krypto und Aktien. Zusätzlich bietet KryptoDash eine Lernplattform mit Quizzen zu historischen Finanzereignissen sowie eine Fake-Wallet-Trading-Umgebung, in der ohne Risiko mit virtuellem Geld gehandelt und unterschiedliche Strategien getestet werden können.\n\nDas Projekt wurde in einem 2-Personen-Team umgesetzt. Den Großteil der technischen Arbeit habe ich übernommen: Auswahl des Tech-Stacks, Projekt-Setup, Anbindung und Implementierung der Backend-APIs, zentrale Backend-Logik sowie der überwiegende Teil des Frontends.",
+        "KryptoDash is a full-stack application that connects various crypto exchanges such as Binance, KuCoin, Bitget and Coinbase via API keys. Users get a central dashboard with live prices, a wallet overview as a pie chart and integrated TradingView charts for crypto and stocks. In addition, KryptoDash offers a learning platform with quizzes on historical financial events as well as a fake-wallet trading environment where users can trade with virtual money without risk and test different strategies.\n\nThe project was developed in a two-person team. I was responsible for the majority of the technical work: choosing the tech stack, setting up the project, integrating and implementing the backend APIs, the core backend logic, and most of the frontend.",
       image: "/Bilder/KryptoDash/landingpage.png",
       images: [
         {
           url: "/Bilder/KryptoDash/fakeWallet.png",
-          caption: "Fake-Wallet-Trading mit virtuellem Geld"
+          caption: "Fake wallet trading with virtual money"
         },
         {
           url: "/Bilder/KryptoDash/wallet.png",
-          caption: "Wallet-Übersicht mit Kreisdiagramm der Assets"
+          caption: "Wallet overview with assets in a pie chart"
         },
         {
           url: "/Bilder/KryptoDash/fakeWalletSettings.png",
-          caption: "Einstellungen und Verwaltung der Fake-Wallet"
+          caption: "Fake wallet settings and management"
         },
         {
           url: "/Bilder/KryptoDash/quiz.png",
-          caption: "Learning-Plattform mit Quiz zu historischen Ereignissen"
+          caption: "Learning platform with quizzes on historical events"
         }
       ] as ProjectImage[],
       detailComponent: "",
@@ -74,15 +74,15 @@ export const otherProjects = {
       tags: [
         "Crypto Dashboard",
         "TradingView",
-        "Lernplattform",
+        "Learning platform",
         "Fake-Wallet",
-        "API-Integration"
+        "API integration"
       ],
       features: [
-        "Zentrale Übersicht über Krypto-Bestände und Kurse verschiedener Börsen",
-        "Integration mehrerer Anbieter (z. B. Binance, KuCoin, Bitget, Coinbase) über API-Keys",
-        "TradingView-Charts für interaktive Analysen von Krypto und Aktien mit Indikatoren",
-        "Lernplattform mit Quizzen und Fake-Wallet-Trading ohne Risiko"
+        "Central overview of crypto holdings and prices across different exchanges",
+        "Integration of multiple providers (e.g. Binance, KuCoin, Bitget, Coinbase) via API keys",
+        "TradingView charts for interactive analysis of crypto and stocks with indicators",
+        "Learning platform with quizzes and risk-free fake-wallet trading"
       ],
       techStack: ["Angular", "TypeScript", "Django", "Python", "REST API"],
       demoLink: "",
@@ -98,43 +98,44 @@ export const otherProjects = {
       stats: [
         {
           icon: "Layers",
-          label: "Architektur",
+          label: "Architecture",
           value: "Angular-Frontend & Django-Backend"
         },
         {
           icon: "Users",
-          label: "Zielgruppe",
-          value: "Krypto-Enthusiasten und Trading-Einsteiger"
+          label: "Target audience",
+          value: "Crypto enthusiasts and trading beginners"
         },
         {
           icon: "Zap",
-          label: "Funktionen",
-          value: "Live-Kurse, Wallet-Übersicht, Fake-Wallet & Coin-Exchange"
+          label: "Features",
+          value: "Live prices, wallet overview, fake wallet & coin exchange"
         },
         {
           icon: "Star",
-          label: "Entwicklung",
-          value: "2-Personen-Team"
+          label: "Development",
+          value: "Two-person team"
         }
       ]
     },
 
     {
       id: "",
-      title: "2D Online Multiplayer Mobile Kartenspiel",
+      title: "2D Online Multiplayer Mobile Card Game",
       subtitle: "",
-      description: "Privatprojekt mit Unity, C# und Photon PUN 2 für Android.",
-      longDescription: "Ein 2D Online Multiplayer Kartenspiel für Mobile (Android), entwickelt als Privatprojekt. Es nutzt Photon PUN 2 für den Multiplayer-Part und bietet eine optimierte Mobile UI/UX.",
+      description: "Private project built with Unity, C# and Photon PUN 2 for Android.",
+      longDescription:
+        "A 2D online multiplayer card game for mobile (Android), developed as a private project. It uses Photon PUN 2 for the multiplayer part and provides an optimized mobile UI/UX.",
       image: "/Bilder/dummy.png", // Placeholder
       images: [],
       detailComponent: "",
       videos: [],
       tags: ["Unity 2D", "Photon PUN 2", "Android", "Mobile"],
       features: [
-        "Online Multiplayer",
-        "Android Build",
+        "Online multiplayer",
+        "Android build",
         "Mobile UI/UX",
-        "Komplexe Kartenlogik"
+        "Complex card logic"
       ],
       techStack: ["Unity", "C#", "Photon PUN 2"],
       demoLink: "",
@@ -183,22 +184,22 @@ export const otherProjects = {
     },
     {
           id: "coming-soon",
-          title: "Bald verfügbar",
+          title: "Coming soon",
           subtitle: "",
           description:
-            "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
+            "This project is still secret - more information coming soon.",
           longDescription:
-            "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentieren.",
+            "This entry is a placeholder. In the future, additional projects will be presented here.",
           image: "/Bilder/dummy.png",
           images: [] as ProjectImage[],
           detailComponent: "",
           videos: [],
-          tags: ["Bald verfügbar", "Portfolio", "Mehr Projekte"],
+          tags: ["Coming soon", "Portfolio", "More projects"],
           features: [
-            "Platzhalter für zukünftige Projekte",
-            "In Vorbereitung"
+            "Placeholder for future projects",
+            "In preparation"
           ],
-          techStack: ["Noch geheim"],
+          techStack: ["Still secret"],
           demoLink: "",
           demoImage: "",
           demoDownload: "",
@@ -210,9 +211,8 @@ export const otherProjects = {
           miscimage: "",
           miscTitle: "",
           stats: [
-            { icon: "Layers", label: "Kategorie", value: "Streng Geheim" },
-            { icon: "Clock", label: "Zeitplan", value: "Bald verfügbar" }
-            
+            { icon: "Layers", label: "Category", value: "Top secret" },
+            { icon: "Clock", label: "Schedule", value: "Coming soon" }
           ]
         }
   ]
