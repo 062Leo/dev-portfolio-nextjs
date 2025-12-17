@@ -2,12 +2,21 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { NetworkBackground } from "@/components/NetworkBackground";
 import { portfolioData } from "@/data/portfolio-data";
+import { otherProjects } from "@/data/other_projects";
 import { DetailPage as DefaultDetailPage } from "@/components/projects/default";
 
 export function generateStaticParams() {
-  return portfolioData.projects.map((project) => ({
+  const mainProjects = portfolioData.projects.map((project) => ({
     id: project.id,
   }));
+
+  const additionalProjects = otherProjects.projects
+    .filter((project) => project.id && project.id.trim() !== "")
+    .map((project) => ({
+      id: project.id,
+    }));
+
+  return [...mainProjects, ...additionalProjects];
 }
 
 export default async function ProjectsPage({ params }: { params: Promise<{ id: string }> }) {

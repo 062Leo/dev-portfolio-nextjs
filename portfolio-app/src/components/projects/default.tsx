@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
+import { otherProjects } from "@/data/other_projects";
 import { ArrowLeft, Github, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Youtube } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
@@ -58,15 +59,24 @@ export function DetailPage({ id }: { id: string }) {
     const [isReady, setIsReady] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
     const [pendingUrl, setPendingUrl] = useState<string | null>(null);
+    const [selectedImage, setSelectedImage] = useState<{ url: string; caption?: string } | null>(null);
     const { language } = useLanguage();
-    const [project, setProject] = useState<(typeof portfolioData.projects)[number] | null>(null);
+    const [project, setProject] = useState<
+        (typeof portfolioData.projects)[number] | (typeof otherProjects.projects)[number] | null
+    >(null);
 
     useEffect(() => {
         const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
         setIsDarkMode(prefersDark);
 
         const data = language === "en" ? portfolioDataEn : portfolioData;
-        const foundProject = data.projects.find((p) => p.id === id) || null;
+
+        // Zuerst in den Hauptprojekten suchen (DE/EN), dann in otherProjects als Fallback
+        const foundProject =
+            data.projects.find((p) => p.id === id) ||
+            otherProjects.projects.find((p) => p.id === id) ||
+            null;
+
         setProject(foundProject);
 
         setIsReady(true);
@@ -91,6 +101,7 @@ export function DetailPage({ id }: { id: string }) {
 
     // Dynamic stats from project data
     const showStats = project.stats && project.stats.length > 0;
+    const hasImages = project.images && project.images.length > 0;
 
     return (
         <>
@@ -152,6 +163,8 @@ export function DetailPage({ id }: { id: string }) {
                         <div className="text-lg leading-relaxed">
                             {renderMarkdownText(project.longDescription || project.description, colors.boomforceProjectDescriptionText)}
                         </div>
+
+                        
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
@@ -242,6 +255,51 @@ export function DetailPage({ id }: { id: string }) {
                             )}
                         </div>
 
+
+                        {hasImages && (
+                            <div >
+                                <h3
+                                    className="mb-6 text-2xl font-semibold font-press-start text-center"
+                                    style={{ color: colors.boomforceScreenshotsTitleColor }}
+                                >
+                                    SCREENSHOTS
+                                </h3>
+                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                    {project.images!.map((image, index) => (
+                                        <div key={index} className="flex flex-col items-center gap-3">
+                                            <div
+                                                className="relative w-full max-w-md overflow-hidden rounded-xl border-2 aspect-video cursor-pointer group"
+                                                style={{
+                                                    borderColor: colors.boomforceScreenshotsBorder,
+                                                    backgroundColor: colors.boomforceScreenshotsBackground,
+                                                }}
+                                                onClick={() => setSelectedImage(image)}
+                                            >
+                                                <img
+                                                    src={image.url}
+                                                    alt={image.caption || project.title}
+                                                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                                />
+                                                <div
+                                                    className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                                                >
+                                                    <span className="text-lg font-semibold text-white">Click me</span>
+                                                </div>
+                                            </div>
+                                            {image.caption && (
+                                                <p
+                                                    className="text-sm text-center max-w-md"
+                                                    style={{ color: colors.boomforceProjectDescriptionText }}
+                                                >
+                                                    {image.caption}
+                                                </p>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         {/* Details Section with Videos */}
                         <ProjectVideos 
                             videoBig={project.videoBig}
@@ -255,6 +313,41 @@ export function DetailPage({ id }: { id: string }) {
                         />
                     </div>
                 </div>
+                {selectedImage && (
+                    <div
+                        role="dialog"
+                        aria-modal="true"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4"
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <div
+                            className="w-full max-w-[95vw] rounded-3xl bg-background/95 px-6 py-10 text-foreground shadow-2xl border border-border relative"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button
+                                type="button"
+                                className="absolute -top-2 right-5 text-5xl font-extrabold text-red-500 drop-shadow-lg hover:scale-110 hover:opacity-90 transition-transform"
+                                onClick={() => setSelectedImage(null)}
+                            >
+                                ×
+                            </button>
+                            <div className="flex justify-center pb-4">
+                                <div className="w-full flex justify-center">
+                                    <img
+                                        src={selectedImage.url}
+                                        alt={selectedImage.caption || "Screenshot"}
+                                        className="min-h-[50vh] min-w-[50vw] max-h-[75vh] max-w-[95vw] h-auto w-auto object-contain rounded-xl"
+                                    />
+                                </div>
+                            </div>
+                            {selectedImage.caption && (
+                                <p className="text-center text-base" style={{ color: colors.boomforceProjectDescriptionText }}>
+                                    {selectedImage.caption}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                )}
                 {showDialog && pendingUrl && (
                     <div
                         role="dialog"
