@@ -182,5 +182,38 @@ export const otherProjects = {
       miscTitle: "",
       stats: []
     },
+    {
+          id: "coming-soon",
+          title: "Coming soon",
+          subtitle: "",
+          description:
+            "This project is still secret - more information coming soon.",
+          longDescription:
+            "This entry is a placeholder. In the future, additional projects will be presented here.",
+          image: "/Bilder/dummy.png",
+          images: [] as ProjectImage[],
+          detailComponent: "",
+          videos: [],
+          tags: ["Coming soon", "Portfolio", "More projects"],
+          features: [
+            "Placeholder for future projects",
+            "In preparation"
+          ],
+          techStack: ["Still secret"],
+          demoLink: "",
+          demoImage: "",
+          demoDownload: "",
+          githubUrl: "",
+          videoBig: "",
+          demotext: "",
+          demoControls: [],
+          misctext: "",
+          miscimage: "",
+          miscTitle: "",
+          stats: [
+            { icon: "Layers", label: "Category", value: "Top secret" },
+            { icon: "Clock", label: "Schedule", value: "Coming soon" }
+          ]
+        }
   ]
 };
