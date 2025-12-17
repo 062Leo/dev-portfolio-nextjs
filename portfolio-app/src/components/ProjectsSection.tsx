@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowRight, Download, ExternalLink } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
+import { otherProjects } from "@/data/other_projects";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
@@ -33,6 +34,7 @@ export function ProjectsShowcase() {
   }
 
   const projects = (language === "en" ? portfolioDataEn : portfolioData).projects;
+  const moreProjects = otherProjects.projects.filter((project) => project.id && project.id.trim() !== "");
 
   return (
     <section className="relative px-4 py-24">
@@ -111,19 +113,25 @@ export function ProjectsShowcase() {
                 </p>
 
                 <div className="mb-4 flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full border px-2 py-1 text-sm font-medium"
-                      style={{
-                        borderColor: colors.projectsSectionTagBorder,
-                        color: colors.projectsSectionTagText,
-                        backgroundColor: colors.projectsSectionTagBackground,
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                  {project.tags.map((tag, index) => {
+                    if (!tag || tag.trim() === "") {
+                      return null;
+                    }
+
+                    return (
+                      <span
+                        key={`${project.id}-${index}`}
+                        className="rounded-full border px-2 py-1 text-sm font-medium"
+                        style={{
+                          borderColor: colors.projectsSectionTagBorder,
+                          color: colors.projectsSectionTagText,
+                          backgroundColor: colors.projectsSectionTagBackground,
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    );
+                  })}
                 </div>
                 
                 <div className="mb-4">
@@ -190,6 +198,113 @@ export function ProjectsShowcase() {
           ))}
         </div>
 
+        {/* Weitere Projekte / More Projects */}
+        <h3
+          className="mt-16 mb-4 text-center text-2xl font-semibold md:text-3xl pt-4"
+          style={{ color: colors.projectsSectionTitleColor }}
+        >
+          {language === "de" ? "Weitere Projekte" : "More Projects"}
+        </h3>
+        <p
+          className="mx-auto mb-12 max-w-3xl text-center"
+          style={{ color: colors.projectsSectionSubtitleColor }}
+        >
+          {language === "de"
+            ? "Zusätzliche Projekte und Experimente, die mein Portfolio ergänzen."
+            : "Additional projects and experiments that complement my portfolio."}
+        </p>
+
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
+          {moreProjects.map((project) => (
+            <div
+              key={project.id}
+              className="card-hover overflow-hidden rounded-lg shadow-sm"
+              style={{
+                backgroundColor: colors.projectsSectionCardBackground,
+                borderColor: colors.projectsSectionCardBorder,
+                boxShadow: colors.projectsSectionCardShadow,
+                borderWidth: "1px",
+                borderStyle: "solid",
+              }}
+            >
+              <div className="h-48 overflow-hidden">
+                <Link href={`/projects/${project.id}`}>
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    width={600}
+                    height={400}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </Link>
+              </div>
+
+              <div className="p-6">
+                <Link href={`/projects/${project.id}`}>
+                  <div className="mb-1 flex items-baseline gap-2 flex-wrap">
+                    <h3
+                      className="text-xl font-semibold transition-colors"
+                      style={{
+                        color: colors.projectsSectionTitleColor,
+                      }}
+                    >
+                      {project.title}
+                    </h3>
+                    {project.subtitle && project.subtitle.trim() && (
+                      <span
+                        className="text-xl font-semibold"
+                        style={{
+                          color: colors.projectsSectionTitleColor,
+                        }}
+                      >
+                        {project.subtitle}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+                <p className="mb-4 text-sm" style={{ color: colors.projectsSectionSubtitleColor }}>
+                  {project.description}
+                </p>
+
+                <div className="mb-4 flex flex-wrap gap-2">
+                  {project.tags.map((tag, index) => {
+                    if (!tag || tag.trim() === "") {
+                      return null;
+                    }
+
+                    return (
+                      <span
+                        key={`${project.id}-more-${index}`}
+                        className="rounded-full border px-2 py-1 text-sm font-medium"
+                        style={{
+                          borderColor: colors.projectsSectionTagBorder,
+                          color: colors.projectsSectionTagText,
+                          backgroundColor: colors.projectsSectionTagBackground,
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    );
+                  })}
+                </div>
+
+                <div className="mb-4">
+                  <Link
+                    href={`/projects/${project.id}`}
+                    className="inline-flex items-center gap-1 text-sm font-semibold transition-colors"
+                    style={{ color: colors.projectsSectionLinkColor }}
+                  >
+                    {language === "de" ? "Mehr Details anzeigen" : "View more Details"}
+                    <ArrowRight className="h-4 w-4" style={{ color: colors.projectsSectionLinkColor }} />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+
+
         <div className=" mt-12 flex flex-col justify-center gap-4 pt-4 sm:flex-row">
           <button
             type="button"
@@ -203,11 +318,14 @@ export function ProjectsShowcase() {
               setPendingUrl("https://github.com/062Leo");
               setShowDialog(true);
             }}
-          >
+            >
             {language === "de" ? "Mein GitHub-Profil ansehen" : "Check My Personal GitHub"}
             <ArrowRight size={16} />
           </button>
         </div>
+
+
+            {/* hier hin */}
       </div>
 
       {showDialog && pendingUrl && (
