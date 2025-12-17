@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { otherProjects } from "@/data/other_projects";
+import { otherProjects as otherProjectsEn } from "@/data/other_projects_en";
 import { ArrowLeft, Github, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Youtube } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
@@ -70,11 +71,12 @@ export function DetailPage({ id }: { id: string }) {
         setIsDarkMode(prefersDark);
 
         const data = language === "en" ? portfolioDataEn : portfolioData;
+        const otherSource = language === "en" ? otherProjectsEn : otherProjects;
 
-        // Zuerst in den Hauptprojekten suchen (DE/EN), dann in otherProjects als Fallback
+        // Zuerst in den Hauptprojekten suchen (DE/EN), dann in den weiteren Projekten (DE/EN) als Fallback
         const foundProject =
             data.projects.find((p) => p.id === id) ||
-            otherProjects.projects.find((p) => p.id === id) ||
+            otherSource.projects.find((p) => p.id === id) ||
             null;
 
         setProject(foundProject);
