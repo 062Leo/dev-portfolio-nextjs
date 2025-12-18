@@ -119,6 +119,41 @@ export const otherProjects = {
       ]
     },
 
+     {
+      id: "",
+      title: "",
+      subtitle: "",
+      description: "",
+      longDescription:
+        "",
+      image: "",
+      images: [] as ProjectImage[],
+      detailComponent: "",
+      videos: [],
+      tags: ["", "", "", "", ""],
+      features: [
+        "",
+        "",
+        "",
+        ""
+      ],
+      techStack: ["", "", "", ""],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "",
+      videoBig: "",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: []
+    },
+
+
+
+
     {
       id: "",
       title: "2D Online Multiplayer Mobile Kartenspiel",
@@ -151,35 +186,62 @@ export const otherProjects = {
     },
     
     {
-      id: "",
-      title: "dummy",
+      id: "doom-mobility-prototype",
+      title: "DOOM Movement Prototype",
       subtitle: "",
-      description: "",
+      description:
+        "High Mobility Gameplay mit Dashes, Wall-Climbing und Trampolinen. First-Person-Bewegungs-Prototyp inspiriert von DOOM mit hoher Mobilität, Dashes, Trampolinen und präzisem Wall-Climbing.",
       longDescription:
-        "",
-      image: "",
+        "Dieser Prototyp fokussiert sich auf das schnelle, vertikale Movement wie in DOOM. Der Spieler verfügt über zwei Dashes mit Cooldown-Anzeige im UI, Trampoline mit unterschiedlicher Sprunghöhe und ein durchdachtes Wall-Climbing-System. An Wänden kann nur in bestimmten Blickwinkeln geklettert werden: vertikal bis ca. 90 Grad von der Wand wegschauen, horizontal bis ca. 70 Grad. Dadurch ist der Spieler immer absprungbereit, ähnlich wie im Original-DOOM. Zusätzlich existieren mehrere Spawnpoints und der Spieler stirbt, wenn er aus der Map fällt.",
+      image: "/Bilder/Doom/Doom.png",
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
-      tags: ["", "", "", "", ""],
-      features: [
-        "",
-        "",
-        "",
-        ""
+      tags: [
+        "Unity",
+        "Networking",
+        "Prototype",
+        "High Mobility",
+        "First Person",
+        "Movement",
+        "Level Design",
       ],
-      techStack: ["", "", "", ""],
+      features: [
+        "Zwei Dashes mit sichtbarem Cooldown auf dem Canvas",
+        "Kleine und große Trampoline mit unterschiedlicher Sprunghöhe",
+        "Powerup, das den Dash sofort wieder verfügbar macht",
+        "Mehrere Spawnpoints und Tod beim Fallen aus der Map",
+        "Wall-Climbing nur in definierten Blickwinkeln für DOOM-typisches Movement"
+      ],
+      techStack: ["Unity", "C#", "Netcode for GameObjects"],
       demoLink: "",
       demoImage: "",
       demoDownload: "",
       githubUrl: "",
-      videoBig: "",
-      demotext: "",
+      videoBig: "/Videos/Big/Doom_Showcase.mp4",
+      demotext: "Kurzer Showcase des High-Mobility-Movements (Dashes, Trampoline, Wall-Climbing).",
       demoControls: [],
-      misctext: "",
+      misctext:
+        "",
       miscimage: "",
       miscTitle: "",
-      stats: []
+      stats: [
+        {
+          icon: "Zap",
+          label: "Fokus",
+          value: "High-Mobility-Movement und Networking"
+        },
+        {
+          icon: "Layers",
+          label: "Genre",
+          value: "First-Person Movement Prototype"
+        },
+        {
+          icon: "Clock",
+          label: "Typ",
+          value: "Experimenteller Prototyp"
+        }
+      ]
     },
     {
           id: "coming-soon",

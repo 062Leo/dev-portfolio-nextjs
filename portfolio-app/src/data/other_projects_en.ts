@@ -118,6 +118,66 @@ export const otherProjects = {
         }
       ]
     },
+    {
+          id: "doom-mobility-prototype",
+          title: "DOOM Movement Prototype",
+          subtitle: "",
+          description:
+            "High-mobility gameplay with dashes, wall-climbing and trampolines. First-person movement prototype inspired by DOOM with high mobility, dashes, trampolines and precise wall-climbing.",
+          longDescription:
+            "This prototype focuses on fast, vertical movement similar to DOOM. The player has two dashes with a cooldown indicator in the UI, trampolines with different jump heights and a well-thought-out wall-climbing system. Wall-climbing is only possible within specific view angles: vertically up to about 90 degrees away from the wall, horizontally up to about 70 degrees. This ensures the player is always ready to jump off, similar to the original DOOM. In addition, there are multiple spawn points and the player dies when falling out of the map.",
+          image: "/Bilder/Doom/Doom.png",
+          images: [] as ProjectImage[],
+          detailComponent: "",
+          videos: [],
+          tags: [
+            "Unity",
+            "Networking",
+            "Prototype",
+            "High Mobility",
+            "First Person",
+            "Movement",
+            "Level Design",
+          ],
+          features: [
+            "Two dashes with visible cooldown on the canvas",
+            "Small and large trampolines with different jump heights",
+            "Power-up that instantly refreshes the dash",
+            "Multiple spawn points and death when falling out of the map",
+            "Wall-climbing only within defined view angles for DOOM-style movement"
+          ],
+          techStack: ["Unity", "C#", "Netcode for GameObjects"],
+          demoLink: "",
+          demoImage: "",
+          demoDownload: "",
+          githubUrl: "",
+          videoBig: "/Videos/Big/Doom_Showcase.mp4",
+          demotext: "Short showcase of the high-mobility movement (dashes, trampolines, wall-climbing).",
+          demoControls: [],
+          misctext:
+            "",
+          miscimage: "",
+          miscTitle: "",
+          stats: [
+            {
+              icon: "Zap",
+              label: "Focus",
+              value: "High-mobility movement and networking"
+            },
+            {
+              icon: "Layers",
+              label: "Genre",
+              value: "First-person movement prototype"
+            },
+            {
+              icon: "Clock",
+              label: "Type",
+              value: "Experimental prototype"
+            }
+          ]
+        },
+    
+
 
     {
       id: "",
