@@ -173,6 +173,131 @@ export const otherProjects = {
               icon: "Clock",
               label: "Type",
               value: "Experimental prototype"
+            },
+            { icon: "Star", label: "Development", value: "Solo project" }
+          ]
+        },
+
+    {
+          id: "arcanoid-3d",
+          title: "Arcanoid 3D",
+          subtitle: "",
+          description:
+            "3D Arcanoid prototype in Unity with different brick types, multiple power-ups, scoring and life system as well as game-over and win screens.",
+          longDescription:
+            "Arcanoid 3D is a modern 3D take on classic brick-breaker gameplay. There are different brick types that need to be hit a different number of times (blue bricks once, green twice, yellow three times). After every three destroyed bricks, power-ups spawn: a green power-up spawns a barrier below the paddle for 10 seconds so the ball cannot leave the play area; a yellow power-up makes the paddle wider for 10 seconds; a blue power-up fires two shots that each count as a ball hit. In addition, there is a game-over screen with a restart option when all lives are used up, and a won-game screen when all bricks have been destroyed. The score is displayed (each destroyed brick gives +10 points, when the ball is lost one life is removed and 50 points are deducted). On the top wall, the current lives and the remaining duration of the active power-ups are displayed, including an animated life indicator.",
+          image: "/Bilder/Arcanoid/arcanoid.png",
+          images: [] as ProjectImage[],
+          detailComponent: "",
+          videos: [],
+          tags: [
+            "Unity 3D",
+            "Arcanoid",
+            "Powerups",
+            "Score System",
+            "Prototype"
+          ],
+          features: [
+            "Different brick types that require 1x, 2x or 3x hits",
+            "Power-ups after every three destroyed bricks",
+            "Green power-up: temporary barrier below the paddle (10 seconds)",
+            "Yellow power-up: wider paddle for 10 seconds",
+            "Blue power-up: two shots that count as ball hits",
+            "Game-over and won-game screens with restart option",
+            "Scoring system with points for bricks and deduction when losing a life",
+            "Display of lives and power-up duration on the top wall with animation"
+          ],
+          techStack: ["Unity", "C#"],
+          demoLink: "",
+          demoImage: "",
+          demoDownload: "",
+          githubUrl: "",
+          videoBig: "/Videos/Big/Arcanoid.mp4",
+          demotext:
+            "Gameplay showcase of Arcanoid 3D with bricks, power-ups, scoring and life system.",
+          demoControls: [],
+          misctext: "",
+          miscimage: "",
+          miscTitle: "",
+          stats: [
+            {
+              icon: "Zap",
+              label: "Focus",
+              value: "Arcanoid-style gameplay with power-ups and scoring system"
+            },
+            {
+              icon: "Layers",
+              label: "Genre",
+              value: "3D brick-breaker prototype"
+            },
+            {
+              icon: "Clock",
+              label: "Status",
+              value: "Finished prototype with restart logic"
+            },
+            { icon: "Star", label: "Development", value: "Solo project" }
+          ]
+    },
+    
+        
+         {
+          id: "smart-color-following-car",
+          title: "Smart Color Following Car",
+          subtitle: "",
+          description:
+            "Autonomous vehicle based on the Elegoo Smart Robot Car V3 that independently follows a colored target object using a Pixy2 camera.",
+          longDescription:
+            "The goal of this project was to develop an autonomous vehicle that can follow a colored target object without any manual input. At the core of the system is the Pixy2 camera, which detects objects based on color signatures. An Elegoo Smart Robot Car V3 handles the movement, while an Arduino Uno processes the sensor data and controls the motors. In the code, various driving functions such as forward, left, right and stop are provided. Based on the position of the object derived from the camera image, the vehicle decides whether it should steer left or right or come to a stop.\n\nThe distance to the target object is determined solely by the size of the detected object in the camera image: the larger the object appears, the closer it is. This allows the vehicle to decide whether it should keep moving or stop. The resulting prototype clearly demonstrates how color detection and camera data can be used to realize autonomous color-following behavior and provides a solid foundation for further experiments.",
+          image: "/Bilder/SmartCar/smartCar.png",
+          images: [] as ProjectImage[],
+          detailComponent: "",
+          videos: [],
+          tags: [
+            "Arduino",
+            "Elegoo Smart Robot Car",
+            "Pixy2 camera",
+            "Autonomous driving",
+            "Color detection"
+          ],
+          features: [
+            "Autonomous following of a colored target object using a Pixy2 camera",
+            "Evaluation of color signatures for object detection",
+            "Control of an Elegoo Smart Robot Car V3 via Arduino Uno",
+            "Creative workarounds for hardware issues and motor control"
+          ],
+          techStack: [ "Arduino C++", "Pixy2", "Elegoo Smart Robot Car"],
+          demoLink: "",
+          demoImage: "",
+          demoDownload: "",
+          githubUrl: "",
+          videoBig: "/Videos/Big/Smart-Colorfollowing-Car.mp4",
+          demotext:
+            "Live demonstration of the Smart Color Following Car with Pixy2 camera and color-based object detection.",
+          demoControls: [],
+          misctext:
+            "The project showed how important solution-oriented thinking is when dealing with hardware issues and provides a solid basis for further experiments with sensors.",
+          miscimage: "",
+          miscTitle: "Challenges & Learnings",
+          stats: [
+            {
+              icon: "Layers",
+              label: "Category",
+              value: "Embedded / robotics project"
+            },
+            {
+              icon: "Target",
+              label: "Goal",
+              value: "Autonomous color-following vehicle"
+            },
+            {
+              icon: "Clock",
+              label: "Status",
+              value: "Working prototype"
+            },
+            {
+              icon: "Star",
+              label: "Development",
+              value: "Solo project"
             }
           ]
         },
