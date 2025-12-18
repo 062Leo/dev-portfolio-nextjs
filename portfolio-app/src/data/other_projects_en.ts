@@ -173,9 +173,71 @@ export const otherProjects = {
               icon: "Clock",
               label: "Type",
               value: "Experimental prototype"
-            }
+            },
+            { icon: "Star", label: "Development", value: "Solo project" }
           ]
         },
+
+    {
+          id: "arcanoid-3d",
+          title: "Arcanoid 3D",
+          subtitle: "",
+          description:
+            "3D Arcanoid prototype in Unity with different brick types, multiple power-ups, scoring and life system as well as game-over and win screens.",
+          longDescription:
+            "Arcanoid 3D is a modern 3D take on classic brick-breaker gameplay. There are different brick types that need to be hit a different number of times (blue bricks once, green twice, yellow three times). After every three destroyed bricks, power-ups spawn: a green power-up spawns a barrier below the paddle for 10 seconds so the ball cannot leave the play area; a yellow power-up makes the paddle wider for 10 seconds; a blue power-up fires two shots that each count as a ball hit. In addition, there is a game-over screen with a restart option when all lives are used up, and a won-game screen when all bricks have been destroyed. The score is displayed (each destroyed brick gives +10 points, when the ball is lost one life is removed and 50 points are deducted). On the top wall, the current lives and the remaining duration of the active power-ups are displayed, including an animated life indicator.",
+          image: "/Bilder/Arcanoid/arcanoid.png",
+          images: [] as ProjectImage[],
+          detailComponent: "",
+          videos: [],
+          tags: [
+            "Unity 3D",
+            "Arcanoid",
+            "Powerups",
+            "Score System",
+            "Prototype"
+          ],
+          features: [
+            "Different brick types that require 1x, 2x or 3x hits",
+            "Power-ups after every three destroyed bricks",
+            "Green power-up: temporary barrier below the paddle (10 seconds)",
+            "Yellow power-up: wider paddle for 10 seconds",
+            "Blue power-up: two shots that count as ball hits",
+            "Game-over and won-game screens with restart option",
+            "Scoring system with points for bricks and deduction when losing a life",
+            "Display of lives and power-up duration on the top wall with animation"
+          ],
+          techStack: ["Unity", "C#"],
+          demoLink: "",
+          demoImage: "",
+          demoDownload: "",
+          githubUrl: "",
+          videoBig: "/Videos/Big/Arcanoid.mp4",
+          demotext:
+            "Gameplay showcase of Arcanoid 3D with bricks, power-ups, scoring and life system.",
+          demoControls: [],
+          misctext: "",
+          miscimage: "",
+          miscTitle: "",
+          stats: [
+            {
+              icon: "Zap",
+              label: "Focus",
+              value: "Arcanoid-style gameplay with power-ups and scoring system"
+            },
+            {
+              icon: "Layers",
+              label: "Genre",
+              value: "3D brick-breaker prototype"
+            },
+            {
+              icon: "Clock",
+              label: "Status",
+              value: "Finished prototype with restart logic"
+            },
+            { icon: "Star", label: "Development", value: "Solo project" }
+          ]
+    },
     
 
 
