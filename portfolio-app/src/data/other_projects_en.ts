@@ -239,6 +239,69 @@ export const otherProjects = {
           ]
     },
     
+        
+         {
+          id: "smart-color-following-car",
+          title: "Smart Color Following Car",
+          subtitle: "",
+          description:
+            "Autonomous vehicle based on the Elegoo Smart Robot Car V3 that independently follows a colored target object using a Pixy2 camera.",
+          longDescription:
+            "The goal of this project was to develop an autonomous vehicle that can follow a colored target object without any manual input. At the core of the system is the Pixy2 camera, which detects objects based on color signatures. An Elegoo Smart Robot Car V3 handles the movement, while an Arduino Uno processes the sensor data and controls the motors. In the code, various driving functions such as forward, left, right and stop are provided. Based on the position of the object derived from the camera image, the vehicle decides whether it should steer left or right or come to a stop.\n\nThe distance to the target object is determined solely by the size of the detected object in the camera image: the larger the object appears, the closer it is. This allows the vehicle to decide whether it should keep moving or stop. The resulting prototype clearly demonstrates how color detection and camera data can be used to realize autonomous color-following behavior and provides a solid foundation for further experiments.",
+          image: "/Bilder/SmartCar/smartCar.png",
+          images: [] as ProjectImage[],
+          detailComponent: "",
+          videos: [],
+          tags: [
+            "Arduino",
+            "Elegoo Smart Robot Car",
+            "Pixy2 camera",
+            "Autonomous driving",
+            "Color detection"
+          ],
+          features: [
+            "Autonomous following of a colored target object using a Pixy2 camera",
+            "Evaluation of color signatures for object detection",
+            "Control of an Elegoo Smart Robot Car V3 via Arduino Uno",
+            "Creative workarounds for hardware issues and motor control"
+          ],
+          techStack: [ "Arduino C++", "Pixy2", "Elegoo Smart Robot Car"],
+          demoLink: "",
+          demoImage: "",
+          demoDownload: "",
+          githubUrl: "",
+          videoBig: "/Videos/Big/Smart-Colorfollowing-Car.mp4",
+          demotext:
+            "Live demonstration of the Smart Color Following Car with Pixy2 camera and color-based object detection.",
+          demoControls: [],
+          misctext:
+            "The project showed how important solution-oriented thinking is when dealing with hardware issues and provides a solid basis for further experiments with sensors.",
+          miscimage: "",
+          miscTitle: "Challenges & Learnings",
+          stats: [
+            {
+              icon: "Layers",
+              label: "Category",
+              value: "Embedded / robotics project"
+            },
+            {
+              icon: "Target",
+              label: "Goal",
+              value: "Autonomous color-following vehicle"
+            },
+            {
+              icon: "Clock",
+              label: "Status",
+              value: "Working prototype"
+            },
+            {
+              icon: "Star",
+              label: "Development",
+              value: "Solo project"
+            }
+          ]
+        },
+    
 
 
     {
