@@ -257,7 +257,7 @@ export const portfolioData = {
       description:
         "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
       longDescription:
-        "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentieren.",
+        "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentiert.",
       image: "/Bilder/dummy.png",
       images: [] as ProjectImage[],
       detailComponent: "",
