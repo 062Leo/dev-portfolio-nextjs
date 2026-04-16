@@ -272,7 +272,7 @@ export const portfolioData = {
       description:
         "Unity-Editor-Tool, das Änderungen aus dem Play Mode erfasst und nach dem Beenden wieder auf den Edit Mode anwendet, sodass kein Iterationsfortschritt beim Testen verloren geht.",
       longDescription:
-        "Play Mode Changes Saver löst ein zentrales Workflow-Problem in der Unity-Entwicklung: Änderungen, die im Play Mode vorgenommen werden, gehen beim Beenden des Spielbetriebs normalerweise verloren. Das Tool erstellt automatisch Szenen-Snapshots, verfolgt Änderungen an Transforms, Components, Materials und GameObject-Namen und ermöglicht es, selektiv nur die gewünschten Änderungen zu übernehmen.\n\nEs unterstützt Multi-Scene-Workflows, Vergleichsansichten nebeneinander, Inspector-Integration sowie eine zuverlässige Objekterkennung durch eine hybride GUID+Pfad-Strategie, die auch nach Umbenennungen funktioniert. Vollständige Undo/Redo-Unterstützung und eine rein editor-seitige Implementierung halten die Laufzeitumgebung sauber.",
+        "**Problem:** In professionellen Unity-Produktionsabläufen werden wichtige Szenenanpassungen häufig im Play Mode vorgenommen. Beim Beenden des Play Modes gehen diese Änderungen standardmäßig verloren. Das führt zu wiederholter manueller Nacharbeit, langsameren Iterationszyklen und einem höheren Risiko für inkonsistente Ergebnisse.\n\n**Lösung:** Play Mode Changes Saver wurde als produktionsorientiertes Editor-Tool entwickelt. Es erstellt automatisch Szenen-Snapshots, erkennt Änderungen an Transforms, allen Unity-Components, eigenen Components und Scripts an GameObjects, Materials und Namen und bietet eine geführte Side-by-Side-Prüfung, damit nur validierte Änderungen zurück in den Edit Mode übernommen werden. Dazu kommen Inspector-Integration, Multi-Scene-Unterstützung, Undo/Redo sowie eine robuste Objekterkennung über eine hybride GUID+Pfad-Strategie, die auch nach Umbenennungen stabil bleibt.\n\n**Ergebnis:** Das ist kein reiner Prototyp, sondern ein **production-ready Produkt, das im Unity Asset Store veröffentlicht wurde**. Es zeigt klar die vollständige Umsetzung von Problemverständnis über technische Lösung bis hin zu einem ausgelieferten Produkt mit praktischem Mehrwert für Entwickler und Level-Designer.\n\nWeitere Informationen zum Tool findest du auf der Unity-Asset-Store-Seite.",
       image: "/Bilder/dummy.png",
       images: [
         {
@@ -296,7 +296,7 @@ export const portfolioData = {
         "Inspector-Integration mit dediziertem Overrides-Button",
         "Eigenschaftsvergleich nebeneinander zur selektiven Übernahme",
         "Szenenweiter Overrides-Browser zur zentralen Übersicht",
-        "Verfolgung von Transforms, Components, Materials und Namen",
+        "Verfolgung von Transforms, allen Unity-Components, eigenen Components und Scripts an GameObjects, Materials und Namen",
         "Hybride GUID+Pfad-Objekterkennung (umbenenungsresistent)",
         "Persistente Speicherung über ScriptableObjects",
         "Multi-Scene-Unterstützung mit automatischem Wechsel",

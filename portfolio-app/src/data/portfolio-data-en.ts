@@ -298,7 +298,7 @@ export const portfolioData = {
       description:
         "Unity Editor tool that captures and reapplies Play Mode changes to Edit Mode, so your iteration progress is not lost after testing.",
       longDescription:
-        "Play Mode Changes Saver solves a key workflow problem in Unity development: changes made during Play Mode are usually discarded when you stop play. The tool creates scene snapshots automatically, tracks Transform, Component, Material, and GameObject name changes, and lets you selectively apply only what you want to keep.\n\nIt supports multi-scene workflows, side-by-side comparisons, inspector integration, and reliable object matching with a hybrid GUID+path strategy that still works after renames. Full undo/redo support and editor-only implementation keep your runtime clean.",
+        "**Problem:** In professional Unity production workflows, important scene tweaks are often made during Play Mode, but Unity discards them when Play Mode ends. This repeatedly forces manual rework, slows iteration, and increases the risk of missing or inconsistent changes.\n\n**Solution:** Play Mode Changes Saver was built as a production-focused Editor tool that automatically snapshots scenes, tracks changes across transforms, all Unity components, custom components and scripts attached to GameObjects, materials, and names, and provides guided side-by-side review so only validated changes are applied back to Edit Mode. It includes inspector integration, multi-scene handling, undo/redo support, and robust object matching via hybrid GUID+path identification that remains stable across renames.\n\n**Result:** This is not just a prototype. It is a **production-ready product published on the Unity Asset Store**, demonstrating end-to-end delivery from problem analysis to a shipped solution that improves day-to-day developer and level-design workflows.\n\nMore information about the tool is available on the Unity Asset Store page.",
       image: "/Bilder/dummy.png",
       images: [
         {
@@ -322,7 +322,7 @@ export const portfolioData = {
         "Inspector integration with a dedicated overrides button",
         "Side-by-side property comparison for selective apply",
         "Scene-wide overrides browser for centralized review",
-        "Tracking for transforms, components, materials, and names",
+        "Tracking for transforms, all Unity components, custom components and scripts attached to GameObjects, materials, and names",
         "Hybrid GUID+path object identification (rename-resilient)",
         "Persistent storage via ScriptableObjects",
         "Multi-scene support with automatic switching",
