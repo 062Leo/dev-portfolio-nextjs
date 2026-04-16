@@ -29,6 +29,8 @@ export type Project = {
   demoDownload?: string;
   githubUrl?: string;
   videoBig?: string;
+  custom1Link?: string;
+  custom1BTNText?: string;
   demotext: string;
   demoControls: string[] | DemoControlsGroup[];
   misctext: string;
@@ -97,6 +99,8 @@ export const portfolioData = {
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
       githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
       videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -144,6 +148,8 @@ export const portfolioData = {
       demoDownload: "",
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
       videoBig: "/Videos/Big/BroforceShowcase.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
       demotext: "**Hinweis zur Demo:** Zu Beginn siehst du alle Objekttypen. Gehe durch das blaue Portal, um in den Testbereich teleportiert zu werden, in dem du das Verhalten der einzelnen Objekte ausprobieren kannst. Läufst du anschließend weiter nach rechts, gelangst du nach dem Testbereich zu einem weiteren Portal, das dich ins Demolevel bringt. Alternativ kannst du auch einfach nach unten springen, falls du das Portal nicht erreichst. \n\n PS: Auf den fliegenden Fässern kannst du mitreiten, indem du dich auf sie stellst, nachdem du sie mit einem Schuss aktiviert hast.",
       demoControls: [
         "Links/Rechts: A/D oder Pfeiltasten ⬅️➡️",
@@ -182,6 +188,8 @@ export const portfolioData = {
       demoDownload: "",
       githubUrl: "https://github.com/062Leo/Hide-And-Hunt",
       videoBig: "/Videos/Big/HideAndHuntShowcaseFinal.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
       demotext: "Diese Demo-Version zeigt dir die grundlegenden Spielmechaniken, allerdings ohne vollständige Online-Funktionen.\n\n**So startest du die Demo:**\n\n1. Auf **Play** klicken.\n2. Auf **Create Lobby** klicken.\n3. Rolle wählen: **Killer** oder **Survivor**.\n\n",
       demoControls: [
         {
@@ -243,6 +251,8 @@ export const portfolioData = {
       demoDownload: "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
       githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
       videoBig: "/Videos/Big/GameOfLife.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -273,6 +283,8 @@ export const portfolioData = {
       demoDownload: "",
       githubUrl: "",
       videoBig: "",
+      custom1Link: "",
+      custom1BTNText: "",
       demotext: "",
       demoControls: [],
       misctext: "",

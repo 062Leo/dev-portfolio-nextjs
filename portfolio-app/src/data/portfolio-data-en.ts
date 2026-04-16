@@ -29,6 +29,8 @@ export type Project = {
   demoDownload?: string;
   githubUrl?: string;
   videoBig?: string;
+  custom1Link?: string;
+  custom1BTNText?: string;
   demotext: string;
   demoControls: string[] | DemoControlsGroup[];
   misctext: string;
@@ -100,6 +102,8 @@ export const portfolioData = {
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
       githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
       videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -165,6 +169,8 @@ export const portfolioData = {
       demoDownload: "",
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
       videoBig: "/Videos/Big/BroforceShowcase.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
       demotext:
         "**Demo note:** At the beginning you see all object types. Go through the blue portal to be teleported to the test area where you can try out the behaviour of the individual objects. If you then continue to the right, you will reach another portal after the test area that takes you to the demo level. Alternatively, you can simply jump down if you do not reach the portal. \n\n PS: You can ride on the flying barrels by standing on them after activating them with a shot.",
       demoControls: [
@@ -206,6 +212,8 @@ export const portfolioData = {
       demoDownload: "",
       githubUrl: "https://github.com/062Leo/Hide-And-Hunt",
       videoBig: "/Videos/Big/HideAndHuntShowcaseFinal.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
       demotext:
         "This demo version shows you the basic game mechanics, but without full online functionality.\n\n**How to start the demo:**\n\n1. Click on **Play**.\n2. Click on **Create Lobby**.\n3. Choose a role: **Killer** or **Survivor**.\n\n",
       demoControls: [
@@ -269,6 +277,8 @@ export const portfolioData = {
       demoDownload: "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
       githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
       videoBig: "/Videos/Big/GameOfLife.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -299,6 +309,8 @@ export const portfolioData = {
       demoDownload: "",
       githubUrl: "",
       videoBig: "",
+      custom1Link: "",
+      custom1BTNText: "",
       demotext: "",
       demoControls: [],
       misctext: "",
