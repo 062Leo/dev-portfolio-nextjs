@@ -31,6 +31,7 @@ export type Project = {
   videoBig?: string;
   custom1Link?: string;
   custom1BTNText?: string;
+  customLabel?: string;
   demotext: string;
   demoControls: string[] | DemoControlsGroup[];
   misctext: string;
@@ -104,6 +105,7 @@ export const portfolioData = {
       videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
       custom1Link: "",
       custom1BTNText: "",
+      customLabel: "",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -171,6 +173,7 @@ export const portfolioData = {
       videoBig: "/Videos/Big/BroforceShowcase.mp4",
       custom1Link: "",
       custom1BTNText: "",
+      customLabel: "",
       demotext:
         "**Demo note:** At the beginning you see all object types. Go through the blue portal to be teleported to the test area where you can try out the behaviour of the individual objects. If you then continue to the right, you will reach another portal after the test area that takes you to the demo level. Alternatively, you can simply jump down if you do not reach the portal. \n\n PS: You can ride on the flying barrels by standing on them after activating them with a shot.",
       demoControls: [
@@ -214,6 +217,7 @@ export const portfolioData = {
       videoBig: "/Videos/Big/HideAndHuntShowcaseFinal.mp4",
       custom1Link: "",
       custom1BTNText: "",
+      customLabel: "",
       demotext:
         "This demo version shows you the basic game mechanics, but without full online functionality.\n\n**How to start the demo:**\n\n1. Click on **Play**.\n2. Click on **Create Lobby**.\n3. Choose a role: **Killer** or **Survivor**.\n\n",
       demoControls: [
@@ -279,6 +283,7 @@ export const portfolioData = {
       videoBig: "/Videos/Big/GameOfLife.mp4",
       custom1Link: "",
       custom1BTNText: "",
+      customLabel: "",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -334,6 +339,7 @@ export const portfolioData = {
       videoBig: "",
       custom1Link: "https://assetstore.unity.com/packages/slug/354984",
       custom1BTNText: "View on Asset Store",
+      customLabel: "Unity Asset Store",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -371,6 +377,7 @@ export const portfolioData = {
       videoBig: "",
       custom1Link: "",
       custom1BTNText: "",
+      customLabel: "",
       demotext: "",
       demoControls: [],
       misctext: "",

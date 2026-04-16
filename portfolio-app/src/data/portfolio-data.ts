@@ -31,6 +31,7 @@ export type Project = {
   videoBig?: string;
   custom1Link?: string;
   custom1BTNText?: string;
+  customLabel?: string;
   demotext: string;
   demoControls: string[] | DemoControlsGroup[];
   misctext: string;
@@ -101,6 +102,7 @@ export const portfolioData = {
       videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
       custom1Link: "",
       custom1BTNText: "",
+      customLabel: "",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -150,6 +152,7 @@ export const portfolioData = {
       videoBig: "/Videos/Big/BroforceShowcase.mp4",
       custom1Link: "",
       custom1BTNText: "",
+      customLabel: "",
       demotext: "**Hinweis zur Demo:** Zu Beginn siehst du alle Objekttypen. Gehe durch das blaue Portal, um in den Testbereich teleportiert zu werden, in dem du das Verhalten der einzelnen Objekte ausprobieren kannst. Läufst du anschließend weiter nach rechts, gelangst du nach dem Testbereich zu einem weiteren Portal, das dich ins Demolevel bringt. Alternativ kannst du auch einfach nach unten springen, falls du das Portal nicht erreichst. \n\n PS: Auf den fliegenden Fässern kannst du mitreiten, indem du dich auf sie stellst, nachdem du sie mit einem Schuss aktiviert hast.",
       demoControls: [
         "Links/Rechts: A/D oder Pfeiltasten ⬅️➡️",
@@ -190,6 +193,7 @@ export const portfolioData = {
       videoBig: "/Videos/Big/HideAndHuntShowcaseFinal.mp4",
       custom1Link: "",
       custom1BTNText: "",
+      customLabel: "",
       demotext: "Diese Demo-Version zeigt dir die grundlegenden Spielmechaniken, allerdings ohne vollständige Online-Funktionen.\n\n**So startest du die Demo:**\n\n1. Auf **Play** klicken.\n2. Auf **Create Lobby** klicken.\n3. Rolle wählen: **Killer** oder **Survivor**.\n\n",
       demoControls: [
         {
@@ -253,6 +257,7 @@ export const portfolioData = {
       videoBig: "/Videos/Big/GameOfLife.mp4",
       custom1Link: "",
       custom1BTNText: "",
+      customLabel: "",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -285,6 +290,7 @@ export const portfolioData = {
       videoBig: "",
       custom1Link: "",
       custom1BTNText: "",
+      customLabel: "",
       demotext: "",
       demoControls: [],
       misctext: "",
