@@ -385,6 +385,11 @@ export function DetailPage({ id }: { id: string }) {
                                     ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
                                     : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
                             </p>
+                            <p className="mb-10 text-sm break-all opacity-80">
+                                {language === "en"
+                                    ? `(redirecting to: ${project.demoLink})`
+                                    : `(Weiterleitung zu: ${project.demoLink})`}
+                            </p>
                             <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                                 <button
                                     type="button"
