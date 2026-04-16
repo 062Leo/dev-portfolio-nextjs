@@ -2,21 +2,39 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { NetworkBackground } from "@/components/NetworkBackground";
 import { portfolioData } from "@/data/portfolio-data";
+import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { otherProjects } from "@/data/other_projects";
+import { otherProjects as otherProjectsEn } from "@/data/other_projects_en";
 import { DetailPage as DefaultDetailPage } from "@/components/projects/default";
 
 export function generateStaticParams() {
-  const mainProjects = portfolioData.projects.map((project) => ({
-    id: project.id,
-  }));
+  const ids = new Set<string>();
 
-  const additionalProjects = otherProjects.projects
-    .filter((project) => project.id && project.id.trim() !== "")
-    .map((project) => ({
-      id: project.id,
-    }));
+  for (const project of portfolioData.projects) {
+    if (project.id && project.id.trim() !== "") {
+      ids.add(project.id);
+    }
+  }
 
-  return [...mainProjects, ...additionalProjects];
+  for (const project of portfolioDataEn.projects) {
+    if (project.id && project.id.trim() !== "") {
+      ids.add(project.id);
+    }
+  }
+
+  for (const project of otherProjects.projects) {
+    if (project.id && project.id.trim() !== "") {
+      ids.add(project.id);
+    }
+  }
+
+  for (const project of otherProjectsEn.projects) {
+    if (project.id && project.id.trim() !== "") {
+      ids.add(project.id);
+    }
+  }
+
+  return Array.from(ids).map((id) => ({ id }));
 }
 
 export default async function ProjectsPage({ params }: { params: Promise<{ id: string }> }) {

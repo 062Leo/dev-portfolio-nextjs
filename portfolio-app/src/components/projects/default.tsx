@@ -5,7 +5,7 @@ import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { otherProjects } from "@/data/other_projects";
 import { otherProjects as otherProjectsEn } from "@/data/other_projects_en";
-import { ArrowLeft, Github, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Youtube } from "lucide-react";
+import { ArrowLeft, Github, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Youtube, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
@@ -253,6 +253,20 @@ export function DetailPage({ id }: { id: string }) {
                                 >
                                     <Github className="w-5 h-5" />
                                     {language === "de" ? "CODE ANSEHEN" : "VIEW CODE"}
+                                </button>
+                            )}
+                            {project.custom1Link && project.custom1BTNText && (
+                                <button
+                                    type="button"
+                                    className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
+                                    style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
+                                    onClick={() => {
+                                        setPendingUrl(project.custom1Link as string);
+                                        setShowDialog(true);
+                                    }}
+                                >
+                                    <ExternalLink className="mr-2 w-5 h-5" />
+                                    {project.custom1BTNText}
                                 </button>
                             )}
                         </div>

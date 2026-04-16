@@ -287,6 +287,66 @@ export const portfolioData = {
       stats: [{ icon: "Star", label: "Development", value: "Solo project" }]
     },
     {
+      id: "play-mode-saver",
+      title: "Play Mode Changes Saver",
+      subtitle: "Never lose Play Mode tweaks again",
+      description:
+        "Unity Editor tool that captures and reapplies Play Mode changes to Edit Mode, so your iteration progress is not lost after testing.",
+      longDescription:
+        "Play Mode Changes Saver solves a key workflow problem in Unity development: changes made during Play Mode are usually discarded when you stop play. The tool creates scene snapshots automatically, tracks Transform, Component, Material, and GameObject name changes, and lets you selectively apply only what you want to keep.\n\nIt supports multi-scene workflows, side-by-side comparisons, inspector integration, and reliable object matching with a hybrid GUID+path strategy that still works after renames. Full undo/redo support and editor-only implementation keep your runtime clean.",
+      image: "/Bilder/dummy.png",
+      images: [
+        {
+          url: "/Bilder/dummy.png",
+          caption: "Inspector integration for applying tracked Play Mode changes"
+        },
+        {
+          url: "/Bilder/dummy.png",
+          caption: "Side-by-side property comparison before applying overrides"
+        },
+        {
+          url: "/Bilder/dummy.png",
+          caption: "Central browser window for scene-wide override management"
+        }
+      ],
+      detailComponent: "",
+      videos: [],
+      tags: ["Unity", "Editor Tool", "Game Development", "Play Mode", "C#", "Workflow"],
+      features: [
+        "Automatic baseline snapshots on Play Mode entry",
+        "Inspector integration with a dedicated overrides button",
+        "Side-by-side property comparison for selective apply",
+        "Scene-wide overrides browser for centralized review",
+        "Tracking for transforms, components, materials, and names",
+        "Hybrid GUID+path object identification (rename-resilient)",
+        "Persistent storage via ScriptableObjects",
+        "Multi-scene support with automatic switching",
+        "Full undo/redo integration",
+        "Granular property-level control",
+        "Original value retention for full revert",
+        "Zero runtime overhead (editor-only)"
+      ],
+      techStack: ["C#", "Unity Editor", "GlobalObjectId", "SerializedObject / SerializedProperty", "ScriptableObject", "EditorGUI"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "",
+      videoBig: "",
+      custom1Link: "https://assetstore.unity.com/packages/slug/354984",
+      custom1BTNText: "View on Asset Store",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Change Granularity", value: "Property-Level" },
+        { icon: "Code", label: "Tracked Changes", value: "Transforms, Components, Materials, Names" },
+        { icon: "Target", label: "Object Identification", value: "Hybrid GUID + Path" },
+        { icon: "Star", label: "Runtime Overhead", value: "Zero" }
+      ]
+    },
+    {
       id: "coming-soon",
       title: "Coming soon",
       subtitle: "",
