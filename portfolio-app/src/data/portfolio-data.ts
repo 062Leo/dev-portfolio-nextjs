@@ -266,6 +266,67 @@ export const portfolioData = {
       stats: [{ icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" },]
     },
     {
+      id: "play-mode-saver",
+      title: "Play Mode Changes Saver",
+      subtitle: "Nie wieder Play-Mode-Änderungen verlieren",
+      description:
+        "Unity-Editor-Tool, das Änderungen aus dem Play Mode erfasst und nach dem Beenden wieder auf den Edit Mode anwendet, sodass kein Iterationsfortschritt beim Testen verloren geht.",
+      longDescription:
+        "Play Mode Changes Saver löst ein zentrales Workflow-Problem in der Unity-Entwicklung: Änderungen, die im Play Mode vorgenommen werden, gehen beim Beenden des Spielbetriebs normalerweise verloren. Das Tool erstellt automatisch Szenen-Snapshots, verfolgt Änderungen an Transforms, Components, Materials und GameObject-Namen und ermöglicht es, selektiv nur die gewünschten Änderungen zu übernehmen.\n\nEs unterstützt Multi-Scene-Workflows, Vergleichsansichten nebeneinander, Inspector-Integration sowie eine zuverlässige Objekterkennung durch eine hybride GUID+Pfad-Strategie, die auch nach Umbenennungen funktioniert. Vollständige Undo/Redo-Unterstützung und eine rein editor-seitige Implementierung halten die Laufzeitumgebung sauber.",
+      image: "/Bilder/dummy.png",
+      images: [
+        {
+          url: "/Bilder/dummy.png",
+          caption: "Inspector-Integration zum Anwenden erfasster Play-Mode-Änderungen"
+        },
+        {
+          url: "/Bilder/dummy.png",
+          caption: "Eigenschaftsvergleich nebeneinander vor dem Übernehmen von Overrides"
+        },
+        {
+          url: "/Bilder/dummy.png",
+          caption: "Zentrales Browser-Fenster zur szenenweiten Verwaltung von Overrides"
+        }
+      ],
+      detailComponent: "",
+      videos: [],
+      tags: ["Unity", "Editor Tool", "Spieleentwicklung", "Play Mode", "C#", "Workflow"],
+      features: [
+        "Automatische Baseline-Snapshots beim Betreten des Play Modes",
+        "Inspector-Integration mit dediziertem Overrides-Button",
+        "Eigenschaftsvergleich nebeneinander zur selektiven Übernahme",
+        "Szenenweiter Overrides-Browser zur zentralen Übersicht",
+        "Verfolgung von Transforms, Components, Materials und Namen",
+        "Hybride GUID+Pfad-Objekterkennung (umbenenungsresistent)",
+        "Persistente Speicherung über ScriptableObjects",
+        "Multi-Scene-Unterstützung mit automatischem Wechsel",
+        "Vollständige Undo/Redo-Integration",
+        "Granulare Steuerung auf Eigenschaftsebene",
+        "Speicherung von Originalwerten für vollständiges Zurücksetzen",
+        "Kein Laufzeit-Overhead (nur im Editor)"
+      ],
+      techStack: ["C#", "Unity Editor", "GlobalObjectId", "SerializedObject / SerializedProperty", "ScriptableObject", "EditorGUI"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "",
+      videoBig: "",
+      custom1Link: "https://assetstore.unity.com/packages/slug/354984",
+      custom1BTNText: "Im Asset Store ansehen",
+      customLabel: "Unity Asset Store",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Änderungsgranularität", value: "Eigenschaftsebene" },
+        { icon: "Code", label: "Erfasste Änderungen", value: "Transforms, Components, Materials, Namen" },
+        { icon: "Target", label: "Objekterkennung", value: "Hybrid GUID + Pfad" },
+        { icon: "Star", label: "Laufzeit-Overhead", value: "Keiner" }
+      ]
+    },
+    {
       id: "coming-soon",
       title: "Bald verfügbar",
       subtitle: "",
