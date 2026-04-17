@@ -122,6 +122,57 @@ export const portfolioData = {
       ]
     },
     {
+      id: "play-mode-saver",
+      title: "Play Mode Changes Saver",
+      subtitle: "Free Tool · Published on the Unity Asset Store",
+      description:
+        "Unity Editor tool that captures and reapplies Play Mode changes to Edit Mode, so your iteration progress is not lost after testing.",
+      longDescription:
+        "**Problem:** In professional **Unity** production workflows, important scene tweaks are often made during **Play Mode**, but Unity discards them when Play Mode ends. This repeatedly forces manual rework, slows iteration, and increases the risk of missing or inconsistent changes.\n\n**Solution:** Play Mode Changes Saver was built as a production-focused **Editor tool** that automatically snapshots scenes, tracks changes across **transforms**, all Unity components, custom components and scripts attached to GameObjects, materials, and names, and provides guided side-by-side review so only validated changes are applied back to Edit Mode. It includes inspector integration, multi-scene handling, undo/redo support, and robust object matching via **hybrid GUID+path identification** that remains stable across renames.\n\n**Result:** This is not just a prototype. It is a **production-ready product** published on the **Unity Asset Store**, demonstrating end-to-end delivery from problem analysis to a shipped solution that improves day-to-day developer and level-design workflows.\n\nMore information about the tool is available on the Unity Asset Store page.",
+      image: "/Bilder/RuntimeSaver/TitleImage.jpg",
+      images: [],
+      detailComponent: "",
+      videos: [],
+      tags: ["Unity","Published", "Editor Tool", "Game Development", "Play Mode", "C#", "Workflow"],
+      features: [
+        "Automatic baseline snapshots on Play Mode entry",
+        "Inspector integration with a dedicated overrides button",
+        "Side-by-side property comparison for selective apply",
+        "Scene-wide overrides browser for centralized review",
+        "Tracking for transforms, all Unity components, custom components and scripts attached to GameObjects, materials, and names",
+        "Hybrid GUID+path object identification (rename-resilient)",
+        "Persistent storage via ScriptableObjects",
+        "Multi-scene support with automatic switching",
+        "Full undo/redo integration",
+        "Granular property-level control",
+        "Original value retention for full revert",
+        "Zero runtime overhead (editor-only)"
+      ],
+      techStack: ["C#", "Unity Editor", "GlobalObjectId", "SerializedObject / SerializedProperty", "ScriptableObject", "EditorGUI"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "",
+      videoBig: "/Videos/Big/PlayModeChangesSaver.mp4",
+      custom1Link: "https://assetstore.unity.com/packages/slug/354984",
+      custom1BTNText: "View on Asset Store",
+      customLabel: "Unity Asset Store",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Download",     label: "Sales",               value: "> 750" },
+        { icon: "Eye",          label: "Page Views",          value: "> 1,000" },
+        { icon: "TrendingUp",   label: "Conversion Rate",     value: "~71.33%" },
+        { icon: "Star",         label: "Average Rating",      value: "5/5 Stars" },
+        { icon: "DollarSign",        label: "Pricing",             value: "Free" },
+        { icon: "Zap",          label: "Runtime Overhead",    value: "None" },
+        { icon: "Target",       label: "Object Identification", value: "Hybrid GUID + Path" }
+      ]
+    },
+    {
       id: "broforce-clone",
       title: "BoomForce",
       subtitle: "(Broforce clone)",
@@ -256,104 +307,7 @@ export const portfolioData = {
       ]
     },
     
-    {
-      id: "game-of-life",
-      title: "Conway's Game of Life",
-      subtitle: "",
-      description: "Desktop application for simulating Conway's Game of Life.",
-      longDescription:
-        "An interactive desktop application for Conway's Game of Life. It offers a free drawing mode and prefab placement, supports theme switching, variable brush sizes as well as flexible canvas size and speed settings, implemented with C#, .NET and WPF.",
-      image: "/Bilder/GameOfLife/GameOfLife.png",
-      images: [] as ProjectImage[],
-      detailComponent: "",
-      videos: [],
-      tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
-      features: [
-        "Free drawing and prefab mode for cell configurations",
-        "Toggleable dark/light theme",
-        "Brush size and canvas size zoom sliders for precise editing",
-        "Adjustable simulation speed with start/stop controls",
-      ],
-      techStack: ["C#", ".NET", "WPF", "XAML"],
-      demoLink: "",
-      demoImage: "",
-      demoDownload: "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
-      githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
-      videoBig: "/Videos/Big/GameOfLife.mp4",
-      custom1Link: "",
-      custom1BTNText: "",
-      customLabel: "",
-      demotext: "",
-      demoControls: [],
-      misctext: "",
-      miscimage: "",
-      miscTitle: "",
-      stats: [{ icon: "Users", label: "Development", value: "Solo project" }]
-    },
-    {
-      id: "play-mode-saver",
-      title: "Play Mode Changes Saver",
-      subtitle: "Free Tool · Published on the Unity Asset Store",
-      description:
-        "Unity Editor tool that captures and reapplies Play Mode changes to Edit Mode, so your iteration progress is not lost after testing.",
-      longDescription:
-        "**Problem:** In professional **Unity** production workflows, important scene tweaks are often made during **Play Mode**, but Unity discards them when Play Mode ends. This repeatedly forces manual rework, slows iteration, and increases the risk of missing or inconsistent changes.\n\n**Solution:** Play Mode Changes Saver was built as a production-focused **Editor tool** that automatically snapshots scenes, tracks changes across **transforms**, all Unity components, custom components and scripts attached to GameObjects, materials, and names, and provides guided side-by-side review so only validated changes are applied back to Edit Mode. It includes inspector integration, multi-scene handling, undo/redo support, and robust object matching via **hybrid GUID+path identification** that remains stable across renames.\n\n**Result:** This is not just a prototype. It is a **production-ready product** published on the **Unity Asset Store**, demonstrating end-to-end delivery from problem analysis to a shipped solution that improves day-to-day developer and level-design workflows.\n\nMore information about the tool is available on the Unity Asset Store page.",
-      image: "/Bilder/dummy.png",
-      images: [
-        {
-          url: "/Bilder/dummy.png",
-          caption: "Inspector integration for applying tracked Play Mode changes"
-        },
-        { 
-          url: "/Bilder/dummy.png",
-          caption: "Side-by-side property comparison before applying overrides"
-        },
-        {
-          url: "/Bilder/dummy.png",
-          caption: "Central browser window for scene-wide override management"
-        }
-      ],
-      detailComponent: "",
-      videos: [],
-      tags: ["Unity", "Editor Tool", "Game Development", "Play Mode", "C#", "Workflow"],
-      features: [
-        "Automatic baseline snapshots on Play Mode entry",
-        "Inspector integration with a dedicated overrides button",
-        "Side-by-side property comparison for selective apply",
-        "Scene-wide overrides browser for centralized review",
-        "Tracking for transforms, all Unity components, custom components and scripts attached to GameObjects, materials, and names",
-        "Hybrid GUID+path object identification (rename-resilient)",
-        "Persistent storage via ScriptableObjects",
-        "Multi-scene support with automatic switching",
-        "Full undo/redo integration",
-        "Granular property-level control",
-        "Original value retention for full revert",
-        "Zero runtime overhead (editor-only)"
-      ],
-      techStack: ["C#", "Unity Editor", "GlobalObjectId", "SerializedObject / SerializedProperty", "ScriptableObject", "EditorGUI"],
-      demoLink: "",
-      demoImage: "",
-      demoDownload: "",
-      githubUrl: "",
-      videoBig: "/Videos/Big/PlayModeChangesSaver.mp4",
-      custom1Link: "https://assetstore.unity.com/packages/slug/354984",
-      custom1BTNText: "View on Asset Store",
-      customLabel: "Unity Asset Store",
-      demotext: "",
-      demoControls: [],
-      misctext: "",
-      miscimage: "",
-      miscTitle: "",
-      stats: [
-        { icon: "Download",     label: "Sales",               value: "> 750" },
-        { icon: "Eye",          label: "Page Views",          value: "> 1,000" },
-        { icon: "TrendingUp",   label: "Conversion Rate",     value: "~71.33%" },
-        { icon: "Star",         label: "Rating",              value: "5/5 Stars" },
-        { icon: "DollarSign",        label: "Pricing",             value: "Free" },
-        { icon: "Zap",          label: "Runtime Overhead",    value: "None" },
-        { icon: "Target",       label: "Object Identification", value: "Hybrid GUID + Path" }
-      ]
-    },
+    
     {
       id: "coming-soon",
       title: "Coming soon",

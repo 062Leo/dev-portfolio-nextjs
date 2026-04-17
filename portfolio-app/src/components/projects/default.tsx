@@ -262,19 +262,19 @@ export function DetailPage({ id }: { id: string }) {
                                     {language === "de" ? "CODE ANSEHEN" : "VIEW CODE"}
                                 </button>
                             )}
-                            {project.custom1Link && project.custom1BTNText && (
+                            {(project as any).custom1Link && (project as any).custom1BTNText && (
                                 <button
                                     type="button"
                                     className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
                                     style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
                                     onClick={() => {
-                                        setPendingCustomUrl(project.custom1Link as string);
-                                        setPendingCustomLabel(("customLabel" in project && project.customLabel) ? project.customLabel : "");
+                                        setPendingCustomUrl((project as any).custom1Link as string);
+                                        setPendingCustomLabel(("customLabel" in project && (project as any).customLabel) ? (project as any).customLabel : "");
                                         setShowCustomDialog(true);
                                     }}
                                 >
                                     <ExternalLink className="mr-2 w-5 h-5" />
-                                    {project.custom1BTNText}
+                                    {(project as any).custom1BTNText}
                                 </button>
                             )}
                         </div>

@@ -120,6 +120,57 @@ export const portfolioData = {
       ]
     },
     {
+      id: "play-mode-saver",
+      title: "Play Mode Changes Saver",
+      subtitle: "Kostenloses Tool · Veröffentlicht im Unity Asset Store",
+      description:
+        "Unity-Editor-Tool, das Änderungen aus dem Play Mode erfasst und auf den Edit Mode überträgt, damit der Iterationsfortschritt nach dem Testen nicht verloren geht.",
+      longDescription:
+        "**Problem:** In professionellen **Unity**-Produktionsabläufen werden wichtige Szenenanpassungen häufig im **Play Mode** vorgenommen, doch Unity verwirft diese beim Beenden des Modus. Dies erzwingt wiederholte manuelle Nacharbeit, verlangsamt die Iteration und erhöht das Risiko für fehlende oder inkonsistente Änderungen.\n\n**Lösung:** Play Mode Changes Saver wurde als produktionsorientiertes **Editor-Tool** entwickelt, das automatisch Szenen-Snapshots erstellt und Änderungen an **Transforms**, allen Unity-Components, eigenen Components und Scripts an GameObjects, Materials sowie Namen nachverfolgt. Es bietet eine geführte Side-by-Side-Prüfung, sodass nur validierte Änderungen in den Edit Mode übernommen werden. Die Lösung umfasst Inspector-Integration, Multi-Scene-Unterstützung, Undo/Redo-Support und eine robuste Objekterkennung via **hybrider GUID+Pfad-Identifikation**, die auch bei Umbenennungen stabil bleibt.\n\n**Ergebnis:** Dies ist kein reiner Prototyp, sondern ein **production-ready Produkt**, das im **Unity Asset Store** veröffentlicht wurde. Es demonstriert die vollständige Umsetzung von der Problemanalyse bis hin zu einer ausgelieferten Lösung, die den täglichen Workflow von Entwicklern und Level-Designern optimiert.\n\nWeitere Informationen zum Tool sind auf der Unity-Asset-Store-Seite verfügbar.",
+      image: "/Bilder/RuntimeSaver/TitleImage.jpg",
+      images: [],
+      detailComponent: "",
+      videos: [],
+      tags: ["Unity", "Veröffentlicht", "Editor-Tool", "Spieleentwicklung", "Play Mode", "C#", "Workflow"],
+      features: [
+        "Automatische Baseline-Snapshots beim Start des Play Modes",
+        "Inspector-Integration mit dediziertem Overrides-Button",
+        "Eigenschaftsvergleich nebeneinander für selektive Übernahme",
+        "Szenenweiter Overrides-Browser für zentrale Prüfung",
+        "Nachverfolgung von Transforms, allen Unity-Components, Custom-Components, Scripts, Materials und Namen",
+        "Hybride GUID+Pfad-Objektidentifikation (resistent gegen Umbenennungen)",
+        "Persistente Speicherung via ScriptableObjects",
+        "Multi-Scene-Unterstützung mit automatischem Wechsel",
+        "Vollständige Undo/Redo-Integration",
+        "Granulare Steuerung auf Eigenschaftsebene",
+        "Erhalt der Originalwerte für vollständiges Zurücksetzen",
+        "Kein Laufzeit-Overhead (nur im Editor)"
+      ],
+      techStack: ["C#", "Unity Editor", "GlobalObjectId", "SerializedObject / SerializedProperty", "ScriptableObject", "EditorGUI"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "",
+      videoBig: "/Videos/Big/PlayModeChangesSaver.mp4",
+      custom1Link: "https://assetstore.unity.com/packages/slug/354984",
+      custom1BTNText: "Im Asset Store ansehen",
+      customLabel: "Unity Asset Store",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Download",     label: "Verkäufe",            value: "> 750" },
+        { icon: "Eye",          label: "Seitenaufrufe",       value: "> 1.000" },
+        { icon: "TrendingUp",   label: "Konversionsrate",     value: "~71,33%" },
+        { icon: "Star",         label: "Durchschnittliche Bewertung",   value: "5/5 Sterne" },
+        { icon: "DollarSign",   label: "Preis",               value: "Kostenlos" },
+        { icon: "Zap",          label: "Laufzeit-Overhead",   value: "Keiner" },
+        { icon: "Target",       label: "Objektidentifikation", value: "Hybrid GUID + Pfad" }
+      ]
+    },
+    {
       id: "broforce-clone",
       title: "BoomForce",
       subtitle:"(Broforce Klon)",
@@ -229,105 +280,6 @@ export const portfolioData = {
   { icon: "Code",   label: "Umfang",         value: "Kompletter Gameplay-Prototyp" },
   { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" }
 ]
-    },
-    
-    {
-      id: "game-of-life",
-      title: "Conway's Game of Life",
-      subtitle: "",
-      description: "Desktop-Anwendung zur Simulation von Conways Game of Life.",
-      longDescription:
-        "Eine interaktive Desktop-Anwendung für Conways Game of Life. Sie bietet einen freies Zeichen Modus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Canvasgrößen- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
-      image: "/Bilder/GameOfLife/GameOfLife.png",
-      images: [] as ProjectImage[],
-      detailComponent: "",
-      videos: [],
-      tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
-      features: [
-        "Freies Zeichnen und Prefab-Modus für Zellkonfigurationen",
-        "Umschaltbares Dark/Light Theme",
-        "Pinsel- und Canvasgrößen Zoom-Regler für präzises Editing",
-        "Anpassbare Simulationsgeschwindigkeit mit Start/Stopp-Steuerung"
-      ],
-      techStack: ["C#", ".NET", "WPF", "XAML"],
-      demoLink: "",
-      demoImage: "",
-      demoDownload: "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
-      githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
-      videoBig: "/Videos/Big/GameOfLife.mp4",
-      custom1Link: "",
-      custom1BTNText: "",
-      customLabel: "",
-      demotext: "",
-      demoControls: [],
-      misctext: "",
-      miscimage: "",
-      miscTitle: "",
-      stats: [{ icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" },]
-    },
-    {
-      id: "play-mode-saver",
-      title: "Play Mode Changes Saver",
-      subtitle: "Kostenloses Tool · Veröffentlicht im Unity Asset Store",
-      description:
-        "Unity-Editor-Tool, das Änderungen aus dem Play Mode erfasst und auf den Edit Mode überträgt, damit der Iterationsfortschritt nach dem Testen nicht verloren geht.",
-      longDescription:
-        "**Problem:** In professionellen **Unity**-Produktionsabläufen werden wichtige Szenenanpassungen häufig im **Play Mode** vorgenommen, doch Unity verwirft diese beim Beenden des Modus. Dies erzwingt wiederholte manuelle Nacharbeit, verlangsamt die Iteration und erhöht das Risiko für fehlende oder inkonsistente Änderungen.\n\n**Lösung:** Play Mode Changes Saver wurde als produktionsorientiertes **Editor-Tool** entwickelt, das automatisch Szenen-Snapshots erstellt und Änderungen an **Transforms**, allen Unity-Components, eigenen Components und Scripts an GameObjects, Materials sowie Namen nachverfolgt. Es bietet eine geführte Side-by-Side-Prüfung, sodass nur validierte Änderungen in den Edit Mode übernommen werden. Die Lösung umfasst Inspector-Integration, Multi-Scene-Unterstützung, Undo/Redo-Support und eine robuste Objekterkennung via **hybrider GUID+Pfad-Identifikation**, die auch bei Umbenennungen stabil bleibt.\n\n**Ergebnis:** Dies ist kein reiner Prototyp, sondern ein **production-ready Produkt**, das im **Unity Asset Store** veröffentlicht wurde. Es demonstriert die vollständige Umsetzung von der Problemanalyse bis hin zu einer ausgelieferten Lösung, die den täglichen Workflow von Entwicklern und Level-Designern optimiert.\n\nWeitere Informationen zum Tool sind auf der Unity-Asset-Store-Seite verfügbar.",
-      image: "/Bilder/dummy.png",
-      images: [
-        {
-          url: "/Bilder/dummy.png",
-          caption: "Inspector-Integration zum Übernehmen erfasster Play-Mode-Änderungen"
-        },
-        { 
-          url: "/Bilder/dummy.png",
-          caption: "Eigenschaftsvergleich nebeneinander vor dem Anwenden von Overrides"
-        },
-        {
-          url: "/Bilder/dummy.png",
-          caption: "Zentrales Browser-Fenster zur szenenweiten Verwaltung von Overrides"
-        }
-      ],
-      detailComponent: "",
-      videos: [],
-      tags: ["Unity", "Editor-Tool", "Spieleentwicklung", "Play Mode", "C#", "Workflow"],
-      features: [
-        "Automatische Baseline-Snapshots beim Start des Play Modes",
-        "Inspector-Integration mit dediziertem Overrides-Button",
-        "Eigenschaftsvergleich nebeneinander für selektive Übernahme",
-        "Szenenweiter Overrides-Browser für zentrale Prüfung",
-        "Nachverfolgung von Transforms, allen Unity-Components, Custom-Components, Scripts, Materials und Namen",
-        "Hybride GUID+Pfad-Objektidentifikation (resistent gegen Umbenennungen)",
-        "Persistente Speicherung via ScriptableObjects",
-        "Multi-Scene-Unterstützung mit automatischem Wechsel",
-        "Vollständige Undo/Redo-Integration",
-        "Granulare Steuerung auf Eigenschaftsebene",
-        "Erhalt der Originalwerte für vollständiges Zurücksetzen",
-        "Kein Laufzeit-Overhead (nur im Editor)"
-      ],
-      techStack: ["C#", "Unity Editor", "GlobalObjectId", "SerializedObject / SerializedProperty", "ScriptableObject", "EditorGUI"],
-      demoLink: "",
-      demoImage: "",
-      demoDownload: "",
-      githubUrl: "",
-      videoBig: "/Videos/Big/PlayModeChangesSaver.mp4",
-      custom1Link: "https://assetstore.unity.com/packages/slug/354984",
-      custom1BTNText: "Im Asset Store ansehen",
-      customLabel: "Unity Asset Store",
-      demotext: "",
-      demoControls: [],
-      misctext: "",
-      miscimage: "",
-      miscTitle: "",
-      stats: [
-        { icon: "Download",     label: "Verkäufe",            value: "> 750" },
-        { icon: "Eye",          label: "Seitenaufrufe",       value: "> 1.000" },
-        { icon: "TrendingUp",   label: "Konversionsrate",     value: "~71,33%" },
-        { icon: "Star",         label: "Bewertung",           value: "5/5 Sterne" },
-        { icon: "DollarSign",   label: "Preis",               value: "Kostenlos" },
-        { icon: "Zap",          label: "Laufzeit-Overhead",   value: "Keiner" },
-        { icon: "Target",       label: "Objektidentifikation", value: "Hybrid GUID + Pfad" }
-      ]
     },
     {
       id: "coming-soon",
