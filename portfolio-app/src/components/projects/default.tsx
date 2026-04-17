@@ -279,11 +279,24 @@ export function DetailPage({ id }: { id: string }) {
                             )}
                         </div>
 
+                        
+                        {/* Details Section with Videos */}
+                        <ProjectVideos 
+                            videoBig={project.videoBig}
+                            videos={project.videos}
+                            colors={{
+                                boomforceScreenshotsTitleColor: colors.boomforceScreenshotsTitleColor,
+                                boomforceScreenshotsBorder: colors.boomforceScreenshotsBorder,
+                                boomforceScreenshotsBackground: colors.boomforceScreenshotsBackground,
+                                boomforceProjectDescriptionText: colors.boomforceProjectDescriptionText
+                            }}
+                        />
+
 
                         {hasImages && (
                             <div >
                                 <h3
-                                    className="mb-6 text-2xl font-semibold font-press-start text-center"
+                                    className="mt-12 mb-6 text-2xl font-semibold font-press-start text-center"
                                     style={{ color: colors.boomforceScreenshotsTitleColor }}
                                 >
                                     SCREENSHOTS
@@ -324,17 +337,7 @@ export function DetailPage({ id }: { id: string }) {
                             </div>
                         )}
 
-                        {/* Details Section with Videos */}
-                        <ProjectVideos 
-                            videoBig={project.videoBig}
-                            videos={project.videos}
-                            colors={{
-                                boomforceScreenshotsTitleColor: colors.boomforceScreenshotsTitleColor,
-                                boomforceScreenshotsBorder: colors.boomforceScreenshotsBorder,
-                                boomforceScreenshotsBackground: colors.boomforceScreenshotsBackground,
-                                boomforceProjectDescriptionText: colors.boomforceProjectDescriptionText
-                            }}
-                        />
+                        
                     </div>
                 </div>
                 {selectedImage && (

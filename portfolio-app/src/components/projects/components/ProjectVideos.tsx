@@ -84,11 +84,11 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors 
   };
 
   return (
-    <div className="pt-8 space-y-8">
+    <div className="pt-1 space-y-8">
       {hasBigVideo && (
         <div>
           <h3
-            className="mb-8 text-2xl font-semibold font-press-start text-center"
+            className="mb-6 text-2xl font-semibold font-press-start text-center"
             style={{ color: colors.boomforceScreenshotsTitleColor }}
           >
             VIDEO
