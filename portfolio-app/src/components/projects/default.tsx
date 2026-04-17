@@ -5,7 +5,7 @@ import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { otherProjects } from "@/data/other_projects";
 import { otherProjects as otherProjectsEn } from "@/data/other_projects_en";
-import { ArrowLeft, Github, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Youtube, ExternalLink } from "lucide-react";
+import { ArrowLeft, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Eye, TrendingUp, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
@@ -13,14 +13,17 @@ import ProjectVideos from "./components/ProjectVideos";
 
 // Icon map for dynamic stat rendering
 const iconMap = {
-  Clock,
-  Star,
-  Code,
-  Zap,
-  Users,
-  Target,
-  Award,
-  Layers
+    Clock,
+    Star,
+    Code,
+    Zap,
+    Users,
+    Target,
+    Award,
+    Layers,
+    Download,
+    Eye,
+    TrendingUp
 };
 
 // Helper function to render markdown-like formatting
@@ -254,7 +257,7 @@ export function DetailPage({ id }: { id: string }) {
                                         setShowDialog(true);
                                     }}
                                 >
-                                    <Github className="w-5 h-5" />
+                                    <ExternalLink className="w-5 h-5" />
                                     {language === "de" ? "CODE ANSEHEN" : "VIEW CODE"}
                                 </button>
                             )}

@@ -5,7 +5,7 @@ export type ProjectImage = {
 };
 
 export type ProjectStat = {
-  icon: "Clock" | "Star" | "Code" | "Zap" | "Users" | "Target" | "Award" | "Layers";
+  icon: "Clock" | "Star" | "Code" | "Zap" | "Users" | "Target" | "Award" | "Layers" | "Download" | "Eye" | "TrendingUp";
   label: string;
   value: string;
 };
@@ -294,7 +294,7 @@ export const portfolioData = {
     {
       id: "play-mode-saver",
       title: "Play Mode Changes Saver",
-      subtitle: "Never lose Play Mode tweaks again",
+      subtitle: "Free Tool · Published on the Unity Asset Store",
       description:
         "Unity Editor tool that captures and reapplies Play Mode changes to Edit Mode, so your iteration progress is not lost after testing.",
       longDescription:
@@ -305,7 +305,7 @@ export const portfolioData = {
           url: "/Bilder/dummy.png",
           caption: "Inspector integration for applying tracked Play Mode changes"
         },
-        {
+        { 
           url: "/Bilder/dummy.png",
           caption: "Side-by-side property comparison before applying overrides"
         },
@@ -346,10 +346,12 @@ export const portfolioData = {
       miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Layers", label: "Change Granularity", value: "Property-Level" },
-        { icon: "Code", label: "Tracked Changes", value: "Transforms, Components, Materials, Names" },
-        { icon: "Target", label: "Object Identification", value: "Hybrid GUID + Path" },
-        { icon: "Star", label: "Runtime Overhead", value: "Zero" }
+        { icon: "Download",     label: "Sales",               value: "754" },
+        { icon: "Eye",          label: "Page Views",          value: "1,057" },
+        { icon: "TrendingUp",   label: "Conversion Rate",     value: "71.33%" },
+        { icon: "Star",         label: "Rating",              value: "5 / 5" },
+        { icon: "Layers",       label: "Change Granularity",  value: "Property-Level" },
+        { icon: "Target",       label: "Object Identification", value: "Hybrid GUID + Path" }
       ]
     },
     {
