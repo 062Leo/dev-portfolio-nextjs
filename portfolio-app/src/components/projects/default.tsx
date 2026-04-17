@@ -5,7 +5,7 @@ import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { otherProjects } from "@/data/other_projects";
 import { otherProjects as otherProjectsEn } from "@/data/other_projects_en";
-import { ArrowLeft, Github, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Youtube } from "lucide-react";
+import { ArrowLeft, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Eye, TrendingUp, DollarSign, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
@@ -13,14 +13,18 @@ import ProjectVideos from "./components/ProjectVideos";
 
 // Icon map for dynamic stat rendering
 const iconMap = {
-  Clock,
-  Star,
-  Code,
-  Zap,
-  Users,
-  Target,
-  Award,
-  Layers
+    Clock,
+    Star,
+    Code,
+    Zap,
+    Users,
+    Target,
+    Award,
+    Layers,
+    Download,
+    Eye,
+    TrendingUp,
+    DollarSign
 };
 
 // Helper function to render markdown-like formatting
@@ -60,6 +64,9 @@ export function DetailPage({ id }: { id: string }) {
     const [isReady, setIsReady] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
     const [pendingUrl, setPendingUrl] = useState<string | null>(null);
+    const [showCustomDialog, setShowCustomDialog] = useState(false);
+    const [pendingCustomUrl, setPendingCustomUrl] = useState<string | null>(null);
+    const [pendingCustomLabel, setPendingCustomLabel] = useState<string>("");
     const [selectedImage, setSelectedImage] = useState<{ url: string; caption?: string } | null>(null);
     const { language } = useLanguage();
     const [project, setProject] = useState<
@@ -251,17 +258,45 @@ export function DetailPage({ id }: { id: string }) {
                                         setShowDialog(true);
                                     }}
                                 >
-                                    <Github className="w-5 h-5" />
+                                    <ExternalLink className="w-5 h-5" />
                                     {language === "de" ? "CODE ANSEHEN" : "VIEW CODE"}
                                 </button>
                             )}
+                            {(project as any).custom1Link && (project as any).custom1BTNText && (
+                                <button
+                                    type="button"
+                                    className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
+                                    style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
+                                    onClick={() => {
+                                        setPendingCustomUrl((project as any).custom1Link as string);
+                                        setPendingCustomLabel(("customLabel" in project && (project as any).customLabel) ? (project as any).customLabel : "");
+                                        setShowCustomDialog(true);
+                                    }}
+                                >
+                                    <ExternalLink className="mr-2 w-5 h-5" />
+                                    {(project as any).custom1BTNText}
+                                </button>
+                            )}
                         </div>
+
+                        
+                        {/* Details Section with Videos */}
+                        <ProjectVideos 
+                            videoBig={project.videoBig}
+                            videos={project.videos}
+                            colors={{
+                                boomforceScreenshotsTitleColor: colors.boomforceScreenshotsTitleColor,
+                                boomforceScreenshotsBorder: colors.boomforceScreenshotsBorder,
+                                boomforceScreenshotsBackground: colors.boomforceScreenshotsBackground,
+                                boomforceProjectDescriptionText: colors.boomforceProjectDescriptionText
+                            }}
+                        />
 
 
                         {hasImages && (
                             <div >
                                 <h3
-                                    className="mb-6 text-2xl font-semibold font-press-start text-center"
+                                    className="mt-12 mb-6 text-2xl font-semibold font-press-start text-center"
                                     style={{ color: colors.boomforceScreenshotsTitleColor }}
                                 >
                                     SCREENSHOTS
@@ -302,17 +337,7 @@ export function DetailPage({ id }: { id: string }) {
                             </div>
                         )}
 
-                        {/* Details Section with Videos */}
-                        <ProjectVideos 
-                            videoBig={project.videoBig}
-                            videos={project.videos}
-                            colors={{
-                                boomforceScreenshotsTitleColor: colors.boomforceScreenshotsTitleColor,
-                                boomforceScreenshotsBorder: colors.boomforceScreenshotsBorder,
-                                boomforceScreenshotsBackground: colors.boomforceScreenshotsBackground,
-                                boomforceProjectDescriptionText: colors.boomforceProjectDescriptionText
-                            }}
-                        />
+                        
                     </div>
                 </div>
                 {selectedImage && (
@@ -323,12 +348,13 @@ export function DetailPage({ id }: { id: string }) {
                         onClick={() => setSelectedImage(null)}
                     >
                         <div
-                            className="w-full max-w-[95vw] rounded-3xl bg-background/95 px-6 py-10 text-foreground shadow-2xl border border-border relative"
+                            className="w-full max-w-[95vw] rounded-3xl bg-background/95 px-6 py-4 text-foreground shadow-2xl border border-border relative"
+                            style={{ maxHeight: '90vh', overflow: 'auto' }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             <button
                                 type="button"
-                                className="absolute -top-2 right-5 text-5xl font-extrabold text-red-500 drop-shadow-lg hover:scale-110 hover:opacity-90 transition-transform"
+                                className="absolute -top+0 right-6 text-5xl font-extrabold text-red-500 drop-shadow-lg hover:scale-110 hover:opacity-90 transition-transform"
                                 onClick={() => setSelectedImage(null)}
                             >
                                 ×
@@ -370,6 +396,11 @@ export function DetailPage({ id }: { id: string }) {
                                       ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
                                       : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
                             </p>
+                            <p className="mb-10 text-sm break-all opacity-80">
+                                {language === "en"
+                                    ? `(redirecting to: ${pendingUrl})`
+                                    : `(Weiterleitung zu: ${pendingUrl})`}
+                            </p>
                             <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                                 <button
                                     type="button"
@@ -388,6 +419,62 @@ export function DetailPage({ id }: { id: string }) {
                                         const url = pendingUrl;
                                         setShowDialog(false);
                                         setPendingUrl(null);
+                                        if (url) {
+                                            window.open(url, "_blank", "noopener,noreferrer");
+                                        }
+                                    }}
+                                >
+                                    {language === "en" ? "Continue" : "Fortfahren"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {showCustomDialog && pendingCustomUrl && (
+                    <div
+                        role="dialog"
+                        aria-modal="true"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+                    >
+                        <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
+                            <h2 className="mb-6 text-4xl font-semibold">
+                                {language === "en" ? "External link" : "Externer Link"}
+                            </h2>
+                            <p className="mb-4 text-2xl">
+                                {language === "en"
+                                    ? `You are about to leave this website and will be redirected to an external platform (${pendingCustomLabel || "External Website"}).`
+                                    : `Sie verlassen diese Website und werden auf eine externe Plattform (${pendingCustomLabel || "Externe Website"}) weitergeleitet.`}
+                            </p>
+                            <p className="mb-10 text-2xl">
+                                {language === "en"
+                                    ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
+                                    : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
+                            </p>
+                            <p className="mb-10 text-sm break-all opacity-80">
+                                {language === "en"
+                                    ? `(redirecting to: ${pendingCustomUrl})`
+                                    : `(Weiterleitung zu: ${pendingCustomUrl})`}
+                            </p>
+                            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                                <button
+                                    type="button"
+                                    className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-background hover:bg-muted hover:shadow-lg hover:-translate-y-[2px] hover:border-foreground/60 transition-all duration-150"
+                                    onClick={() => {
+                                        setShowCustomDialog(false);
+                                        setPendingCustomUrl(null);
+                                        setPendingCustomLabel("");
+                                    }}
+                                >
+                                    {language === "en" ? "Cancel" : "Abbrechen"}
+                                </button>
+                                <button
+                                    type="button"
+                                    className="rounded-md px-4 py-2 text-xl font-semibold bg-foreground text-background hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-foreground/70 transition-all duration-150"
+                                    onClick={() => {
+                                        const url = pendingCustomUrl;
+                                        setShowCustomDialog(false);
+                                        setPendingCustomUrl(null);
+                                        setPendingCustomLabel("");
                                         if (url) {
                                             window.open(url, "_blank", "noopener,noreferrer");
                                         }

@@ -29,6 +29,9 @@ export type Project = {
   demoDownload?: string;
   githubUrl?: string;
   videoBig?: string;
+  custom1Link?: string;
+  custom1BTNText?: string;
+  customLabel?: string;
   demotext: string;
   demoControls: string[] | DemoControlsGroup[];
   misctext: string;
@@ -97,6 +100,9 @@ export const portfolioData = {
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
       githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
       videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -111,6 +117,57 @@ export const portfolioData = {
         { icon: "Zap", label: "Trainierte Modelle", value: "ca. 88" },
         { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" },
         { icon: "Award", label: "Note", value: "1.0" },
+      ]
+    },
+    {
+      id: "play-mode-saver",
+      title: "Play Mode Changes Saver",
+      subtitle: "Kostenloses Tool · Veröffentlicht im Unity Asset Store",
+      description:
+        "Unity-Editor-Tool, das Änderungen aus dem Play Mode erfasst und auf den Edit Mode überträgt, damit der Iterationsfortschritt nach dem Testen nicht verloren geht.",
+      longDescription:
+        "**Problem:** In professionellen **Unity**-Produktionsabläufen werden wichtige Szenenanpassungen häufig im **Play Mode** vorgenommen, doch Unity verwirft diese beim Beenden des Modus. Dies erzwingt wiederholte manuelle Nacharbeit, verlangsamt die Iteration und erhöht das Risiko für fehlende oder inkonsistente Änderungen.\n\n**Lösung:** Play Mode Changes Saver wurde als produktionsorientiertes **Editor-Tool** entwickelt, das automatisch Szenen-Snapshots erstellt und Änderungen an **Transforms**, allen Unity-Components, eigenen Components und Scripts an GameObjects, Materials sowie Namen nachverfolgt. Es bietet eine geführte Side-by-Side-Prüfung, sodass nur validierte Änderungen in den Edit Mode übernommen werden. Die Lösung umfasst Inspector-Integration, Multi-Scene-Unterstützung, Undo/Redo-Support und eine robuste Objekterkennung via **hybrider GUID+Pfad-Identifikation**, die auch bei Umbenennungen stabil bleibt.\n\n**Ergebnis:** Dies ist kein reiner Prototyp, sondern ein **production-ready Produkt**, das im **Unity Asset Store** veröffentlicht wurde. Es demonstriert die vollständige Umsetzung von der Problemanalyse bis hin zu einer ausgelieferten Lösung, die den täglichen Workflow von Entwicklern und Level-Designern optimiert.\n\nWeitere Informationen zum Tool sind auf der Unity-Asset-Store-Seite verfügbar.",
+      image: "/Bilder/RuntimeSaver/TitleImage.jpg",
+      images: [],
+      detailComponent: "",
+      videos: [],
+      tags: ["Unity", "Veröffentlicht", "Editor-Tool", "Spieleentwicklung", "Play Mode", "C#", "Workflow"],
+      features: [
+        "Automatische Baseline-Snapshots beim Start des Play Modes",
+        "Inspector-Integration mit dediziertem Overrides-Button",
+        "Eigenschaftsvergleich nebeneinander für selektive Übernahme",
+        "Szenenweiter Overrides-Browser für zentrale Prüfung",
+        "Nachverfolgung von Transforms, allen Unity-Components, Custom-Components, Scripts, Materials und Namen",
+        "Hybride GUID+Pfad-Objektidentifikation (resistent gegen Umbenennungen)",
+        "Persistente Speicherung via ScriptableObjects",
+        "Multi-Scene-Unterstützung mit automatischem Wechsel",
+        "Vollständige Undo/Redo-Integration",
+        "Granulare Steuerung auf Eigenschaftsebene",
+        "Erhalt der Originalwerte für vollständiges Zurücksetzen",
+        "Kein Laufzeit-Overhead (nur im Editor)"
+      ],
+      techStack: ["C#", "Unity Editor", "GlobalObjectId", "SerializedObject / SerializedProperty", "ScriptableObject", "EditorGUI"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "",
+      videoBig: "/Videos/Big/PlayModeChangesSaver.mp4",
+      custom1Link: "https://assetstore.unity.com/packages/slug/354984",
+      custom1BTNText: "Im Asset Store ansehen",
+      customLabel: "Unity Asset Store",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Download",     label: "Verkäufe",            value: "> 750" },
+        { icon: "Eye",          label: "Seitenaufrufe",       value: "> 1.000" },
+        { icon: "TrendingUp",   label: "Konversionsrate",     value: "~71,33%" },
+        { icon: "Star",         label: "Durchschnittliche Bewertung",   value: "5/5 Sterne" },
+        { icon: "DollarSign",   label: "Preis",               value: "Kostenlos" },
+        { icon: "Zap",          label: "Laufzeit-Overhead",   value: "Keiner" },
+        { icon: "Target",       label: "Objektidentifikation", value: "Hybrid GUID + Pfad" }
       ]
     },
     {
@@ -144,6 +201,9 @@ export const portfolioData = {
       demoDownload: "",
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
       videoBig: "/Videos/Big/BroforceShowcase.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
       demotext: "**Hinweis zur Demo:** Zu Beginn siehst du alle Objekttypen. Gehe durch das blaue Portal, um in den Testbereich teleportiert zu werden, in dem du das Verhalten der einzelnen Objekte ausprobieren kannst. Läufst du anschließend weiter nach rechts, gelangst du nach dem Testbereich zu einem weiteren Portal, das dich ins Demolevel bringt. Alternativ kannst du auch einfach nach unten springen, falls du das Portal nicht erreichst. \n\n PS: Auf den fliegenden Fässern kannst du mitreiten, indem du dich auf sie stellst, nachdem du sie mit einem Schuss aktiviert hast.",
       demoControls: [
         "Links/Rechts: A/D oder Pfeiltasten ⬅️➡️",
@@ -182,6 +242,9 @@ export const portfolioData = {
       demoDownload: "",
       githubUrl: "https://github.com/062Leo/Hide-And-Hunt",
       videoBig: "/Videos/Big/HideAndHuntShowcaseFinal.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
       demotext: "Diese Demo-Version zeigt dir die grundlegenden Spielmechaniken, allerdings ohne vollständige Online-Funktionen.\n\n**So startest du die Demo:**\n\n1. Auf **Play** klicken.\n2. Auf **Create Lobby** klicken.\n3. Rolle wählen: **Killer** oder **Survivor**.\n\n",
       demoControls: [
         {
@@ -218,38 +281,6 @@ export const portfolioData = {
   { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" }
 ]
     },
-    
-    {
-      id: "game-of-life",
-      title: "Conway's Game of Life",
-      subtitle: "",
-      description: "Desktop-Anwendung zur Simulation von Conways Game of Life.",
-      longDescription:
-        "Eine interaktive Desktop-Anwendung für Conways Game of Life. Sie bietet einen freies Zeichen Modus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Canvasgrößen- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
-      image: "/Bilder/GameOfLife/GameOfLife.png",
-      images: [] as ProjectImage[],
-      detailComponent: "",
-      videos: [],
-      tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
-      features: [
-        "Freies Zeichnen und Prefab-Modus für Zellkonfigurationen",
-        "Umschaltbares Dark/Light Theme",
-        "Pinsel- und Canvasgrößen Zoom-Regler für präzises Editing",
-        "Anpassbare Simulationsgeschwindigkeit mit Start/Stopp-Steuerung"
-      ],
-      techStack: ["C#", ".NET", "WPF", "XAML"],
-      demoLink: "",
-      demoImage: "",
-      demoDownload: "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
-      githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
-      videoBig: "/Videos/Big/GameOfLife.mp4",
-      demotext: "",
-      demoControls: [],
-      misctext: "",
-      miscimage: "",
-      miscTitle: "",
-      stats: [{ icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" },]
-    },
     {
       id: "coming-soon",
       title: "Bald verfügbar",
@@ -273,6 +304,9 @@ export const portfolioData = {
       demoDownload: "",
       githubUrl: "",
       videoBig: "",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
       demotext: "",
       demoControls: [],
       misctext: "",

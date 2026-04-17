@@ -1,11 +1,10 @@
-
 export type ProjectImage = {
   url: string;
   caption?: string;
 };
 
 export type ProjectStat = {
-  icon: "Clock" | "Star" | "Code" | "Zap" | "Users" | "Target" | "Award" | "Layers";
+  icon: "Clock" | "Star" | "Code" | "Zap" | "Users" | "Target" | "DollarSign" | "Layers" | "Download" | "Eye" | "TrendingUp";
   label: string;
   value: string;
 };
@@ -29,6 +28,9 @@ export type Project = {
   demoDownload?: string;
   githubUrl?: string;
   videoBig?: string;
+  custom1Link?: string;
+  custom1BTNText?: string;
+  customLabel?: string;
   demotext: string;
   demoControls: string[] | DemoControlsGroup[];
   misctext: string;
@@ -100,6 +102,9 @@ export const portfolioData = {
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
       githubUrl: "https://github.com/062Leo/Bachelorarbeit-Demo",
       videoBig: "/Videos/Big/FragenTrainingShowcase.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
       demotext: "",
       demoControls: [],
       misctext: "",
@@ -107,13 +112,64 @@ export const portfolioData = {
       miscTitle: "",
       stats: [
         { icon: "Layers", label: "Training levels", value: "13 levels + 1 generalization level" },
-        { icon: "Layers", label: "Parkour variants", value: "31 different parkours" },
+        { icon: "Zap", label: "Parkour variants", value: "31 different parkours" },
         { icon: "Target", label: "Success rate training levels", value: "approx. 92 %" },
-        { icon: "Star", label: "Success rate generalization level", value: "43-53 %" },
+        { icon: "TrendingUp", label: "Success rate generalization level", value: "43-53 %" },
         { icon: "Clock", label: "Total training time of all models", value: "711.17 hours" },
-        { icon: "Zap", label: "Trained models", value: "approx. 88" },
-        { icon: "Star", label: "Development", value: "Solo project" },
+        { icon: "Code", label: "Trained models", value: "approx. 88" },
+        { icon: "Users", label: "Development", value: "Solo project" },
         { icon: "Award", label: "Grade", value: "1.0" },
+      ]
+    },
+    {
+      id: "play-mode-saver",
+      title: "Play Mode Changes Saver",
+      subtitle: "Free Tool · Published on the Unity Asset Store",
+      description:
+        "Unity Editor tool that captures and reapplies Play Mode changes to Edit Mode, so your iteration progress is not lost after testing.",
+      longDescription:
+        "**Problem:** In professional **Unity** production workflows, important scene tweaks are often made during **Play Mode**, but Unity discards them when Play Mode ends. This repeatedly forces manual rework, slows iteration, and increases the risk of missing or inconsistent changes.\n\n**Solution:** Play Mode Changes Saver was built as a production-focused **Editor tool** that automatically snapshots scenes, tracks changes across **transforms**, all Unity components, custom components and scripts attached to GameObjects, materials, and names, and provides guided side-by-side review so only validated changes are applied back to Edit Mode. It includes inspector integration, multi-scene handling, undo/redo support, and robust object matching via **hybrid GUID+path identification** that remains stable across renames.\n\n**Result:** This is not just a prototype. It is a **production-ready product** published on the **Unity Asset Store**, demonstrating end-to-end delivery from problem analysis to a shipped solution that improves day-to-day developer and level-design workflows.\n\nMore information about the tool is available on the Unity Asset Store page.",
+      image: "/Bilder/RuntimeSaver/TitleImage.jpg",
+      images: [],
+      detailComponent: "",
+      videos: [],
+      tags: ["Unity","Published", "Editor Tool", "Game Development", "Play Mode", "C#", "Workflow"],
+      features: [
+        "Automatic baseline snapshots on Play Mode entry",
+        "Inspector integration with a dedicated overrides button",
+        "Side-by-side property comparison for selective apply",
+        "Scene-wide overrides browser for centralized review",
+        "Tracking for transforms, all Unity components, custom components and scripts attached to GameObjects, materials, and names",
+        "Hybrid GUID+path object identification (rename-resilient)",
+        "Persistent storage via ScriptableObjects",
+        "Multi-scene support with automatic switching",
+        "Full undo/redo integration",
+        "Granular property-level control",
+        "Original value retention for full revert",
+        "Zero runtime overhead (editor-only)"
+      ],
+      techStack: ["C#", "Unity Editor", "GlobalObjectId", "SerializedObject / SerializedProperty", "ScriptableObject", "EditorGUI"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "",
+      videoBig: "/Videos/Big/PlayModeChangesSaver.mp4",
+      custom1Link: "https://assetstore.unity.com/packages/slug/354984",
+      custom1BTNText: "View on Asset Store",
+      customLabel: "Unity Asset Store",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Download",     label: "Sales",               value: "> 750" },
+        { icon: "Eye",          label: "Page Views",          value: "> 1,000" },
+        { icon: "TrendingUp",   label: "Conversion Rate",     value: "~71.33%" },
+        { icon: "Star",         label: "Average Rating",      value: "5/5 Stars" },
+        { icon: "DollarSign",        label: "Pricing",             value: "Free" },
+        { icon: "Zap",          label: "Runtime Overhead",    value: "None" },
+        { icon: "Target",       label: "Object Identification", value: "Hybrid GUID + Path" }
       ]
     },
     {
@@ -165,6 +221,9 @@ export const portfolioData = {
       demoDownload: "",
       githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
       videoBig: "/Videos/Big/BroforceShowcase.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
       demotext:
         "**Demo note:** At the beginning you see all object types. Go through the blue portal to be teleported to the test area where you can try out the behaviour of the individual objects. If you then continue to the right, you will reach another portal after the test area that takes you to the demo level. Alternatively, you can simply jump down if you do not reach the portal. \n\n PS: You can ride on the flying barrels by standing on them after activating them with a shot.",
       demoControls: [
@@ -177,7 +236,7 @@ export const portfolioData = {
       misctext: "",
       miscimage: "",
       miscTitle: "",
-      stats: [{ icon: "Star", label: "Development", value: "Solo project" }],
+      stats: [{ icon: "Users", label: "Development", value: "Solo project" }],
     },
     {
       id: "prop-hunt",
@@ -206,6 +265,9 @@ export const portfolioData = {
       demoDownload: "",
       githubUrl: "https://github.com/062Leo/Hide-And-Hunt",
       videoBig: "/Videos/Big/HideAndHuntShowcaseFinal.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
       demotext:
         "This demo version shows you the basic game mechanics, but without full online functionality.\n\n**How to start the demo:**\n\n1. Click on **Play**.\n2. Click on **Create Lobby**.\n3. Choose a role: **Killer** or **Survivor**.\n\n",
       demoControls: [
@@ -239,43 +301,13 @@ export const portfolioData = {
       miscTitle: "The map:",
       stats: [
         { icon: "Users", label: "Player roles", value: "1 killer, up to 4 survivors" },
-        { icon: "Layers", label: "Game structure", value: "Asymmetric 4v1 setup" },
+        { icon: "Target", label: "Game structure", value: "Asymmetric 4v1 setup" },
         { icon: "Code", label: "Scope", value: "Complete gameplay prototype" },
-        { icon: "Star", label: "Development", value: "Solo project" },
+        { icon: "Users", label: "Development", value: "Solo project" },
       ]
     },
     
-    {
-      id: "game-of-life",
-      title: "Conway's Game of Life",
-      subtitle: "",
-      description: "Desktop application for simulating Conway's Game of Life.",
-      longDescription:
-        "An interactive desktop application for Conway's Game of Life. It offers a free drawing mode and prefab placement, supports theme switching, variable brush sizes as well as flexible canvas size and speed settings, implemented with C#, .NET and WPF.",
-      image: "/Bilder/GameOfLife/GameOfLife.png",
-      images: [] as ProjectImage[],
-      detailComponent: "",
-      videos: [],
-      tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
-      features: [
-        "Free drawing and prefab mode for cell configurations",
-        "Toggleable dark/light theme",
-        "Brush size and canvas size zoom sliders for precise editing",
-        "Adjustable simulation speed with start/stop controls",
-      ],
-      techStack: ["C#", ".NET", "WPF", "XAML"],
-      demoLink: "",
-      demoImage: "",
-      demoDownload: "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
-      githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
-      videoBig: "/Videos/Big/GameOfLife.mp4",
-      demotext: "",
-      demoControls: [],
-      misctext: "",
-      miscimage: "",
-      miscTitle: "",
-      stats: [{ icon: "Star", label: "Development", value: "Solo project" }]
-    },
+    
     {
       id: "coming-soon",
       title: "Coming soon",
@@ -299,13 +331,16 @@ export const portfolioData = {
       demoDownload: "",
       githubUrl: "",
       videoBig: "",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
       demotext: "",
       demoControls: [],
       misctext: "",
       miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Layers", label: "Category", value: "Top secret" },
+        { icon: "Eye", label: "Category", value: "Top secret" },
         { icon: "Clock", label: "Schedule", value: "Coming soon" }
       ]
     }

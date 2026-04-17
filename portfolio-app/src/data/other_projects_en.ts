@@ -23,6 +23,8 @@ export type Project = {
   longDescription?: string;
   image: string; // Kept for backward compatibility as the main image
   images?: ProjectImage[]; // New field for multiple images with captions
+  custom1Link?: string;
+  custom1BTNText?: string;
   tags: string[];
   demoLink?: string;
   demoImage?: string;
@@ -118,6 +120,40 @@ export const otherProjects = {
         }
       ]
     },
+    {
+          id: "game-of-life",
+          title: "Conway's Game of Life",
+          subtitle: "",
+          description: "Desktop application for simulating Conway's Game of Life.",
+          longDescription:
+            "An interactive desktop application for Conway's Game of Life. It offers a free drawing mode and prefab placement, supports theme switching, variable brush sizes as well as flexible canvas size and speed settings, implemented with C#, .NET and WPF.",
+          image: "/Bilder/GameOfLife/GameOfLife.png",
+          images: [] as ProjectImage[],
+          detailComponent: "",
+          videos: [],
+          tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
+          features: [
+            "Free drawing and prefab mode for cell configurations",
+            "Toggleable dark/light theme",
+            "Brush size and canvas size zoom sliders for precise editing",
+            "Adjustable simulation speed with start/stop controls",
+          ],
+          techStack: ["C#", ".NET", "WPF", "XAML"],
+          demoLink: "",
+          demoImage: "",
+          demoDownload: "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
+          githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
+          videoBig: "/Videos/Big/GameOfLife.mp4",
+          custom1Link: "",
+          custom1BTNText: "",
+          customLabel: "",
+          demotext: "",
+          demoControls: [],
+          misctext: "",
+          miscimage: "",
+          miscTitle: "",
+          stats: [{ icon: "Users", label: "Development", value: "Solo project" }]
+        },
     {
           id: "doom-mobility-prototype",
           title: "DOOM Movement Prototype",

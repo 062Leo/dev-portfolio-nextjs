@@ -110,7 +110,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden space-x-8 md:flex flex-1 ml-190">
+        <div className="hidden space-x-8 md:flex flex-1 ml-160">
           {navItems.map((item) => (
             <Link
               key={item.name}
