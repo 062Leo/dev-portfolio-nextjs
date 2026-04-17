@@ -345,12 +345,13 @@ export function DetailPage({ id }: { id: string }) {
                         onClick={() => setSelectedImage(null)}
                     >
                         <div
-                            className="w-full max-w-[95vw] rounded-3xl bg-background/95 px-6 py-10 text-foreground shadow-2xl border border-border relative"
+                            className="w-full max-w-[95vw] rounded-3xl bg-background/95 px-6 py-4 text-foreground shadow-2xl border border-border relative"
+                            style={{ maxHeight: '90vh', overflow: 'auto' }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             <button
                                 type="button"
-                                className="absolute -top-2 right-5 text-5xl font-extrabold text-red-500 drop-shadow-lg hover:scale-110 hover:opacity-90 transition-transform"
+                                className="absolute -top+0 right-6 text-5xl font-extrabold text-red-500 drop-shadow-lg hover:scale-110 hover:opacity-90 transition-transform"
                                 onClick={() => setSelectedImage(null)}
                             >
                                 ×
