@@ -5,7 +5,7 @@ import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { otherProjects } from "@/data/other_projects";
 import { otherProjects as otherProjectsEn } from "@/data/other_projects_en";
-import { ArrowLeft, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Eye, TrendingUp, ExternalLink } from "lucide-react";
+import { ArrowLeft, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Eye, TrendingUp, DollarSign, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
@@ -23,7 +23,8 @@ const iconMap = {
     Layers,
     Download,
     Eye,
-    TrendingUp
+    TrendingUp,
+    DollarSign
 };
 
 // Helper function to render markdown-like formatting

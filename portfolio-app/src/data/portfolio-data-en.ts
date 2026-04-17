@@ -1,11 +1,10 @@
-
 export type ProjectImage = {
   url: string;
   caption?: string;
 };
 
 export type ProjectStat = {
-  icon: "Clock" | "Star" | "Code" | "Zap" | "Users" | "Target" | "Award" | "Layers" | "Download" | "Eye" | "TrendingUp";
+  icon: "Clock" | "Star" | "Code" | "Zap" | "Users" | "Target" | "DollarSign" | "Layers" | "Download" | "Eye" | "TrendingUp";
   label: string;
   value: string;
 };
@@ -113,12 +112,12 @@ export const portfolioData = {
       miscTitle: "",
       stats: [
         { icon: "Layers", label: "Training levels", value: "13 levels + 1 generalization level" },
-        { icon: "Layers", label: "Parkour variants", value: "31 different parkours" },
+        { icon: "Zap", label: "Parkour variants", value: "31 different parkours" },
         { icon: "Target", label: "Success rate training levels", value: "approx. 92 %" },
-        { icon: "Star", label: "Success rate generalization level", value: "43-53 %" },
+        { icon: "TrendingUp", label: "Success rate generalization level", value: "43-53 %" },
         { icon: "Clock", label: "Total training time of all models", value: "711.17 hours" },
-        { icon: "Zap", label: "Trained models", value: "approx. 88" },
-        { icon: "Star", label: "Development", value: "Solo project" },
+        { icon: "Code", label: "Trained models", value: "approx. 88" },
+        { icon: "Users", label: "Development", value: "Solo project" },
         { icon: "Award", label: "Grade", value: "1.0" },
       ]
     },
@@ -186,7 +185,7 @@ export const portfolioData = {
       misctext: "",
       miscimage: "",
       miscTitle: "",
-      stats: [{ icon: "Star", label: "Development", value: "Solo project" }],
+      stats: [{ icon: "Users", label: "Development", value: "Solo project" }],
     },
     {
       id: "prop-hunt",
@@ -251,9 +250,9 @@ export const portfolioData = {
       miscTitle: "The map:",
       stats: [
         { icon: "Users", label: "Player roles", value: "1 killer, up to 4 survivors" },
-        { icon: "Layers", label: "Game structure", value: "Asymmetric 4v1 setup" },
+        { icon: "Target", label: "Game structure", value: "Asymmetric 4v1 setup" },
         { icon: "Code", label: "Scope", value: "Complete gameplay prototype" },
-        { icon: "Star", label: "Development", value: "Solo project" },
+        { icon: "Users", label: "Development", value: "Solo project" },
       ]
     },
     
@@ -289,7 +288,7 @@ export const portfolioData = {
       misctext: "",
       miscimage: "",
       miscTitle: "",
-      stats: [{ icon: "Star", label: "Development", value: "Solo project" }]
+      stats: [{ icon: "Users", label: "Development", value: "Solo project" }]
     },
     {
       id: "play-mode-saver",
@@ -346,11 +345,12 @@ export const portfolioData = {
       miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Download",     label: "Sales",               value: "754" },
-        { icon: "Eye",          label: "Page Views",          value: "1,057" },
-        { icon: "TrendingUp",   label: "Conversion Rate",     value: "71.33%" },
-        { icon: "Star",         label: "Rating",              value: "5 / 5" },
-        { icon: "Layers",       label: "Change Granularity",  value: "Property-Level" },
+        { icon: "Download",     label: "Sales",               value: "> 750" },
+        { icon: "Eye",          label: "Page Views",          value: "> 1,000" },
+        { icon: "TrendingUp",   label: "Conversion Rate",     value: "~71.33%" },
+        { icon: "Star",         label: "Rating",              value: "5/5 Stars" },
+        { icon: "DollarSign",        label: "Pricing",             value: "Free" },
+        { icon: "Zap",          label: "Runtime Overhead",    value: "None" },
         { icon: "Target",       label: "Object Identification", value: "Hybrid GUID + Path" }
       ]
     },
@@ -386,7 +386,7 @@ export const portfolioData = {
       miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Layers", label: "Category", value: "Top secret" },
+        { icon: "Eye", label: "Category", value: "Top secret" },
         { icon: "Clock", label: "Schedule", value: "Coming soon" }
       ]
     }

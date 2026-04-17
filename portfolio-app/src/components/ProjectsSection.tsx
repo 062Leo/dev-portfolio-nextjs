@@ -100,7 +100,7 @@ export function ProjectsShowcase() {
                     </h3>
                     {project.subtitle && project.subtitle.trim() && (
                       <span
-                        className="text-xl font-semibold"
+                        className="text-l font-semibold"
                         style={{
                           color: colors.projectsSectionTitleColor,
                         }}
@@ -254,7 +254,7 @@ export function ProjectsShowcase() {
                     </h3>
                     {project.subtitle && project.subtitle.trim() && (
                       <span
-                        className="text-xl font-semibold"
+                        className="text-l font-semibold"
                         style={{
                           color: colors.projectsSectionTitleColor,
                         }}
