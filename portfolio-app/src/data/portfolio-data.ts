@@ -159,31 +159,59 @@ export const portfolioData = {
     {
       id: "food-check-scanner-app",
       title: "FoodCheck Scanner App",
-      subtitle: "Barcode-Scanner für Zutatenanalyse & NOVA-Einstufung",
-      description: "Mobile App (Expo) zum Scannen von Lebensmittel-Barcodes und zur schnellen Bewertung von Zutaten, Additiven und Verarbeitungsgrad.",
+      subtitle: "Barcode-Scanner zur Analyse von Zutaten, NOVA-Klassifizierung und Ernährungsrisiko-Bewertung",
+      description: "Datenschutz-erste mobile App (Expo/React Native), die Lebensmittel-Barcodes scannt, Zutaten und Zusatzstoffe gegen 683 Gesundheitsregeln bewertet und Verarbeitungsstufen klassifiziert – ohne proprietären Backend, ohne Tracking, ohne Werbung.",
       longDescription:
-        "FoodCheck ist eine React Native (Expo) App, die per Kamera EAN-Barcodes erkennt, Produktdaten lokal cached und Zutaten auf gesundheitliche Risikofaktoren prüft.\n\n" +
-        "Die App kombiniert lokale SQLite-Persistence, on-device ML Kit OCR für Zutaten-Scans sowie Recherchen gegen die Open Food Facts API. Sie bietet ein umfangreiches Red-Flag-System mit 683 vordefinierten Regeln, mehrsprachige Zutatenanzeigen und eine NOVA-/Nutri-Score-Klassifikation. Benutzer können Produkte bearbeiten und direkt an Open Food Facts beitragen.\n\n" +
-        "Ideal für den schnellen Check im Supermarkt oder zur strukturierten Datensammlung und -bearbeitung.\n\n" +
-        "Die App ist derzeit nicht in einem App Store veröffentlicht und wurde nicht für die breite Öffentlichkeit bereitgestellt; eine spätere Veröffentlichung ist möglich. Wer sie dennoch nutzen möchte, kann sie auf eigenes Risiko selbst bauen und verwenden oder einen fertigen Build aus den GitHub-Releases beziehen.",
+        "FoodCheck ist eine React Native (Expo) App, die EAN-8/EAN-13 Barcodes via Kamera erkennt, Produktdaten lokal in SQLite zwischenspeichert und Zutaten auf gesundheitliche Risikofaktoren überprüft.\n\n" +
+        "Die App kombiniert lokale SQLite-Persistierung, on-device ML Kit OCR für Zutatenlisten und Abfragen gegen die Open Food Facts API v2. Sie enthält ein umfassendes Risiko-Bewertungssystem mit 683 Kern-Regeln in 19 Kategorien (E-Nummern, Süßstoffe, Konservierungsstoffe, Emulgatoren, gehärtete Fette, Phosphate etc.), mehrsprachige Zutatendarstellungen in 8 Sprachen (de/en/fr/it/es/nl/pt/pl) und NOVA-/Nutri-Score-Klassifizierung mit farblich gekennzeichneten Ampel-Bewertungen. KI-gestützte Insights von Robotoff ergänzen die Analyse mit Confidence-Scores für Kategorien, Labels und Zutaten.\n\n" +
+        "Benutzer können Produkte mit OCR-gestützter Erfassung von Zutaten und Nährwerten bearbeiten (on-device ML Kit oder Cloud Vision über OFF), Zutaten automatisch übersetzen (DeepL oder MyMemory) und direkt zu Open Food Facts beitragen. Ein vollständiges Backup-System (JSON Export/Import) und Favoritenverwaltung runden die Funktionen ab.\n\n" +
+        "Datenschutz ist Kernprinzip: kein eigener Server, keine Benutzerkonten, keine Cloud-Synchronisation, kein Tracking, keine Werbung. Persönliche Daten (Favoriten, Filterregeln, Einstellungen, API-Schlüssel) bleiben ausschließlich auf dem Gerät. Produktdaten werden aus der öffentlichen Open Food Facts Datenbank abgerufen und lokal zwischengespeichert für schnellen Zugriff. Uploads zu OFF sind vollständig optional und benutzergesteuert.\n\n" +
+        "Die Architektur ist streng geschichtet (Screens → Store → Domain → Infrastructure), folgt SOLID-Prinzipien und ist vollständig in TypeScript (Strict Mode) typisiert. Die App ist derzeit nicht im App Store veröffentlicht; eine spätere Veröffentlichung ist möglich. Jeder kann sie aus dem Quellcode bauen oder ein vorkompiliertes Build von den GitHub Releases herunterladen.",
       image: "/Bilder/FoodCheck/AppIcon.png",
       images: [] as ProjectImage[], 
       detailComponent: "",
       videos: [],
-      tags: ["React Native", "Expo", "Mobile App", "Food Tech", "Health"],
+      tags: ["React Native", "Expo", "TypeScript", "Mobile App", "Food Tech", "Gesundheit", "Datenschutz", "OCR", "Open Food Facts"],
       features: [
-        "Sofortiges Kamera-Scanning von EAN-8/EAN-13 Barcodes",
-        "Cache-first Architektur mit lokaler SQLite-Datenbank (offline-fähig)",
-        "Red-Flag-Erkennung (683 Seed-Regeln) für bedenkliche Zutaten und Additive",
-        "NOVA- und Nutri-Score-Einstufung mit Farbcodierung",
-        "OCR-gestützte Zutaten- und Nährwerterfassung (on-device ML Kit + OFF OCR-Fallback)",
-        "Mehrsprachige Zutatenanzeige & automatische Übersetzungen (DeepL / MyMemory)",
-        "Favoriten, Filter-Regeln und Export/Import (Backup)"
+        "Echtzeitscanning von EAN-8/EAN-13 Barcodes mit haptischem Feedback",
+        "Cache-First-Architektur: lokale SQLite mit intelligenter 7-Tage-Ablauf-Erkennung",
+        "Ampel-Produktbewertung (Grün/Gelb/Rot) basierend auf Warnsignalen + NOVA-Score",
+        "Risiko-Bewertung: 683 Kern-Regeln in 19 Kategorien (Zusatzstoffe, Zucker, gehärtete Fette, E-Nummern, etc.)",
+        "Benutzerdefinierte Filter: Zutaten-Stichwörter und Nährstoff-Schwellenwerte mit mehrsprachiger Auto-Übersetzung",
+        "NOVA-Klassifizierung (1-4, unverarbeitet bis ultra-verarbeitet) und Nutri-Score (A-E), beide farblich gekennzeichnet",
+        "Lokales ML Kit OCR für Zutatenlisten und Nährwertangaben mit automatischer Spracherkennung",
+        "Cloud Vision OCR Fallback mit Crop-Tool und Bearbeitungsfunktion",
+        "Produktkatalog mit Textsuche (SQLite LIKE), Risiko-Filter (OK/Warnung/Kritisch), Sortierung und Wisch-zum-Löschen",
+        "Favoritenverwaltung mit schnellem Toggle aus Produktdetail und Katalog",
+        "Produktbearbeitung in 8 Sprachen: OCR-Erfassung, manuelle Eingabe, Auto-Übersetzung (DeepL/MyMemory), Batch-Übersetzung",
+        "Optionaler Beitrag zu Open Food Facts (erfordert OFF-Konto, gespeichert in SecureStore)",
+        "Robotoff AI Insights mit Confidence-Bar-Visualisierung",
+        "Mehrsprachige Benutzeroberfläche: Deutsch/Englisch, Sprachwechsel jederzeit möglich",
+        "Swipeable Bildergalerie mit lokalem File Caching (expo-file-system)",
+        "Backup & Restore: kompletter SQLite Export/Import als JSON über Native Share Sheet",
+        "Dark Mode First Design",
+        "Privacy-by-Design: kein Backend, keine Cloud-Sync, kein Tracking, keine Ads – Daten bleiben auf dem Gerät"
       ],
-      techStack: ["TypeScript", "Expo", "React Native", "Zustand", "expo-sqlite", "ML Kit OCR", "Open Food Facts API", "Robotoff", "DeepL / MyMemory"],
-      demoLink: "",
+      techStack: [
+        "TypeScript 5.9 (strict)",
+        "Expo SDK 54 (managed workflow)",
+        "React Native 0.81 + React 19.1",
+        "Expo Router (file-based navigation)",
+        "Zustand 5 (4 stores: filter, catalog, language, settings)",
+        "expo-sqlite 16 (SQLite)",
+        "expo-camera 17 (barcode scanning)",
+        "ML Kit Text Recognition (on-device OCR)",
+        "expo-secure-store (credentials + API keys)",
+        "expo-file-system (image caching)",
+        "Open Food Facts API v2 (read + write)",
+        "Robotoff (AI insights)",
+        "DeepL Free API + MyMemory (translation)",
+        "SymSpell (spell correction for ingredient matching)",
+        "ESLint 10 (flat config) + Prettier 3",
+        "Jest + jest-expo (23 suites, 265 tests)"
+      ],demoLink: "",
       demoImage: "",
-      demoDownload: "https://github.com/062Leo/FoodCheck-Scanner/releases/download/Release/FoodCheck_V1.0.apk",
+      demoDownload: "https://github.com/062Leo/FoodCheck-Scanner/releases",
       githubUrl: "https://github.com/062Leo/FoodCheck-Scanner",
       videoBig: "/Videos/Big/FoodCheck_Video.mp4",
       custom1Link: "",
@@ -195,10 +223,10 @@ export const portfolioData = {
       miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Layers", label: "Seed-Regeln", value: "683 vordefinierte Regeln" },
-        { icon: "Zap", label: "OCR", value: "On-device ML Kit + OFF OCR" },
-        { icon: "Code", label: "Tests", value: "23 Test-Suiten, 265 Tests" },
-        { icon: "Clock", label: "Architektur", value: "Offline-first · Expo SDK 54" }
+        { icon: "Layers", label: "Risiko-Regeln", value: "683 Kern-Regeln in 19 Kategorien" },
+        { icon: "Zap", label: "OCR", value: "On-Device ML Kit + OFF Cloud Vision" },
+        { icon: "Code", label: "Tests", value: "265 Tests über 23 Suites" },
+        { icon: "Eye", label: "Datenschutz", value: "Dezentral · Ohne Tracking · Werbefrei" }
       ]
     },
     {
