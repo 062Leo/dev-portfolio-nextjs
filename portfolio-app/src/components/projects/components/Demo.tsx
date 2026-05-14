@@ -65,23 +65,19 @@ const isGroupedControls = (
 };
 
 export function DetailPage({ id }: { id: string }) {
-    const [isDarkMode, setIsDarkMode] = useState(true);
     const [isReady, setIsReady] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
     const { language } = useLanguage();
     const [project, setProject] = useState<(typeof portfolioData.projects)[number] | null>(null);
 
     useEffect(() => {
-        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-        setIsDarkMode(prefersDark);
-
         const data = language === "en" ? portfolioDataEn : portfolioData;
         const foundProject = data.projects.find((p) => p.id === id) || null;
         setProject(foundProject);
 
         setIsReady(true);
     }, [id, language]);
-    const colors = useThemeColors(isDarkMode);
+    const colors = useThemeColors(true);
 
     if (!isReady) {
         return null;

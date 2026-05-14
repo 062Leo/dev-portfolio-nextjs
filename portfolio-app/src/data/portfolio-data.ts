@@ -46,31 +46,17 @@ export type Project = {
 export const portfolioData = {
   personal: {
     firstName: "Leo",
-    lastName: "",
-    role: "Softwareentwickler (B.Sc. Softwareentwicklung, Schwerpunkt Games Engineering)",
-    tagline: "Unity, C# und .NET - Fokus auf Games Engineering & sauberen Code",
-    motivation: "Abgeschlossenes Bachelorstudium der Softwareentwicklung (Schwerpunkt Games Engineering) und Praxiserfahrung in C#, .NET und Unity - mit starkem Fokus auf Clean Code, Refactoring und qualitativ hochwertige, wartbare Software.",
-    github: "https://github.com/062Leo",
+    role: "Softwareentwickler (B.Sc. Softwareentwicklung, Schwerpunkt Games Engineering) mit Fokus auf AI, Automatisierung und sauberen Code",
   },
   about: {
     title: "About Me",
     description: [
-      "Ich bin Softwareentwickler mit einem erfolgreich abgeschlossenen Bachelor of Science in Softwareentwicklung (Schwerpunkt Games Engineering) an der Hochschule Heilbronn.",
-      "Im Studium und in praxisnahen Projekten habe ich umfangreiche Erfahrung in der Entwicklung von 2D- und 3D-Spielen mit Unity und C# sowie in der Umsetzung von Web- und Desktopanwendungen gesammelt.",
-      "Dabei habe ich mich intensiv mit Clean Code, Refactoring und der Verbesserung bestehender C#- und .NET-Anwendungen auseinandergesetzt.",
-      "Ich lege großen Wert auf strukturierte Arbeitsweisen, qualitativ hochwertige Software und kontinuierliche Weiterentwicklung - sowohl beruflich als auch persönlich."
-    ],
-    softSkills: [
-      "Teamfähigkeit / Kollaboration",
-      "Eigenverantwortliche Arbeitsweise",
-      "Strukturierte und analytische Arbeitsweise",
-      "Lernbereitschaft / Schnelle Auffassungsgabe",
-      "Problemlösungskompetenz",
-      "Kommunikationsfähigkeit",
-      "Agiles Mindset",
-      "Hoher Qualitätsanspruch",
-      "Motivation und Begeisterung"
+      "Ich bin Softwareentwickler mit einem erfolgreich abgeschlossenen Bachelor of Science in Softwareentwicklung an der Hochschule Heilbronn. Meine Bachelorarbeit habe ich mit 1,0 abgeschlossen; der Gesamtdurchschnitt meines Studiums lag bei 2,1.",
+      "Im Studium sowie in praxisnahen privaten Projekten habe ich einige Erfahrung in Unity und C#, aber auch in Web-, Desktop- und Tooling-Projekten gesammelt. Für mich ist Unity kein reines Games-Thema, sondern ein vielseitiges Werkzeug, das in vielen Branchen sinnvoll eingesetzt werden kann.",
+      "Besonders interessieren mich Künstliche Intelligenz, insbesondere ihrem produktiver Einsatz im Arbeitsalltag sowie die Integration von KI in Projekte und Apps. Ebenso wichtig ist mir Automatisierung - etwa mit Python-Skripten, TypeScript-Tools für den Browser oder anderen Workflows, die wiederkehrende Aufgaben reduzieren.",
+      "Ich ergreife gerne Eigeninitiative, denke aktiv mit, treffe Entscheidungen und arbeite selbstständig. Einen Großteil meiner Freizeit nutze ich für Projekte; dazu gehören Planung, Umsetzung und Recherche. Durch diese Arbeit bilde ich mich fortlaufend eigenständig weiter."
     ]
+    
   },
   projects: [
     {

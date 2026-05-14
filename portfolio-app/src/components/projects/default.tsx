@@ -60,7 +60,6 @@ const renderMarkdownText = (text: string, color: string) => {
 };
 
 export function DetailPage({ id }: { id: string }) {
-    const [isDarkMode, setIsDarkMode] = useState(true);
     const [isReady, setIsReady] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
     const [pendingUrl, setPendingUrl] = useState<string | null>(null);
@@ -74,9 +73,6 @@ export function DetailPage({ id }: { id: string }) {
     >(null);
 
     useEffect(() => {
-        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-        setIsDarkMode(prefersDark);
-
         const data = language === "en" ? portfolioDataEn : portfolioData;
         const otherSource = language === "en" ? otherProjectsEn : otherProjects;
 
@@ -90,7 +86,7 @@ export function DetailPage({ id }: { id: string }) {
 
         setIsReady(true);
     }, [id, language]);
-    const colors = useThemeColors(isDarkMode);
+    const colors = useThemeColors(true);
 
     if (!isReady) {
         return null;
