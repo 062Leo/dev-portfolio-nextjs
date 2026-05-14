@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X, Moon, Sun } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -12,9 +12,9 @@ import { useLanguage } from "@/context/LanguageContext";
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  // theme is always dark
   const { language, setLanguage } = useLanguage();
-  const colors = useThemeColors(isDarkMode);
+  const colors = useThemeColors(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,33 +39,18 @@ export function Navbar() {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
+    // ensure CSS variables / classes for dark theme are applied
+    if (typeof document !== "undefined") {
+      document.documentElement.classList.add("dark");
     }
-
-    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDarkMode(prefersDark);
-    applyThemeColors(prefersDark);
+    applyThemeColors(true);
   }, []);
-
-  const toggleTheme = () => {
-    setIsDarkMode((prev) => {
-      const next = !prev;
-      if (next) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-      applyThemeColors(next);
-      return next;
-    });
-  };
 
   const toggleLanguage = () => {
     setLanguage(language === "de" ? "en" : "de");
   };
 
-  const contactHref = "/#contact";
+  
 
   const navItems =
     language === "de"
@@ -74,14 +59,12 @@ export function Navbar() {
           { name: "Über mich", href: "/#about" },
           // { name: "Skills", href: "/#skills" },
           { name: "Projekte", href: "/projects" },
-          { name: "Kontakt", href: contactHref },
         ]
       : [
           { name: "Home", href: "/" },
           { name: "About", href: "/#about" },
           // { name: "Skills", href: "/#skills" },
           { name: "Projects", href: "/projects" },
-          { name: "Contact", href: contactHref },
         ];
 
   return (
@@ -95,8 +78,8 @@ export function Navbar() {
       <div className="container flex items-center justify-between">
         <Link href="/" className="flex items-center text-xl font-bold">
           <span className="relative z-10">
-            <span className="text-glow" style={{ color: colors.navbarTitleColor }}>
-              Leo's
+              <span className="text-glow" style={{ color: colors.navbarTitleColor }}>
+              Leos
             </span>
             <span
               className="text-glow"
@@ -110,7 +93,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden space-x-8 md:flex flex-1 ml-160">
+        <div className="hidden space-x-8 md:flex flex-1 ml-185">
           {navItems.map((item) => (
             <Link
               key={item.name}

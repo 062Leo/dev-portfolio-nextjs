@@ -1,30 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function ContactSection() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const [isReady, setIsReady] = useState(false);
   const { language } = useLanguage();
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDarkMode(prefersDark);
-    setIsReady(true);
-  }, []);
-
-  const colors = useThemeColors(isDarkMode);
-
-  if (!isReady) {
-    return null;
-  }
+  const colors = useThemeColors(true);
 
   return (
     <section id="contact" className="relative px-4 py-24">

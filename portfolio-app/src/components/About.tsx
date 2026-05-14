@@ -1,31 +1,16 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
-import { Briefcase, ChartNoAxesCombined, Code, Gamepad2 } from "lucide-react";
+import { type ReactNode } from "react";
+import { Bot, Briefcase, ChartNoAxesCombined, Code, Workflow } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { useThemeColors, type ThemeColorSet } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function About() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const [isReady, setIsReady] = useState(false);
   const { language } = useLanguage();
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
 
-    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDarkMode(prefersDark);
-    setIsReady(true);
-  }, []);
-
-  const colors = useThemeColors(isDarkMode);
-
-  if (!isReady) {
-    return null;
-  }
+  const colors = useThemeColors(true);
 
   const currentPortfolioData = language === "en" ? portfolioDataEn : portfolioData;
 
@@ -57,7 +42,7 @@ export function About() {
             }}
           >
             <h3 className="text-2xl font-semibold">
-              {language === "de" ? "Software- und Spiele-Entwickler" : "Software and Game Developer"}
+              {language === "de" ? "Softwareentwickler mit Fokus auf Anwendungen, Tools & AI" : "Software Developer focused on applications, tools & AI"}
             </h3>
 
             {currentPortfolioData.about.description.map((paragraph, index) => (
@@ -89,38 +74,48 @@ export function About() {
               }
               description={
                 language === "de"
-                  ? "Entwicklung moderner Anwendungen - von Web-Frontends bis zu Desktop- und Backend-Lösungen - mit Fokus auf sauberer Architektur und wartbarem Code."
-                  : "Development of modern applications - from web frontends to desktop and backend solutions - with a focus on clean architecture and maintainable code."
+                  ? "Entwicklung moderner Anwendungen - von Web-Frontends über Desktop- bis Backend-Lösungen - mit Fokus auf sauberer Architektur, wartbarem Code und praxisnaher Umsetzbarkeit."
+                  : "Development of modern applications - from web frontends to desktop and backend solutions - with a focus on clean architecture, maintainable code and practical delivery."
               }
               colors={colors}
             />
             <InfoCard
-              icon={<Gamepad2 className="h-6 w-6" />}
-              title={language === "de" ? "Game Development" : "Game Development"}
+              icon={<Workflow className="h-6 w-6" />}
+              title={language === "de" ? "Interactive Systems" : "Interactive Systems"}
               description={
                 language === "de"
-                  ? "Konzeption und Umsetzung von 2D- und 3D-Spielen mit Schwerpunkt Unity und C#, inklusive Projekten zu Multiplayer, KI, physikbasiertem Gameplay, Mobile-Entwicklung und Monetarisierungsstrategien."
-                  : "Concept and implementation of 2D and 3D games with a focus on Unity and C#, including projects on multiplayer, AI, physics-based gameplay, mobile development and monetisation strategies."
+                  ? "Konzeption und Umsetzung interaktiver Systeme mit Unity und C# - von Spielen und Simulationen bis zu Anwendungen, in denen Echtzeit-Interaktion, Physik oder komplexe Abläufe gefragt sind."
+                  : "Concept and implementation of interactive systems with Unity and C# - from games and simulations to applications where real-time interaction, physics or complex workflows matter."
+              }
+              colors={colors}
+            />
+            <InfoCard
+              icon={<Bot className="h-6 w-6" />}
+              title={language === "de" ? "AI & Automation" : "AI & Automation"}
+              description={
+                language === "de"
+                  ? "Großes Interesse an Künstlicher Intelligenz (KI), insbesondere ihrem produktiven Einsatz im Arbeitsalltag und dem sinnvollen Einbau in Projekte und Apps - kombiniert mit Automatisierung via Python, TypeScript oder Browser-Workflows."
+                  : "Strong interest in AI, its productive use in everyday work and its integration into projects and apps - combined with automation via Python, TypeScript or browser workflows."
               }
               colors={colors}
             />
             <InfoCard
               icon={<ChartNoAxesCombined className="h-6 w-6" />}
-              title={language === "de" ? "Agile Collaboration" : "Agile Collaboration"}
+              title={language === "de" ? "Collaboration & Communication" : "Collaboration & Communication"}
               description={
                 language === "de"
-                  ? "Zusammenarbeit in agilen Softwareprojekten mit Scrum, klarer Kommunikation und strukturierter Vorgehensweise von Planung bis Umsetzung."
-                  : "Collaboration in agile software projects using Scrum, clear communication and a structured approach from planning to implementation."
+                  ? "Zusammenarbeit in agilen Projekten mit klarer Kommunikation, strukturierter Abstimmung und einem verlässlichen Vorgehen von der Planung bis zur Umsetzung."
+                  : "Collaboration in agile projects with clear communication, structured alignment and a reliable approach from planning to delivery."
               }
               colors={colors}
             />
             <InfoCard
               icon={<Briefcase className="h-6 w-6" />}
-              title={language === "de" ? "Professional Mindset" : "Professional Mindset"}
+              title={language === "de" ? "Ownership & Mindset" : "Ownership & Mindset"}
               description={
                 language === "de"
-                  ? "Hoher Qualitätsanspruch, Clean Code, Refactoring und die Bereitschaft, sich fachlich wie persönlich kontinuierlich weiterzuentwickeln."
-                  : "High quality standards, clean code, refactoring and the willingness to continuously develop both professionally and personally."
+                  ? "Eigeninitiative, selbstständiges Arbeiten, aktives Mitdenken und die Bereitschaft, Entscheidungen zu treffen und sich durch Projekte und Recherche kontinuierlich weiterzuentwickeln."
+                  : "Initiative, independent work, active thinking and the willingness to make decisions and keep developing through projects and research."
               }
               colors={colors}
             />
