@@ -45,12 +45,7 @@ export type Project = {
 export const portfolioData = {
   personal: {
     firstName: "Leo",
-    lastName: "",
     role: "Software Developer (B.Sc. Software Engineering, focus on Games Engineering)",
-    tagline: "Unity, C# and .NET - Focus on Games Engineering & clean code",
-    motivation:
-      "Completed bachelor's degree in Software Engineering (focus on Games Engineering) and practical experience in C#, .NET and Unity - with a strong focus on clean code, refactoring and high-quality, maintainable software.",
-    github: "https://github.com/062Leo",
   },
   about: {
     title: "About Me",
@@ -59,17 +54,6 @@ export const portfolioData = {
       "During my studies and in practical projects, I gained extensive experience in developing 2D and 3D games with Unity and C# as well as implementing web and desktop applications.",
       "In the process I have worked intensively with clean code, refactoring and improving existing C# and .NET applications.",
       "I place great value on structured ways of working, high-quality software and continuous development - both professionally and personally."
-    ],
-    softSkills: [
-      "Teamwork / Collaboration",
-      "Self-directed way of working",
-      "Structured and analytical way of working",
-      "Willingness to learn / quick comprehension",
-      "Problem-solving skills",
-      "Communication skills",
-      "Agile mindset",
-      "High quality standards",
-      "Motivation and enthusiasm"
     ]
   },
   projects: [

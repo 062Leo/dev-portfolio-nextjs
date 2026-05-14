@@ -89,7 +89,6 @@ export function HomeSection() {
               <span style={{ color: colors.homeSectionSeparator }}>{' /'}</span>
               <span style={{ color: colors.homeSectionBracketText }}>&gt;</span>
             </span>
-            <span className="opacity-0 animate-fade-in-delay-2"> {currentPortfolioData.personal.lastName}</span>
           </h1>
 
           <p
