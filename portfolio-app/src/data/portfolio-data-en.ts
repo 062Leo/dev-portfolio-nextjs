@@ -173,6 +173,51 @@ export const portfolioData = {
       ]
     },
     {
+      id: "food-check-scanner-app",
+      title: "FoodCheck Scanner App",
+      subtitle: "Barcode scanner for ingredient analysis & NOVA classification",
+      description: "Mobile app (Expo) for scanning food barcodes and quickly evaluating ingredients, additives, and processing level.",
+      longDescription:
+        "FoodCheck is a React Native (Expo) app that recognizes EAN barcodes via the camera, caches product data locally, and checks ingredients for health-related risk factors.\n\n" +
+        "The app combines local SQLite persistence, on-device ML Kit OCR for ingredient scans, and lookups against the Open Food Facts API. It includes an extensive red-flag system with 683 predefined rules, multilingual ingredient displays, and NOVA / Nutri-Score classification. Users can edit products and contribute directly to Open Food Facts.\n\n" +
+        "It is ideal for quick checks in the supermarket or for structured data collection and editing.\n\n" +
+        "The app is currently not published in an app store and has not been released to the general public; a later release is possible. Anyone who still wants to use it can build and use it at their own risk or download a ready-made build from the GitHub releases.",
+      image: "/Bilder/FoodCheck/AppIcon.png",
+      images: [] as ProjectImage[], 
+      detailComponent: "",
+      videos: [],
+      tags: ["React Native", "Expo", "Mobile App", "Food Tech", "Health"],
+      features: [
+        "Instant camera scanning of EAN-8 / EAN-13 barcodes",
+        "Cache-first architecture with a local SQLite database (offline capable)",
+        "Red-flag detection (683 seed rules) for concerning ingredients and additives",
+        "NOVA and Nutri-Score classification with color coding",
+        "OCR-assisted ingredient and nutrition capture (on-device ML Kit + OFF OCR fallback)",
+        "Multilingual ingredient display and automatic translations (DeepL / MyMemory)",
+        "Favorites, filter rules, and export/import (backup)"
+      ],
+      techStack: ["TypeScript", "Expo", "React Native", "Zustand", "expo-sqlite", "ML Kit OCR", "Open Food Facts API", "Robotoff", "DeepL / MyMemory"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "https://github.com/062Leo/FoodCheck-Scanner/releases/download/Release/FoodCheck_V1.0.apk",
+      githubUrl: "https://github.com/062Leo/FoodCheck-Scanner",
+      videoBig: "/Videos/Big/FoodCheck_Video.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Seed rules", value: "683 predefined rules" },
+        { icon: "Zap", label: "OCR", value: "On-device ML Kit + OFF OCR" },
+        { icon: "Code", label: "Tests", value: "23 test suites, 265 tests" },
+        { icon: "Clock", label: "Architecture", value: "Offline-first · Expo SDK 54" }
+      ]
+    },    
+    {
       id: "broforce-clone",
       title: "BoomForce",
       subtitle: "(Broforce clone)",

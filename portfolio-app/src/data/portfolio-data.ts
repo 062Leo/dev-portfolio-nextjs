@@ -166,9 +166,9 @@ export const portfolioData = {
         "Die App kombiniert lokale SQLite-Persistence, on-device ML Kit OCR für Zutaten-Scans sowie Recherchen gegen die Open Food Facts API. Sie bietet ein umfangreiches Red-Flag-System mit 683 vordefinierten Regeln, mehrsprachige Zutatenanzeigen und eine NOVA-/Nutri-Score-Klassifikation. Benutzer können Produkte bearbeiten und direkt an Open Food Facts beitragen.\n\n" +
         "Ideal für den schnellen Check im Supermarkt oder zur strukturierten Datensammlung und -bearbeitung.\n\n" +
         "Die App ist derzeit nicht in einem App Store veröffentlicht und wurde nicht für die breite Öffentlichkeit bereitgestellt; eine spätere Veröffentlichung ist möglich. Wer sie dennoch nutzen möchte, kann sie auf eigenes Risiko selbst bauen und verwenden oder einen fertigen Build aus den GitHub-Releases beziehen.",
-      image: "/Bilder/dummy.png",//XX
-      images: [] as ProjectImage[], //XX
-      detailComponent: "",//XX
+      image: "/Bilder/FoodCheck/AppIcon.png",
+      images: [] as ProjectImage[], 
+      detailComponent: "",
       videos: [],
       tags: ["React Native", "Expo", "Mobile App", "Food Tech", "Health"],
       features: [
@@ -181,19 +181,19 @@ export const portfolioData = {
         "Favoriten, Filter-Regeln und Export/Import (Backup)"
       ],
       techStack: ["TypeScript", "Expo", "React Native", "Zustand", "expo-sqlite", "ML Kit OCR", "Open Food Facts API", "Robotoff", "DeepL / MyMemory"],
-      demoLink: "",//XX
-      demoImage: "",//XX
-      demoDownload: "",//XX
-      githubUrl: "",//XX
-      videoBig: "",//XX
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "https://github.com/062Leo/FoodCheck-Scanner/releases/download/Release/FoodCheck_V1.0.apk",
+      githubUrl: "https://github.com/062Leo/FoodCheck-Scanner",
+      videoBig: "/Videos/Big/FoodCheck_Video.mp4",
       custom1Link: "",
       custom1BTNText: "",
       customLabel: "",
-      demotext: "",//XX
-      demoControls: [],//XX
-      misctext: "",//XX
-      miscimage: "",//XX
-      miscTitle: "",//XX
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
       stats: [
         { icon: "Layers", label: "Seed-Regeln", value: "683 vordefinierte Regeln" },
         { icon: "Zap", label: "OCR", value: "On-device ML Kit + OFF OCR" },
