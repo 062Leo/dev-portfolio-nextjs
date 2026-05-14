@@ -171,6 +171,51 @@ export const portfolioData = {
       ]
     },
     {
+      id: "food-check-scanner-app",
+      title: "FoodCheck Scanner App",
+      subtitle: "Barcode-Scanner für Zutatenanalyse & NOVA-Einstufung",
+      description: "Mobile App (Expo) zum Scannen von Lebensmittel-Barcodes und zur schnellen Bewertung von Zutaten, Additiven und Verarbeitungsgrad.",
+      longDescription:
+        "FoodCheck ist eine React Native (Expo) App, die per Kamera EAN-Barcodes erkennt, Produktdaten lokal cached und Zutaten auf gesundheitliche Risikofaktoren prüft.\n\n" +
+        "Die App kombiniert lokale SQLite-Persistence, on-device ML Kit OCR für Zutaten-Scans sowie Recherchen gegen die Open Food Facts API. Sie bietet ein umfangreiches Red-Flag-System mit 683 vordefinierten Regeln, mehrsprachige Zutatenanzeigen und eine NOVA-/Nutri-Score-Klassifikation. Benutzer können Produkte bearbeiten und direkt an Open Food Facts beitragen.\n\n" +
+        "Ideal für den schnellen Check im Supermarkt oder zur strukturierten Datensammlung und -bearbeitung.\n\n" +
+        "Die App ist derzeit nicht in einem App Store veröffentlicht und wurde nicht für die breite Öffentlichkeit bereitgestellt; eine spätere Veröffentlichung ist möglich. Wer sie dennoch nutzen möchte, kann sie auf eigenes Risiko selbst bauen und verwenden oder einen fertigen Build aus den GitHub-Releases beziehen.",
+      image: "/Bilder/dummy.png",//XX
+      images: [] as ProjectImage[], //XX
+      detailComponent: "",//XX
+      videos: [],
+      tags: ["React Native", "Expo", "Mobile App", "Food Tech", "Health"],
+      features: [
+        "Sofortiges Kamera-Scanning von EAN-8/EAN-13 Barcodes",
+        "Cache-first Architektur mit lokaler SQLite-Datenbank (offline-fähig)",
+        "Red-Flag-Erkennung (683 Seed-Regeln) für bedenkliche Zutaten und Additive",
+        "NOVA- und Nutri-Score-Einstufung mit Farbcodierung",
+        "OCR-gestützte Zutaten- und Nährwerterfassung (on-device ML Kit + OFF OCR-Fallback)",
+        "Mehrsprachige Zutatenanzeige & automatische Übersetzungen (DeepL / MyMemory)",
+        "Favoriten, Filter-Regeln und Export/Import (Backup)"
+      ],
+      techStack: ["TypeScript", "Expo", "React Native", "Zustand", "expo-sqlite", "ML Kit OCR", "Open Food Facts API", "Robotoff", "DeepL / MyMemory"],
+      demoLink: "",//XX
+      demoImage: "",//XX
+      demoDownload: "",//XX
+      githubUrl: "",//XX
+      videoBig: "",//XX
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
+      demotext: "",//XX
+      demoControls: [],//XX
+      misctext: "",//XX
+      miscimage: "",//XX
+      miscTitle: "",//XX
+      stats: [
+        { icon: "Layers", label: "Seed-Regeln", value: "683 vordefinierte Regeln" },
+        { icon: "Zap", label: "OCR", value: "On-device ML Kit + OFF OCR" },
+        { icon: "Code", label: "Tests", value: "23 Test-Suiten, 265 Tests" },
+        { icon: "Clock", label: "Architektur", value: "Offline-first · Expo SDK 54" }
+      ]
+    },
+    {
       id: "broforce-clone",
       title: "BoomForce",
       subtitle:"(Broforce Klon)",

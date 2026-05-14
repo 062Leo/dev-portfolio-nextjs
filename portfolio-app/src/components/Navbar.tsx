@@ -74,14 +74,12 @@ export function Navbar() {
           { name: "Über mich", href: "/#about" },
           // { name: "Skills", href: "/#skills" },
           { name: "Projekte", href: "/projects" },
-          { name: "Kontakt", href: contactHref },
         ]
       : [
           { name: "Home", href: "/" },
           { name: "About", href: "/#about" },
           // { name: "Skills", href: "/#skills" },
           { name: "Projects", href: "/projects" },
-          { name: "Contact", href: contactHref },
         ];
 
   return (
@@ -110,7 +108,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden space-x-8 md:flex flex-1 ml-160">
+        <div className="hidden space-x-8 md:flex flex-1 ml-185">
           {navItems.map((item) => (
             <Link
               key={item.name}
