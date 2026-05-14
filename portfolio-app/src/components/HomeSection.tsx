@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { } from "react";
 import { ArrowDown } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
@@ -10,17 +10,9 @@ import { useLanguage } from "@/context/LanguageContext";
 const hoverText = " onClick={reload}";
 
 export function HomeSection() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const [isReady, setIsReady] = useState(false);
+  const isReady = true;
   const { language } = useLanguage();
-  const colors = useThemeColors(isDarkMode);
-
-  useEffect(() => {
-    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDarkMode(prefersDark);
-
-    setIsReady(true);
-  }, []);
+  const colors = useThemeColors(true);
 
   const handleScrollClick = () => {
     const aboutSection = document.getElementById("about");

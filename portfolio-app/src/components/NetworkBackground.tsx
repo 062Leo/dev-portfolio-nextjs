@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { getColor } from "@/components/colors";
 
 type ShiftState = {
@@ -40,27 +40,6 @@ const MAX_SHIFT_DURATION = 2000;
 
 export function NetworkBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(true);
-
-  useEffect(() => {
-    if (typeof document === "undefined") {
-      return;
-    }
-
-    const handleThemeChange = () => {
-      setIsDarkMode(document.documentElement.classList.contains("dark"));
-    };
-
-    const observer = new MutationObserver(handleThemeChange);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    handleThemeChange();
-
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -78,7 +57,7 @@ export function NetworkBackground() {
     const target: Target = { x: 0, y: 0 };
     let animationFrameId = 0;
     let points: Point[] = [];
-    const colors = getColor(isDarkMode);
+    const colors = getColor(true);
     const strokeBase = colors.networkStroke;
     const circleBase = colors.networkCircle;
 
@@ -256,15 +235,10 @@ export function NetworkBackground() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
     };
-  }, [isDarkMode]);
+  }, []);
 
   return (
-    <div
-      className="pointer-events-none fixed inset-0 z-0"
-      style={{
-        background: getColor(isDarkMode).networkBackground,
-      }}
-    >
+    <div className="pointer-events-none fixed inset-0 z-0" style={{ background: getColor(true).networkBackground }}>
       <canvas ref={canvasRef} className="h-full w-full" />
     </div>
   );

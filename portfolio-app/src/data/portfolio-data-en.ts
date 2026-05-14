@@ -157,6 +157,79 @@ export const portfolioData = {
       ]
     },
     {
+      id: "food-check-scanner-app",
+      title: "FoodCheck Scanner App",
+      subtitle: "Barcode scanner for ingredient analysis, NOVA classification & nutritional risk assessment",
+      description: "Privacy-first mobile app (Expo/React Native) that scans food barcodes, evaluates ingredients and additives against 683 health rules, and classifies processing levels — no proprietary backend, no tracking, no ads.",
+      longDescription:
+        "FoodCheck is a React Native (Expo) app that recognizes EAN-8/EAN-13 barcodes via the camera, caches product data locally in SQLite, and checks ingredients for health-related risk factors.\n\n" +
+        "The app combines local SQLite persistence, on-device ML Kit OCR for ingredient scans, and lookups against the Open Food Facts API v2. It includes an extensive red-flag system with 683 seed rules across 19 categories (E-numbers, sweeteners, preservatives, emulsifiers, hydrogenated fats, phosphates, etc.), multilingual ingredient displays in 8 languages (de/en/fr/it/es/nl/pt/pl), and NOVA / Nutri-Score classification with color-coded traffic-light ratings. AI-powered insights from Robotoff complement the analysis with confidence-scored predictions for categories, labels, and ingredients.\n\n" +
+        "Users can edit products with OCR-assisted ingredient and nutrition capture (on-device ML Kit or OFF Cloud Vision fallback), auto-translate ingredients via DeepL or MyMemory, and contribute directly to Open Food Facts. A full backup system (JSON export/import) and favorites management round out the feature set.\n\n" +
+        "Privacy is a core principle: there is no FoodCheck-owned server, no user accounts, no cloud sync, no tracking, and no ads. Personal data (favorites, filter rules, settings, API keys) stays exclusively on the device. Product data is fetched from the public Open Food Facts database and cached locally for fast re-access. Uploads to OFF are strictly opt-in and user-initiated.\n\n" +
+        "The architecture is strictly layered (screens → store → domain → infrastructure), follows SOLID principles, and is fully typed in TypeScript strict mode. The app is currently not published in an app store; a later release is possible. Anyone can build it from source or download a build from the GitHub releases.",
+      image: "/Bilder/FoodCheck/AppIcon.png",
+      images: [] as ProjectImage[], 
+      detailComponent: "",
+      videos: [],
+      tags: ["React Native", "Expo", "TypeScript", "Mobile App", "Food Tech", "Health", "Privacy", "OCR", "Open Food Facts"],
+      features: [
+        "Instant camera scanning of EAN-8 / EAN-13 barcodes (expo-camera) with haptic feedback",
+        "Cache-first architecture: local SQLite database with 7-day stale detection for fast re-access",
+        "Traffic-light product rating (Green/Yellow/Red) based on red flags + NOVA score",
+        "Red-flag detection: 683 seed rules in 19 categories (additives, sugars, hydrogenated fats, E-numbers, etc.)",
+        "Custom filter rules: user-defined ingredient keywords and nutrient thresholds with multi-language auto-translation",
+        "NOVA classification (1-4, unprocessed to ultra-processed) and Nutri-Score (A-E), both color-coded",
+        "On-device ML Kit OCR for ingredient lists and nutrition tables with language auto-detection",
+        "OFF Cloud Vision OCR fallback (Google Cloud Vision pipeline via OFF) with crop tool and result editing",
+        "Full product catalog with text search (SQLite LIKE), filter chips (OK/Warning/Critical), sorting, and swipe-to-delete",
+        "Favorites management with inline toggle from product detail and catalog",
+        "Product editing in 8 languages: OCR capture, manual text, auto-translation (DeepL / MyMemory), batch translate",
+        "Optional contribution to Open Food Facts (requires OFF account, stored in SecureStore)",
+        "Robotoff AI insights with confidence-bar visualization",
+        "Multi-language UI: German / English, runtime switch persisted in SecureStore",
+        "Swipeable product image gallery with local file caching (expo-file-system)",
+        "Backup & restore: full SQLite export/import as JSON via native share sheet",
+        "Dark mode first design",
+        "No proprietary backend: no FoodCheck accounts, no cloud sync, no tracking, no ads — personal data never leaves the device"
+      ],
+      techStack: [
+        "TypeScript 5.9 (strict)",
+        "Expo SDK 54 (managed workflow)",
+        "React Native 0.81 + React 19.1",
+        "Expo Router (file-based navigation)",
+        "Zustand 5 (4 stores: filter, catalog, language, settings)",
+        "expo-sqlite 16 (SQLite)",
+        "expo-camera 17 (barcode scanning)",
+        "ML Kit Text Recognition (on-device OCR)",
+        "expo-secure-store (credentials + API keys)",
+        "expo-file-system (image caching)",
+        "Open Food Facts API v2 (read + write)",
+        "Robotoff (AI insights)",
+        "DeepL Free API + MyMemory (translation)",
+        "SymSpell (spell correction for ingredient matching)",
+        "ESLint 10 (flat config) + Prettier 3",
+        "Jest + jest-expo (23 suites, 265 tests)"
+      ],demoLink: "",
+      demoImage: "",
+      demoDownload: "https://github.com/062Leo/FoodCheck-Scanner/releases",
+      githubUrl: "https://github.com/062Leo/FoodCheck-Scanner",
+      videoBig: "/Videos/Big/FoodCheck_Video.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Seed rules", value: "683 rules in 19 categories" },
+        { icon: "Zap", label: "OCR", value: "On-device ML Kit + OFF Cloud Vision" },
+        { icon: "Code", label: "Tests", value: "23 suites, 265 tests" },
+        { icon: "Eye", label: "Privacy", value: "No own backend · No tracking · No ads" }
+      ]
+    },
+    {
       id: "broforce-clone",
       title: "BoomForce",
       subtitle: "(Broforce clone)",

@@ -12,23 +12,16 @@ import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function ProjectsShowcase() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const [isReady, setIsReady] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
   const { language } = useLanguage();
 
   useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDarkMode(prefersDark);
     setIsReady(true);
   }, []);
 
-  const colors = useThemeColors(isDarkMode);
+  const colors = useThemeColors(true);
 
   if (!isReady) {
     return null;

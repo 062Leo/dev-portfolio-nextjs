@@ -46,31 +46,17 @@ export type Project = {
 export const portfolioData = {
   personal: {
     firstName: "Leo",
-    lastName: "",
-    role: "Softwareentwickler (B.Sc. Softwareentwicklung, Schwerpunkt Games Engineering)",
-    tagline: "Unity, C# und .NET - Fokus auf Games Engineering & sauberen Code",
-    motivation: "Abgeschlossenes Bachelorstudium der Softwareentwicklung (Schwerpunkt Games Engineering) und Praxiserfahrung in C#, .NET und Unity - mit starkem Fokus auf Clean Code, Refactoring und qualitativ hochwertige, wartbare Software.",
-    github: "https://github.com/062Leo",
+    role: "Softwareentwickler (B.Sc. Softwareentwicklung, Schwerpunkt Games Engineering) mit Fokus auf AI, Automatisierung und sauberen Code",
   },
   about: {
     title: "About Me",
     description: [
-      "Ich bin Softwareentwickler mit einem erfolgreich abgeschlossenen Bachelor of Science in Softwareentwicklung (Schwerpunkt Games Engineering) an der Hochschule Heilbronn.",
-      "Im Studium und in praxisnahen Projekten habe ich umfangreiche Erfahrung in der Entwicklung von 2D- und 3D-Spielen mit Unity und C# sowie in der Umsetzung von Web- und Desktopanwendungen gesammelt.",
-      "Dabei habe ich mich intensiv mit Clean Code, Refactoring und der Verbesserung bestehender C#- und .NET-Anwendungen auseinandergesetzt.",
-      "Ich lege großen Wert auf strukturierte Arbeitsweisen, qualitativ hochwertige Software und kontinuierliche Weiterentwicklung - sowohl beruflich als auch persönlich."
-    ],
-    softSkills: [
-      "Teamfähigkeit / Kollaboration",
-      "Eigenverantwortliche Arbeitsweise",
-      "Strukturierte und analytische Arbeitsweise",
-      "Lernbereitschaft / Schnelle Auffassungsgabe",
-      "Problemlösungskompetenz",
-      "Kommunikationsfähigkeit",
-      "Agiles Mindset",
-      "Hoher Qualitätsanspruch",
-      "Motivation und Begeisterung"
+      "Ich bin Softwareentwickler mit einem erfolgreich abgeschlossenen Bachelor of Science in Softwareentwicklung an der Hochschule Heilbronn. Meine Bachelorarbeit habe ich mit 1,0 abgeschlossen; der Gesamtdurchschnitt meines Studiums lag bei 2,1.",
+      "Im Studium sowie in praxisnahen privaten Projekten habe ich einige Erfahrung in Unity und C#, aber auch in Web-, Desktop- und Tooling-Projekten gesammelt. Für mich ist Unity kein reines Games-Thema, sondern ein vielseitiges Werkzeug, das in vielen Branchen sinnvoll eingesetzt werden kann.",
+      "Besonders interessieren mich Künstliche Intelligenz, insbesondere ihrem produktiver Einsatz im Arbeitsalltag sowie die Integration von KI in Projekte und Apps. Ebenso wichtig ist mir Automatisierung - etwa mit Python-Skripten, TypeScript-Tools für den Browser oder anderen Workflows, die wiederkehrende Aufgaben reduzieren.",
+      "Ich ergreife gerne Eigeninitiative, denke aktiv mit, treffe Entscheidungen und arbeite selbstständig. Einen Großteil meiner Freizeit nutze ich für Projekte; dazu gehören Planung, Umsetzung und Recherche. Durch diese Arbeit bilde ich mich fortlaufend eigenständig weiter."
     ]
+    
   },
   projects: [
     {
@@ -168,6 +154,79 @@ export const portfolioData = {
         { icon: "DollarSign",   label: "Preis",               value: "Kostenlos" },
         { icon: "Zap",          label: "Laufzeit-Overhead",   value: "Keiner" },
         { icon: "Target",       label: "Objektidentifikation", value: "Hybrid GUID + Pfad" }
+      ]
+    },
+    {
+      id: "food-check-scanner-app",
+      title: "FoodCheck Scanner App",
+      subtitle: "Barcode-Scanner zur Analyse von Zutaten, NOVA-Klassifizierung und Ernährungsrisiko-Bewertung",
+      description: "Datenschutz-erste mobile App (Expo/React Native), die Lebensmittel-Barcodes scannt, Zutaten und Zusatzstoffe gegen 683 Gesundheitsregeln bewertet und Verarbeitungsstufen klassifiziert – ohne proprietären Backend, ohne Tracking, ohne Werbung.",
+      longDescription:
+        "FoodCheck ist eine React Native (Expo) App, die EAN-8/EAN-13 Barcodes via Kamera erkennt, Produktdaten lokal in SQLite zwischenspeichert und Zutaten auf gesundheitliche Risikofaktoren überprüft.\n\n" +
+        "Die App kombiniert lokale SQLite-Persistierung, on-device ML Kit OCR für Zutatenlisten und Abfragen gegen die Open Food Facts API v2. Sie enthält ein umfassendes Risiko-Bewertungssystem mit 683 Kern-Regeln in 19 Kategorien (E-Nummern, Süßstoffe, Konservierungsstoffe, Emulgatoren, gehärtete Fette, Phosphate etc.), mehrsprachige Zutatendarstellungen in 8 Sprachen (de/en/fr/it/es/nl/pt/pl) und NOVA-/Nutri-Score-Klassifizierung mit farblich gekennzeichneten Ampel-Bewertungen. KI-gestützte Insights von Robotoff ergänzen die Analyse mit Confidence-Scores für Kategorien, Labels und Zutaten.\n\n" +
+        "Benutzer können Produkte mit OCR-gestützter Erfassung von Zutaten und Nährwerten bearbeiten (on-device ML Kit oder Cloud Vision über OFF), Zutaten automatisch übersetzen (DeepL oder MyMemory) und direkt zu Open Food Facts beitragen. Ein vollständiges Backup-System (JSON Export/Import) und Favoritenverwaltung runden die Funktionen ab.\n\n" +
+        "Datenschutz ist Kernprinzip: kein eigener Server, keine Benutzerkonten, keine Cloud-Synchronisation, kein Tracking, keine Werbung. Persönliche Daten (Favoriten, Filterregeln, Einstellungen, API-Schlüssel) bleiben ausschließlich auf dem Gerät. Produktdaten werden aus der öffentlichen Open Food Facts Datenbank abgerufen und lokal zwischengespeichert für schnellen Zugriff. Uploads zu OFF sind vollständig optional und benutzergesteuert.\n\n" +
+        "Die Architektur ist streng geschichtet (Screens → Store → Domain → Infrastructure), folgt SOLID-Prinzipien und ist vollständig in TypeScript (Strict Mode) typisiert. Die App ist derzeit nicht im App Store veröffentlicht; eine spätere Veröffentlichung ist möglich. Jeder kann sie aus dem Quellcode bauen oder ein vorkompiliertes Build von den GitHub Releases herunterladen.",
+      image: "/Bilder/FoodCheck/AppIcon.png",
+      images: [] as ProjectImage[], 
+      detailComponent: "",
+      videos: [],
+      tags: ["React Native", "Expo", "TypeScript", "Mobile App", "Food Tech", "Gesundheit", "Datenschutz", "OCR", "Open Food Facts"],
+      features: [
+        "Echtzeitscanning von EAN-8/EAN-13 Barcodes mit haptischem Feedback",
+        "Cache-First-Architektur: lokale SQLite mit intelligenter 7-Tage-Ablauf-Erkennung",
+        "Ampel-Produktbewertung (Grün/Gelb/Rot) basierend auf Warnsignalen + NOVA-Score",
+        "Risiko-Bewertung: 683 Kern-Regeln in 19 Kategorien (Zusatzstoffe, Zucker, gehärtete Fette, E-Nummern, etc.)",
+        "Benutzerdefinierte Filter: Zutaten-Stichwörter und Nährstoff-Schwellenwerte mit mehrsprachiger Auto-Übersetzung",
+        "NOVA-Klassifizierung (1-4, unverarbeitet bis ultra-verarbeitet) und Nutri-Score (A-E), beide farblich gekennzeichnet",
+        "Lokales ML Kit OCR für Zutatenlisten und Nährwertangaben mit automatischer Spracherkennung",
+        "Cloud Vision OCR Fallback mit Crop-Tool und Bearbeitungsfunktion",
+        "Produktkatalog mit Textsuche (SQLite LIKE), Risiko-Filter (OK/Warnung/Kritisch), Sortierung und Wisch-zum-Löschen",
+        "Favoritenverwaltung mit schnellem Toggle aus Produktdetail und Katalog",
+        "Produktbearbeitung in 8 Sprachen: OCR-Erfassung, manuelle Eingabe, Auto-Übersetzung (DeepL/MyMemory), Batch-Übersetzung",
+        "Optionaler Beitrag zu Open Food Facts (erfordert OFF-Konto, gespeichert in SecureStore)",
+        "Robotoff AI Insights mit Confidence-Bar-Visualisierung",
+        "Mehrsprachige Benutzeroberfläche: Deutsch/Englisch, Sprachwechsel jederzeit möglich",
+        "Swipeable Bildergalerie mit lokalem File Caching (expo-file-system)",
+        "Backup & Restore: kompletter SQLite Export/Import als JSON über Native Share Sheet",
+        "Dark Mode First Design",
+        "Privacy-by-Design: kein Backend, keine Cloud-Sync, kein Tracking, keine Ads – Daten bleiben auf dem Gerät"
+      ],
+      techStack: [
+        "TypeScript 5.9 (strict)",
+        "Expo SDK 54 (managed workflow)",
+        "React Native 0.81 + React 19.1",
+        "Expo Router (file-based navigation)",
+        "Zustand 5 (4 stores: filter, catalog, language, settings)",
+        "expo-sqlite 16 (SQLite)",
+        "expo-camera 17 (barcode scanning)",
+        "ML Kit Text Recognition (on-device OCR)",
+        "expo-secure-store (credentials + API keys)",
+        "expo-file-system (image caching)",
+        "Open Food Facts API v2 (read + write)",
+        "Robotoff (AI insights)",
+        "DeepL Free API + MyMemory (translation)",
+        "SymSpell (spell correction for ingredient matching)",
+        "ESLint 10 (flat config) + Prettier 3",
+        "Jest + jest-expo (23 suites, 265 tests)"
+      ],demoLink: "",
+      demoImage: "",
+      demoDownload: "https://github.com/062Leo/FoodCheck-Scanner/releases",
+      githubUrl: "https://github.com/062Leo/FoodCheck-Scanner",
+      videoBig: "/Videos/Big/FoodCheck_Video.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Risiko-Regeln", value: "683 Kern-Regeln in 19 Kategorien" },
+        { icon: "Zap", label: "OCR", value: "On-Device ML Kit + OFF Cloud Vision" },
+        { icon: "Code", label: "Tests", value: "265 Tests über 23 Suites" },
+        { icon: "Eye", label: "Datenschutz", value: "Dezentral · Ohne Tracking · Werbefrei" }
       ]
     },
     {
