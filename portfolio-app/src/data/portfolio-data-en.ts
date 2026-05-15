@@ -45,7 +45,6 @@ export type Project = {
 export const portfolioData = {
   personal: {
     firstName: "Leo",
-    lastName: "",
     role: "Software Developer (B.Sc. Software Engineering, focus on Games Engineering)",
     tagline: "Unity, C# and .NET - Focus on Games Engineering & clean code",
     motivation:
