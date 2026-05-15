@@ -1,5 +1,4 @@
 import { About } from "@/components/About";
-import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 import { HomeSection } from "@/components/HomeSection";
 import { Navbar } from "@/components/Navbar";
@@ -14,7 +13,6 @@ export default function Home() {
       <main className="relative z-10">
         <HomeSection />
         <About />
-        <ContactSection />
       </main>
       <div className="relative z-10">
         <Footer />
