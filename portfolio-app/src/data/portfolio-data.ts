@@ -160,7 +160,7 @@ export const portfolioData = {
       id: "food-check-scanner-app",
       title: "FoodCheck Scanner App",
       subtitle: "Barcode-Scanner zur Analyse von Zutaten, NOVA-Klassifizierung und Ernährungsrisiko-Bewertung",
-      description: "Datenschutz-erste mobile App (Expo/React Native), die Lebensmittel-Barcodes scannt, Zutaten und Zusatzstoffe gegen 683 Gesundheitsregeln bewertet und Verarbeitungsstufen klassifiziert – ohne proprietären Backend, ohne Tracking, ohne Werbung.",
+      description: "Datenschutzorientierte mobile App (Expo/React Native), die Lebensmittel-Barcodes scannt, Zutaten und Zusatzstoffe gegen 683 Gesundheitsregeln bewertet und Verarbeitungsstufen klassifiziert – ohne proprietären Backend, ohne Tracking, ohne Werbung.",
       longDescription:
         "FoodCheck ist eine React Native (Expo) App, die EAN-8/EAN-13 Barcodes via Kamera erkennt, Produktdaten lokal in SQLite zwischenspeichert und Zutaten auf gesundheitliche Risikofaktoren überprüft.\n\n" +
         "Die App kombiniert lokale SQLite-Persistierung, on-device ML Kit OCR für Zutatenlisten und Abfragen gegen die Open Food Facts API v2. Sie enthält ein umfassendes Risiko-Bewertungssystem mit 683 Kern-Regeln in 19 Kategorien (E-Nummern, Süßstoffe, Konservierungsstoffe, Emulgatoren, gehärtete Fette, Phosphate etc.), mehrsprachige Zutatendarstellungen in 8 Sprachen (de/en/fr/it/es/nl/pt/pl) und NOVA-/Nutri-Score-Klassifizierung mit farblich gekennzeichneten Ampel-Bewertungen. KI-gestützte Insights von Robotoff ergänzen die Analyse mit Confidence-Scores für Kategorien, Labels und Zutaten.\n\n" +
