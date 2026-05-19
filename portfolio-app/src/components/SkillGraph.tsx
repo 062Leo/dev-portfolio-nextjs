@@ -192,29 +192,6 @@ export function SkillGraph() {
 
     saveNodesRef.current = nodes;
 
-    // rectangular grid with 50px margin — initial targets
-    const PAD = 50;
-    const cols = 4;
-    const rows = Math.ceil(categories.length / cols);
-    const cw = (width - PAD * 2) / cols;
-    const ch = (height - PAD * 2) / rows;
-
-    targetsRef.current.clear();
-    for (let i = 0; i < categories.length; i++) {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      targetsRef.current.set(i, [
-        PAD + cw / 2 + col * cw,
-        PAD + ch / 2 + row * ch,
-      ]);
-    }
-
-    function groupTarget(i: number) {
-      const t = targetsRef.current.get(i);
-      if (t) return { x: t[0], y: t[1] };
-      return { x: width / 2, y: height / 2 };
-    }
-
     const simulation = forceSimulation<SimNode>(nodes)
       .force(
         "link",
@@ -470,16 +447,9 @@ export function SkillGraph() {
     const onResize = () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
-      const sx = w / width;
-      const sy = h / height;
       width = w;
       height = h;
       svgEl.setAttribute("viewBox", `0 0 ${w} ${h}`);
-
-      // scale existing targets proportionally
-      targetsRef.current.forEach(([tx, ty], key) => {
-        targetsRef.current.set(key, [tx * sx, ty * sy]);
-      });
 
       simulation
         .force("x", forceX<SimNode>(w / 2).strength(0.02))
