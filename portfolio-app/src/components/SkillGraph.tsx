@@ -299,8 +299,12 @@ export function SkillGraph() {
 
     // ── bounding helper ──────────────────────────────────────────────────
     function clampNode(n: SimNode, r: number) {
-      if (n.x != null) n.x = Math.max(r, Math.min(width - r, n.x));
-      if (n.y != null) n.y = Math.max(r, Math.min(height - r, n.y));
+      // soft boundary — push nodes back inside the 40px margin
+      const margin = 40;
+      if (n.x != null && n.x < margin + r) n.vx = (n.vx ?? 0) + (margin + r - n.x) * 0.3;
+      if (n.x != null && n.x > width - margin - r) n.vx = (n.vx ?? 0) - (n.x - (width - margin - r)) * 0.3;
+      if (n.y != null && n.y < margin + r) n.vy = (n.vy ?? 0) + (margin + r - n.y) * 0.3;
+      if (n.y != null && n.y > height - margin - r) n.vy = (n.vy ?? 0) - (n.y - (height - margin - r)) * 0.3;
     }
 
     // ── tick ────────────────────────────────────────────────────────────
@@ -395,9 +399,8 @@ export function SkillGraph() {
       const px = (e.clientX - rect.left) * scaleX;
       const py = (e.clientY - rect.top) * scaleY;
 
-      const r = radiusScale(dragNode.rating);
-      dragNode.fx = Math.max(r, Math.min(width - r, px));
-      dragNode.fy = Math.max(r, Math.min(height - r, py));
+      dragNode.fx = px;
+      dragNode.fy = py;
     }
 
     function onPointerUp(_e: PointerEvent) {
