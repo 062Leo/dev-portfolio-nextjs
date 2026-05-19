@@ -1,11 +1,21 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type ReactNode, useRef } from "react";
 import { Bot, Briefcase, ChartNoAxesCombined, Code, Workflow } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { useThemeColors, type ThemeColorSet } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
+import { SkillGraph, defaultParams, type SkillGraphParams } from "@/components/SkillGraph";
+import { SkillGraphDebug } from "@/components/SkillGraphDebug";
+
+function ratingLegendColor(rating: number): string {
+  const t = (rating - 1) / 4;
+  const r = Math.round(239 - t * (239 - 34));
+  const g = Math.round(68 + t * (197 - 68));
+  const b = Math.round(68 + t * (94 - 68));
+  return `rgb(${r},${g},${b})`;
+}
 
 export function About() {
   const { language } = useLanguage();
@@ -13,6 +23,9 @@ export function About() {
   const colors = useThemeColors(true);
 
   const currentPortfolioData = language === "en" ? portfolioDataEn : portfolioData;
+
+  const paramsRef = useRef<SkillGraphParams>({ ...defaultParams });
+  const rebuildSignalRef = useRef<number>(0);
 
   return (
     <section id="about" className="relative px-4 py-24">
@@ -108,6 +121,34 @@ export function About() {
           </div>
         </div>
       </div>
+
+        {/* Interactive Skill Graph — full width */}
+        <div className="mt-16 w-full">
+          <h3
+            className="mb-4 text-center text-2xl font-bold md:text-3xl"
+            style={{ color: colors.skillsSectionTitleColor }}
+          >
+            {language === "de" ? "Skills & Technologien" : "Skills & Technologies"}
+          </h3>
+          <p className="mb-6 text-center text-sm" style={{ color: colors.skillsSectionButtonInactiveText }}>
+            {language === "de"
+              ? "Klick = auswählen/abwählen · Drag & Drop = ziehen (springt zurück) · Linke Maustaste halten + bewegen = explosive Abstoßung · Auf Leo klicken = alles zurücksetzen"
+              : "Click = select/deselect · Drag & drop = pull (snaps back) · Hold LMB + move = explosive repulsion · Click Leo = reset all"}
+          </p>
+          <SkillGraph paramsRef={paramsRef} rebuildSignalRef={rebuildSignalRef} />
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs" style={{ color: colors.skillsSectionButtonInactiveText }}>
+            <span>{language === "de" ? "Legende:" : "Legend:"}</span>
+            {[1, 2, 3, 4, 5].map((r) => (
+              <span key={r} className="flex items-center gap-1">
+                <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: ratingLegendColor(r) }} />
+                {language === "de"
+                  ? ["kaum", "Basis", "solide", "gut", "sehr gut"][r - 1]
+                  : ["little", "basic", "solid", "good", "expert"][r - 1]}
+              </span>
+            ))}
+          </div>
+        </div>
+        <SkillGraphDebug paramsRef={paramsRef} rebuildSignalRef={rebuildSignalRef} />
     </section>
   );
 }

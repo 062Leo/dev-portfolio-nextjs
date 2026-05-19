@@ -76,19 +76,22 @@ export function Navbar() {
       style={{ backgroundColor: isScrolled ? `${colors.navbarBackground}cc` : "transparent" }}
     >
       <div className="container flex items-center justify-between">
-        <Link href="/" className="flex items-center text-xl font-bold">
-          <span className="relative z-10">
-              <span className="text-glow" style={{ color: colors.navbarTitleColor }}>
-              Leos
+        <Link href="/" className="flex items-center text-xl font-bold group">
+          <span className="relative z-10 flex items-baseline">
+              <span
+                className="text-glow transition-colors duration-300"
+                style={{ color: colors.navbarTitleColor, textShadow: colors.navbarTitleGlow }}
+              >
+              leo
             </span>
             <span
-              className="text-glow"
+              className="text-glow transition-all duration-300"
               style={{
                 color: colors.navbarLinkHover,
                 textShadow: colors.navbarTitleGlow,
               }}
             >
-              {' Portfolio'}
+              {'.dev'}
             </span>
           </span>
         </Link>

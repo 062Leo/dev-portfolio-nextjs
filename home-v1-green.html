@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leo · Portfolio (Green Terminal)</title>
+  <style>
+    /* ─── tokens — dark tech/utility + green accent ──────────────────── */
+    :root {
+      --bg:      oklch(10% 0.018 240);
+      --surface: oklch(14% 0.018 240);
+      --fg:      oklch(94% 0.003 240);
+      --muted:   oklch(58% 0.015 250);
+      --border:  oklch(22% 0.018 250);
+      --accent:  oklch(62% 0.18 150);
+      --accent-dim: oklch(50% 0.14 150);
+
+      --accent-soft: color-mix(in oklch, var(--accent) 14%, transparent);
+      --fg-soft:     color-mix(in oklch, var(--fg) 6%, transparent);
+
+      --font-display: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+      --font-body:    -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+      --fs-h1:   clamp(40px, 6vw, 72px);
+      --fs-h2:   clamp(28px, 3.5vw, 44px);
+      --fs-h3:   19px;
+      --fs-lead: 17px;
+      --fs-body: 15px;
+      --fs-meta: 12px;
+
+      --gap-xs:   8px;
+      --gap-sm:  12px;
+      --gap-md:  20px;
+      --gap-lg:  32px;
+      --gap-xl:  56px;
+      --gap-2xl: 96px;
+      --container: 1100px;
+      --gutter: 32px;
+      --radius: 6px;
+      --radius-lg: 10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: 1.55;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+    p { text-wrap: pretty; }
+    h1, h2, h3 { text-wrap: balance; }
+
+    /* ─── canvas background ──────────────────────────────────────────── */
+    #network-bg {
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ─── layout primitives ──────────────────────────────────────────── */
+    .container { max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+    .section { padding-block: clamp(48px, 8vw, var(--gap-2xl)); position: relative; z-index: 1; }
+    .section + .section { border-top: 1px solid var(--border); }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--gap-lg); }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap-lg); }
+    .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: var(--gap-xl); align-items: start; }
+    @media (max-width: 860px) { .grid-2, .grid-3, .grid-2-1 { grid-template-columns: 1fr; } }
+
+    /* ─── type ───────────────────────────────────────────────────────── */
+    .h1, h1 { font-family: var(--font-display); font-size: var(--fs-h1); line-height: 1.06; letter-spacing: -0.02em; margin: 0; }
+    .h2, h2 { font-family: var(--font-display); font-size: var(--fs-h2); line-height: 1.12; letter-spacing: -0.01em; margin: 0; }
+    .h3, h3 { font-size: var(--fs-h3); font-weight: 600; margin: 0; }
+    .lead { font-size: var(--fs-lead); color: var(--muted); max-width: 60ch; margin: 0; }
+    .eyebrow {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--accent); margin: 0 0 var(--gap-md);
+    }
+    .meta { font-family: var(--font-mono); font-size: var(--fs-meta); color: var(--muted); }
+    .num  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+    /* ─── chrome ─────────────────────────────────────────────────────── */
+    .topnav {
+      position: sticky; top: 0; z-index: 10;
+      background: color-mix(in oklch, var(--bg) 88%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topnav-inner { display: flex; align-items: center; justify-content: space-between; padding-block: 12px; }
+    .topnav .logo { font-family: var(--font-display); font-size: 17px; font-weight: 600; letter-spacing: -0.02em; color: var(--accent); }
+    .topnav nav { display: flex; gap: var(--gap-lg); }
+    .topnav nav a { font-size: 13px; color: var(--muted); letter-spacing: 0.02em; }
+    .topnav nav a:hover { color: var(--fg); }
+    .topnav .lang-toggle {
+      display: flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 4px 10px; color: var(--muted); font-size: 12px;
+    }
+    .topnav .lang-toggle:hover { border-color: var(--accent); color: var(--fg); }
+    .topnav .lang-toggle.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+    .pagefoot {
+      padding-block: var(--gap-xl); position: relative; z-index: 1;
+      color: var(--muted); font-size: 12px; border-top: 1px solid var(--border);
+    }
+
+    /* ─── buttons ────────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: var(--radius);
+      border: 1px solid transparent;
+      font-size: 14px; font-weight: 500; font-family: var(--font-mono);
+      letter-spacing: 0.02em;
+      transition: transform 0.05s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .btn-primary:hover { background: color-mix(in oklch, var(--accent) 85%, black); }
+    .btn-secondary { background: transparent; color: var(--fg); border-color: var(--border); }
+    .btn-secondary:hover { border-color: var(--accent); }
+
+    /* ─── card ───────────────────────────────────────────────────────── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 24px;
+    }
+    .card-flat { background: transparent; border: 0; padding: 0; }
+
+    /* ─── hero ───────────────────────────────────────────────────────── */
+    .hero { padding-block: clamp(100px, 14vw, 180px); }
+    .hero-inner { max-width: 46ch; }
+    .hero .cursor { display: inline-block; width: 3px; height: 1.1em; background: var(--accent); vertical-align: text-bottom; margin-left: 2px; animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .hero .easter-egg { color: var(--accent); font-family: var(--font-mono); font-size: 14px; opacity: 0; transition: opacity 0.2s ease; display: inline; cursor: pointer; }
+    .hero .name-wrapper { display: inline-flex; align-items: baseline; cursor: pointer; position: relative; }
+    .hero .name-wrapper:hover .easter-egg { opacity: 1; }
+    .hero .bracket { color: var(--muted); }
+
+    /* ─── feature cell ───────────────────────────────────────────────── */
+    .feature .feature-mark {
+      width: 32px; height: 32px; display: grid; place-items: center;
+      border: 1px solid var(--accent-soft); border-radius: 6px;
+      color: var(--accent); margin-bottom: var(--gap-sm);
+    }
+    .feature .feature-mark svg { width: 16px; height: 16px; }
+    .feature h3 { margin-bottom: 4px; font-size: 15px; }
+    .feature p  { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+    /* ─── stat ───────────────────────────────────────────────────────── */
+    .stat .stat-num {
+      font-family: var(--font-display); font-size: clamp(44px, 6vw, 72px);
+      line-height: 0.95; letter-spacing: -0.03em; color: var(--accent); font-weight: 600;
+    }
+    .stat .stat-label { color: var(--muted); font-size: 13px; margin-top: 6px; }
+    .stat .stat-unit { font-size: 0.45em; opacity: 0.6; margin-left: 2px; }
+
+    /* ─── pill / tag ─────────────────────────────────────────────────── */
+    .pill {
+      display: inline-flex; align-items: center;
+      padding: 3px 9px; background: var(--accent-soft);
+      color: var(--accent); border-radius: 999px;
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .tag {
+      display: inline-flex; align-items: center;
+      padding: 3px 9px; background: transparent;
+      color: var(--muted); border: 1px solid var(--border);
+      border-radius: 999px; font-size: 11px;
+    }
+
+    /* ─── project card ───────────────────────────────────────────────── */
+    .proj-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .proj-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .proj-card .proj-img { height: 180px; background: var(--bg); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; color: var(--muted);
+      font-family: var(--font-mono); font-size: 11px; }
+    .proj-card .proj-body { padding: 18px; }
+    .proj-card h3 { font-family: var(--font-display); font-size: 15px; letter-spacing: -0.01em; margin-bottom: 4px; }
+    .proj-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .proj-card .proj-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+
+    /* ─── info row ───────────────────────────────────────────────────── */
+    .info-row { display: flex; gap: var(--gap-md); padding: 14px 0; border-bottom: 1px solid var(--border); }
+    .info-row:last-child { border-bottom: 0; }
+    .info-row .info-icon { width: 36px; height: 36px; flex-shrink: 0; display: grid; place-items: center;
+      background: var(--accent-soft); border-radius: 6px; color: var(--accent); }
+    .info-row .info-icon svg { width: 16px; height: 16px; }
+    .info-row h4 { margin: 0 0 2px; font-size: 14px; font-family: var(--font-display); letter-spacing: -0.01em; }
+    .info-row p { margin: 0; color: var(--muted); font-size: 12px; }
+
+    /* ─── consent modal ──────────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: oklch(0% 0 0 / 0.7); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px; max-width: 440px; width: 90%;
+    }
+    .modal-box h3 { font-family: var(--font-display); margin-bottom: 8px; font-size: 16px; }
+    .modal-box p { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0 0 6px; }
+    .modal-box .modal-url { font-family: var(--font-mono); font-size: 11px; color: var(--accent);
+      word-break: break-all; margin: 12px 0; padding: 8px 12px; background: var(--bg); border-radius: var(--radius); }
+    .modal-box .modal-actions { display: flex; gap: var(--gap-sm); margin-top: 16px; justify-content: flex-end; }
+
+    /* ─── scroll hint ────────────────────────────────────────────────── */
+    .scroll-hint {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: var(--muted); font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.06em; animation: float 2s ease-in-out infinite;
+    }
+    .scroll-hint svg { width: 16px; height: 16px; }
+    @keyframes float { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
+
+    /* ─── responsive tweaks ──────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .topnav nav { display: none; }
+      .hero { padding-block: 80px; }
+      .proj-card .proj-img { height: 140px; }
+    }
+
+    /* ─── section label ──────────────────────────────────────────────── */
+    .section-label {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+      color: var(--muted); text-transform: uppercase; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::before { content: ''; width: 20px; height: 1px; background: var(--border); }
+
+    /* ─── fade-in animation ──────────────────────────────────────────── */
+    .fade-in { opacity: 0; transform: translateY(16px); animation: fadeIn 0.6s ease-out forwards; }
+    .fade-in-d1 { animation-delay: 0.15s; }
+    .fade-in-d2 { animation-delay: 0.3s; }
+    .fade-in-d3 { animation-delay: 0.45s; }
+    .fade-in-d4 { animation-delay: 0.6s; }
+    @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <canvas id="network-bg"></canvas>
+
+  <header class="topnav">
+    <div class="container topnav-inner">
+      <span class="logo">&gt; leo<span style="color:var(--muted)">.dev</span></span>
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#projects">Projekte</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:var(--gap-sm);">
+        <button class="lang-toggle active" data-lang="de" onclick="setLang('de')">DE</button>
+        <button class="lang-toggle" data-lang="en" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="content">
+    <!-- ═══ HERO ═══ -->
+    <section class="section hero" id="home" data-od-id="hero">
+      <div class="container hero-inner">
+        <p class="eyebrow fade-in">SOFTWAREENTWICKLER · B.SC · LEO</p>
+        <h1 class="fade-in fade-in-d1">
+          <span class="bracket">&lt;</span><span class="name-wrapper" id="name-easter"><span id="name-text">Leo</span><span class="easter-egg" id="easter-text"> onClick={reload}</span></span><span class="bracket"> /&gt;</span>
+        </h1>
+        <p class="lead fade-in fade-in-d2" style="margin-top:16px;" id="hero-role">Softwareentwickler &amp; Systemarchitekt — Spiele, Web-Apps, KI-Integration und interaktive Systeme.</p>
+        <div class="hero-cta fade-in fade-in-d3" style="margin-top:28px;">
+          <a class="btn btn-primary" href="#projects">→ Projekte ansehen</a>
+          <a class="btn btn-secondary" href="#about">Über mich</a>
+        </div>
+      </div>
+      <div class="scroll-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        scroll
+      </div>
+    </section>
+
+    <!-- ═══ ABOUT ═══ -->
+    <section class="section" id="about" data-od-id="about">
+      <div class="container grid-2-1">
+        <div>
+          <p class="section-label">About</p>
+          <h2>Über <span style="color:var(--accent)">mich</span></h2>
+          <div style="margin-top:20px;color:var(--muted);font-size:14px;line-height:1.7;">
+            <p>Ich bin Softwareentwickler mit einem B.Sc. in Softwareentwicklung von der IU Internationalen Hochschule. Meine Leidenschaft liegt in der Entwicklung kreativer, technisch anspruchsvoller Projekte — von Unity-Spielen über Fullstack-Webanwendungen bis hin zu KI-gestützten Systemen.</p>
+            <p>Neben meiner Arbeit als Entwickler bin ich begeistert von sauberer Architektur, performantem Code und durchdachten User Experiences. Jedes Projekt, das ich anfasse, soll nicht nur funktionieren, sondern Freude am Benutzen vermitteln.</p>
+          </div>
+          <div style="display:flex;gap:var(--gap-lg);margin-top:20px;">
+            <div class="stat"><div class="stat-num">5<span class="stat-unit">+</span></div><p class="stat-label">Jahre Entwicklung</p></div>
+            <div class="stat"><div class="stat-num">15<span class="stat-unit">+</span></div><p class="stat-label">Projekte</p></div>
+            <div class="stat"><div class="stat-num">10<span class="stat-unit">+</span></div><p class="stat-label">Technologien</p></div>
+          </div>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;">
+          <div class="info-row"><div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3H7.8C6.12 3 5.28 3 4.64 3.33C4.07 3.61 3.61 4.07 3.33 4.64C3 5.28 3 6.12 3 7.8V8M8 21H7.8C6.12 21 5.28 21 4.64 20.67C4.07 20.39 3.61 19.93 3.33 19.36C3 18.72 3 17.88 3 16.2V16M21 8V7.8C21 6.12 21 5.28 20.67 4.64C20.39 4.07 19.93 3.61 19.36 3.33C18.72 3 17.88 3 16.2 3H16M21 16V16.2C21 17.88 21 18.72 20.67 19.36C20.39 19.93 19.93 20.39 19.36 20.67C18.72 21 17.88 21 16.2 21H16"/></svg></div><div><h4>Softwareentwicklung</h4><p>Clean Architecture, Web, Desktop &amp; Backend</p></div></div>
+          <div class="info-row"><div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg></div><div><h4>Interaktive Systeme</h4><p>Unity/C#, Spiele &amp; Echtzeitsimulationen</p></div></div>
+          <div class="info-row"><div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2a9 9 0 0 1 9 9c0 5-9 11-9 11S3 16 3 11a9 9 0 0 1 9-9z"/><circle cx="12" cy="11" r="3"/></svg></div><div><h4>KI &amp; Automation</h4><p>ML-Agenten, Python, TypeScript &amp; Browser-Automation</p></div></div>
+          <div class="info-row"><div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><h4>Teamwork &amp; Ownership</h4><p>Agile Methoden, Eigeninitiative &amp; klare Kommunikation</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ PROJECTS ═══ -->
+    <section class="section" id="projects" data-od-id="projects">
+      <div class="container">
+        <p class="section-label">Projects</p>
+        <h2>Ausgewählte <span style="color:var(--accent)">Projekte</span></h2>
+        <p class="lead" style="margin-top:8px;">Eine Auswahl aktueller Arbeiten — Spiele, Tools, KI und Fullstack.</p>
+
+        <div class="grid-3" style="margin-top:var(--gap-xl);">
+          <div class="proj-card">
+            <div class="proj-img" style="background:linear-gradient(135deg,oklch(25% 0.04 280),oklch(15% 0.03 260));">ML Agent · Bachelorarbeit</div>
+            <div class="proj-body">
+              <h3>ML-Agent in Unity</h3>
+              <p>Reinforcement-Learning-Agent (PPO+LSTM), 31 Parkours, Note 1.0</p>
+              <div class="proj-tags"><span class="pill">Unity</span><span class="pill">ML</span><span class="tag">Python</span></div>
+            </div>
+          </div>
+          <div class="proj-card">
+            <div class="proj-img" style="background:linear-gradient(135deg,oklch(22% 0.03 140),oklch(14% 0.03 150));">Play Mode Saver</div>
+            <div class="proj-body">
+              <h3>Play Mode Changes Saver</h3>
+              <p>Unity Asset Store (>750 Sales, 5/5&#9733;), Editor-Tool für Play-Mode-Änderungen</p>
+              <div class="proj-tags"><span class="pill">Unity</span><span class="tag">C#</span></div>
+            </div>
+          </div>
+          <div class="proj-card">
+            <div class="proj-img" style="background:linear-gradient(135deg,oklch(22% 0.04 200),oklch(15% 0.03 180));">FoodCheck App</div>
+            <div class="proj-body">
+              <h3>FoodCheck Scanner</h3>
+              <p>React Native Barcode-Scanner, 683 Regeln, 19 Kategorien, Open Food Facts</p>
+              <div class="proj-tags"><span class="pill">React Native</span><span class="tag">Expo</span></div>
+            </div>
+          </div>
+          <div class="proj-card">
+            <div class="proj-img" style="background:linear-gradient(135deg,oklch(22% 0.05 20),oklch(15% 0.03 10));">BoomForce</div>
+            <div class="proj-body">
+              <h3>BoomForce</h3>
+              <p>Unity 2D Shooter mit Kettenreaktionen &amp; zerstörbarer Umgebung</p>
+              <div class="proj-tags"><span class="pill">Unity 2D</span><span class="tag">C#</span></div>
+            </div>
+          </div>
+          <div class="proj-card">
+            <div class="proj-img" style="background:linear-gradient(135deg,oklch(22% 0.04 60),oklch(15% 0.02 40));">Hide'n Hunt</div>
+            <div class="proj-body">
+              <h3>Hide'n Hunt</h3>
+              <p>4v1 Multiplayer Prop-Hunt mit Unity Netcode</p>
+              <div class="proj-tags"><span class="pill">Unity Netcode</span><span class="tag">C#</span></div>
+            </div>
+          </div>
+          <div class="proj-card" style="border-style:dashed;opacity:0.5;">
+            <div class="proj-img" style="display:flex;align-items:center;justify-content:center;background:var(--bg);">
+              <span style="font-family:var(--font-mono);font-size:24px;color:var(--muted);">+</span>
+            </div>
+            <div class="proj-body" style="text-align:center;">
+              <h3 style="color:var(--muted);">Mehr auf GitHub</h3>
+              <p>Weitere Projekte &amp; Experimente</p>
+              <button class="btn btn-secondary" style="margin-top:8px;font-size:12px;" onclick="openExternal('https://github.com/062Leo', 'GitHub')">→ GitHub</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pagefoot">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--gap-sm);">
+      <span>© 2026 Leo · Alle Rechte vorbehalten</span>
+      <span class="meta">Private Portfolio-Website · Keine personenbezogenen Daten werden gespeichert</span>
+    </div>
+  </footer>
+
+  <!-- ═══ GDPR Consent Modal ═══ -->
+  <div class="modal-overlay" id="consent-modal">
+    <div class="modal-box">
+      <h3>Externer Link</h3>
+      <p>Sie verlassen diese Website und werden auf eine externe Plattform weitergeleitet. Der Betreiber der Zielseite kann personenbezogene Daten verarbeiten.</p>
+      <div class="modal-url" id="consent-url"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button>
+        <button class="btn btn-primary" id="consent-continue" onclick="continueExternal()">Fortfahren →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ─── Language toggle ──────────────────────────────────────────────────
+    let currentLang = 'de';
+    const t = {
+      de: { heroRole: 'Softwareentwickler & Systemarchitekt — Spiele, Web-Apps, KI-Integration und interaktive Systeme.' },
+      en: { heroRole: 'Software Developer & Systems Architect — Games, Web Apps, AI Integration and Interactive Systems.' }
+    };
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-toggle').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+      document.getElementById('hero-role').textContent = t[lang].heroRole;
+    }
+
+    // ─── Easter egg: hover "Leo" → show "onClick={reload}", click → reload ──
+    const nameEaster = document.getElementById('name-easter');
+    nameEaster.addEventListener('click', () => { window.location.reload(); });
+
+    // ─── GDPR consent modal ───────────────────────────────────────────────
+    let pendingUrl = '';
+    const modal = document.getElementById('consent-modal');
+
+    function openExternal(url, label) {
+      pendingUrl = url;
+      document.getElementById('consent-url').textContent = url;
+      modal.classList.add('open');
+    }
+    function closeModal() { modal.classList.remove('open'); pendingUrl = ''; }
+    function continueExternal() { if (pendingUrl) window.open(pendingUrl, '_blank'); closeModal(); }
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+    // ─── Network background canvas ────────────────────────────────────────
+    (function() {
+      const canvas = document.getElementById('network-bg');
+      const ctx = canvas.getContext('2d');
+      let w, h, points = [];
+      let mouseX = -10000, mouseY = -10000;
+      const GRID = 55;
+      const NEIGHBORS = 3;
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+        initPoints();
+      }
+
+      function initPoints() {
+        const cols = Math.floor(w / GRID);
+        const rows = Math.floor(h / GRID);
+        points = [];
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            points.push({
+              x: c * GRID + GRID/2 + (Math.random() - 0.5) * 20,
+              y: r * GRID + GRID/2 + (Math.random() - 0.5) * 20,
+              ox: c * GRID + GRID/2,
+              oy: r * GRID + GRID/2,
+              vx: (Math.random() - 0.5) * 0.3,
+              vy: (Math.random() - 0.5) * 0.3,
+              phase: Math.random() * Math.PI * 2
+            });
+          }
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        const time = Date.now() * 0.001;
+
+        // Move points
+        for (const p of points) {
+          p.x += p.vx;
+          p.y += p.vy;
+          const dx = p.x - p.ox, dy = p.y - p.oy;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist > 15) { p.vx = -p.vx * 0.8; p.vy = -p.vy * 0.8; }
+          p.x += Math.sin(time * 1.3 + p.phase) * 0.15;
+          p.y += Math.cos(time * 1.7 + p.phase) * 0.15;
+        }
+
+        // Build neighbor index (sort by x, connect k-nearest)
+        const sorted = [...points].sort((a,b) => a.x - b.x);
+
+        // Draw lines and points
+        for (let i = 0; i < points.length; i++) {
+          const p = points[i];
+
+          // Find closest neighbors
+          const neighbors = [];
+          // Search nearby in sorted array
+          const idx = sorted.indexOf(p);
+          for (let j = Math.max(0, idx - 8); j < Math.min(sorted.length, idx + 8); j++) {
+            if (sorted[j] === p) continue;
+            const dx = p.x - sorted[j].x, dy = p.y - sorted[j].y;
+            const d = dx*dx + dy*dy;
+            neighbors.push({ point: sorted[j], dist: d });
+          }
+          neighbors.sort((a,b) => a.dist - b.dist);
+
+          for (let k = 0; k < Math.min(NEIGHBORS, neighbors.length); k++) {
+            const n = neighbors[k].point;
+            const mx = (p.x + n.x) / 2, my = (p.y + n.y) / 2;
+            const mDist = (mouseX - mx)*(mouseX - mx) + (mouseY - my)*(mouseY - my);
+
+            let alpha = 0;
+            if (mDist < 4000) alpha = 0.15;
+            else if (mDist < 20000) alpha = 0.05;
+            else if (mDist < 60000) alpha = 0.02;
+
+            if (alpha > 0) {
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(n.x, n.y);
+              ctx.strokeStyle = `oklch(62% 0.18 150 / ${alpha})`;
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+
+          // Draw point
+          const pDist = (mouseX - p.x)*(mouseX - p.x) + (mouseY - p.y)*(mouseY - p.y);
+          let pAlpha = 0;
+          if (pDist < 4000) pAlpha = 0.5;
+          else if (pDist < 20000) pAlpha = 0.2;
+          else if (pDist < 60000) pAlpha = 0.06;
+
+          if (pAlpha > 0) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 1.8, 0, Math.PI * 2);
+            ctx.fillStyle = `oklch(68% 0.06 190 / ${pAlpha})`;
+            ctx.fill();
+          }
+        }
+
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', resize);
+      window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+      window.addEventListener('mouseleave', () => { mouseX = -10000; mouseY = -10000; });
+
+      resize();
+      draw();
+    })();
+  </script>
+</body>
+</html>

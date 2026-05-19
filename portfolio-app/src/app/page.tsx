@@ -1,6 +1,7 @@
 import { About } from "@/components/About";
 import { Footer } from "@/components/Footer";
 import { HomeSection } from "@/components/HomeSection";
+import { HomePreviewSection } from "@/components/HomePreviewSection";
 import { Navbar } from "@/components/Navbar";
 import { NetworkBackground } from "@/components/NetworkBackground";
 import { Toaster } from "@/components/ui/toaster";
@@ -13,6 +14,7 @@ export default function Home() {
       <main className="relative z-10">
         <HomeSection />
         <About />
+        <HomePreviewSection />
       </main>
       <div className="relative z-10">
         <Footer />
