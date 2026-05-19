@@ -1,97 +1,26 @@
 "use client";
 
-import { useEffect, useRef, type MutableRefObject } from "react";
+import { useEffect, useRef, useCallback } from "react";
+import {
+  forceSimulation,
+  forceLink,
+  forceManyBody,
+  forceCollide,
+  forceX,
+  forceY,
+} from "d3-force";
+import type { SimulationNodeDatum, SimulationLinkDatum } from "d3-force";
 import skillsData from "@/../docs/skills_rated.json";
 
-type SkillNode = {
+// ── data types & utilities (shared) ──────────────────────────────────────────
+
+export type SkillNodeData = {
   name: string;
   rating: number;
   category: string;
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
 };
 
-export type SkillGraphParams = {
-  velocityDecay: number;
-  categoryStrength: number;
-  collisionRadius: number;
-  collisionIterations: number;
-  centeringStrength: number;
-  maxRadiusMultiplier: number;
-  innerRingFactor: number;
-  outerRingFactor: number;
-  clusterRadiusMax: number;
-  clusterRadiusBase: number;
-  clusterRadiusScale: number;
-  bubblePadding: number;
-  bubbleMaxExpansionFactor: number;
-  bubbleMinRadius: number;
-  bubbleFillAlpha: number;
-  bubbleStrokeAlpha: number;
-  bubbleStrokeWidth: number;
-  nodeBaseSize: number;
-  nodeRatingScale: number;
-  nodeGlowRadius: number;
-  nodeLabelFontSize: number;
-  nodeLabelTruncate: number;
-  nodeLabelTextAlpha: number;
-  connectionMaxDist: number;
-  connectionBaseAlpha: number;
-  connectionWidth: number;
-  leoSize: number;
-  leoSizeHovered: number;
-  leoGlowLayers: number;
-  catLabelFontSize: number;
-  catLabelLineLength: number;
-  catLabelDotRadius: number;
-  mouseRepulsionRadius: number;
-  explosiveRepulsionStrength: number;
-  linkStrength: number;
-  linkDistance: number;
-};
-
-export const defaultParams: SkillGraphParams = {
-  velocityDecay: 0.69,
-  categoryStrength: 0.012,
-  collisionRadius: 15.5,
-  collisionIterations: 2,
-  centeringStrength: 0.0014,
-  maxRadiusMultiplier: 0.85,
-  innerRingFactor: 0.29,
-  outerRingFactor: 0.95,
-  clusterRadiusMax: 210,
-  clusterRadiusBase: 46,
-  clusterRadiusScale: 3.4,
-  bubblePadding: 15,
-  bubbleMaxExpansionFactor: 4,
-  bubbleMinRadius: 60,
-  bubbleFillAlpha: 0.04,
-  bubbleStrokeAlpha: 0.46,
-  bubbleStrokeWidth: 3.5,
-  nodeBaseSize: 4,
-  nodeRatingScale: 0.7,
-  nodeGlowRadius: 3,
-  nodeLabelFontSize: 8.5,
-  nodeLabelTruncate: 14,
-  nodeLabelTextAlpha: 0.79,
-  connectionMaxDist: 70,
-  connectionBaseAlpha: 0.21,
-  connectionWidth: 0.8,
-  leoSize: 11,
-  leoSizeHovered: 16,
-  leoGlowLayers: 6,
-  catLabelFontSize: 8.5,
-  catLabelLineLength: 17,
-  catLabelDotRadius: 0,
-  mouseRepulsionRadius: 80,
-  explosiveRepulsionStrength: 107,
-  linkStrength: 0.3,
-  linkDistance: 150,
-};
-
-const CATEGORY_COLORS: Record<string, string> = {
+export const CATEGORY_COLORS: Record<string, string> = {
   Programmiersprachen: "rgba(167,139,250,0.25)",
   Frameworks_Plattformen: "rgba(56,189,248,0.25)",
   Game_Development: "rgba(52,211,153,0.25)",
@@ -105,7 +34,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   Soft_Skills_Methoden: "rgba(74,222,128,0.25)",
 };
 
-const CATEGORY_DISPLAY: Record<string, string> = {
+export const CATEGORY_DISPLAY: Record<string, string> = {
   Programmiersprachen: "Sprachen",
   Frameworks_Plattformen: "Frameworks",
   Game_Development: "Game Dev",
@@ -119,7 +48,7 @@ const CATEGORY_DISPLAY: Record<string, string> = {
   Soft_Skills_Methoden: "Soft Skills",
 };
 
-function ratingColor(rating: number): string {
+export function ratingColor(rating: number): string {
   const t = (rating - 1) / 4;
   const r = Math.round(239 - t * (239 - 34));
   const g = Math.round(68 + t * (197 - 68));
@@ -127,18 +56,21 @@ function ratingColor(rating: number): string {
   return `rgb(${r},${g},${b})`;
 }
 
-function ratingBright(rating: number): string {
+export function ratingBright(rating: number): string {
   const t = (rating - 1) / 4;
-  const r = Math.round(255 - t * (239 - 120));
-  const g = Math.round(100 + t * (200 - 100));
-  const b = Math.round(80 + t * (140 - 80));
-  return `rgb(${r},${g},${b})`;
+  const r = 1.0 - t * 0.5;
+  const g = 0.4 + t * 0.5;
+  const b = 0.3 + t * 0.4;
+  return `rgb(${Math.round(r * 255)},${Math.round(g * 255)},${Math.round(b * 255)})`;
 }
 
-// Deep merge: combines bestehendeKeywords + neueKeywords per category
-function deepMergeSkills(): Map<string, Record<string, number>> {
+export function deepMergeSkills(): Map<string, Record<string, number>> {
   const merged = new Map<string, Record<string, number>>();
-  const src = skillsData as any;
+  interface SkillsFile {
+    bestehendeKeywords?: Record<string, Record<string, number>>;
+    neueKeywords?: Record<string, Record<string, number>>;
+  }
+  const src = skillsData as unknown as SkillsFile;
 
   for (const source of [src.bestehendeKeywords, src.neueKeywords]) {
     if (!source) continue;
@@ -154,756 +86,425 @@ function deepMergeSkills(): Map<string, Record<string, number>> {
   return merged;
 }
 
-function computeRingLayout(
-  totalCats: number,
-  cx: number,
-  cy: number,
-  radiusX: number,
-  radiusY: number,
-  params: SkillGraphParams
-): { x: number; y: number }[] {
-  const positions: { x: number; y: number }[] = [];
+// ── graph simulation types ──────────────────────────────────────────────────
 
-  const innerCount = Math.max(2, Math.round(totalCats * 0.3));
-  const outerCount = totalCats - innerCount;
-
-  for (let i = 0; i < innerCount; i++) {
-    const angle = (i / innerCount) * Math.PI * 2 - Math.PI / 2;
-    positions.push({
-      x: cx + Math.cos(angle) * radiusX * params.innerRingFactor,
-      y: cy + Math.sin(angle) * radiusY * params.innerRingFactor,
-    });
-  }
-
-  const outerAngleOffset = Math.PI / outerCount;
-  for (let i = 0; i < outerCount; i++) {
-    const angle = (i / outerCount) * Math.PI * 2 + outerAngleOffset - Math.PI / 2;
-    positions.push({
-      x: cx + Math.cos(angle) * radiusX * params.outerRingFactor,
-      y: cy + Math.sin(angle) * radiusY * params.outerRingFactor,
-    });
-  }
-
-  return positions;
+interface SimNode extends SimulationNodeDatum {
+  id: string;
+  name: string;
+  rating: number;
+  category: string;
+  groupIndex: number;
 }
 
-function buildNodes(
-  width: number,
-  height: number,
-  params: SkillGraphParams
-): { nodes: SkillNode[]; categoryOrigins: Map<string, { x: number; y: number }> } {
-  const allCats = deepMergeSkills();
-  const cx = width / 2;
-  const cy = height / 2;
-  const catOrigins = new Map<string, { x: number; y: number }>();
-
-  const catEntries = Array.from(allCats.entries()).map(([name, skills]) => ({
-    name,
-    skills,
-    count: Object.keys(skills).length,
-  }));
-  catEntries.sort((a, b) => a.count - b.count);
-
-  const catOriginsLocal = new Map<string, { x: number; y: number }>();
-  const radiusX = (width / 2) * params.maxRadiusMultiplier;
-  const radiusY = (height / 2) * params.maxRadiusMultiplier;
-  const ringConfigs = computeRingLayout(catEntries.length, cx, cy, radiusX, radiusY, params);
-
-  catEntries.forEach((cat, i) => {
-    catOriginsLocal.set(cat.name, ringConfigs[i]);
-    catOrigins.set(cat.name, ringConfigs[i]);
-  });
-
-  const nodes: SkillNode[] = [];
-
-  for (const cat of catEntries) {
-    const origin = catOriginsLocal.get(cat.name)!;
-    const skillNames = Object.keys(cat.skills);
-    const clusterRadius = Math.min(params.clusterRadiusMax, params.clusterRadiusBase + skillNames.length * params.clusterRadiusScale);
-
-    skillNames.forEach((name, si) => {
-      const frac = si / Math.max(1, skillNames.length - 1);
-      const localGolden = Math.PI * (3 - Math.sqrt(5));
-      const a = si * localGolden;
-      const d = clusterRadius * (0.18 + frac * 0.82);
-
-      const ox = origin.x + Math.cos(a) * d;
-      const oy = origin.y + Math.sin(a) * d;
-
-      nodes.push({
-        name,
-        rating: cat.skills[name],
-        category: cat.name,
-        x: ox,
-        y: oy,
-        vx: 0,
-        vy: 0,
-      });
-    });
-  }
-
-  return { nodes, categoryOrigins: catOrigins };
+interface SimLink extends SimulationLinkDatum<SimNode> {
+  source: string | SimNode;
+  target: string | SimNode;
 }
 
-export function SkillGraph({
-  paramsRef,
-  rebuildSignalRef,
-}: {
-  paramsRef?: MutableRefObject<SkillGraphParams>;
-  rebuildSignalRef?: MutableRefObject<number>;
-}) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const nodesRef = useRef<SkillNode[]>([]);
-  const catOriginsRef = useRef<Map<string, { x: number; y: number }>>(
-    new Map()
-  );
-  const animRef = useRef<number>(0);
-  const hoverRef = useRef<SkillNode | null>(null);
-  const dragRef = useRef<SkillNode | null>(null);
-  const selectedRef = useRef<SkillNode | null>(null);
-  const mouseRef = useRef({ x: -100, y: -100 });
-  const mouseDownRef = useRef(false);
-  const dragOffsetRef = useRef({ x: 0, y: 0 });
-  const leoPosRef = useRef({ x: 0, y: 0 });
-  const prevRebuildRef = useRef(-1);
+// ── visual constants ────────────────────────────────────────────────────────
+
+const RADIUS_MIN = 5;
+const RADIUS_MAX = 15;
+const LABEL_RATING_THRESHOLD = 3;
+const LINK_DISTANCE = 32;
+const CHARGE_STRENGTH = -45;
+const POSITION_STRENGTH = 0.06;
+const COLLIDE_PADDING = 1.5;
+
+function radiusScale(rating: number): number {
+  return RADIUS_MIN + ((rating - 1) / 4) * (RADIUS_MAX - RADIUS_MIN);
+}
+
+// ── component ───────────────────────────────────────────────────────────────
+
+export function SkillGraph() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const dprRef = useRef<number>(typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
+  const buildSimulation = useCallback(() => {
     const container = containerRef.current;
-    if (!canvas || !container) return;
+    const svgEl = svgRef.current;
+    if (!container || !svgEl) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    let width = container.clientWidth;
+    let height = container.clientHeight;
 
-    function fullResize() {
-      if (!canvas || !ctx) return;
-      const dpr = window.devicePixelRatio || 1;
-      dprRef.current = dpr;
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    svgEl.innerHTML = "";
+    svgEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+    const merged = deepMergeSkills();
+    const categories = Array.from(merged.keys());
+    const catCount = categories.length;
+
+    const nodes: SimNode[] = [];
+    const links: SimLink[] = [];
+
+    categories.forEach((category, ci) => {
+      const skills = merged.get(category)!;
+      const entries = Object.entries(skills).sort((a, b) => b[1] - a[1]);
+
+      const groupNodes: SimNode[] = [];
+      entries.forEach(([name, rating]) => {
+        const node: SimNode = {
+          id: `${category}:${name}`,
+          name,
+          rating,
+          category,
+          groupIndex: ci,
+        };
+        nodes.push(node);
+        groupNodes.push(node);
+      });
+
+      // connect within group — chain + a few cross-links
+      for (let i = 0; i < groupNodes.length - 1; i++) {
+        links.push({ source: groupNodes[i].id, target: groupNodes[i + 1].id });
+      }
+      // extra connections for cohesion
+      for (let i = 0; i < groupNodes.length; i++) {
+        for (let j = i + 2; j < Math.min(i + 5, groupNodes.length); j++) {
+          links.push({ source: groupNodes[i].id, target: groupNodes[j].id });
+        }
+      }
+    });
+
+    // category grid
+    const cols = Math.ceil(Math.sqrt(catCount));
+    const rows = Math.ceil(catCount / cols);
+    const margin = Math.min(width, height) * 0.05;
+
+    function groupCenter(i: number) {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const cw = (width - margin * 2) / cols;
+      const ch = (height - margin * 2) / rows;
+      const stagger = row % 2 === 0 ? 0 : cw * 0.1;
+      return {
+        x: margin + cw / 2 + col * cw + stagger,
+        y: margin + ch / 2 + row * ch,
+      };
     }
 
-    function rebuild() {
-      if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
-      const result = buildNodes(rect.width, rect.height, paramsRef?.current ?? defaultParams);
-      nodesRef.current = result.nodes;
-      catOriginsRef.current = result.categoryOrigins;
+    const simulation = forceSimulation<SimNode>(nodes)
+      .force(
+        "link",
+        forceLink<SimNode, SimLink>(links)
+          .id((d) => d.id)
+          .distance(LINK_DISTANCE)
+      )
+      .force("charge", forceManyBody().strength(CHARGE_STRENGTH))
+      .force(
+        "collide",
+        forceCollide<SimNode>().radius((d) => radiusScale(d.rating) + COLLIDE_PADDING)
+      )
+      .force(
+        "x",
+        forceX<SimNode>((d) => groupCenter(d.groupIndex).x).strength(POSITION_STRENGTH)
+      )
+      .force(
+        "y",
+        forceY<SimNode>((d) => groupCenter(d.groupIndex).y).strength(POSITION_STRENGTH)
+      )
+      .alphaDecay(0.015)
+      .alphaMin(0.001);
+
+    const ns = "http://www.w3.org/2000/svg";
+
+    // glow filters per category
+    const defs = document.createElementNS(ns, "defs");
+    categories.forEach((cat, i) => {
+      const base = CATEGORY_COLORS[cat] || "rgba(167,139,250,0.4)";
+      const glowColor = base.replace(/[\d.]+\)$/, "0.8)");
+      const filter = document.createElementNS(ns, "filter");
+      filter.setAttribute("id", `sg-glow-${i}`);
+      filter.setAttribute("x", "-50%");
+      filter.setAttribute("y", "-50%");
+      filter.setAttribute("width", "200%");
+      filter.setAttribute("height", "200%");
+      filter.innerHTML = [
+        `<feGaussianBlur stdDeviation="3" result="blur"/>`,
+        `<feFlood flood-color="${glowColor}" flood-opacity="0.5" result="color"/>`,
+        `<feComposite in="color" in2="blur" operator="in" result="glow"/>`,
+        `<feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>`,
+      ].join("");
+      defs.appendChild(filter);
+    });
+    svgEl.appendChild(defs);
+
+    // layers
+    const linkLayer = document.createElementNS(ns, "g");
+    const nodeLayer = document.createElementNS(ns, "g");
+    const labelLayer = document.createElementNS(ns, "g");
+    svgEl.appendChild(linkLayer);
+    svgEl.appendChild(nodeLayer);
+    svgEl.appendChild(labelLayer);
+
+    // link elements
+    const linkEls: SVGLineElement[] = [];
+    for (let i = 0; i < links.length; i++) {
+      const line = document.createElementNS(ns, "line");
+      line.setAttribute("stroke", "rgba(167,139,250,0.1)");
+      line.setAttribute("stroke-width", "1");
+      linkLayer.appendChild(line);
+      linkEls.push(line);
     }
 
-    fullResize();
-    leoPosRef.current = {
-      x: canvas.getBoundingClientRect().width / 2,
-      y: canvas.getBoundingClientRect().height / 2,
+    // node + label elements
+    const nodeEls: SVGCircleElement[] = [];
+    const labelEls: SVGTextElement[] = [];
+
+    nodes.forEach((n) => {
+      const r = radiusScale(n.rating);
+      const circle = document.createElementNS(ns, "circle");
+      circle.setAttribute("r", String(r));
+      circle.setAttribute("fill", ratingColor(n.rating));
+      circle.setAttribute("stroke", "rgba(255,255,255,0.2)");
+      circle.setAttribute("stroke-width", "1");
+      circle.setAttribute("filter", `url(#sg-glow-${n.groupIndex})`);
+      circle.style.cursor = "grab";
+      circle.style.transition = "r 0.25s ease, stroke-width 0.25s ease, stroke 0.25s ease";
+
+      const title = document.createElementNS(ns, "title");
+      title.textContent = `${n.name}  (${n.rating}/5)  —  ${CATEGORY_DISPLAY[n.category] || n.category}`;
+      circle.appendChild(title);
+
+      circle.addEventListener("pointerenter", () => {
+        circle.setAttribute("r", String(r * 1.5));
+        circle.setAttribute("stroke", "rgba(255,255,255,0.8)");
+        circle.setAttribute("stroke-width", "2.5");
+        circle.style.cursor = "grab";
+      });
+      circle.addEventListener("pointerleave", () => {
+        circle.setAttribute("r", String(r));
+        circle.setAttribute("stroke", "rgba(255,255,255,0.2)");
+        circle.setAttribute("stroke-width", "1");
+        circle.style.cursor = "default";
+      });
+
+      nodeLayer.appendChild(circle);
+      nodeEls.push(circle);
+
+      if (n.rating >= LABEL_RATING_THRESHOLD) {
+        const text = document.createElementNS(ns, "text");
+        text.textContent = n.name;
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("dy", String(r + 11));
+        text.setAttribute("fill", "rgba(213,220,232,0.65)");
+        text.setAttribute("font-size", String(Math.max(8, r * 0.6)));
+        text.setAttribute("font-family", "monospace");
+        text.setAttribute("pointer-events", "none");
+        labelLayer.appendChild(text);
+        labelEls.push(text);
+      }
+    });
+
+    // ── bounding helper ──────────────────────────────────────────────────
+    function clampNode(n: SimNode, r: number) {
+      if (n.x != null) n.x = Math.max(r, Math.min(width - r, n.x));
+      if (n.y != null) n.y = Math.max(r, Math.min(height - r, n.y));
+    }
+
+    // ── tick ────────────────────────────────────────────────────────────
+    simulation.on("tick", () => {
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        const r = radiusScale(n.rating);
+        clampNode(n, r);
+      }
+
+      for (let i = 0; i < links.length; i++) {
+        const s = links[i].source as SimNode;
+        const t = links[i].target as SimNode;
+        linkEls[i].setAttribute("x1", String(s.x ?? 0));
+        linkEls[i].setAttribute("y1", String(s.y ?? 0));
+        linkEls[i].setAttribute("x2", String(t.x ?? 0));
+        linkEls[i].setAttribute("y2", String(t.y ?? 0));
+      }
+
+      let li = 0;
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        const cx = n.x ?? 0;
+        const cy = n.y ?? 0;
+        nodeEls[i].setAttribute("cx", String(cx));
+        nodeEls[i].setAttribute("cy", String(cy));
+
+        if (n.rating >= LABEL_RATING_THRESHOLD && li < labelEls.length) {
+          const r = radiusScale(n.rating);
+          labelEls[li].setAttribute("x", String(cx));
+          labelEls[li].setAttribute("y", String(cy));
+          labelEls[li].setAttribute("dy", String(r + 11));
+          li++;
+        }
+      }
+    });
+
+    // ── drag ────────────────────────────────────────────────────────────
+    let dragNode: SimNode | null = null;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let nodeStartFx: number | null = null;
+    let nodeStartFy: number | null = null;
+
+    function findNode(px: number, py: number): SimNode | null {
+      // reverse order so topmost (last drawn) is hit first
+      for (let i = nodes.length - 1; i >= 0; i--) {
+        const n = nodes[i];
+        const r = radiusScale(n.rating) + 4; // hit tolerance
+        const dx = (n.x ?? 0) - px;
+        const dy = (n.y ?? 0) - py;
+        if (dx * dx + dy * dy < r * r) return n;
+      }
+      return null;
+    }
+
+    function svgRect() {
+      const svg = svgRef.current;
+      if (!svg) return { left: 0, top: 0, width: 1, height: 1 };
+      return svg.getBoundingClientRect();
+    }
+
+    function onPointerDown(e: PointerEvent) {
+      const rect = svgRect();
+      const scaleX = width / rect.width;
+      const scaleY = height / rect.height;
+      const px = (e.clientX - rect.left) * scaleX;
+      const py = (e.clientY - rect.top) * scaleY;
+
+      const hit = findNode(px, py);
+      if (!hit) return;
+
+      e.preventDefault();
+      dragNode = hit;
+      dragStartX = px;
+      dragStartY = py;
+      nodeStartFx = hit.fx ?? null;
+      nodeStartFy = hit.fy ?? null;
+      hit.fx = hit.x;
+      hit.fy = hit.y;
+      if (svgRef.current) svgRef.current.style.cursor = "grabbing";
+      simulation.alphaTarget(0.3).restart();
+    }
+
+    function onPointerMove(e: PointerEvent) {
+      if (!dragNode) {
+        const rect = svgRect();
+        const scaleX = width / rect.width;
+        const scaleY = height / rect.height;
+        const px = (e.clientX - rect.left) * scaleX;
+        const py = (e.clientY - rect.top) * scaleY;
+        const hit = findNode(px, py);
+        if (svgRef.current) svgRef.current.style.cursor = hit ? "grab" : "default";
+        return;
+      }
+
+      const rect = svgRect();
+      const scaleX = width / rect.width;
+      const scaleY = height / rect.height;
+      const px = (e.clientX - rect.left) * scaleX;
+      const py = (e.clientY - rect.top) * scaleY;
+
+      const r = radiusScale(dragNode.rating);
+      dragNode.fx = Math.max(r, Math.min(width - r, px));
+      dragNode.fy = Math.max(r, Math.min(height - r, py));
+    }
+
+    function onPointerUp(_e: PointerEvent) {
+      if (!dragNode) return;
+      dragNode.fx = nodeStartFx;
+      dragNode.fy = nodeStartFy;
+      dragNode = null;
+      if (svgRef.current) svgRef.current.style.cursor = "default";
+      simulation.alphaTarget(0);
+    }
+
+    svgEl.addEventListener("pointerdown", onPointerDown);
+    svgEl.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+
+    // ── resize ──────────────────────────────────────────────────────────
+    const onResize = () => {
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      width = w;
+      height = h;
+      svgEl.setAttribute("viewBox", `0 0 ${w} ${h}`);
+
+      const rm = Math.min(w, h) * 0.05;
+      const rcw = (w - rm * 2) / cols;
+      const rrows = Math.ceil(catCount / cols);
+      const rch = (h - rm * 2) / rrows;
+
+      simulation
+        .force(
+          "x",
+          forceX<SimNode>((d) => {
+            const col = d.groupIndex % cols;
+            const row = Math.floor(d.groupIndex / cols);
+            const stagger = row % 2 === 0 ? 0 : rcw * 0.1;
+            return rm + rcw / 2 + col * rcw + stagger;
+          }).strength(POSITION_STRENGTH)
+        )
+        .force(
+          "y",
+          forceY<SimNode>((d) => {
+            const row = Math.floor(d.groupIndex / cols);
+            return rm + rch / 2 + row * rch;
+          }).strength(POSITION_STRENGTH)
+        )
+        .alpha(0.3)
+        .restart();
     };
 
-    if (nodesRef.current.length === 0) {
-      rebuild();
-    }
-
-    function getNodes() { return nodesRef.current; }
-
-    // ── Physics + Draw loop ────────────────────────────────────────
-
-    function animate() {
-      if (!ctx || !canvas) return;
-
-      // Check for rebuild signal (checked every frame)
-      if (rebuildSignalRef && prevRebuildRef.current !== rebuildSignalRef.current) {
-        rebuild();
-        prevRebuildRef.current = rebuildSignalRef.current;
-        selectedRef.current = null;
-        dragRef.current = null;
-        hoverRef.current = null;
-      }
-
-      const p = paramsRef?.current ?? defaultParams;
-      const cw = canvas.width / dprRef.current;
-      const ch = canvas.height / dprRef.current;
-      const cxCenter = cw / 2;
-      const cyCenter = ch / 2;
-      const mx = mouseRef.current.x;
-      const my = mouseRef.current.y;
-      const mouseDown = mouseDownRef.current;
-      const dragged = dragRef.current;
-      const hovered = hoverRef.current;
-      const selected = selectedRef.current;
-
-      const leoX = leoPosRef.current.x;
-      const leoY = leoPosRef.current.y;
-
-      const explosive = mouseDown && !selected && !dragged;
-
-      const ns = getNodes();
-
-      // ── 1. Apply forces to nodes ─────────────────────────────────
-
-      for (const n of ns) {
-        if (n === dragged) {
-          n.x = mx - dragOffsetRef.current.x;
-          n.y = my - dragOffsetRef.current.y;
-          n.vx = 0;
-          n.vy = 0;
-          continue;
-        }
-
-        const catOrigin = catOriginsRef.current.get(n.category);
-        if (catOrigin) {
-          n.vx += (catOrigin.x - n.x) * p.categoryStrength;
-          n.vy += (catOrigin.y - n.y) * p.categoryStrength;
-        }
-
-        n.vx += (cxCenter - n.x) * p.centeringStrength;
-        n.vy += (cyCenter - n.y) * p.centeringStrength;
-
-        if (n === hovered && !dragged && !selected) {
-          n.vx += (mx - n.x) * 0.04;
-          n.vy += (my - n.y) * 0.04;
-        }
-
-        // Leo repulsion — push nodes away from center
-        const ldx = n.x - leoX;
-        const ldy = n.y - leoY;
-        const ld = Math.sqrt(ldx * ldx + ldy * ldy);
-        const leoRepelDist = 40;
-        if (ld < leoRepelDist && ld > 0) {
-          const force = ((leoRepelDist - ld) / ld) * 0.18;
-          n.vx += ldx * force;
-          n.vy += ldy * force;
-        }
-
-        // Mouse interaction
-        const mdx = n.x - mx;
-        const mdy = n.y - my;
-        const md = Math.sqrt(mdx * mdx + mdy * mdy);
-        if (md > 0) {
-          if (explosive) {
-            if (md < p.mouseRepulsionRadius) {
-              const force = ((p.mouseRepulsionRadius - md) / p.mouseRepulsionRadius) * p.explosiveRepulsionStrength;
-              n.vx += (mdx / md) * force;
-              n.vy += (mdy / md) * force;
-              n.vx += (Math.random() - 0.5) * 10;
-              n.vy += (Math.random() - 0.5) * 10;
-            }
-          } else {
-            // Docking: attract nodes toward mouse so they're clickable
-            const dockingRadius = 60;
-            if (md < dockingRadius && md > 1) {
-              const force = ((dockingRadius - md) / dockingRadius) * 3;
-              n.vx -= (mdx / md) * force;
-              n.vy -= (mdy / md) * force;
-            }
-          }
-        }
-      }
-
-      // ── 2. Iterative collision detection (position-based, D3-style) ─
-
-      for (let iter = 0; iter < p.collisionIterations; iter++) {
-        for (let i = 0; i < ns.length; i++) {
-          for (let j = i + 1; j < ns.length; j++) {
-            const a = ns[i];
-            const b = ns[j];
-            if (a === dragged || b === dragged) continue;
-            const dx = b.x - a.x;
-            const dy = b.y - a.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const minDist = p.collisionRadius * 2;
-            if (dist < minDist && dist > 0.01) {
-              const strength = 0.5;
-              const shift = ((minDist - dist) / dist) * strength;
-              const fx = dx * shift;
-              const fy = dy * shift;
-              a.x -= fx;
-              a.y -= fy;
-              b.x += fx;
-              b.y += fy;
-            }
-          }
-        }
-      }
-
-      // ── 2.5. Link forces — D3 forceLink: spring between nearby same-category nodes ─
-
-      const linkRange = p.linkDistance * 1.5;
-      for (let i = 0; i < ns.length; i++) {
-        for (let j = i + 1; j < ns.length; j++) {
-          const a = ns[i];
-          const b = ns[j];
-          if (a.category !== b.category) continue;
-          const dx = b.x - a.x;
-          const dy = b.y - a.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < linkRange && dist > 0.01) {
-            const ux = dx / dist;
-            const uy = dy / dist;
-            const f = ((dist - p.linkDistance) / dist) * p.linkStrength;
-            a.vx += ux * f;
-            a.vy += uy * f;
-            b.vx -= ux * f;
-            b.vy -= uy * f;
-          }
-        }
-      }
-
-      // ── 3. Apply velocities with damping ─────────────────────────
-
-      for (const n of ns) {
-        if (n === dragged) continue;
-        n.vx *= p.velocityDecay;
-        n.vy *= p.velocityDecay;
-        n.x += n.vx;
-        n.y += n.vy;
-        n.x = Math.max(16, Math.min(cw - 16, n.x));
-        n.y = Math.max(16, Math.min(ch - 16, n.y));
-      }
-
-      // ── DRAW ─────────────────────────────────────────────────────
-
-      ctx.clearRect(0, 0, cw, ch);
-
-      // Compute live category centroids for drawing
-      const catMeta = new Map<
-        string,
-        {
-          sx: number;
-          sy: number;
-          count: number;
-          avgDist: number;
-          nodes: SkillNode[];
-        }
-      >();
-
-      for (const n of ns) {
-        let m = catMeta.get(n.category);
-        if (!m) {
-          m = { sx: 0, sy: 0, count: 0, avgDist: 0, nodes: [] };
-          catMeta.set(n.category, m);
-        }
-        m.sx += n.x;
-        m.sy += n.y;
-        m.count += 1;
-        m.nodes.push(n);
-      }
-
-      for (const [, m] of catMeta) {
-        m.sx /= m.count;
-        m.sy /= m.count;
-        let sumDist = 0;
-        for (const n of m.nodes) {
-          const dx = n.x - m.sx;
-          const dy = n.y - m.sy;
-          sumDist += Math.sqrt(dx * dx + dy * dy);
-        }
-        m.avgDist = sumDist / m.count;
-      }
-
-      let leoHovered = false;
-      const ldx = leoX - mx;
-      const ldy = leoY - my;
-      if (Math.sqrt(ldx * ldx + ldy * ldy) < 30) leoHovered = true;
-
-      const activeNode = dragged || hovered;
-      const highlightedNode = dragged || selected || hovered;
-
-      // 1. Category bubbles — each group independently
-      for (const [cat, meta] of catMeta) {
-        if (meta.count < 3) continue;
-
-        const cx = meta.sx;
-        const cy = meta.sy;
-        const maxBubbleDist = Math.max(meta.avgDist * p.bubbleMaxExpansionFactor, p.bubbleMinRadius);
-
-        const nearby = meta.nodes.filter((n) => {
-          const dx = n.x - cx;
-          const dy = n.y - cy;
-          return Math.sqrt(dx * dx + dy * dy) <= maxBubbleDist;
-        });
-
-        if (nearby.length < 3) continue;
-
-        const outerPts = nearby.map((n) => {
-          const dx = n.x - cx;
-          const dy = n.y - cy;
-          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          return {
-            x: n.x + (dx / dist) * p.bubblePadding,
-            y: n.y + (dy / dist) * p.bubblePadding,
-          };
-        });
-
-        outerPts.sort(
-          (a, b) =>
-            Math.atan2(a.y - cy, a.x - cx) -
-            Math.atan2(b.y - cy, b.x - cx)
-        );
-
-        ctx.beginPath();
-        if (outerPts.length > 0) {
-          ctx.moveTo(outerPts[0].x, outerPts[0].y);
-          for (let i = 1; i < outerPts.length; i++) {
-            const prev = outerPts[i - 1];
-            const curr = outerPts[i];
-            ctx.quadraticCurveTo(
-              prev.x,
-              prev.y,
-              (prev.x + curr.x) / 2,
-              (prev.y + curr.y) / 2
-            );
-          }
-          const last = outerPts[outerPts.length - 1];
-          const first = outerPts[0];
-          ctx.quadraticCurveTo(
-            last.x,
-            last.y,
-            (last.x + first.x) / 2,
-            (last.y + first.y) / 2
-          );
-        }
-        ctx.closePath();
-
-        ctx.fillStyle = (
-          CATEGORY_COLORS[cat] || "rgba(148,163,184,0.25)"
-        ).replace("0.25", p.bubbleFillAlpha.toFixed(2));
-        ctx.fill();
-
-        ctx.strokeStyle = (
-          CATEGORY_COLORS[cat] || "rgba(148,163,184,0.25)"
-        ).replace("0.25", p.bubbleStrokeAlpha.toFixed(2));
-        ctx.lineWidth = p.bubbleStrokeWidth;
-        ctx.setLineDash([5, 9]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        const displayName = CATEGORY_DISPLAY[cat] || cat;
-
-        let bestIdx = 0;
-        let bestDist = -Infinity;
-        for (let i = 0; i < outerPts.length; i++) {
-          const dx = outerPts[i].x - leoX;
-          const dy = outerPts[i].y - leoY;
-          const d = dx * dx + dy * dy;
-          if (d > bestDist) {
-            bestDist = d;
-            bestIdx = i;
-          }
-        }
-
-        const anchorPt = outerPts[bestIdx];
-        const labelDirX = anchorPt.x - cx;
-        const labelDirY = anchorPt.y - cy;
-        const labelDirLen =
-          Math.sqrt(labelDirX * labelDirX + labelDirY * labelDirY) || 1;
-
-        const labelX = anchorPt.x + (labelDirX / labelDirLen) * p.catLabelLineLength;
-        const labelY = anchorPt.y + (labelDirY / labelDirLen) * p.catLabelLineLength;
-        const lineStartX = anchorPt.x;
-        const lineStartY = anchorPt.y;
-
-        ctx.beginPath();
-        ctx.moveTo(lineStartX, lineStartY);
-        ctx.lineTo(labelX, labelY);
-        ctx.strokeStyle = (
-          CATEGORY_COLORS[cat] || "rgba(148,163,184,0.4)"
-        ).replace("0.25", "0.40");
-        ctx.lineWidth = 1;
-        ctx.setLineDash([2, 4]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        ctx.beginPath();
-        ctx.arc(lineStartX, lineStartY, p.catLabelDotRadius, 0, Math.PI * 2);
-        ctx.fillStyle = (
-          CATEGORY_COLORS[cat] || "rgba(148,163,184,0.5)"
-        ).replace("0.25", "0.50");
-        ctx.fill();
-
-        ctx.font =
-          `600 ${p.catLabelFontSize}px -apple-system, BlinkMacSystemFont, 'JetBrains Mono', sans-serif`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillStyle = (
-          CATEGORY_COLORS[cat] || "rgba(148,163,184,0.7)"
-        ).replace("0.25", "0.70");
-        ctx.fillText(displayName, labelX, labelY);
-      }
-
-      // 2. Leo → category connections
-      for (const [, meta] of catMeta) {
-        ctx.beginPath();
-        ctx.moveTo(leoX, leoY);
-        ctx.lineTo(meta.sx, meta.sy);
-        ctx.strokeStyle = "rgba(167,139,250,0.12)";
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
-      }
-
-      // 3. Inter-node connections (proximity-based, same category)
-      for (let i = 0; i < ns.length; i++) {
-        for (let j = i + 1; j < ns.length; j++) {
-          const a = ns[i];
-          const b = ns[j];
-          if (a.category !== b.category) continue;
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist >= p.connectionMaxDist) continue;
-
-          const isHighlighted =
-            highlightedNode &&
-            (a === highlightedNode || b === highlightedNode);
-          const baseAlpha = p.connectionBaseAlpha;
-          const alpha = baseAlpha * (1 - dist / p.connectionMaxDist);
-          if (alpha <= 0.01) continue;
-
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          if (isHighlighted) {
-            const hi = highlightedNode!;
-            ctx.strokeStyle = ratingBright(hi.rating)
-              .replace("rgb", "rgba")
-              .replace(")", `,${alpha})`);
-          } else {
-            ctx.strokeStyle = `rgba(167,139,250,${alpha})`;
-          }
-          ctx.lineWidth = p.connectionWidth;
-          ctx.stroke();
-        }
-      }
-
-      // 4. Draw nodes with text labels
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      for (const n of ns) {
-        const isActive = n === activeNode;
-        const isHighlighted = n === highlightedNode;
-        const scale = isActive ? 1.35 : 1;
-        const baseSize = p.nodeBaseSize + n.rating * p.nodeRatingScale;
-
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, (baseSize + p.nodeGlowRadius) * scale, 0, Math.PI * 2);
-        if (isHighlighted) {
-          ctx.fillStyle = ratingBright(n.rating)
-            .replace("rgb", "rgba")
-            .replace(")", ",0.50)");
-        } else {
-          ctx.fillStyle = "rgba(167,139,250,0.18)";
-        }
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, baseSize * scale, 0, Math.PI * 2);
-        ctx.fillStyle = isHighlighted
-          ? ratingBright(n.rating)
-          : ratingColor(n.rating);
-        ctx.fill();
-
-        if (isHighlighted) {
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, baseSize * scale + 2.5, 0, Math.PI * 2);
-          ctx.strokeStyle = "rgba(255,255,255,0.85)";
-          ctx.lineWidth = 2;
-          ctx.stroke();
-        }
-
-        const fontSize = p.nodeLabelFontSize;
-        const fontWeight = isHighlighted ? 600 : 400;
-        ctx.font = `${fontWeight} ${fontSize}px -apple-system, BlinkMacSystemFont, 'JetBrains Mono', monospace`;
-        const textAlpha = isHighlighted ? 1 : p.nodeLabelTextAlpha;
-        const textColor = ratingBright(n.rating)
-          .replace("rgb", "rgba")
-          .replace(")", `,${textAlpha})`);
-        ctx.fillStyle = textColor;
-
-        let label = n.name;
-        if (label.length > p.nodeLabelTruncate && !isHighlighted) {
-          label = label.slice(0, p.nodeLabelTruncate - 2) + "\u2026";
-        }
-        ctx.fillText(label, n.x, n.y + baseSize * scale + 8);
-      }
-
-      // 5. Central Leo node
-      {
-        const leoSize = leoHovered ? p.leoSizeHovered : p.leoSize;
-        for (let g = p.leoGlowLayers; g >= 1; g--) {
-          ctx.beginPath();
-          ctx.arc(leoX, leoY, leoSize + g * 7, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(167,139,250,${0.07 / g})`;
-          ctx.fill();
-        }
-        ctx.beginPath();
-        ctx.arc(leoX, leoY, leoSize, 0, Math.PI * 2);
-        ctx.fillStyle = leoHovered
-          ? "rgba(200,180,255,0.95)"
-          : "rgba(167,139,250,0.78)";
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(leoX, leoY, leoSize + 2, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(255,255,255,0.55)";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-        ctx.font = "600 12px -apple-system, BlinkMacSystemFont, sans-serif";
-        ctx.fillStyle = "rgba(255,255,255,1)";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("Leo", leoX, leoY + leoSize + 12);
-      }
-
-      animRef.current = requestAnimationFrame(animate);
-    }
-
-    animate();
-
-    const resizeObserver = new ResizeObserver(() => {
-      fullResize();
-      leoPosRef.current = {
-        x: canvas.getBoundingClientRect().width / 2,
-        y: canvas.getBoundingClientRect().height / 2,
-      };
-      rebuild();
-      selectedRef.current = null;
-      dragRef.current = null;
-      hoverRef.current = null;
-    });
-    resizeObserver.observe(container);
+    window.addEventListener("resize", onResize);
 
     return () => {
-      cancelAnimationFrame(animRef.current);
-      resizeObserver.disconnect();
+      simulation.stop();
+      window.removeEventListener("resize", onResize);
+      svgEl.removeEventListener("pointerdown", onPointerDown);
+      svgEl.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Hit-test ───────────────────────────────────────────────────
-
-  const getNodeAtMouse = (mx: number, my: number): SkillNode | null => {
-    const nodes = nodesRef.current;
-    for (let i = nodes.length - 1; i >= 0; i--) {
-      const n = nodes[i];
-      const dx = n.x - mx;
-      const dy = n.y - my;
-      if (Math.sqrt(dx * dx + dy * dy) < 14) return n;
-    }
-    return null;
-  };
-
-  const deselectNode = (node: SkillNode) => {
-    const catOrigin = catOriginsRef.current.get(node.category);
-    if (catOrigin) {
-      node.vx = (catOrigin.x - node.x) * 0.3;
-      node.vy = (catOrigin.y - node.y) * 0.3;
-    }
-    selectedRef.current = null;
-    hoverRef.current = null;
-    dragRef.current = null;
-  };
-
-  const resetAll = () => {
-    const nodes = nodesRef.current;
-    for (const n of nodes) {
-      const catOrigin = catOriginsRef.current.get(n.category);
-      if (catOrigin) {
-        n.vx = (catOrigin.x - n.x) * 0.12;
-        n.vy = (catOrigin.y - n.y) * 0.12;
-      }
-    }
-    selectedRef.current = null;
-    hoverRef.current = null;
-    dragRef.current = null;
-  };
-
-  // ── Mouse handlers ────────────────────────────────────────────
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    mouseDownRef.current = true;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-    mouseRef.current = { x: mx, y: my };
-
-    // Leo click → reset all
-    const leoX = leoPosRef.current.x;
-    const leoY = leoPosRef.current.y;
-    const distToLeo = Math.sqrt((mx - leoX) ** 2 + (my - leoY) ** 2);
-    if (distToLeo < 34) {
-      resetAll();
-      mouseDownRef.current = true;
-      return;
-    }
-
-    const node = getNodeAtMouse(mx, my);
-    if (node) {
-      if (node === selectedRef.current) {
-        deselectNode(node);
-      } else {
-        if (selectedRef.current) {
-          deselectNode(selectedRef.current);
-        }
-        selectedRef.current = node;
-        dragRef.current = node;
-        hoverRef.current = node;
-        dragOffsetRef.current = { x: mx - node.x, y: my - node.y };
-      }
-    } else {
-      if (selectedRef.current) {
-        deselectNode(selectedRef.current);
-      }
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-    mouseRef.current = { x: mx, y: my };
-
-    if (dragRef.current) {
-      hoverRef.current = dragRef.current;
-    } else {
-      hoverRef.current = getNodeAtMouse(mx, my);
-    }
-  };
-
-  const handleMouseUp = () => {
-    mouseDownRef.current = false;
-    if (dragRef.current) {
-      const n = dragRef.current;
-      const catOrigin = catOriginsRef.current.get(n.category);
-      if (catOrigin) {
-        n.vx = (catOrigin.x - n.x) * 0.15;
-        n.vy = (catOrigin.y - n.y) * 0.15;
-      }
-    }
-    dragRef.current = null;
-    hoverRef.current = getNodeAtMouse(mouseRef.current.x, mouseRef.current.y);
-  };
-
-  const handleMouseLeave = () => {
-    mouseDownRef.current = false;
-    dragRef.current = null;
-    hoverRef.current = null;
-    mouseRef.current = { x: -200, y: -200 };
-  };
+  useEffect(() => {
+    if (cleanupRef.current) cleanupRef.current();
+    const cleanup = buildSimulation();
+    cleanupRef.current = cleanup ?? null;
+    return () => {
+      if (cleanupRef.current) cleanupRef.current();
+    };
+  }, [buildSimulation]);
 
   return (
-    <div ref={containerRef} className="relative w-full" style={{ height: "calc(100vh - 5rem)" }}>
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 h-full w-full cursor-crosshair rounded-xl"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
+    <section id="skills" className="relative w-full py-16 md:py-24">
+      <div className="container mx-auto max-w-7xl px-4">
+        <h2
+          className="mb-2 text-center text-3xl font-bold md:text-4xl"
+          style={{ color: "rgba(239,68,68,1)", textShadow: "0 0 20px rgba(239,68,68,0.35)" }}
+        >
+          Skills &amp; Expertise
+        </h2>
+        <p
+          className="mb-10 text-center text-sm md:text-base"
+          style={{ color: "rgba(213,220,232,0.6)" }}
+        >
+          Jede Blase ist eine Technologie &mdash; je gr&ouml;sser, desto mehr Erfahrung.
+          Ziehe Knoten mit der Maus umher.
+        </p>
+      </div>
+      <div
+        ref={containerRef}
+        className="relative mx-auto w-full max-w-7xl overflow-hidden rounded-xl border"
         style={{
-          background: "rgb(8,10,18)",
-          touchAction: "none",
+          height: "clamp(420px, 55vh, 680px)",
+          borderColor: "rgba(167,139,250,0.25)",
+          backgroundColor: "rgba(11,13,23,0.6)",
         }}
-      />
-    </div>
+      >
+        <svg ref={svgRef} className="h-full w-full" />
+      </div>
+    </section>
   );
 }
