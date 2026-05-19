@@ -5,48 +5,43 @@ import {
   forceSimulation,
   forceLink,
   forceManyBody,
-  forceCollide,
   forceX,
   forceY,
 } from "d3-force";
 import type { SimulationNodeDatum, SimulationLinkDatum, Simulation } from "d3-force";
-import skillsData from "@/../docs/skills_rated.json";
+import skillsData from "@/data/skills_rated.json";
 
-// ── data types & utilities (shared) ──────────────────────────────────────────
+// ── category definitions ────────────────────────────────────────────────────
 
-export type SkillNodeData = {
-  name: string;
-  rating: number;
-  category: string;
-};
+type CatKey = string;
 
-export const CATEGORY_COLORS: Record<string, string> = {
-  Programmiersprachen: "rgba(167,139,250,0.25)",
-  Frameworks_Plattformen: "rgba(56,189,248,0.25)",
-  Game_Development: "rgba(52,211,153,0.25)",
-  AI_ML: "rgba(250,204,21,0.25)",
-  Cloud_DevOps: "rgba(251,146,60,0.25)",
-  Datenbanken: "rgba(129,140,248,0.25)",
-  Tools_IDEs: "rgba(244,114,182,0.25)",
-  Projektmanagement: "rgba(148,163,184,0.25)",
-  Methoden_Konzepte: "rgba(94,234,212,0.25)",
-  Sonstiges_Hardware: "rgba(253,224,71,0.25)",
-  Soft_Skills_Methoden: "rgba(74,222,128,0.25)",
-};
+const CATEGORIES: { key: CatKey; color: string }[] = [
+  { key: ".NET",             color: "rgba(129,140,248,0.25)" },
+  { key: "Architektur",      color: "rgba(99,102,241,0.25)" },
+  { key: "Backend",          color: "rgba(74,222,128,0.25)" },
+  { key: "Daten & SQL",      color: "rgba(14,165,233,0.25)" },
+  { key: "DevOps",           color: "rgba(251,146,60,0.25)" },
+  { key: "Game Design",      color: "rgba(168,85,247,0.25)" },
+  { key: "Hardware",         color: "rgba(245,158,11,0.25)" },
+  { key: "KI & ML",          color: "rgba(250,204,21,0.25)" },
+  { key: "KI-Tools",         color: "rgba(236,72,153,0.25)" },
+  { key: "ML Training",      color: "rgba(253,224,71,0.25)" },
+  { key: "PM",               color: "rgba(148,163,184,0.25)" },
+  { key: "Softw. Engineering",color: "rgba(94,234,212,0.25)" },
+  { key: "Sonstiges",        color: "rgba(156,163,175,0.25)" },
+  { key: "Sprachen",         color: "rgba(167,139,250,0.25)" },
+  { key: "Testing",          color: "rgba(239,68,68,0.25)" },
+  { key: "Tools",            color: "rgba(244,114,182,0.25)" },
+  { key: "Unity",            color: "rgba(52,211,153,0.25)" },
+  { key: "Unity Monet.",     color: "rgba(34,197,94,0.25)" },
+  { key: "Unity Netcode",    color: "rgba(45,212,191,0.25)" },
+  { key: "Web",              color: "rgba(56,189,248,0.25)" },
+];
 
-export const CATEGORY_DISPLAY: Record<string, string> = {
-  Programmiersprachen: "Sprachen",
-  Frameworks_Plattformen: "Frameworks",
-  Game_Development: "Game Dev",
-  AI_ML: "AI & ML",
-  Cloud_DevOps: "Cloud / DevOps",
-  Datenbanken: "Datenbanken",
-  Tools_IDEs: "Tools & IDEs",
-  Projektmanagement: "PM",
-  Methoden_Konzepte: "Methoden",
-  Sonstiges_Hardware: "Sonstiges",
-  Soft_Skills_Methoden: "Soft Skills",
-};
+const CAT_COLOR_MAP: Record<CatKey, string> = {};
+for (const c of CATEGORIES) CAT_COLOR_MAP[c.key] = c.color;
+
+// ── data helpers ────────────────────────────────────────────────────────────
 
 export function ratingColor(rating: number): string {
   const t = (rating - 1) / 4;
@@ -56,34 +51,13 @@ export function ratingColor(rating: number): string {
   return `rgb(${r},${g},${b})`;
 }
 
-export function ratingBright(rating: number): string {
-  const t = (rating - 1) / 4;
-  const r = 1.0 - t * 0.5;
-  const g = 0.4 + t * 0.5;
-  const b = 0.3 + t * 0.4;
-  return `rgb(${Math.round(r * 255)},${Math.round(g * 255)},${Math.round(b * 255)})`;
-}
-
-export function deepMergeSkills(): Map<string, Record<string, number>> {
-  const merged = new Map<string, Record<string, number>>();
-  interface SkillsFile {
-    bestehendeKeywords?: Record<string, Record<string, number>>;
-    neueKeywords?: Record<string, Record<string, number>>;
+function getSkillCategories(): Map<CatKey, Record<string, number>> {
+  const map = new Map<CatKey, Record<string, number>>();
+  const src = skillsData as Record<string, Record<string, number>>;
+  for (const [cat, skills] of Object.entries(src)) {
+    map.set(cat, skills);
   }
-  const src = skillsData as unknown as SkillsFile;
-
-  for (const source of [src.bestehendeKeywords, src.neueKeywords]) {
-    if (!source) continue;
-    for (const [cat, skills] of Object.entries(source)) {
-      if (!merged.has(cat)) merged.set(cat, {});
-      const target = merged.get(cat)!;
-      for (const [name, rating] of Object.entries(skills as Record<string, number>)) {
-        target[name] = rating;
-      }
-    }
-  }
-
-  return merged;
+  return map;
 }
 
 // ── graph simulation types ──────────────────────────────────────────────────
@@ -108,7 +82,6 @@ const RADIUS_MAX = 15;
 const LABEL_RATING_THRESHOLD = 3;
 const LINK_DISTANCE = 28;
 const CHARGE_STRENGTH = -35;
-const COLLIDE_PADDING = 1.5;
 
 function radiusScale(rating: number): number {
   return RADIUS_MIN + ((rating - 1) / 4) * (RADIUS_MAX - RADIUS_MIN);
@@ -133,7 +106,7 @@ export function SkillGraph() {
       if (n.x == null || n.y == null) continue;
       let g = groups.get(n.groupIndex);
       if (!g) {
-        g = { xs: [], ys: [], cat: CATEGORY_DISPLAY[n.category] || n.category };
+        g = { xs: [], ys: [], cat: n.category };
         groups.set(n.groupIndex, g);
       }
       g.xs.push(n.x);
@@ -182,7 +155,7 @@ export function SkillGraph() {
     svgEl.innerHTML = "";
     svgEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
-    const merged = deepMergeSkills();
+    const merged = getSkillCategories();
     const categories = Array.from(merged.keys());
 
     const nodes: SimNode[] = [];
@@ -219,6 +192,22 @@ export function SkillGraph() {
 
     saveNodesRef.current = nodes;
 
+    // rectangular grid with 30px margin
+    const PAD = 50;
+    const cols = 4;
+    const rows = Math.ceil(categories.length / cols);
+    const cw = (width - PAD * 2) / cols;
+    const ch = (height - PAD * 2) / rows;
+
+    function groupTarget(i: number) {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      return {
+        x: PAD + cw / 2 + col * cw,
+        y: PAD + ch / 2 + row * ch,
+      };
+    }
+
     const simulation = forceSimulation<SimNode>(nodes)
       .force(
         "link",
@@ -228,11 +217,13 @@ export function SkillGraph() {
       )
       .force("charge", forceManyBody().strength(CHARGE_STRENGTH))
       .force(
-        "collide",
-        forceCollide<SimNode>().radius((d) => radiusScale(d.rating) + COLLIDE_PADDING)
+        "x",
+        forceX<SimNode>((d) => groupTarget(d.groupIndex).x).strength(0.05)
       )
-      .force("x", forceX<SimNode>(width / 2).strength(0.01))
-      .force("y", forceY<SimNode>(height / 2).strength(0.01))
+      .force(
+        "y",
+        forceY<SimNode>((d) => groupTarget(d.groupIndex).y).strength(0.05)
+      )
       .alphaDecay(0.015)
       .alphaMin(0.001);
 
@@ -243,7 +234,7 @@ export function SkillGraph() {
     // glow filters per category
     const defs = document.createElementNS(ns, "defs");
     categories.forEach((cat, i) => {
-      const base = CATEGORY_COLORS[cat] || "rgba(167,139,250,0.4)";
+      const base = CAT_COLOR_MAP[cat] || "rgba(167,139,250,0.4)";
       const glowColor = base.replace(/[\d.]+\)$/, "0.8)");
       const filter = document.createElementNS(ns, "filter");
       filter.setAttribute("id", `sg-glow-${i}`);
@@ -295,7 +286,7 @@ export function SkillGraph() {
       circle.style.transition = "r 0.25s ease, stroke-width 0.25s ease, stroke 0.25s ease";
 
       const title = document.createElementNS(ns, "title");
-      title.textContent = `${n.name}  (${n.rating}/5)  —  ${CATEGORY_DISPLAY[n.category] || n.category}`;
+      title.textContent = `${n.name}  (${n.rating}/5)  —  ${n.category}`;
       circle.appendChild(title);
 
       circle.addEventListener("pointerenter", () => {
@@ -433,7 +424,8 @@ export function SkillGraph() {
 
     function onPointerUp(_e: PointerEvent) {
       if (!dragNode) return;
-      // keep node fixed where dropped — group stays anchored
+      dragNode.fx = null;
+      dragNode.fy = null;
       dragNode = null;
       if (svgRef.current) svgRef.current.style.cursor = "default";
       simulation.alphaTarget(0);
@@ -481,9 +473,26 @@ export function SkillGraph() {
       height = h;
       svgEl.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
+      const p = 50;
+      const rcw = (w - p * 2) / cols;
+      const rrows = Math.ceil(categories.length / cols);
+      const rch = (h - p * 2) / rrows;
+
       simulation
-        .force("x", forceX<SimNode>(w / 2).strength(0.01))
-        .force("y", forceY<SimNode>(h / 2).strength(0.01))
+        .force(
+          "x",
+          forceX<SimNode>((d) => {
+            const col = d.groupIndex % cols;
+            return p + rcw / 2 + col * rcw;
+          }).strength(0.05)
+        )
+        .force(
+          "y",
+          forceY<SimNode>((d) => {
+            const row = Math.floor(d.groupIndex / cols);
+            return p + rch / 2 + row * rch;
+          }).strength(0.05)
+        )
         .alpha(0.3)
         .restart();
     };
