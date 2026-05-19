@@ -9,7 +9,7 @@ import {
   forceX,
   forceY,
 } from "d3-force";
-import type { SimulationNodeDatum, SimulationLinkDatum } from "d3-force";
+import type { SimulationNodeDatum, SimulationLinkDatum, Simulation } from "d3-force";
 import skillsData from "@/../docs/skills_rated.json";
 
 // ── data types & utilities (shared) ──────────────────────────────────────────
@@ -106,9 +106,8 @@ interface SimLink extends SimulationLinkDatum<SimNode> {
 const RADIUS_MIN = 5;
 const RADIUS_MAX = 15;
 const LABEL_RATING_THRESHOLD = 3;
-const LINK_DISTANCE = 32;
-const CHARGE_STRENGTH = -45;
-const POSITION_STRENGTH = 0.06;
+const LINK_DISTANCE = 28;
+const CHARGE_STRENGTH = -35;
 const COLLIDE_PADDING = 1.5;
 
 function radiusScale(rating: number): number {
@@ -121,6 +120,56 @@ export function SkillGraph() {
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
+  const saveNodesRef = useRef<SimNode[]>([]);
+  const targetsRef = useRef<Map<number, [number, number]>>(new Map());
+  const simRef = useRef<Simulation<SimNode, SimLink> | null>(null);
+
+  const handleSave = useCallback(() => {
+    const nodes = saveNodesRef.current;
+    if (!nodes.length) return;
+
+    const groups = new Map<number, { xs: number[]; ys: number[]; cat: string }>();
+    for (const n of nodes) {
+      if (n.x == null || n.y == null) continue;
+      let g = groups.get(n.groupIndex);
+      if (!g) {
+        g = { xs: [], ys: [], cat: CATEGORY_DISPLAY[n.category] || n.category };
+        groups.set(n.groupIndex, g);
+      }
+      g.xs.push(n.x);
+      g.ys.push(n.y);
+    }
+
+    const lines: string[] = [];
+    const sorted = Array.from(groups.entries()).sort((a, b) => a[0] - b[0]);
+    for (const [idx, g] of sorted) {
+      const avgX = Math.round(g.xs.reduce((s, v) => s + v, 0) / g.xs.length);
+      const avgY = Math.round(g.ys.reduce((s, v) => s + v, 0) / g.ys.length);
+      lines.push(`${idx}: ${avgX}  ${avgY}   // ${g.cat}`);
+      targetsRef.current.set(idx, [avgX, avgY]);
+    }
+
+    // unfix all nodes so simulation re-settles around new targets
+    for (const n of nodes) {
+      n.fx = null;
+      n.fy = null;
+    }
+    simRef.current?.alphaTarget(0.3).restart();
+
+    const output = `TARGETS (saved):\n${lines.join("\n")}\n---\n[${sorted.map(([i, g]) => {
+      const x = Math.round(g.xs.reduce((s, v) => s + v, 0) / g.xs.length);
+      const y = Math.round(g.ys.reduce((s, v) => s + v, 0) / g.ys.length);
+      return `[${x}, ${y}]`;
+    }).join(", ")}]`;
+
+    console.log(output);
+
+    const ta = document.getElementById("sg-save-output") as HTMLTextAreaElement | null;
+    if (ta) {
+      ta.value = output;
+      ta.style.display = "block";
+    }
+  }, []);
 
   const buildSimulation = useCallback(() => {
     const container = containerRef.current;
@@ -135,7 +184,6 @@ export function SkillGraph() {
 
     const merged = deepMergeSkills();
     const categories = Array.from(merged.keys());
-    const catCount = categories.length;
 
     const nodes: SimNode[] = [];
     const links: SimLink[] = [];
@@ -169,22 +217,7 @@ export function SkillGraph() {
       }
     });
 
-    // category grid
-    const cols = Math.ceil(Math.sqrt(catCount));
-    const rows = Math.ceil(catCount / cols);
-    const margin = Math.min(width, height) * 0.05;
-
-    function groupCenter(i: number) {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      const cw = (width - margin * 2) / cols;
-      const ch = (height - margin * 2) / rows;
-      const stagger = row % 2 === 0 ? 0 : cw * 0.1;
-      return {
-        x: margin + cw / 2 + col * cw + stagger,
-        y: margin + ch / 2 + row * ch,
-      };
-    }
+    saveNodesRef.current = nodes;
 
     const simulation = forceSimulation<SimNode>(nodes)
       .force(
@@ -198,16 +231,12 @@ export function SkillGraph() {
         "collide",
         forceCollide<SimNode>().radius((d) => radiusScale(d.rating) + COLLIDE_PADDING)
       )
-      .force(
-        "x",
-        forceX<SimNode>((d) => groupCenter(d.groupIndex).x).strength(POSITION_STRENGTH)
-      )
-      .force(
-        "y",
-        forceY<SimNode>((d) => groupCenter(d.groupIndex).y).strength(POSITION_STRENGTH)
-      )
+      .force("x", forceX<SimNode>(width / 2).strength(0.01))
+      .force("y", forceY<SimNode>(height / 2).strength(0.01))
       .alphaDecay(0.015)
       .alphaMin(0.001);
+
+    simRef.current = simulation;
 
     const ns = "http://www.w3.org/2000/svg";
 
@@ -340,18 +369,13 @@ export function SkillGraph() {
       }
     });
 
-    // ── drag ────────────────────────────────────────────────────────────
+    // ── drag (D3-style: fix single node → link forces pull group) ──────
     let dragNode: SimNode | null = null;
-    let dragStartX = 0;
-    let dragStartY = 0;
-    let nodeStartFx: number | null = null;
-    let nodeStartFy: number | null = null;
 
     function findNode(px: number, py: number): SimNode | null {
-      // reverse order so topmost (last drawn) is hit first
       for (let i = nodes.length - 1; i >= 0; i--) {
         const n = nodes[i];
-        const r = radiusScale(n.rating) + 4; // hit tolerance
+        const r = radiusScale(n.rating) + 4;
         const dx = (n.x ?? 0) - px;
         const dy = (n.y ?? 0) - py;
         if (dx * dx + dy * dy < r * r) return n;
@@ -377,10 +401,7 @@ export function SkillGraph() {
 
       e.preventDefault();
       dragNode = hit;
-      dragStartX = px;
-      dragStartY = py;
-      nodeStartFx = hit.fx ?? null;
-      nodeStartFy = hit.fy ?? null;
+      // fix the node at its current position
       hit.fx = hit.x;
       hit.fy = hit.y;
       if (svgRef.current) svgRef.current.style.cursor = "grabbing";
@@ -412,16 +433,45 @@ export function SkillGraph() {
 
     function onPointerUp(_e: PointerEvent) {
       if (!dragNode) return;
-      dragNode.fx = nodeStartFx;
-      dragNode.fy = nodeStartFy;
+      // keep node fixed where dropped — group stays anchored
       dragNode = null;
       if (svgRef.current) svgRef.current.style.cursor = "default";
       simulation.alphaTarget(0);
     }
 
+    // double-click to release a fixed node
+    function onDblClick(e: MouseEvent) {
+      const rect = svgRect();
+      const scaleX = width / rect.width;
+      const scaleY = height / rect.height;
+      const px = (e.clientX - rect.left) * scaleX;
+      const py = (e.clientY - rect.top) * scaleY;
+
+      const hit = findNode(px, py);
+      if (hit && (hit.fx != null || hit.fy != null)) {
+        hit.fx = null;
+        hit.fy = null;
+        simulation.alphaTarget(0.3).restart();
+      }
+    }
+
     svgEl.addEventListener("pointerdown", onPointerDown);
     svgEl.addEventListener("pointermove", onPointerMove);
+    svgEl.addEventListener("dblclick", onDblClick);
     window.addEventListener("pointerup", onPointerUp);
+
+    // debug coordinate display
+    const onDebugMove = (e: PointerEvent) => {
+      const dbg = document.getElementById("sg-debug-coords");
+      if (!dbg) return;
+      const rect = svgEl.getBoundingClientRect();
+      const scaleX = width / rect.width;
+      const scaleY = height / rect.height;
+      const px = Math.round((e.clientX - rect.left) * scaleX);
+      const py = Math.round((e.clientY - rect.top) * scaleY);
+      dbg.textContent = `x: ${px} \u00a0 y: ${py}`;
+    };
+    svgEl.addEventListener("pointermove", onDebugMove);
 
     // ── resize ──────────────────────────────────────────────────────────
     const onResize = () => {
@@ -431,28 +481,9 @@ export function SkillGraph() {
       height = h;
       svgEl.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
-      const rm = Math.min(w, h) * 0.05;
-      const rcw = (w - rm * 2) / cols;
-      const rrows = Math.ceil(catCount / cols);
-      const rch = (h - rm * 2) / rrows;
-
       simulation
-        .force(
-          "x",
-          forceX<SimNode>((d) => {
-            const col = d.groupIndex % cols;
-            const row = Math.floor(d.groupIndex / cols);
-            const stagger = row % 2 === 0 ? 0 : rcw * 0.1;
-            return rm + rcw / 2 + col * rcw + stagger;
-          }).strength(POSITION_STRENGTH)
-        )
-        .force(
-          "y",
-          forceY<SimNode>((d) => {
-            const row = Math.floor(d.groupIndex / cols);
-            return rm + rch / 2 + row * rch;
-          }).strength(POSITION_STRENGTH)
-        )
+        .force("x", forceX<SimNode>(w / 2).strength(0.01))
+        .force("y", forceY<SimNode>(h / 2).strength(0.01))
         .alpha(0.3)
         .restart();
     };
@@ -461,9 +492,12 @@ export function SkillGraph() {
 
     return () => {
       simulation.stop();
+      simRef.current = null;
       window.removeEventListener("resize", onResize);
       svgEl.removeEventListener("pointerdown", onPointerDown);
       svgEl.removeEventListener("pointermove", onPointerMove);
+      svgEl.removeEventListener("dblclick", onDblClick);
+      svgEl.removeEventListener("pointermove", onDebugMove);
       window.removeEventListener("pointerup", onPointerUp);
     };
   }, []);
@@ -498,12 +532,32 @@ export function SkillGraph() {
         ref={containerRef}
         className="relative mx-auto w-full max-w-7xl overflow-hidden rounded-xl border"
         style={{
-          height: "clamp(420px, 55vh, 680px)",
+          height: "clamp(500px, 70vh, 850px)",
           borderColor: "rgba(167,139,250,0.25)",
           backgroundColor: "rgba(11,13,23,0.6)",
         }}
       >
         <svg ref={svgRef} className="h-full w-full" />
+        <div
+          id="sg-debug-coords"
+          className="pointer-events-none absolute right-2 top-2 rounded bg-black/70 px-2 py-1 font-mono text-xs text-lime-400"
+          style={{ zIndex: 50 }}
+        >
+          x: — &nbsp; y: —
+        </div>
+        <button
+          onClick={handleSave}
+          className="absolute left-2 top-2 z-50 rounded bg-purple-700/80 px-3 py-1 font-mono text-xs text-white transition hover:bg-purple-600"
+        >
+          Save
+        </button>
+        <textarea
+          id="sg-save-output"
+          className="absolute bottom-2 left-2 z-50 hidden w-72 rounded bg-black/85 p-2 font-mono text-[10px] leading-tight text-lime-400"
+          rows={12}
+          readOnly
+          onClick={(e) => (e.target as HTMLTextAreaElement).select()}
+        />
       </div>
     </section>
   );
