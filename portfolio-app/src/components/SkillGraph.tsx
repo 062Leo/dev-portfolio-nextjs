@@ -192,20 +192,27 @@ export function SkillGraph() {
 
     saveNodesRef.current = nodes;
 
-    // rectangular grid with 30px margin
+    // rectangular grid with 50px margin — initial targets
     const PAD = 50;
     const cols = 4;
     const rows = Math.ceil(categories.length / cols);
     const cw = (width - PAD * 2) / cols;
     const ch = (height - PAD * 2) / rows;
 
-    function groupTarget(i: number) {
+    targetsRef.current.clear();
+    for (let i = 0; i < categories.length; i++) {
       const col = i % cols;
       const row = Math.floor(i / cols);
-      return {
-        x: PAD + cw / 2 + col * cw,
-        y: PAD + ch / 2 + row * ch,
-      };
+      targetsRef.current.set(i, [
+        PAD + cw / 2 + col * cw,
+        PAD + ch / 2 + row * ch,
+      ]);
+    }
+
+    function groupTarget(i: number) {
+      const t = targetsRef.current.get(i);
+      if (t) return { x: t[0], y: t[1] };
+      return { x: width / 2, y: height / 2 };
     }
 
     const simulation = forceSimulation<SimNode>(nodes)
@@ -216,14 +223,8 @@ export function SkillGraph() {
           .distance(LINK_DISTANCE)
       )
       .force("charge", forceManyBody().strength(CHARGE_STRENGTH))
-      .force(
-        "x",
-        forceX<SimNode>((d) => groupTarget(d.groupIndex).x).strength(0.05)
-      )
-      .force(
-        "y",
-        forceY<SimNode>((d) => groupTarget(d.groupIndex).y).strength(0.05)
-      )
+      .force("x", forceX<SimNode>(width / 2).strength(0.02))
+      .force("y", forceY<SimNode>(height / 2).strength(0.02))
       .alphaDecay(0.015)
       .alphaMin(0.001);
 
@@ -469,30 +470,20 @@ export function SkillGraph() {
     const onResize = () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
+      const sx = w / width;
+      const sy = h / height;
       width = w;
       height = h;
       svgEl.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
-      const p = 50;
-      const rcw = (w - p * 2) / cols;
-      const rrows = Math.ceil(categories.length / cols);
-      const rch = (h - p * 2) / rrows;
+      // scale existing targets proportionally
+      targetsRef.current.forEach(([tx, ty], key) => {
+        targetsRef.current.set(key, [tx * sx, ty * sy]);
+      });
 
       simulation
-        .force(
-          "x",
-          forceX<SimNode>((d) => {
-            const col = d.groupIndex % cols;
-            return p + rcw / 2 + col * rcw;
-          }).strength(0.05)
-        )
-        .force(
-          "y",
-          forceY<SimNode>((d) => {
-            const row = Math.floor(d.groupIndex / cols);
-            return p + rch / 2 + row * rch;
-          }).strength(0.05)
-        )
+        .force("x", forceX<SimNode>(w / 2).strength(0.02))
+        .force("y", forceY<SimNode>(h / 2).strength(0.02))
         .alpha(0.3)
         .restart();
     };
