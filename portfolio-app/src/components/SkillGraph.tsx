@@ -57,7 +57,6 @@ const RATING_MAX = 5;  // highest possible rating
 
 const RADIUS_MIN = 5;                             // smallest circle radius (px) for rating 1
 const RADIUS_MAX = 15;                            // largest circle radius (px) for rating 5
-const LABEL_RATING_THRESHOLD = 3;                  // minimum rating to render a text label
 const NODE_STROKE_COLOR = "rgba(255,255,255,0.2)"; // normal circle stroke
 const NODE_STROKE_WIDTH = 1;                       // normal stroke width (px)
 const NODE_HOVER_SCALE = 1.5;                      // radius multiplier on pointer enter
@@ -122,14 +121,42 @@ const GLOW_FLOOD_ALPHA = 0.8;  // alpha of the flood colour (replaces category a
 const GLOW_FLOOD_OPACITY = 0.5; // flood-opacity filter attribute
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  LABEL STYLES
+//  LABEL STYLES  —  Jeder Parameter hier einstellbar
 // ══════════════════════════════════════════════════════════════════════════════
 
-const LABEL_OFFSET_Y = 11;                          // px below node centre
-const LABEL_COLOR = "rgba(213,220,232,0.65)";       // text fill
+// ——  Positionierung ————————————————————————————————————————————————————————————
+const LABEL_GAP_NODE = 4;             // px abstand zwischen knotenrand und label-start
+const LABEL_GAP_OTHER_LABEL = 2;      // min px abstand zwischen zwei label-bounding-boxen
+const LABEL_CONNECTOR_LENGTH = 8;     // länge der verbindungslinie vom knotenrand zum label (px)
+const LABEL_TRY_DIRECTIONS = 8;       // wie viele richtungen probiert werden: 4 = N/S/W/O, 8 = +diagonalen
+
+// ——  Text‑Grösse (skaliert linear mit Rating 1…5) ———————————————————————————
+const LABEL_FONT_SIZE_MIN = 5;        // px für Rating 1
+const LABEL_FONT_SIZE_MAX = 14;       // px für Rating 5
 const LABEL_FONT_FAMILY = "monospace";
-const LABEL_FONT_SIZE_MIN = 8;                      // minimum font size (px)
-const LABEL_FONT_SIZE_SCALE = 0.6;                  // multiplier of node radius → font size
+
+// ——  Farben ———————————————————————————————————————————————————————————————————
+const LABEL_COLOR_NORMAL = "rgba(213,220,232,0.55)";  // text-farbe normal
+const LABEL_COLOR_HOVER = "rgba(255,255,255,1)";      // text-farbe wenn knoten gehovert
+
+// ——  Verbindungslinie Label → Knoten —————————————————————————————————————————
+const LABEL_LINE_COLOR = "rgba(192,184,213,0.28)";    // farbe der mini-linie
+const LABEL_LINE_WIDTH = 0.5;                         // strichstärke (px)
+const LABEL_LINE_COLOR_HOVER = "rgba(255,255,255,0.6)"; // linien-farbe bei hover
+const LABEL_LINE_WIDTH_HOVER = 1.0;                   // strichstärke bei hover
+
+// ——  Richtungs‑Priorität (höher = wird zuerst probiert) ——————————————————————
+//      0=unten  1=oben  2=rechts  3=links  4=u.rechts  5=o.rechts  6=u.links  7=o.links
+const LABEL_DIR_PRIORITY: Record<number, number> = {
+  0: 8,   // unten          (bevorzugt)
+  1: 7,   // oben
+  2: 6,   // rechts
+  3: 5,   // links
+  4: 4,   // unten-rechts
+  5: 3,   // oben-rechts
+  6: 2,   // unten-links
+  7: 1,   // oben-links
+};
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  CONTAINER STYLES
@@ -220,6 +247,11 @@ function getSkillCategories(): Map<CatKey, Record<string, number>> {
 function radiusScale(rating: number): number {
   const t = (rating - RATING_MIN) / (RATING_MAX - RATING_MIN);
   return RADIUS_MIN + t * (RADIUS_MAX - RADIUS_MIN);
+}
+
+function labelFontSize(rating: number): number {
+  const t = (rating - RATING_MIN) / (RATING_MAX - RATING_MIN);
+  return Math.round(LABEL_FONT_SIZE_MIN + t * (LABEL_FONT_SIZE_MAX - LABEL_FONT_SIZE_MIN));
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -618,12 +650,14 @@ export function SkillGraph() {
       linkEls.push(line);
     }
 
-    // node + label elements
+    // node + label + connector elements (one label + line per node, always)
     const nodeEls: SVGCircleElement[] = [];
-    const labelEls: SVGTextElement[] = [];
+    const labelEls: SVGTextElement[] = [];      // same length as nodes
+    const labelLineEls: SVGLineElement[] = [];  // same length as nodes, connecting line
 
-    nodes.forEach((n) => {
+    nodes.forEach((n, ni) => {
       const r = radiusScale(n.rating);
+      const fs = labelFontSize(n.rating);
       const circle = document.createElementNS(ns, "circle");
       circle.setAttribute("r", String(r));
       circle.setAttribute("fill", ratingColor(n.rating));
@@ -637,34 +671,53 @@ export function SkillGraph() {
       title.textContent = `${n.name}  (${n.rating}/${RATING_MAX})  —  ${n.category}`;
       circle.appendChild(title);
 
+      // ── connecting line (node edge → label) ───────────────────────────
+      const line = document.createElementNS(ns, "line");
+      line.setAttribute("stroke", LABEL_LINE_COLOR);
+      line.setAttribute("stroke-width", String(LABEL_LINE_WIDTH));
+      line.setAttribute("pointer-events", "none");
+      labelLayer.appendChild(line);
+      labelLineEls.push(line);
+
+      // ── label text ────────────────────────────────────────────────────
+      const text = document.createElementNS(ns, "text");
+      text.textContent = n.name;
+      text.setAttribute("text-anchor", "middle");
+      text.setAttribute("dominant-baseline", "middle");
+      text.setAttribute("fill", LABEL_COLOR_NORMAL);
+      text.setAttribute("font-size", String(fs));
+      text.setAttribute("font-family", LABEL_FONT_FAMILY);
+      text.setAttribute("pointer-events", "none");
+      text.style.transition = "fill 0.25s ease";
+      labelLayer.appendChild(text);
+      labelEls.push(text);
+
+      // ── hover: highlight node + its label + its connector line ─────────
       circle.addEventListener("pointerenter", () => {
         circle.setAttribute("r", String(r * NODE_HOVER_SCALE));
         circle.setAttribute("stroke", NODE_HOVER_STROKE_COLOR);
         circle.setAttribute("stroke-width", String(NODE_HOVER_STROKE_WIDTH));
         circle.style.cursor = "grab";
+        text.setAttribute("fill", LABEL_COLOR_HOVER);
+        text.setAttribute("font-weight", "bold");
+        text.setAttribute("font-size", String(fs * 1.2));
+        labelLineEls[ni].setAttribute("stroke", LABEL_LINE_COLOR_HOVER);
+        labelLineEls[ni].setAttribute("stroke-width", String(LABEL_LINE_WIDTH_HOVER));
       });
       circle.addEventListener("pointerleave", () => {
         circle.setAttribute("r", String(r));
         circle.setAttribute("stroke", NODE_STROKE_COLOR);
         circle.setAttribute("stroke-width", String(NODE_STROKE_WIDTH));
         circle.style.cursor = "default";
+        text.setAttribute("fill", LABEL_COLOR_NORMAL);
+        text.removeAttribute("font-weight");
+        text.setAttribute("font-size", String(fs));
+        labelLineEls[ni].setAttribute("stroke", LABEL_LINE_COLOR);
+        labelLineEls[ni].setAttribute("stroke-width", String(LABEL_LINE_WIDTH));
       });
 
       nodeLayer.appendChild(circle);
       nodeEls.push(circle);
-
-      if (n.rating >= LABEL_RATING_THRESHOLD) {
-        const text = document.createElementNS(ns, "text");
-        text.textContent = n.name;
-        text.setAttribute("text-anchor", "middle");
-        text.setAttribute("dy", String(r + LABEL_OFFSET_Y));
-        text.setAttribute("fill", LABEL_COLOR);
-        text.setAttribute("font-size", String(Math.max(LABEL_FONT_SIZE_MIN, r * LABEL_FONT_SIZE_SCALE)));
-        text.setAttribute("font-family", LABEL_FONT_FAMILY);
-        text.setAttribute("pointer-events", "none");
-        labelLayer.appendChild(text);
-        labelEls.push(text);
-      }
     });
 
     // ── hull paths (one per group, purely visual) ───────────────────────
@@ -746,21 +799,140 @@ export function SkillGraph() {
         linkEls[i].setAttribute("y2", String(t.y ?? 0));
       }
 
-      let li = 0;
+      // ── update node circles ──────────────────────────────────────────
       for (let i = 0; i < nodes.length; i++) {
         const n = nodes[i];
+        nodeEls[i].setAttribute("cx", String(n.x ?? 0));
+        nodeEls[i].setAttribute("cy", String(n.y ?? 0));
+      }
+
+      // ── smart label placement ───────────────────────────────────────
+      const dirAngles = [Math.PI / 2, -Math.PI / 2, 0, Math.PI, Math.PI / 4, -Math.PI / 4, 3 * Math.PI / 4, -3 * Math.PI / 4];
+      const dirTA     = ["middle", "middle", "start", "end", "start", "start", "end", "end"] as const;
+      const dirBL     = ["hanging", "text-bottom", "middle", "middle", "hanging", "text-bottom", "hanging", "text-bottom"] as const;
+      const dirOX     = [0, 0, 4, -4, 4, 4, -4, -4];
+      const dirOY     = [4, -4, 0, 0, 4, -4, 4, -4];
+      const numDirs   = LABEL_TRY_DIRECTIONS >= 8 ? 8 : 4;
+
+      // priority-sorted direction indices
+      const dirByPriority = Array.from({ length: numDirs }, (_, i) => i)
+        .sort((a, b) => (LABEL_DIR_PRIORITY[b] ?? 0) - (LABEL_DIR_PRIORITY[a] ?? 0));
+
+      // build sorted node index list: high rating first (more important labels get best spots)
+      const nodeOrder = nodes.map((_, i) => i).sort((a, b) => nodes[b].rating - nodes[a].rating);
+
+      // helpers for overlap detection
+      function boxesOverlap(a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }) {
+        const g = LABEL_GAP_OTHER_LABEL;
+        return a.x < b.x + b.w + g && a.x + a.w + g > b.x && a.y < b.y + b.h + g && a.y + a.h + g > b.y;
+      }
+      function rectOverlapsCircle(rx: number, ry: number, rw: number, rh: number, cx: number, cy: number, cr: number) {
+        const crp = cr + LABEL_GAP_NODE;
+        const closestX = Math.max(rx, Math.min(cx, rx + rw));
+        const closestY = Math.max(ry, Math.min(cy, ry + rh));
+        const dx = cx - closestX;
+        const dy = cy - closestY;
+        return dx * dx + dy * dy < crp * crp;
+      }
+      function estimateTextSize(text: string, fontSize: number) {
+        return { w: text.length * fontSize * 0.6, h: fontSize * 1.2 };
+      }
+      function textBBox(ax: number, ay: number, ta: string, bl: string, ox: number, oy: number, tw: number, th: number) {
+        const tx = ax + ox;
+        const ty = ay + oy;
+        let x = tx, y = ty;
+        if (ta === "middle") x -= tw / 2;
+        else if (ta === "end") x -= tw;
+        if (bl === "middle") y -= th / 2;
+        else if (bl === "text-bottom") y -= th;
+        // "hanging" keeps y as-is
+        return { x, y, w: tw, h: th };
+      }
+
+      // result per node: { ax, ay, dir, ta, bl, ox, oy }
+      const placements: { ax: number; ay: number; dir: number; ta: string; bl: string; ox: number; oy: number }[] = new Array(nodes.length);
+      const placedBoxes: { x: number; y: number; w: number; h: number }[] = [];
+
+      for (const ni of nodeOrder) {
+        const n = nodes[ni];
         const cx = n.x ?? 0;
         const cy = n.y ?? 0;
-        nodeEls[i].setAttribute("cx", String(cx));
-        nodeEls[i].setAttribute("cy", String(cy));
+        const r = radiusScale(n.rating);
+        const fs = labelFontSize(n.rating);
+        const ts = estimateTextSize(n.name, fs);
+        let bestDir = -1;
+        let bestAnchor = { ax: 0, ay: 0 };
 
-        if (n.rating >= LABEL_RATING_THRESHOLD && li < labelEls.length) {
-          const r = radiusScale(n.rating);
-          labelEls[li].setAttribute("x", String(cx));
-          labelEls[li].setAttribute("y", String(cy));
-          labelEls[li].setAttribute("dy", String(r + LABEL_OFFSET_Y));
-          li++;
+        for (const d of dirByPriority) {
+          const angle = dirAngles[d];
+          const ax = cx + Math.cos(angle) * (r + LABEL_CONNECTOR_LENGTH);
+          const ay = cy + Math.sin(angle) * (r + LABEL_CONNECTOR_LENGTH);
+          const ta = dirTA[d];
+          const bl = dirBL[d];
+          const ox = dirOX[d];
+          const oy = dirOY[d];
+          const box = textBBox(ax, ay, ta, bl, ox, oy, ts.w, ts.h);
+
+          // check overlap with other node circles
+          let overlapsNode = false;
+          for (let j = 0; j < nodes.length; j++) {
+            if (j === ni) continue;
+            if (rectOverlapsCircle(box.x, box.y, box.w, box.h, nodes[j].x ?? 0, nodes[j].y ?? 0, radiusScale(nodes[j].rating))) {
+              overlapsNode = true;
+              break;
+            }
+          }
+          if (overlapsNode) continue;
+
+          // check overlap with already placed labels
+          let overlapsLabel = false;
+          for (const pb of placedBoxes) {
+            if (boxesOverlap(box, pb)) { overlapsLabel = true; break; }
+          }
+          if (overlapsLabel) continue;
+
+          bestDir = d;
+          bestAnchor = { ax, ay };
+          break;
         }
+
+        // fallback: use preferred direction if all overlap
+        if (bestDir < 0) {
+          bestDir = dirByPriority[0];
+          const angle = dirAngles[bestDir];
+          bestAnchor = {
+            ax: cx + Math.cos(angle) * (r + LABEL_CONNECTOR_LENGTH),
+            ay: cy + Math.sin(angle) * (r + LABEL_CONNECTOR_LENGTH),
+          };
+        }
+
+        const d = bestDir;
+        const ta = dirTA[d];
+        const bl = dirBL[d];
+        const ox = dirOX[d];
+        const oy = dirOY[d];
+        placements[ni] = { ax: bestAnchor.ax, ay: bestAnchor.ay, dir: d, ta, bl, ox, oy };
+
+        // register this box for overlap avoidance
+        const box = textBBox(bestAnchor.ax, bestAnchor.ay, ta, bl, ox, oy, ts.w, ts.h);
+        placedBoxes.push(box);
+      }
+
+      // ── apply label & connector positions ───────────────────────────
+      for (let i = 0; i < nodes.length; i++) {
+        const p = placements[i];
+        labelEls[i].setAttribute("x", String(p.ax + p.ox));
+        labelEls[i].setAttribute("y", String(p.ay + p.oy));
+        labelEls[i].setAttribute("text-anchor", p.ta);
+        labelEls[i].setAttribute("dominant-baseline", p.bl);
+
+        const n = nodes[i];
+        const r = radiusScale(n.rating);
+        const angle = dirAngles[p.dir];
+        labelLineEls[i].setAttribute("x1", String((n.x ?? 0) + Math.cos(angle) * r));
+        labelLineEls[i].setAttribute("y1", String((n.y ?? 0) + Math.sin(angle) * r));
+        labelLineEls[i].setAttribute("x2", String(p.ax));
+        labelLineEls[i].setAttribute("y2", String(p.ay));
       }
     });
 
