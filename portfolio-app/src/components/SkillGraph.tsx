@@ -141,12 +141,14 @@ const CONTAINER_BG_COLOR = "rgba(11,13,23,0.6)";
 //  HULL (vacuum-pack enclosure around category groups)
 // ══════════════════════════════════════════════════════════════════════════════
 
-const HULL_PADDING = 10;            // px outside node radius for hull offset
+const HULL_CIRCLE_SAMPLES = 12;     // circumference sample points per node
+const HULL_ARC_SPAN = Math.PI;      // rad – outer half of each node's circumference (π = 180°)
+const HULL_RADIAL_BUCKETS = 72;     // angular buckets for envelope → one outermost point per ~5°
+const HULL_OFFSET_FACTOR = 1 / 3;   // extra distance = radius + radius * factor
 const HULL_STROKE_WIDTH = 1.5;
 const HULL_FILL_OPACITY = 0.1;      // opacity of the hull fill colour
 const HULL_STROKE_OPACITY = 0.45;   // opacity of the hull stroke
-const HULL_CURVE_TENSION = 0.55;    // Catmull‑Rom tension (0‑1; higher = sharper bends)
-const HULL_VACUUM_PULL = 0.35;      // how strongly midpoints dip inward between distant nodes
+const HULL_CURVE_TENSION = 0.35;    // Catmull‑Rom tension (0‑1; lower = softer, rounder curves)
 const HULL_MIN_NODES = 3;           // only draw hull when group has ≥ this many nodes
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -216,72 +218,84 @@ function computeGroupHull(
   groupNodes: SimNode[],
   cx: number,
   cy: number,
-  padding: number,
 ): [number, number][] {
   const n = groupNodes.length;
   if (n < HULL_MIN_NODES) return [];
 
-  // Sort nodes by angle around group centroid
-  const sorted = groupNodes
-    .map((node) => ({
-      node,
-      angle: Math.atan2((node.y ?? 0) - cy, (node.x ?? 0) - cx),
-    }))
-    .sort((a, b) => a.angle - b.angle);
+  // ── 1.  collect circumference sample points from every node ──────────
+  const raw: { x: number; y: number; distC: number; bucket: number }[] = [];
 
-  const points: [number, number][] = [];
+  for (const node of groupNodes) {
+    const nx = node.x ?? 0;
+    const ny = node.y ?? 0;
+    const r = radiusScale(node.rating);
+    const hullR = r + r * HULL_OFFSET_FACTOR;   // radius + radius/3
 
-  for (let i = 0; i < sorted.length; i++) {
-    const curr = sorted[i].node;
-    const next = sorted[(i + 1) % sorted.length].node;
+    const toNodeAngle = Math.atan2(ny - cy, nx - cx);
 
-    const currX = curr.x ?? 0;
-    const currY = curr.y ?? 0;
-    const currR = radiusScale(curr.rating);
+    for (let s = 0; s < HULL_CIRCLE_SAMPLES; s++) {
+      const t = s / (HULL_CIRCLE_SAMPLES - 1);
+      const sampleAngle = toNodeAngle - HULL_ARC_SPAN / 2 + t * HULL_ARC_SPAN;
+      const px = nx + Math.cos(sampleAngle) * hullR;
+      const py = ny + Math.sin(sampleAngle) * hullR;
 
-    const nextX = next.x ?? 0;
-    const nextY = next.y ?? 0;
-    const nextR = radiusScale(next.rating);
+      const dx = px - cx;
+      const dy = py - cy;
+      const distC = Math.sqrt(dx * dx + dy * dy);
+      const angle = Math.atan2(dy, dx);
+      const bucket = Math.floor(((angle + Math.PI) / (2 * Math.PI)) * HULL_RADIAL_BUCKETS);
 
-    // --- "outer tangent point" for current node (pushed away from centroid) ---
-    const dx = currX - cx;
-    const dy = currY - cy;
-    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-    const outerX = currX + (dx / dist) * (currR + padding);
-    const outerY = currY + (dy / dist) * (currR + padding);
-    points.push([outerX, outerY]);
-
-    // --- vacuum midpoint between current and next node ---
-    const gapDx = nextX - currX;
-    const gapDy = nextY - currY;
-    const gapDist = Math.sqrt(gapDx * gapDx + gapDy * gapDy);
-
-    const touchingDist = currR + nextR + padding * 0.5;
-
-    if (gapDist > touchingDist) {
-      // Midpoint between the two *outer* points
-      const nextDx = nextX - cx;
-      const nextDy = nextY - cy;
-      const nextDist = Math.sqrt(nextDx * nextDx + nextDy * nextDy) || 1;
-      const nextOuterX = nextX + (nextDx / nextDist) * (nextR + padding);
-      const nextOuterY = nextY + (nextDy / nextDist) * (nextR + padding);
-
-      const midX = (outerX + nextOuterX) / 2;
-      const midY = (outerY + nextOuterY) / 2;
-
-      // Pull toward centroid — stronger pull for larger gaps
-      const toCx = cx - midX;
-      const toCy = cy - midY;
-      const toCdist = Math.sqrt(toCx * toCx + toCy * toCy) || 1;
-
-      const excess = gapDist - touchingDist;
-      const pull = Math.min(excess * HULL_VACUUM_PULL, padding * 4);
-
-      points.push([midX + (toCx / toCdist) * pull, midY + (toCy / toCdist) * pull]);
+      raw.push({ x: px, y: py, distC, bucket });
     }
   }
 
-  return points;
+  // ── 2.  radial envelope — keep only the outermost point per bucket ───
+  const envelope: (typeof raw[number] | null)[] = new Array(HULL_RADIAL_BUCKETS).fill(null);
+
+  for (const pt of raw) {
+    const b = ((pt.bucket % HULL_RADIAL_BUCKETS) + HULL_RADIAL_BUCKETS) % HULL_RADIAL_BUCKETS;
+    if (!envelope[b] || pt.distC > envelope[b]!.distC) {
+      envelope[b] = pt;
+    }
+  }
+
+  // ── 3.  build sorted point list (skip empty buckets) ─────────────────
+  const points: [number, number][] = [];
+  for (let b = 0; b < HULL_RADIAL_BUCKETS; b++) {
+    const pt = envelope[b];
+    if (pt) points.push([pt.x, pt.y]);
+  }
+
+  if (points.length < 3) return [];
+
+  // ── 4.  insert vacuum midpoints between large spatial gaps ────────────
+  const result: [number, number][] = [];
+  for (let i = 0; i < points.length; i++) {
+    const [cx1, cy1] = points[i];
+    const [cx2, cy2] = points[(i + 1) % points.length];
+
+    result.push([cx1, cy1]);
+
+    const gx = cx2 - cx1;
+    const gy = cy2 - cy1;
+    const gap = Math.sqrt(gx * gx + gy * gy);
+
+    // distance threshold ≈ the arc length of one bucket at average radius
+    const avgDist = groupNodes.reduce((s, nd) => s + Math.sqrt(((nd.x ?? 0) - cx) ** 2 + ((nd.y ?? 0) - cy) ** 2), 0) / n;
+    const bucketArc = (2 * Math.PI * avgDist) / HULL_RADIAL_BUCKETS;
+
+    if (gap > bucketArc * 2.2) {
+      const midX = (cx1 + cx2) / 2;
+      const midY = (cy1 + cy2) / 2;
+      const toCx = cx - midX;
+      const toCy = cy - midY;
+      const toDist = Math.sqrt(toCx * toCx + toCy * toCy) || 1;
+      const pull = Math.min(gap * 0.15, 30);
+      result.push([midX + (toCx / toDist) * pull, midY + (toCy / toDist) * pull]);
+    }
+  }
+
+  return result;
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -619,7 +633,7 @@ export function SkillGraph() {
         cx /= groupNodes.length;
         cy /= groupNodes.length;
 
-        const hullPts = computeGroupHull(groupNodes, cx, cy, HULL_PADDING);
+        const hullPts = computeGroupHull(groupNodes, cx, cy);
         if (hullPts.length < 3) {
           path.setAttribute("d", "");
           continue;
