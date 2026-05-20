@@ -138,6 +138,18 @@ const CONTAINER_BORDER_COLOR = "rgba(167,139,250,0.25)";
 const CONTAINER_BG_COLOR = "rgba(11,13,23,0.6)";
 
 // ══════════════════════════════════════════════════════════════════════════════
+//  HULL (vacuum-pack enclosure around category groups)
+// ══════════════════════════════════════════════════════════════════════════════
+
+const HULL_PADDING = 10;            // px outside node radius for hull offset
+const HULL_STROKE_WIDTH = 1.5;
+const HULL_FILL_OPACITY = 0.1;      // opacity of the hull fill colour
+const HULL_STROKE_OPACITY = 0.45;   // opacity of the hull stroke
+const HULL_CURVE_TENSION = 0.55;    // Catmull‑Rom tension (0‑1; higher = sharper bends)
+const HULL_VACUUM_PULL = 0.35;      // how strongly midpoints dip inward between distant nodes
+const HULL_MIN_NODES = 3;           // only draw hull when group has ≥ this many nodes
+
+// ══════════════════════════════════════════════════════════════════════════════
 //  HELPER FUNCTIONS
 // ══════════════════════════════════════════════════════════════════════════════
 
@@ -161,6 +173,115 @@ function getSkillCategories(): Map<CatKey, Record<string, number>> {
 function radiusScale(rating: number): number {
   const t = (rating - RATING_MIN) / (RATING_MAX - RATING_MIN);
   return RADIUS_MIN + t * (RADIUS_MAX - RADIUS_MIN);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  CATMULL‑ROM → CUBIC BÉZIER  (closed loop → SVG path d-string)
+// ══════════════════════════════════════════════════════════════════════════════
+
+function catmullRomClosedPath(points: [number, number][], tension: number): string {
+  const n = points.length;
+  if (n < 3) {
+    // degenerate: just connect with lines
+    return points.map((p, i) => `${i === 0 ? "M" : "L"}${p[0]},${p[1]}`).join(" ") + " Z";
+  }
+
+  const t = tension;
+  const inv6 = (1 - t) / 6; // influence of neighbours on control points
+
+  let d = `M${points[0][0]},${points[0][1]}`;
+
+  for (let i = 0; i < n; i++) {
+    const p0 = points[(i - 1 + n) % n];
+    const p1 = points[i];
+    const p2 = points[(i + 1) % n];
+    const p3 = points[(i + 2) % n];
+
+    const cp1x = p1[0] + (p2[0] - p0[0]) * inv6;
+    const cp1y = p1[1] + (p2[1] - p0[1]) * inv6;
+    const cp2x = p2[0] - (p3[0] - p1[0]) * inv6;
+    const cp2y = p2[1] - (p3[1] - p1[1]) * inv6;
+
+    d += ` C${cp1x},${cp1y} ${cp2x},${cp2y} ${p2[0]},${p2[1]}`;
+  }
+
+  return d + " Z";
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  VACUUM‑PACK HULL COMPUTATION  (purely visual — no physics impact)
+// ══════════════════════════════════════════════════════════════════════════════
+
+function computeGroupHull(
+  groupNodes: SimNode[],
+  cx: number,
+  cy: number,
+  padding: number,
+): [number, number][] {
+  const n = groupNodes.length;
+  if (n < HULL_MIN_NODES) return [];
+
+  // Sort nodes by angle around group centroid
+  const sorted = groupNodes
+    .map((node) => ({
+      node,
+      angle: Math.atan2((node.y ?? 0) - cy, (node.x ?? 0) - cx),
+    }))
+    .sort((a, b) => a.angle - b.angle);
+
+  const points: [number, number][] = [];
+
+  for (let i = 0; i < sorted.length; i++) {
+    const curr = sorted[i].node;
+    const next = sorted[(i + 1) % sorted.length].node;
+
+    const currX = curr.x ?? 0;
+    const currY = curr.y ?? 0;
+    const currR = radiusScale(curr.rating);
+
+    const nextX = next.x ?? 0;
+    const nextY = next.y ?? 0;
+    const nextR = radiusScale(next.rating);
+
+    // --- "outer tangent point" for current node (pushed away from centroid) ---
+    const dx = currX - cx;
+    const dy = currY - cy;
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    const outerX = currX + (dx / dist) * (currR + padding);
+    const outerY = currY + (dy / dist) * (currR + padding);
+    points.push([outerX, outerY]);
+
+    // --- vacuum midpoint between current and next node ---
+    const gapDx = nextX - currX;
+    const gapDy = nextY - currY;
+    const gapDist = Math.sqrt(gapDx * gapDx + gapDy * gapDy);
+
+    const touchingDist = currR + nextR + padding * 0.5;
+
+    if (gapDist > touchingDist) {
+      // Midpoint between the two *outer* points
+      const nextDx = nextX - cx;
+      const nextDy = nextY - cy;
+      const nextDist = Math.sqrt(nextDx * nextDx + nextDy * nextDy) || 1;
+      const nextOuterX = nextX + (nextDx / nextDist) * (nextR + padding);
+      const nextOuterY = nextY + (nextDy / nextDist) * (nextR + padding);
+
+      const midX = (outerX + nextOuterX) / 2;
+      const midY = (outerY + nextOuterY) / 2;
+
+      // Pull toward centroid — stronger pull for larger gaps
+      const toCx = cx - midX;
+      const toCy = cy - midY;
+      const toCdist = Math.sqrt(toCx * toCx + toCy * toCy) || 1;
+
+      const excess = gapDist - touchingDist;
+      const pull = Math.min(excess * HULL_VACUUM_PULL, padding * 4);
+
+      points.push([midX + (toCx / toCdist) * pull, midY + (toCy / toCdist) * pull]);
+    }
+  }
+
+  return points;
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -373,9 +494,11 @@ export function SkillGraph() {
     svgEl.appendChild(defs);
 
     // layers
+    const hullLayer = document.createElementNS(ns, "g");
     const linkLayer = document.createElementNS(ns, "g");
     const nodeLayer = document.createElementNS(ns, "g");
     const labelLayer = document.createElementNS(ns, "g");
+    svgEl.appendChild(hullLayer);
     svgEl.appendChild(linkLayer);
     svgEl.appendChild(nodeLayer);
     svgEl.appendChild(labelLayer);
@@ -439,6 +562,29 @@ export function SkillGraph() {
       }
     });
 
+    // ── hull paths (one per group, purely visual) ───────────────────────
+    const groupIndices = [...new Set(nodes.map((n) => n.groupIndex))].sort((a, b) => a - b);
+    const hullPaths: SVGPathElement[] = [];
+
+    for (const gi of groupIndices) {
+      const groupNodes = nodes.filter((n) => n.groupIndex === gi);
+      if (groupNodes.length < HULL_MIN_NODES) continue;
+
+      const cat = groupNodes[0].category;
+      const baseColor = CAT_COLOR_MAP[cat] || "rgba(167,139,250,0.25)";
+      const fillColor = baseColor.replace(/[\d.]+\)$/, `${HULL_FILL_OPACITY})`);
+      const strokeColor = baseColor.replace(/[\d.]+\)$/, `${HULL_STROKE_OPACITY})`);
+
+      const path = document.createElementNS(ns, "path");
+      path.setAttribute("fill", fillColor);
+      path.setAttribute("stroke", strokeColor);
+      path.setAttribute("stroke-width", String(HULL_STROKE_WIDTH));
+      path.setAttribute("stroke-linejoin", "round");
+      path.setAttribute("pointer-events", "none");
+      hullLayer.appendChild(path);
+      hullPaths[gi] = path;
+    }
+
     // ── bounding helper ──────────────────────────────────────────────────
     function clampNode(n: SimNode, r: number) {
       // soft boundary — push nodes back inside the margin
@@ -455,6 +601,31 @@ export function SkillGraph() {
         const n = nodes[i];
         const r = radiusScale(n.rating);
         clampNode(n, r);
+      }
+
+      // ── update vacuum‑pack hulls ────────────────────────────────────
+      for (const gi of groupIndices) {
+        const path = hullPaths[gi];
+        if (!path) continue;
+
+        const groupNodes = nodes.filter((n) => n.groupIndex === gi);
+        if (groupNodes.length < HULL_MIN_NODES) {
+          path.setAttribute("d", "");
+          continue;
+        }
+
+        let cx = 0, cy = 0;
+        for (const n of groupNodes) { cx += n.x ?? 0; cy += n.y ?? 0; }
+        cx /= groupNodes.length;
+        cy /= groupNodes.length;
+
+        const hullPts = computeGroupHull(groupNodes, cx, cy, HULL_PADDING);
+        if (hullPts.length < 3) {
+          path.setAttribute("d", "");
+          continue;
+        }
+
+        path.setAttribute("d", catmullRomClosedPath(hullPts, HULL_CURVE_TENSION));
       }
 
       for (let i = 0; i < links.length; i++) {
