@@ -5,6 +5,7 @@ import {
   forceSimulation,
   forceLink,
   forceManyBody,
+  forceCollide,
   forceX,
   forceY,
 } from "d3-force";
@@ -91,6 +92,7 @@ const CHARGE_STRENGTH = -85;      // repulsion between every node pair (negative
 const CENTER_FORCE_STRENGTH = 0.1; // strength of centering gravity
 const ALPHA_DECAY = 0.01;        // cooling rate per tick (higher = faster settle)
 const ALPHA_MIN = 0.001;          // simulation stops when alpha drops below this
+const COLLIDE_PADDING = 2;        // extra px between node edges for forceCollide
 const REHEAT_ALPHA = 0.2;         // alpha / alphaTarget when re-energizing (drag, resize, etc.)
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -565,6 +567,7 @@ export function SkillGraph() {
           .distance(LINK_DISTANCE)
       )
       .force("charge", forceManyBody().strength(CHARGE_STRENGTH))
+      .force("collide", forceCollide<SimNode>().radius(d => radiusScale(d.rating) + COLLIDE_PADDING))
       .force("x", forceX<SimNode>(width / 2).strength(CENTER_FORCE_STRENGTH/2.5))
       .force("y", forceY<SimNode>(height / 2).strength(CENTER_FORCE_STRENGTH))
       .alphaDecay(ALPHA_DECAY)
