@@ -684,7 +684,7 @@ export function SkillGraph() {
       text.textContent = n.name;
       text.setAttribute("text-anchor", "middle");
       text.setAttribute("dominant-baseline", "middle");
-      text.setAttribute("fill", LABEL_COLOR_NORMAL);
+      text.setAttribute("fill", ratingColor(n.rating));
       text.setAttribute("font-size", String(fs));
       text.setAttribute("font-family", LABEL_FONT_FAMILY);
       text.setAttribute("pointer-events", "none");
@@ -709,7 +709,7 @@ export function SkillGraph() {
         circle.setAttribute("stroke", NODE_STROKE_COLOR);
         circle.setAttribute("stroke-width", String(NODE_STROKE_WIDTH));
         circle.style.cursor = "default";
-        text.setAttribute("fill", LABEL_COLOR_NORMAL);
+        text.setAttribute("fill", ratingColor(n.rating));
         text.removeAttribute("font-weight");
         text.setAttribute("font-size", String(fs));
         labelLineEls[ni].setAttribute("stroke", LABEL_LINE_COLOR);
