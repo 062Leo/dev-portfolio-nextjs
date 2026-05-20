@@ -77,7 +77,10 @@ const LINK_STROKE_WIDTH = 1;                        // connection line stroke wi
 // ══════════════════════════════════════════════════════════════════════════════
 
 const GROUP_EXTRA_LINK_START_OFFSET = 3;  // skip N neighbours before additional links start
-const GROUP_EXTRA_LINK_MAX_LOOKAHEAD = 4; // extra-connect to this many nodes ahead
+const GROUP_EXTRA_LINK_MAX_LOOKAHEAD = 4; // how many nodes ahead are eligible as extra targets
+const GROUP_EXTRA_LINK_MAX = 4;           // absolute max extra connections per node (1‑4)
+const MAX_DEGREE_HIGH = 4;                // max total degree for the high-count node
+const MAX_DEGREE_NORMAL = 2;              // max total degree for all other nodes
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  FORCE SIMULATION
@@ -270,14 +273,61 @@ export function SkillGraph() {
         groupNodes.push(node);
       });
 
-      // connect within group — chain + a few cross-links
+      // degree tracking (both chain + extra) per node
+      const degree = new Array<number>(groupNodes.length).fill(0);
+
+      // chain connections
       for (let i = 0; i < groupNodes.length - 1; i++) {
         links.push({ source: groupNodes[i].id, target: groupNodes[i + 1].id });
+        degree[i]++;
+        degree[i + 1]++;
       }
-      // extra connections for cohesion
+
+      // extra connections — exactly 1 middle node gets 3‑4 total (guaranteed)
+      // pick among middle nodes whose bidirectional pool reaches an endpoint
+      const eligible: number[] = [];
       for (let i = 0; i < groupNodes.length; i++) {
-        for (let j = i + GROUP_EXTRA_LINK_START_OFFSET; j < Math.min(i + GROUP_EXTRA_LINK_MAX_LOOKAHEAD, groupNodes.length); j++) {
-          links.push({ source: groupNodes[i].id, target: groupNodes[j].id });
+        if (degree[i] !== 2) continue; // must be middle node (chain degree 2)
+        let reachable = false;
+        for (let j = i + GROUP_EXTRA_LINK_START_OFFSET; j < Math.min(i + GROUP_EXTRA_LINK_START_OFFSET + GROUP_EXTRA_LINK_MAX_LOOKAHEAD, groupNodes.length); j++) {
+          if (degree[j] < MAX_DEGREE_NORMAL) { reachable = true; break; }
+        }
+        if (!reachable) {
+          for (let j = i - GROUP_EXTRA_LINK_START_OFFSET; j >= Math.max(i - GROUP_EXTRA_LINK_START_OFFSET - GROUP_EXTRA_LINK_MAX_LOOKAHEAD + 1, 0); j--) {
+            if (degree[j] < MAX_DEGREE_NORMAL) { reachable = true; break; }
+          }
+        }
+        if (reachable) eligible.push(i);
+      }
+
+      const highIdx = eligible.length > 0
+        ? eligible[Math.floor(Math.random() * eligible.length)]
+        : -1;
+
+      if (highIdx >= 0) {
+        const i = highIdx;
+        // bidirectional pool
+        const pool: number[] = [];
+        for (let j = i + GROUP_EXTRA_LINK_START_OFFSET; j < Math.min(i + GROUP_EXTRA_LINK_START_OFFSET + GROUP_EXTRA_LINK_MAX_LOOKAHEAD, groupNodes.length); j++) {
+          pool.push(j);
+        }
+        for (let j = i - GROUP_EXTRA_LINK_START_OFFSET; j >= Math.max(i - GROUP_EXTRA_LINK_START_OFFSET - GROUP_EXTRA_LINK_MAX_LOOKAHEAD + 1, 0); j--) {
+          pool.push(j);
+        }
+        // shuffle
+        for (let k = pool.length - 1; k > 0; k--) {
+          const r = Math.floor(Math.random() * (k + 1));
+          [pool[k], pool[r]] = [pool[r], pool[k]];
+        }
+        // add extra links one by one, respecting degree caps
+        let extraAdded = 0;
+        for (const target of pool) {
+          if (degree[i] >= MAX_DEGREE_HIGH || extraAdded >= GROUP_EXTRA_LINK_MAX) break;
+          if (degree[target] >= MAX_DEGREE_NORMAL) continue;
+          links.push({ source: groupNodes[i].id, target: groupNodes[target].id });
+          degree[i]++;
+          degree[target]++;
+          extraAdded++;
         }
       }
     });
