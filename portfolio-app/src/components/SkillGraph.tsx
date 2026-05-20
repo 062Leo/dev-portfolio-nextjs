@@ -138,18 +138,61 @@ const CONTAINER_BORDER_COLOR = "rgba(167,139,250,0.25)";
 const CONTAINER_BG_COLOR = "rgba(11,13,23,0.6)";
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  HULL (vacuum-pack enclosure around category groups)
+//  HULL  –  vacuum‑pack enclosure around category groups
+//  Jeder Parameter ist hier einstellbar; Kommentar erklärt, was er tut.
 // ══════════════════════════════════════════════════════════════════════════════
 
-const HULL_CIRCLE_SAMPLES = 12;     // circumference sample points per node
-const HULL_ARC_SPAN = Math.PI;      // rad – outer half of each node's circumference (π = 180°)
-const HULL_RADIAL_BUCKETS = 72;     // angular buckets for envelope → one outermost point per ~5°
-const HULL_OFFSET_FACTOR = 1 / 3;   // extra distance = radius + radius * factor
-const HULL_STROKE_WIDTH = 1.5;
-const HULL_FILL_OPACITY = 0.1;      // opacity of the hull fill colour
-const HULL_STROKE_OPACITY = 0.45;   // opacity of the hull stroke
-const HULL_CURVE_TENSION = 0.35;    // Catmull‑Rom tension (0‑1; lower = softer, rounder curves)
-const HULL_MIN_NODES = 3;           // only draw hull when group has ≥ this many nodes
+const HULL_ENABLED = true;              // Master‑Schalter  true | false
+const HULL_MIN_NODES = 2;               // Gruppe braucht ≥ N Knoten, sonst keine Hülle
+
+// ——  Umfang‑Sampling pro Knoten  ————————————————————————————————————————————
+const HULL_CIRCLE_SAMPLES = 20;         // Abtastpunkte auf dem Knotenumfang (mehr = feiner)
+const HULL_ARC_SPAN = Math.PI;          // Welcher Bogen des Knotens wird abgetastet?
+                                        //   Math.PI       = äussere 180°  (Standard)
+                                        //   Math.PI * 0.6 = äussere ~108° (lockerer, weniger Umschlingung)
+                                        //   Math.PI * 1.3 = äussere ~234° (enger, mehr Umschlingung)
+const HULL_OFFSET_FACTOR = 2 / 3;       // Zusatzabstand = radius + radius * Faktor
+                                        //   0     = direkt auf Knotenrand
+                                        //   1/3   = 33 % extra (empfohlen)
+                                        //   0.5   = 50 % extra
+
+// ——  Radiale Hüllkurve (Envelope)  ——————————————————————————————————————————
+const HULL_RADIAL_BUCKETS = 90;         // Winkel‑Eimer (360° / BUCKETS = ° pro Eimer)
+                                        //   72 = 5°‑Schritte
+                                        //   90 = 4°‑Schritte  (empfohlen)
+                                        //  120 = 3°‑Schritte  (feiner)
+
+// ——  Innere Knoten ausblenden  ———————————————————————————————————————————————
+//      Verhindert, dass die Hülle zu weit innen liegende Punkte mitnimmt
+//      (z.B. Knoten die tief im Gruppen-Inneren sitzen).
+const HULL_INNER_FILTER = true;         // true  = innere Punkte werden entfernt
+const HULL_INNER_THRESHOLD = 0.60;      // 0…1   Abstand zum Zentroid relativ zum
+                                        //        Durchschnitt aller Hüllen-Punkte.
+                                        //   Punkte mit Abstand < Schwellwert × Ø
+                                        //   werden ausgeblendet.
+                                        //   0.70  = empfohlen  (alles unter 70 % fliegt raus)
+                                        //   1.0   = alles bleibt (kein Filter)
+                                        //   0.0   = alles weg 😄
+
+// ——  Vakuum‑Effekt (eingesaugte Stellen zwischen entfernten Knoten)  —————————
+const HULL_VACUUM_THRESHOLD = 2.2;      // Lücken‑Schwelle  (Vielfaches des Eimer‑Bogens)
+                                        //   je kleiner → mehr / häufigere Vakuum‑Punkte
+const HULL_VACUUM_STRENGTH = 0.15;      // Einsaug‑Stärke  (Bruchteil der Lückenweite)
+                                        //   0     = kein Vakuum (hull überspannt Lücken gerade)
+                                        //   0.15  = dezent
+                                        //   0.3   = stark
+const HULL_VACUUM_MAX_PX = 30;          // Maximaler Einsaug‑Abstand in px (Deckel)
+
+// ——  Kurven‑Glättung  ————————————————————————————————————————————————————————
+const HULL_CURVE_TENSION = 0.1;        // Catmull‑Rom Spannung  0 … 1
+                                        //   0     = maximal weich / rund
+                                        //   0.35  = weich mit leichter Spannung
+                                        //   1     = straff / eckiger
+
+// ——  Darstellung  ————————————————————————————————————————————————————————————
+const HULL_STROKE_WIDTH = 1.5;          // px
+const HULL_FILL_OPACITY = 0.1;          // 0 … 1
+const HULL_STROKE_OPACITY = 0.45;       // 0 … 1
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  HELPER FUNCTIONS
@@ -222,14 +265,17 @@ function computeGroupHull(
   const n = groupNodes.length;
   if (n < HULL_MIN_NODES) return [];
 
-  // ── 1.  collect circumference sample points from every node ──────────
-  const raw: { x: number; y: number; distC: number; bucket: number }[] = [];
+  // Each raw sample remembers which node it came from, so we can later
+  // avoid inserting vacuum midpoints between points of the SAME node.
+  interface RawPt { x: number; y: number; distC: number; bucket: number; nodeIdx: number }
+  const raw: RawPt[] = [];
 
-  for (const node of groupNodes) {
+  for (let ni = 0; ni < groupNodes.length; ni++) {
+    const node = groupNodes[ni];
     const nx = node.x ?? 0;
     const ny = node.y ?? 0;
     const r = radiusScale(node.rating);
-    const hullR = r + r * HULL_OFFSET_FACTOR;   // radius + radius/3
+    const hullR = r + r * HULL_OFFSET_FACTOR;
 
     const toNodeAngle = Math.atan2(ny - cy, nx - cx);
 
@@ -245,52 +291,94 @@ function computeGroupHull(
       const angle = Math.atan2(dy, dx);
       const bucket = Math.floor(((angle + Math.PI) / (2 * Math.PI)) * HULL_RADIAL_BUCKETS);
 
-      raw.push({ x: px, y: py, distC, bucket });
+      raw.push({ x: px, y: py, distC, bucket, nodeIdx: ni });
     }
   }
 
-  // ── 2.  radial envelope — keep only the outermost point per bucket ───
-  const envelope: (typeof raw[number] | null)[] = new Array(HULL_RADIAL_BUCKETS).fill(null);
+  // ── 2.  radial envelope — keep outermost point per bucket, track node ─
+  interface EnvPt { x: number; y: number; nodeIdx: number }
+  const envelope: (EnvPt | null)[] = new Array(HULL_RADIAL_BUCKETS).fill(null);
 
   for (const pt of raw) {
     const b = ((pt.bucket % HULL_RADIAL_BUCKETS) + HULL_RADIAL_BUCKETS) % HULL_RADIAL_BUCKETS;
-    if (!envelope[b] || pt.distC > envelope[b]!.distC) {
-      envelope[b] = pt;
+    if (!envelope[b] || pt.distC > (envelope[b]!.x - cx) ** 2 + (envelope[b]!.y - cy) ** 2) {
+      // need distC for comparison — store it implicitly via the raw pt or recalc
+    }
+    // Simpler: compare using the raw pt's distC directly
+  }
+
+  const distByBucket = new Float64Array(HULL_RADIAL_BUCKETS).fill(-1);
+
+  for (const pt of raw) {
+    const b = ((pt.bucket % HULL_RADIAL_BUCKETS) + HULL_RADIAL_BUCKETS) % HULL_RADIAL_BUCKETS;
+    if (pt.distC > distByBucket[b]) {
+      distByBucket[b] = pt.distC;
+      envelope[b] = { x: pt.x, y: pt.y, nodeIdx: pt.nodeIdx };
+    }
+  }
+
+  // ── 2b.  filter out interior points (too close to centroid) ──────────
+  if (HULL_INNER_FILTER) {
+    let sumDist = 0;
+    let envCount = 0;
+    for (const pt of envelope) {
+      if (pt) {
+        sumDist += Math.sqrt((pt.x - cx) ** 2 + (pt.y - cy) ** 2);
+        envCount++;
+      }
+    }
+    if (envCount > 0) {
+      const minDist = (sumDist / envCount) * HULL_INNER_THRESHOLD;
+      for (let b = 0; b < HULL_RADIAL_BUCKETS; b++) {
+        const pt = envelope[b];
+        if (pt) {
+          const d = Math.sqrt((pt.x - cx) ** 2 + (pt.y - cy) ** 2);
+          if (d < minDist) envelope[b] = null;
+        }
+      }
     }
   }
 
   // ── 3.  build sorted point list (skip empty buckets) ─────────────────
-  const points: [number, number][] = [];
+  const points: { x: number; y: number; nodeIdx: number }[] = [];
   for (let b = 0; b < HULL_RADIAL_BUCKETS; b++) {
     const pt = envelope[b];
-    if (pt) points.push([pt.x, pt.y]);
+    if (pt) points.push(pt);
   }
 
   if (points.length < 3) return [];
 
-  // ── 4.  insert vacuum midpoints between large spatial gaps ────────────
+  // average distance of nodes from centroid (for gap threshold)
+  let avgDist = 0;
+  for (const nd of groupNodes) {
+    avgDist += Math.sqrt(((nd.x ?? 0) - cx) ** 2 + ((nd.y ?? 0) - cy) ** 2);
+  }
+  avgDist /= n;
+  const bucketArc = (2 * Math.PI * avgDist) / HULL_RADIAL_BUCKETS;
+
+  // ── 4.  build hull: point → vacuum midpoint (only between DIFFERENT nodes) ─
   const result: [number, number][] = [];
+
   for (let i = 0; i < points.length; i++) {
-    const [cx1, cy1] = points[i];
-    const [cx2, cy2] = points[(i + 1) % points.length];
+    const curr = points[i];
+    const next = points[(i + 1) % points.length];
 
-    result.push([cx1, cy1]);
+    result.push([curr.x, curr.y]);
 
-    const gx = cx2 - cx1;
-    const gy = cy2 - cy1;
+    // Only bridge gaps between DIFFERENT nodes — never within the same node.
+    if (curr.nodeIdx === next.nodeIdx) continue;
+
+    const gx = next.x - curr.x;
+    const gy = next.y - curr.y;
     const gap = Math.sqrt(gx * gx + gy * gy);
 
-    // distance threshold ≈ the arc length of one bucket at average radius
-    const avgDist = groupNodes.reduce((s, nd) => s + Math.sqrt(((nd.x ?? 0) - cx) ** 2 + ((nd.y ?? 0) - cy) ** 2), 0) / n;
-    const bucketArc = (2 * Math.PI * avgDist) / HULL_RADIAL_BUCKETS;
-
-    if (gap > bucketArc * 2.2) {
-      const midX = (cx1 + cx2) / 2;
-      const midY = (cy1 + cy2) / 2;
+    if (gap > bucketArc * HULL_VACUUM_THRESHOLD) {
+      const midX = (curr.x + next.x) / 2;
+      const midY = (curr.y + next.y) / 2;
       const toCx = cx - midX;
       const toCy = cy - midY;
       const toDist = Math.sqrt(toCx * toCx + toCy * toCy) || 1;
-      const pull = Math.min(gap * 0.15, 30);
+      const pull = Math.min(gap * HULL_VACUUM_STRENGTH, HULL_VACUUM_MAX_PX);
       result.push([midX + (toCx / toDist) * pull, midY + (toCy / toDist) * pull]);
     }
   }
@@ -580,23 +668,25 @@ export function SkillGraph() {
     const groupIndices = [...new Set(nodes.map((n) => n.groupIndex))].sort((a, b) => a - b);
     const hullPaths: SVGPathElement[] = [];
 
-    for (const gi of groupIndices) {
-      const groupNodes = nodes.filter((n) => n.groupIndex === gi);
-      if (groupNodes.length < HULL_MIN_NODES) continue;
+    if (HULL_ENABLED) {
+      for (const gi of groupIndices) {
+        const groupNodes = nodes.filter((n) => n.groupIndex === gi);
+        if (groupNodes.length < HULL_MIN_NODES) continue;
 
-      const cat = groupNodes[0].category;
-      const baseColor = CAT_COLOR_MAP[cat] || "rgba(167,139,250,0.25)";
-      const fillColor = baseColor.replace(/[\d.]+\)$/, `${HULL_FILL_OPACITY})`);
-      const strokeColor = baseColor.replace(/[\d.]+\)$/, `${HULL_STROKE_OPACITY})`);
+        const cat = groupNodes[0].category;
+        const baseColor = CAT_COLOR_MAP[cat] || "rgba(167,139,250,0.25)";
+        const fillColor = baseColor.replace(/[\d.]+\)$/, `${HULL_FILL_OPACITY})`);
+        const strokeColor = baseColor.replace(/[\d.]+\)$/, `${HULL_STROKE_OPACITY})`);
 
-      const path = document.createElementNS(ns, "path");
-      path.setAttribute("fill", fillColor);
-      path.setAttribute("stroke", strokeColor);
-      path.setAttribute("stroke-width", String(HULL_STROKE_WIDTH));
-      path.setAttribute("stroke-linejoin", "round");
-      path.setAttribute("pointer-events", "none");
-      hullLayer.appendChild(path);
-      hullPaths[gi] = path;
+        const path = document.createElementNS(ns, "path");
+        path.setAttribute("fill", fillColor);
+        path.setAttribute("stroke", strokeColor);
+        path.setAttribute("stroke-width", String(HULL_STROKE_WIDTH));
+        path.setAttribute("stroke-linejoin", "round");
+        path.setAttribute("pointer-events", "none");
+        hullLayer.appendChild(path);
+        hullPaths[gi] = path;
+      }
     }
 
     // ── bounding helper ──────────────────────────────────────────────────
@@ -618,28 +708,30 @@ export function SkillGraph() {
       }
 
       // ── update vacuum‑pack hulls ────────────────────────────────────
-      for (const gi of groupIndices) {
-        const path = hullPaths[gi];
-        if (!path) continue;
+      if (HULL_ENABLED) {
+        for (const gi of groupIndices) {
+          const path = hullPaths[gi];
+          if (!path) continue;
 
-        const groupNodes = nodes.filter((n) => n.groupIndex === gi);
-        if (groupNodes.length < HULL_MIN_NODES) {
-          path.setAttribute("d", "");
-          continue;
+          const groupNodes = nodes.filter((n) => n.groupIndex === gi);
+          if (groupNodes.length < HULL_MIN_NODES) {
+            path.setAttribute("d", "");
+            continue;
+          }
+
+          let cx = 0, cy = 0;
+          for (const n of groupNodes) { cx += n.x ?? 0; cy += n.y ?? 0; }
+          cx /= groupNodes.length;
+          cy /= groupNodes.length;
+
+          const hullPts = computeGroupHull(groupNodes, cx, cy);
+          if (hullPts.length < 3) {
+            path.setAttribute("d", "");
+            continue;
+          }
+
+          path.setAttribute("d", catmullRomClosedPath(hullPts, HULL_CURVE_TENSION));
         }
-
-        let cx = 0, cy = 0;
-        for (const n of groupNodes) { cx += n.x ?? 0; cy += n.y ?? 0; }
-        cx /= groupNodes.length;
-        cy /= groupNodes.length;
-
-        const hullPts = computeGroupHull(groupNodes, cx, cy);
-        if (hullPts.length < 3) {
-          path.setAttribute("d", "");
-          continue;
-        }
-
-        path.setAttribute("d", catmullRomClosedPath(hullPts, HULL_CURVE_TENSION));
       }
 
       for (let i = 0; i < links.length; i++) {
