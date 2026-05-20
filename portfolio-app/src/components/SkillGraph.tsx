@@ -11,7 +11,9 @@ import {
 import type { SimulationNodeDatum, SimulationLinkDatum, Simulation } from "d3-force";
 import skillsData from "@/data/skills_rated.json";
 
-// ── category definitions ────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+//  CATEGORY DEFINITIONS
+// ══════════════════════════════════════════════════════════════════════════════
 
 type CatKey = string;
 
@@ -41,13 +43,106 @@ const CATEGORIES: { key: CatKey; color: string }[] = [
 const CAT_COLOR_MAP: Record<CatKey, string> = {};
 for (const c of CATEGORIES) CAT_COLOR_MAP[c.key] = c.color;
 
-// ── data helpers ────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+//  RATING SCALE
+// ══════════════════════════════════════════════════════════════════════════════
+
+const RATING_MIN = 1;  // lowest possible rating
+const RATING_MAX = 5;  // highest possible rating
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  NODE SIZING & STYLING
+// ══════════════════════════════════════════════════════════════════════════════
+
+const RADIUS_MIN = 5;                             // smallest circle radius (px) for rating 1
+const RADIUS_MAX = 15;                            // largest circle radius (px) for rating 5
+const LABEL_RATING_THRESHOLD = 3;                  // minimum rating to render a text label
+const NODE_STROKE_COLOR = "rgba(255,255,255,0.2)"; // normal circle stroke
+const NODE_STROKE_WIDTH = 1;                       // normal stroke width (px)
+const NODE_HOVER_SCALE = 1.5;                      // radius multiplier on pointer enter
+const NODE_HOVER_STROKE_COLOR = "rgba(255,255,255,0.8)"; // stroke color on hover
+const NODE_HOVER_STROKE_WIDTH = 2.5;               // stroke width on hover (px)
+const NODE_DRAG_HIT_PADDING = 4;                   // extra px around node for drag hit-test
+const NODE_TRANSITION = "r 0.25s ease, stroke-width 0.25s ease, stroke 0.25s ease"; // CSS transition on hover
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  LINK STYLES
+// ══════════════════════════════════════════════════════════════════════════════
+
+const LINK_STROKE_COLOR = "rgba(192, 184, 213, 0.57)"; // connection line color
+const LINK_STROKE_WIDTH = 1;                        // connection line stroke width (px)
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  GRAPH TOPOLOGY (intra-group connections)
+// ══════════════════════════════════════════════════════════════════════════════
+
+const GROUP_EXTRA_LINK_START_OFFSET = 3;  // skip N neighbours before additional links start
+const GROUP_EXTRA_LINK_MAX_LOOKAHEAD = 4; // extra-connect to this many nodes ahead
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  FORCE SIMULATION
+// ══════════════════════════════════════════════════════════════════════════════
+
+const LINK_DISTANCE = 28;         // target length of link edges
+const CHARGE_STRENGTH = -85;      // repulsion between every node pair (negative = push apart)
+const CENTER_FORCE_STRENGTH = 0.1; // strength of centering gravity
+const ALPHA_DECAY = 0.01;        // cooling rate per tick (higher = faster settle)
+const ALPHA_MIN = 0.001;          // simulation stops when alpha drops below this
+const REHEAT_ALPHA = 0.2;         // alpha / alphaTarget when re-energizing (drag, resize, etc.)
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  RATING COLORS (linear interpolation per node)
+// ══════════════════════════════════════════════════════════════════════════════
+
+const RATING_COLOR_MIN_R = 239;  // rating 1  red-ish
+const RATING_COLOR_MIN_G = 68;
+const RATING_COLOR_MIN_B = 68;
+const RATING_COLOR_MAX_R = 34;   // rating 5  green-ish
+const RATING_COLOR_MAX_G = 197;
+const RATING_COLOR_MAX_B = 94;
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  BOUNDARY (keeps nodes inside container)
+// ══════════════════════════════════════════════════════════════════════════════
+
+const BOUNDARY_MARGIN = 20;       // px margin from container edges
+const BOUNDARY_PUSH_FACTOR = 0.3; // push strength when a node crosses the boundary
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  GLOW FILTER (per category)
+// ══════════════════════════════════════════════════════════════════════════════
+
+const GLOW_BLUR_STDDEV = 3;    // gaussian blur standard deviation
+const GLOW_FLOOD_ALPHA = 0.8;  // alpha of the flood colour (replaces category alpha)
+const GLOW_FLOOD_OPACITY = 0.5; // flood-opacity filter attribute
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  LABEL STYLES
+// ══════════════════════════════════════════════════════════════════════════════
+
+const LABEL_OFFSET_Y = 11;                          // px below node centre
+const LABEL_COLOR = "rgba(213,220,232,0.65)";       // text fill
+const LABEL_FONT_FAMILY = "monospace";
+const LABEL_FONT_SIZE_MIN = 8;                      // minimum font size (px)
+const LABEL_FONT_SIZE_SCALE = 0.6;                  // multiplier of node radius → font size
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  CONTAINER STYLES
+// ══════════════════════════════════════════════════════════════════════════════
+
+const CONTAINER_HEIGHT = "clamp(500px, 70vh, 850px)";
+const CONTAINER_BORDER_COLOR = "rgba(167,139,250,0.25)";
+const CONTAINER_BG_COLOR = "rgba(11,13,23,0.6)";
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  HELPER FUNCTIONS
+// ══════════════════════════════════════════════════════════════════════════════
 
 export function ratingColor(rating: number): string {
-  const t = (rating - 1) / 4;
-  const r = Math.round(239 - t * (239 - 34));
-  const g = Math.round(68 + t * (197 - 68));
-  const b = Math.round(68 + t * (94 - 68));
+  const t = (rating - RATING_MIN) / (RATING_MAX - RATING_MIN);
+  const r = Math.round(RATING_COLOR_MIN_R - t * (RATING_COLOR_MIN_R - RATING_COLOR_MAX_R));
+  const g = Math.round(RATING_COLOR_MIN_G + t * (RATING_COLOR_MAX_G - RATING_COLOR_MIN_G));
+  const b = Math.round(RATING_COLOR_MIN_B + t * (RATING_COLOR_MAX_B - RATING_COLOR_MIN_B));
   return `rgb(${r},${g},${b})`;
 }
 
@@ -60,7 +155,14 @@ function getSkillCategories(): Map<CatKey, Record<string, number>> {
   return map;
 }
 
-// ── graph simulation types ──────────────────────────────────────────────────
+function radiusScale(rating: number): number {
+  const t = (rating - RATING_MIN) / (RATING_MAX - RATING_MIN);
+  return RADIUS_MIN + t * (RADIUS_MAX - RADIUS_MIN);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  TYPES
+// ══════════════════════════════════════════════════════════════════════════════
 
 interface SimNode extends SimulationNodeDatum {
   id: string;
@@ -75,19 +177,9 @@ interface SimLink extends SimulationLinkDatum<SimNode> {
   target: string | SimNode;
 }
 
-// ── visual constants ────────────────────────────────────────────────────────
-
-const RADIUS_MIN = 5;
-const RADIUS_MAX = 15;
-const LABEL_RATING_THRESHOLD = 3;
-const LINK_DISTANCE = 28;
-const CHARGE_STRENGTH = -35;
-
-function radiusScale(rating: number): number {
-  return RADIUS_MIN + ((rating - 1) / 4) * (RADIUS_MAX - RADIUS_MIN);
-}
-
-// ── component ───────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+//  COMPONENT
+// ══════════════════════════════════════════════════════════════════════════════
 
 export function SkillGraph() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -127,7 +219,7 @@ export function SkillGraph() {
       n.fx = null;
       n.fy = null;
     }
-    simRef.current?.alphaTarget(0.3).restart();
+    simRef.current?.alphaTarget(REHEAT_ALPHA).restart();
 
     const output = `TARGETS (saved):\n${lines.join("\n")}\n---\n[${sorted.map(([i, g]) => {
       const x = Math.round(g.xs.reduce((s, v) => s + v, 0) / g.xs.length);
@@ -184,7 +276,7 @@ export function SkillGraph() {
       }
       // extra connections for cohesion
       for (let i = 0; i < groupNodes.length; i++) {
-        for (let j = i + 2; j < Math.min(i + 5, groupNodes.length); j++) {
+        for (let j = i + GROUP_EXTRA_LINK_START_OFFSET; j < Math.min(i + GROUP_EXTRA_LINK_MAX_LOOKAHEAD, groupNodes.length); j++) {
           links.push({ source: groupNodes[i].id, target: groupNodes[j].id });
         }
       }
@@ -200,10 +292,10 @@ export function SkillGraph() {
           .distance(LINK_DISTANCE)
       )
       .force("charge", forceManyBody().strength(CHARGE_STRENGTH))
-      .force("x", forceX<SimNode>(width / 2).strength(0.02))
-      .force("y", forceY<SimNode>(height / 2).strength(0.02))
-      .alphaDecay(0.015)
-      .alphaMin(0.001);
+      .force("x", forceX<SimNode>(width / 2).strength(CENTER_FORCE_STRENGTH/2.5))
+      .force("y", forceY<SimNode>(height / 2).strength(CENTER_FORCE_STRENGTH))
+      .alphaDecay(ALPHA_DECAY)
+      .alphaMin(ALPHA_MIN);
 
     simRef.current = simulation;
 
@@ -213,7 +305,7 @@ export function SkillGraph() {
     const defs = document.createElementNS(ns, "defs");
     categories.forEach((cat, i) => {
       const base = CAT_COLOR_MAP[cat] || "rgba(167,139,250,0.4)";
-      const glowColor = base.replace(/[\d.]+\)$/, "0.8)");
+      const glowColor = base.replace(/[\d.]+\)$/, `${GLOW_FLOOD_ALPHA})`);
       const filter = document.createElementNS(ns, "filter");
       filter.setAttribute("id", `sg-glow-${i}`);
       filter.setAttribute("x", "-50%");
@@ -221,8 +313,8 @@ export function SkillGraph() {
       filter.setAttribute("width", "200%");
       filter.setAttribute("height", "200%");
       filter.innerHTML = [
-        `<feGaussianBlur stdDeviation="3" result="blur"/>`,
-        `<feFlood flood-color="${glowColor}" flood-opacity="0.5" result="color"/>`,
+        `<feGaussianBlur stdDeviation="${GLOW_BLUR_STDDEV}" result="blur"/>`,
+        `<feFlood flood-color="${glowColor}" flood-opacity="${GLOW_FLOOD_OPACITY}" result="color"/>`,
         `<feComposite in="color" in2="blur" operator="in" result="glow"/>`,
         `<feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>`,
       ].join("");
@@ -242,8 +334,8 @@ export function SkillGraph() {
     const linkEls: SVGLineElement[] = [];
     for (let i = 0; i < links.length; i++) {
       const line = document.createElementNS(ns, "line");
-      line.setAttribute("stroke", "rgba(167,139,250,0.1)");
-      line.setAttribute("stroke-width", "1");
+      line.setAttribute("stroke", LINK_STROKE_COLOR);
+      line.setAttribute("stroke-width", String(LINK_STROKE_WIDTH));
       linkLayer.appendChild(line);
       linkEls.push(line);
     }
@@ -257,26 +349,26 @@ export function SkillGraph() {
       const circle = document.createElementNS(ns, "circle");
       circle.setAttribute("r", String(r));
       circle.setAttribute("fill", ratingColor(n.rating));
-      circle.setAttribute("stroke", "rgba(255,255,255,0.2)");
-      circle.setAttribute("stroke-width", "1");
+      circle.setAttribute("stroke", NODE_STROKE_COLOR);
+      circle.setAttribute("stroke-width", String(NODE_STROKE_WIDTH));
       circle.setAttribute("filter", `url(#sg-glow-${n.groupIndex})`);
       circle.style.cursor = "grab";
-      circle.style.transition = "r 0.25s ease, stroke-width 0.25s ease, stroke 0.25s ease";
+      circle.style.transition = NODE_TRANSITION;
 
       const title = document.createElementNS(ns, "title");
-      title.textContent = `${n.name}  (${n.rating}/5)  —  ${n.category}`;
+      title.textContent = `${n.name}  (${n.rating}/${RATING_MAX})  —  ${n.category}`;
       circle.appendChild(title);
 
       circle.addEventListener("pointerenter", () => {
-        circle.setAttribute("r", String(r * 1.5));
-        circle.setAttribute("stroke", "rgba(255,255,255,0.8)");
-        circle.setAttribute("stroke-width", "2.5");
+        circle.setAttribute("r", String(r * NODE_HOVER_SCALE));
+        circle.setAttribute("stroke", NODE_HOVER_STROKE_COLOR);
+        circle.setAttribute("stroke-width", String(NODE_HOVER_STROKE_WIDTH));
         circle.style.cursor = "grab";
       });
       circle.addEventListener("pointerleave", () => {
         circle.setAttribute("r", String(r));
-        circle.setAttribute("stroke", "rgba(255,255,255,0.2)");
-        circle.setAttribute("stroke-width", "1");
+        circle.setAttribute("stroke", NODE_STROKE_COLOR);
+        circle.setAttribute("stroke-width", String(NODE_STROKE_WIDTH));
         circle.style.cursor = "default";
       });
 
@@ -287,10 +379,10 @@ export function SkillGraph() {
         const text = document.createElementNS(ns, "text");
         text.textContent = n.name;
         text.setAttribute("text-anchor", "middle");
-        text.setAttribute("dy", String(r + 11));
-        text.setAttribute("fill", "rgba(213,220,232,0.65)");
-        text.setAttribute("font-size", String(Math.max(8, r * 0.6)));
-        text.setAttribute("font-family", "monospace");
+        text.setAttribute("dy", String(r + LABEL_OFFSET_Y));
+        text.setAttribute("fill", LABEL_COLOR);
+        text.setAttribute("font-size", String(Math.max(LABEL_FONT_SIZE_MIN, r * LABEL_FONT_SIZE_SCALE)));
+        text.setAttribute("font-family", LABEL_FONT_FAMILY);
         text.setAttribute("pointer-events", "none");
         labelLayer.appendChild(text);
         labelEls.push(text);
@@ -299,12 +391,12 @@ export function SkillGraph() {
 
     // ── bounding helper ──────────────────────────────────────────────────
     function clampNode(n: SimNode, r: number) {
-      // soft boundary — push nodes back inside the 40px margin
-      const margin = 40;
-      if (n.x != null && n.x < margin + r) n.vx = (n.vx ?? 0) + (margin + r - n.x) * 0.3;
-      if (n.x != null && n.x > width - margin - r) n.vx = (n.vx ?? 0) - (n.x - (width - margin - r)) * 0.3;
-      if (n.y != null && n.y < margin + r) n.vy = (n.vy ?? 0) + (margin + r - n.y) * 0.3;
-      if (n.y != null && n.y > height - margin - r) n.vy = (n.vy ?? 0) - (n.y - (height - margin - r)) * 0.3;
+      // soft boundary — push nodes back inside the margin
+      const margin = BOUNDARY_MARGIN;
+      if (n.x != null && n.x < margin + r) n.vx = (n.vx ?? 0) + (margin + r - n.x) * BOUNDARY_PUSH_FACTOR;
+      if (n.x != null && n.x > width - margin - r) n.vx = (n.vx ?? 0) - (n.x - (width - margin - r)) * BOUNDARY_PUSH_FACTOR;
+      if (n.y != null && n.y < margin + r) n.vy = (n.vy ?? 0) + (margin + r - n.y) * BOUNDARY_PUSH_FACTOR;
+      if (n.y != null && n.y > height - margin - r) n.vy = (n.vy ?? 0) - (n.y - (height - margin - r)) * BOUNDARY_PUSH_FACTOR;
     }
 
     // ── tick ────────────────────────────────────────────────────────────
@@ -336,7 +428,7 @@ export function SkillGraph() {
           const r = radiusScale(n.rating);
           labelEls[li].setAttribute("x", String(cx));
           labelEls[li].setAttribute("y", String(cy));
-          labelEls[li].setAttribute("dy", String(r + 11));
+          labelEls[li].setAttribute("dy", String(r + LABEL_OFFSET_Y));
           li++;
         }
       }
@@ -348,7 +440,7 @@ export function SkillGraph() {
     function findNode(px: number, py: number): SimNode | null {
       for (let i = nodes.length - 1; i >= 0; i--) {
         const n = nodes[i];
-        const r = radiusScale(n.rating) + 4;
+        const r = radiusScale(n.rating) + NODE_DRAG_HIT_PADDING;
         const dx = (n.x ?? 0) - px;
         const dy = (n.y ?? 0) - py;
         if (dx * dx + dy * dy < r * r) return n;
@@ -378,7 +470,7 @@ export function SkillGraph() {
       hit.fx = hit.x;
       hit.fy = hit.y;
       if (svgRef.current) svgRef.current.style.cursor = "grabbing";
-      simulation.alphaTarget(0.3).restart();
+      simulation.alphaTarget(REHEAT_ALPHA).restart();
     }
 
     function onPointerMove(e: PointerEvent) {
@@ -424,7 +516,7 @@ export function SkillGraph() {
       if (hit && (hit.fx != null || hit.fy != null)) {
         hit.fx = null;
         hit.fy = null;
-        simulation.alphaTarget(0.3).restart();
+        simulation.alphaTarget(REHEAT_ALPHA).restart();
       }
     }
 
@@ -455,9 +547,9 @@ export function SkillGraph() {
       svgEl.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
       simulation
-        .force("x", forceX<SimNode>(w / 2).strength(0.02))
-        .force("y", forceY<SimNode>(h / 2).strength(0.02))
-        .alpha(0.3)
+        .force("x", forceX<SimNode>(w / 2).strength(CENTER_FORCE_STRENGTH))
+        .force("y", forceY<SimNode>(h / 2).strength(CENTER_FORCE_STRENGTH))
+        .alpha(REHEAT_ALPHA)
         .restart();
     };
 
@@ -505,9 +597,9 @@ export function SkillGraph() {
         ref={containerRef}
         className="relative mx-auto w-full max-w-7xl overflow-hidden rounded-xl border"
         style={{
-          height: "clamp(500px, 70vh, 850px)",
-          borderColor: "rgba(167,139,250,0.25)",
-          backgroundColor: "rgba(11,13,23,0.6)",
+          height: CONTAINER_HEIGHT,
+          borderColor: CONTAINER_BORDER_COLOR,
+          backgroundColor: CONTAINER_BG_COLOR,
         }}
       >
         <svg ref={svgRef} className="h-full w-full" />
