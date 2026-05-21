@@ -1120,13 +1120,9 @@ export function SkillGraph() {
                 disabled={!canApply}
                 className="ml-2 rounded px-4 py-1 font-mono text-xs font-semibold transition-all duration-150"
                 style={{
-                  backgroundColor: filterActive
-                    ? "rgba(239,68,68,0.7)"
-                    : canApply
-                      ? "rgba(99,102,241,0.6)"
-                      : "rgba(60,60,70,0.4)",
+                  backgroundColor: canApply ? "rgba(99,102,241,0.6)" : "rgba(60,60,70,0.4)",
                   color: canApply ? "#fff" : "rgba(120,120,130,0.5)",
-                  border: `1px solid ${filterActive ? "rgba(239,68,68,0.8)" : canApply ? "rgba(99,102,241,0.7)" : "rgba(80,80,90,0.3)"}`,
+                  border: `1px solid ${canApply ? "rgba(99,102,241,0.7)" : "rgba(80,80,90,0.3)"}`,
                   cursor: canApply ? "pointer" : "not-allowed",
                 }}
               >
