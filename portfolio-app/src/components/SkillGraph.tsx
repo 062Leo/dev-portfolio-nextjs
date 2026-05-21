@@ -132,6 +132,14 @@ const BOUNDARY_MARGIN = 20;       // px margin from container edges
 const BOUNDARY_PUSH_FACTOR = 0.3; // push strength when a node crosses the boundary
 
 // ══════════════════════════════════════════════════════════════════════════════
+//  MOUSE REPULSION  (left‑click + drag on empty canvas pushes nodes away)
+// ══════════════════════════════════════════════════════════════════════════════
+
+const MOUSE_FORCE_RADIUS = 160;               // px range of the repulsion field
+const MOUSE_FORCE_STRENGTH = 14;              // max push strength at the cursor centre
+const MOUSE_RIPPLE_COLOR = "rgba(167,139,250,0.35)"; // glow colour for the ripple rings
+
+// ══════════════════════════════════════════════════════════════════════════════
 //  GLOW FILTER (per category)
 // ══════════════════════════════════════════════════════════════════════════════
 
@@ -611,15 +619,61 @@ export function SkillGraph() {
       ].join("");
       defs.appendChild(filter);
     });
+    // ── mouse ripple radial gradient ─────────────────────────────────
+    const rippleBase = MOUSE_RIPPLE_COLOR.replace(/[\d.]+\)$/, "");
+    const rippleGrad = document.createElementNS(ns, "radialGradient");
+    rippleGrad.setAttribute("id", "sg-mouse-ripple-grad");
+    rippleGrad.setAttribute("cx", "50%");
+    rippleGrad.setAttribute("cy", "50%");
+    rippleGrad.setAttribute("r", "50%");
+    rippleGrad.innerHTML = [
+      `<stop offset="0%"   stop-color="${MOUSE_RIPPLE_COLOR}"/>`,
+      `<stop offset="60%"  stop-color="${rippleBase}0.15)"/>`,
+      `<stop offset="100%" stop-color="${rippleBase}0)"/>`,
+    ].join("");
+    defs.appendChild(rippleGrad);
+
     svgEl.appendChild(defs);
+
+    // ── CSS keyframes for ripple pulse animation ──────────────────────
+    const rippleStyle = document.createElementNS(ns, "style");
+    rippleStyle.textContent = `
+      @keyframes sg-ripple-pulse {
+        0%, 100% { opacity: 0.55; }
+        50%      { opacity: 0.12; }
+      }
+      @keyframes sg-ripple-inner {
+        0%, 100% { opacity: 0.7; }
+        50%      { opacity: 0.2; }
+      }
+    `;
+    svgEl.appendChild(rippleStyle);
 
     // layers
     const hullLayer = document.createElementNS(ns, "g");
     const linkLayer = document.createElementNS(ns, "g");
     const nodeLayer = document.createElementNS(ns, "g");
     const labelLayer = document.createElementNS(ns, "g");
+
+    // ── mouse ripple visual (hidden until mouse is pressed) ──────────
+    const rippleOuter = document.createElementNS(ns, "circle");
+    rippleOuter.setAttribute("r", String(MOUSE_FORCE_RADIUS));
+    rippleOuter.setAttribute("fill", "url(#sg-mouse-ripple-grad)");
+    rippleOuter.setAttribute("pointer-events", "none");
+    rippleOuter.style.animation = "sg-ripple-pulse 1.4s ease-in-out infinite";
+    rippleOuter.style.display = "none";
+
+    const rippleInner = document.createElementNS(ns, "circle");
+    rippleInner.setAttribute("r", String(MOUSE_FORCE_RADIUS * 0.5));
+    rippleInner.setAttribute("fill", "url(#sg-mouse-ripple-grad)");
+    rippleInner.setAttribute("pointer-events", "none");
+    rippleInner.style.animation = "sg-ripple-inner 1.0s ease-in-out infinite";
+    rippleInner.style.display = "none";
+
     svgEl.appendChild(hullLayer);
     svgEl.appendChild(linkLayer);
+    svgEl.appendChild(rippleOuter);
+    svgEl.appendChild(rippleInner);
     svgEl.appendChild(nodeLayer);
     svgEl.appendChild(labelLayer);
 
@@ -744,6 +798,39 @@ export function SkillGraph() {
         const n = nodes[i];
         const r = radiusScale(n.rating);
         clampNode(n, r);
+      }
+
+      // ── mouse repulsion force (push nodes away from cursor) ────────
+      if (mouseIsDown) {
+        const R2 = MOUSE_FORCE_RADIUS * MOUSE_FORCE_RADIUS;
+        const mcx = mouseSVGX;
+        const mcy = mouseSVGY;
+        for (let i = 0; i < nodes.length; i++) {
+          const n = nodes[i];
+          const dx = (n.x ?? 0) - mcx;
+          const dy = (n.y ?? 0) - mcy;
+          const dist2 = dx * dx + dy * dy;
+          if (dist2 < 1e-6) continue;
+          if (dist2 < R2) {
+            const dist = Math.sqrt(dist2);
+            const force = MOUSE_FORCE_STRENGTH * (1 - dist / MOUSE_FORCE_RADIUS);
+            n.vx = (n.vx ?? 0) + (dx / dist) * force;
+            n.vy = (n.vy ?? 0) + (dy / dist) * force;
+          }
+        }
+      }
+
+      // ── update mouse ripple visual ─────────────────────────────────
+      if (mouseIsDown) {
+        rippleOuter.style.display = "";
+        rippleInner.style.display = "";
+        rippleOuter.setAttribute("cx", String(mouseSVGX));
+        rippleOuter.setAttribute("cy", String(mouseSVGY));
+        rippleInner.setAttribute("cx", String(mouseSVGX));
+        rippleInner.setAttribute("cy", String(mouseSVGY));
+      } else {
+        rippleOuter.style.display = "none";
+        rippleInner.style.display = "none";
       }
 
       // ── update vacuum‑pack hulls ────────────────────────────────────
@@ -922,6 +1009,11 @@ export function SkillGraph() {
     // ── drag (D3-style: fix single node → link forces pull group) ──────
     let dragNode: SimNode | null = null;
 
+    // ── mouse repulsion state (LMB on empty canvas) ─────────────────
+    let mouseIsDown = false;
+    let mouseSVGX = 0;
+    let mouseSVGY = 0;
+
     function findNode(px: number, py: number): SimNode | null {
       for (let i = nodes.length - 1; i >= 0; i--) {
         const n = nodes[i];
@@ -940,6 +1032,8 @@ export function SkillGraph() {
     }
 
     function onPointerDown(e: PointerEvent) {
+      if (e.button !== 0) return; // left button only
+
       const rect = svgRect();
       const scaleX = width / rect.width;
       const scaleY = height / rect.height;
@@ -947,11 +1041,18 @@ export function SkillGraph() {
       const py = (e.clientY - rect.top) * scaleY;
 
       const hit = findNode(px, py);
-      if (!hit) return;
+      if (!hit) {
+        // start mouse repulsion mode
+        mouseIsDown = true;
+        mouseSVGX = px;
+        mouseSVGY = py;
+        simulation.alphaTarget(REHEAT_ALPHA).restart();
+        if (svgRef.current) svgRef.current.style.cursor = "none";
+        return;
+      }
 
       e.preventDefault();
       dragNode = hit;
-      // fix the node at its current position
       hit.fx = hit.x;
       hit.fy = hit.y;
       if (svgRef.current) svgRef.current.style.cursor = "grabbing";
@@ -959,34 +1060,41 @@ export function SkillGraph() {
     }
 
     function onPointerMove(e: PointerEvent) {
-      if (!dragNode) {
-        const rect = svgRect();
-        const scaleX = width / rect.width;
-        const scaleY = height / rect.height;
-        const px = (e.clientX - rect.left) * scaleX;
-        const py = (e.clientY - rect.top) * scaleY;
-        const hit = findNode(px, py);
-        if (svgRef.current) svgRef.current.style.cursor = hit ? "grab" : "default";
-        return;
-      }
-
       const rect = svgRect();
       const scaleX = width / rect.width;
       const scaleY = height / rect.height;
       const px = (e.clientX - rect.left) * scaleX;
       const py = (e.clientY - rect.top) * scaleY;
 
+      if (!dragNode) {
+        if (mouseIsDown) {
+          mouseSVGX = px;
+          mouseSVGY = py;
+          return;
+        }
+        const hit = findNode(px, py);
+        if (svgRef.current) svgRef.current.style.cursor = hit ? "grab" : "default";
+        return;
+      }
+
       dragNode.fx = px;
       dragNode.fy = py;
     }
 
     function onPointerUp(_e: PointerEvent) {
-      if (!dragNode) return;
-      dragNode.fx = null;
-      dragNode.fy = null;
-      dragNode = null;
+      if (dragNode) {
+        dragNode.fx = null;
+        dragNode.fy = null;
+        dragNode = null;
+        simulation.alphaTarget(0);
+      }
+
+      if (mouseIsDown) {
+        mouseIsDown = false;
+        simulation.alphaTarget(0);
+      }
+
       if (svgRef.current) svgRef.current.style.cursor = "default";
-      simulation.alphaTarget(0);
     }
 
     // double-click to release a fixed node
