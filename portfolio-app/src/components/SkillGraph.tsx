@@ -142,7 +142,7 @@ const LABEL_CONNECTOR_LENGTH = 8;     // länge der verbindungslinie vom knotenr
 const LABEL_TRY_DIRECTIONS = 8;       // wie viele richtungen probiert werden: 4 = N/S/W/O, 8 = +diagonalen
 
 // ——  Text‑Grösse (skaliert linear mit Rating 1…5) ———————————————————————————
-const LABEL_FONT_SIZE_MIN = 5;        // px für Rating 1
+const LABEL_FONT_SIZE_MIN = 7;        // px für Rating 1
 const LABEL_FONT_SIZE_MAX = 14;       // px für Rating 5
 const LABEL_FONT_FAMILY = "monospace";
 
@@ -175,7 +175,7 @@ const LABEL_DIR_PRIORITY: Record<number, number> = {
 
 const CONTAINER_HEIGHT = "clamp(500px, 70vh, 850px)";
 const CONTAINER_BORDER_COLOR = "rgba(167,139,250,0.25)";
-const CONTAINER_BG_COLOR = "rgba(11,13,23,0.6)";
+const CONTAINER_BG_COLOR = "rgb(11, 13, 23)";
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  HULL  –  vacuum‑pack enclosure around category groups
