@@ -3,9 +3,9 @@
     ".NET": 5,
     "ASP.NET": 3,
     "Blazor": 3,
-    "Entity Framework Core": 4,
+    "Entity Framework Core": 3,
     "NuGet": 4,
-    "WPF": 4
+    "WPF": 3
   },
   "Architektur": {
     "Clean Code": 5,
@@ -16,22 +16,23 @@
     "Security": 4,
     "Software Configuration": 3,
     "System Engineering": 3,
-    "Technische Dokumentation": 3
+    "Dokumentation": 4
   },
   "Backend": {
-    "Client-Server-Architektur": 4,
+    "Client-Server-Architektur": 3,
     "Django": 3,
-    "Flutter": 2,
+    "Flutter": 3,
     "Microservices": 3,
-    "NodeJS": 2,
+    "NodeJS": 3,
     "REST API": 4
   },
   "Daten & SQL": {
     "JSON": 5,
     "SQL": 3,
-    "SQLite": 2,
-    "XML": 3,
-    "YAML": 2
+    "SQLite": 3,
+    "XML": 2,
+    "YAML": 3,
+     "Markdown": 4
   },
   "DevOps": {
     "Azure": 3,
@@ -68,11 +69,11 @@
     "TensorFlow": 3
   },
   "KI-Tools": {
-    "Antigravity": 2,
-    "Claude Code": 3,
-    "GitHub Copilot": 3,
-    "OpenCode": 2,
-    "Postman": 2
+    "Antigravity": 4,
+    "Claude Code": 4,
+    "GitHub Copilot": 4,
+    "OpenCode": 4,
+    "Windsurf": 3
   },
   "ML Training": {
     "Curriculum Learning": 3,
@@ -112,7 +113,7 @@
     "JavaScript": 3,
     "Python": 3,
     "TypeScript": 4,
-    "java": 3
+    "java": 4
   },
   "Testing": {
     "Integration Testing": 3,
@@ -121,28 +122,27 @@
   },
   "Tools": {
     "Bitbucket": 3,
-    "Eclipse": 1,
+    "Eclipse": 2,
     "Git": 5,
     "Github": 5,
     "Intellij": 3,
     "Rider (JetBrains)": 3,
-    "VS / VS Code": 4,
-    "Windsurf": 3
+    "VS / VS Code": 5,
+    "Postman": 3
   },
   "Unity": {
     "ProBuilder": 3,
-    "State Machine": 4,
     "Unity": 5,
     "Unity Animator": 2,
-    "Unity Particle System": 1,
+    "Unity Particle System": 2,
     "Unity Physics Engine": 4,
     "Unity Shader Graph": 2,
     "Unity Tilemap": 4
   },
   "Unity Monet.": {
-    "Google AdMob": 2,
+    "Google AdMob": 1,
     "IronSource": 2,
-    "Unity Ads": 2,
+    "Unity Ads": 1,
     "Unity IAP": 2
   },
   "Unity Netcode": {
@@ -154,15 +154,13 @@
     "Unity Transport": 3
   },
   "Web": {
-    "Angular": 3,
+    "Angular": 4,
     "CSS": 3,
     "HTML": 3,
-    "Markdown": 4,
-    "Next.js": 2,
+    "Next.js": 4,
     "React": 3,
-    "React Native": 1,
-    "Tailwind": 2,
+    "Tailwind": 3,
     "UX Design": 3,
-    "VueJS": 2
+    "VueJS": 3
   }
 }

@@ -106,15 +106,23 @@ const COLLIDE_PADDING = 2;        // extra px between node edges for forceCollid
 const REHEAT_ALPHA = 0.2;         // alpha / alphaTarget when re-energizing (drag, resize, etc.)
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  RATING COLORS (linear interpolation per node)
+//  RATING COLORS — one constant per rating, set manually as rgba
 // ══════════════════════════════════════════════════════════════════════════════
 
-const RATING_COLOR_MIN_R = 239;  // rating 1  red-ish
-const RATING_COLOR_MIN_G = 68;
-const RATING_COLOR_MIN_B = 68;
-const RATING_COLOR_MAX_R = 34;   // rating 5  green-ish
-const RATING_COLOR_MAX_G = 197;
-const RATING_COLOR_MAX_B = 94;
+const RATING_1_COLOR = "rgb(255, 0, 0)";    // red
+const RATING_2_COLOR = "rgb(255, 102, 0)";    // orange
+const RATING_3_COLOR = "rgb(242, 255, 0)";    // yellow
+const RATING_4_COLOR = "rgb(111, 255, 0)";    // yellow-green
+const RATING_5_COLOR = "rgb(32, 184, 85)";      // bright green
+
+const RATING_COLORS = [
+  "",
+  RATING_1_COLOR,
+  RATING_2_COLOR,
+  RATING_3_COLOR,
+  RATING_4_COLOR,
+  RATING_5_COLOR,
+];
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  BOUNDARY (keeps nodes inside container)
@@ -142,7 +150,7 @@ const LABEL_CONNECTOR_LENGTH = 8;     // länge der verbindungslinie vom knotenr
 const LABEL_TRY_DIRECTIONS = 8;       // wie viele richtungen probiert werden: 4 = N/S/W/O, 8 = +diagonalen
 
 // ——  Text‑Grösse (skaliert linear mit Rating 1…5) ———————————————————————————
-const LABEL_FONT_SIZE_MIN = 7;        // px für Rating 1
+const LABEL_FONT_SIZE_MIN = 9;        // px für Rating 1
 const LABEL_FONT_SIZE_MAX = 14;       // px für Rating 5
 const LABEL_FONT_FAMILY = "monospace";
 
@@ -239,11 +247,8 @@ const HULL_STROKE_OPACITY = 0.45;       // 0 … 1
 // ══════════════════════════════════════════════════════════════════════════════
 
 export function ratingColor(rating: number): string {
-  const t = (rating - RATING_MIN) / (RATING_MAX - RATING_MIN);
-  const r = Math.round(RATING_COLOR_MIN_R - t * (RATING_COLOR_MIN_R - RATING_COLOR_MAX_R));
-  const g = Math.round(RATING_COLOR_MIN_G + t * (RATING_COLOR_MAX_G - RATING_COLOR_MIN_G));
-  const b = Math.round(RATING_COLOR_MIN_B + t * (RATING_COLOR_MAX_B - RATING_COLOR_MIN_B));
-  return `rgb(${r},${g},${b})`;
+  const idx = Math.round(rating);
+  return RATING_COLORS[idx] || RATING_COLORS[1];
 }
 
 function getSkillCategories(): Map<CatKey, Record<string, number>> {
