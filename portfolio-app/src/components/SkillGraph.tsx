@@ -83,13 +83,24 @@ const MAX_DEGREE_HIGH = 4;                // max total degree for the high-count
 const MAX_DEGREE_NORMAL = 2;              // max total degree for all other nodes
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  FORCE SIMULATION
+//  FORCE SIMULATION — dynamic scaling based on visible node count
 // ══════════════════════════════════════════════════════════════════════════════
 
-const LINK_DISTANCE = 28;         // target length of link edges
-const CHARGE_STRENGTH = -85;      // repulsion between every node pair (negative = push apart)
-const CENTER_FORCE_STRENGTH = 0.1; // strength of centering gravity
-const ALPHA_DECAY = 0.01;        // cooling rate per tick (higher = faster settle)
+const LINK_DISTANCE = 28;           // target length of link edges
+
+// —— anchor points for force interpolation (nodeCount → force values) ——
+const MAX_NODES = 126;
+const MIN_NODES = 6;
+
+// values at 126 nodes (all ratings — known perfect)
+const CHARGE_AT_MAX   = -85;
+const CENTER_Y_AT_MAX = 0.1;
+
+// values at 6 nodes (rating 1 only — ADJUST THESE UNTIL LAYOUT LOOKS GOOD)
+const CHARGE_AT_MIN   = -200;
+const CENTER_Y_AT_MIN = 0.045;
+
+const ALPHA_DECAY = 0.01;          // cooling rate per tick (higher = faster settle)
 const ALPHA_MIN = 0.001;          // simulation stops when alpha drops below this
 const COLLIDE_PADDING = 2;        // extra px between node edges for forceCollide
 const REHEAT_ALPHA = 0.2;         // alpha / alphaTarget when re-energizing (drag, resize, etc.)
@@ -485,6 +496,8 @@ export function SkillGraph() {
           rating,
           category,
           groupIndex: ci,
+          x: width / 2 + (Math.random() - 0.5) * 200,
+          y: height / 2 + (Math.random() - 0.5) * 200,
         };
         nodes.push(node);
         groupNodes.push(node);
@@ -549,6 +562,13 @@ export function SkillGraph() {
       }
     });
 
+    // ── dynamic force scaling — linear lerp between min & max node count ──
+    const nodeCount = nodes.length;
+    const t = Math.max(0, Math.min(1, (nodeCount - MIN_NODES) / (MAX_NODES - MIN_NODES)));
+    const dynCharge = CHARGE_AT_MIN + (CHARGE_AT_MAX - CHARGE_AT_MIN) * t;
+    const dynCenterY = CENTER_Y_AT_MIN + (CENTER_Y_AT_MAX - CENTER_Y_AT_MIN) * t;
+    const dynCenterX = dynCenterY / 2.5;
+
     const simulation = forceSimulation<SimNode>(nodes)
       .force(
         "link",
@@ -556,10 +576,10 @@ export function SkillGraph() {
           .id((d) => d.id)
           .distance(LINK_DISTANCE)
       )
-      .force("charge", forceManyBody().strength(CHARGE_STRENGTH))
+      .force("charge", forceManyBody().strength(dynCharge))
       .force("collide", forceCollide<SimNode>().radius(d => radiusScale(d.rating) + COLLIDE_PADDING))
-      .force("x", forceX<SimNode>(width / 2).strength(CENTER_FORCE_STRENGTH/2.5))
-      .force("y", forceY<SimNode>(height / 2).strength(CENTER_FORCE_STRENGTH))
+      .force("x", forceX<SimNode>(width / 2).strength(dynCenterX))
+      .force("y", forceY<SimNode>(height / 2).strength(dynCenterY))
       .alphaDecay(ALPHA_DECAY)
       .alphaMin(ALPHA_MIN);
 
@@ -994,8 +1014,8 @@ export function SkillGraph() {
       svgEl.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
       simulation
-        .force("x", forceX<SimNode>(w / 2).strength(CENTER_FORCE_STRENGTH))
-        .force("y", forceY<SimNode>(h / 2).strength(CENTER_FORCE_STRENGTH))
+        .force("x", forceX<SimNode>(w / 2).strength(dynCenterX))
+        .force("y", forceY<SimNode>(h / 2).strength(dynCenterY))
         .alpha(REHEAT_ALPHA)
         .restart();
     };
