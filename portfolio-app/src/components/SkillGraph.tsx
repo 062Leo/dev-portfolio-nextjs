@@ -136,8 +136,8 @@ const BOUNDARY_PUSH_FACTOR = 0.3; // push strength when a node crosses the bound
 // ══════════════════════════════════════════════════════════════════════════════
 
 const MOUSE_FORCE_RADIUS = 160;               // px range of the repulsion field
-const MOUSE_FORCE_STRENGTH = 14;              // max push strength at the cursor centre
-const MOUSE_RIPPLE_COLOR = "rgba(167,139,250,0.35)"; // glow colour for the ripple rings
+const MOUSE_FORCE_STRENGTH = 20;              // max push strength at the cursor centre
+const MOUSE_RIPPLE_COLOR = "rgba(167, 139, 250, 0.69)"; // glow colour for the ripple rings
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  GLOW FILTER (per category)
@@ -488,6 +488,7 @@ export function SkillGraph() {
 
     svgEl.innerHTML = "";
     svgEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    svgEl.style.userSelect = "none";
 
     const merged = getSkillCategories();
     const categories = Array.from(merged.keys());
@@ -635,17 +636,27 @@ export function SkillGraph() {
 
     svgEl.appendChild(defs);
 
-    // ── CSS keyframes for ripple pulse animation ──────────────────────
+    const RIPPLE_MAX_R = MOUSE_FORCE_RADIUS * 0.6;
+
+    // ── CSS keyframes for ripple ring animation ───────────────────────
     const rippleStyle = document.createElementNS(ns, "style");
     rippleStyle.textContent = `
-      @keyframes sg-ripple-pulse {
-        0%, 100% { opacity: 0.55; }
-        50%      { opacity: 0.12; }
+      @keyframes sg-ripple-ring {
+        0%   { r: 2;  opacity: 0.9; stroke-width: 3.5; }
+        100% { r: ${RIPPLE_MAX_R}; opacity: 0.1;   stroke-width: 1; }
       }
-      @keyframes sg-ripple-inner {
-        0%, 100% { opacity: 0.7; }
-        50%      { opacity: 0.2; }
+      @keyframes sg-ripple-glow {
+        0%, 100% { opacity: 0.22; }
+        50%      { opacity: 0.05; }
       }
+      .sg-ripple-ring {
+        fill: none;
+        stroke: rgba(167,139,250,0.45);
+        animation: sg-ripple-ring 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+      }
+      .sg-ripple-ring:nth-child(1) { animation-delay: 0s; }
+      .sg-ripple-ring:nth-child(2) { animation-delay: -0.5s; }
+      .sg-ripple-ring:nth-child(3) { animation-delay: -1s; }
     `;
     svgEl.appendChild(rippleStyle);
 
@@ -655,25 +666,29 @@ export function SkillGraph() {
     const nodeLayer = document.createElementNS(ns, "g");
     const labelLayer = document.createElementNS(ns, "g");
 
-    // ── mouse ripple visual (hidden until mouse is pressed) ──────────
-    const rippleOuter = document.createElementNS(ns, "circle");
-    rippleOuter.setAttribute("r", String(MOUSE_FORCE_RADIUS));
-    rippleOuter.setAttribute("fill", "url(#sg-mouse-ripple-grad)");
-    rippleOuter.setAttribute("pointer-events", "none");
-    rippleOuter.style.animation = "sg-ripple-pulse 1.4s ease-in-out infinite";
-    rippleOuter.style.display = "none";
+    // ── mouse ripple visual — subtle glow + 3 expanding ripple rings ─
+    const rippleGlow = document.createElementNS(ns, "circle");
+    rippleGlow.setAttribute("r", String(MOUSE_FORCE_RADIUS * 0.3));
+    rippleGlow.setAttribute("fill", "url(#sg-mouse-ripple-grad)");
+    rippleGlow.setAttribute("pointer-events", "none");
+    rippleGlow.style.animation = "sg-ripple-glow 1.2s ease-in-out infinite";
+    rippleGlow.style.display = "none";
 
-    const rippleInner = document.createElementNS(ns, "circle");
-    rippleInner.setAttribute("r", String(MOUSE_FORCE_RADIUS * 0.5));
-    rippleInner.setAttribute("fill", "url(#sg-mouse-ripple-grad)");
-    rippleInner.setAttribute("pointer-events", "none");
-    rippleInner.style.animation = "sg-ripple-inner 1.0s ease-in-out infinite";
-    rippleInner.style.display = "none";
+    const rippleRingGroup = document.createElementNS(ns, "g");
+    rippleRingGroup.setAttribute("pointer-events", "none");
+    rippleRingGroup.style.display = "none";
+    for (let i = 0; i < 3; i++) {
+      const ring = document.createElementNS(ns, "circle");
+      ring.setAttribute("cx", "0");
+      ring.setAttribute("cy", "0");
+      ring.classList.add("sg-ripple-ring");
+      rippleRingGroup.appendChild(ring);
+    }
 
     svgEl.appendChild(hullLayer);
     svgEl.appendChild(linkLayer);
-    svgEl.appendChild(rippleOuter);
-    svgEl.appendChild(rippleInner);
+    svgEl.appendChild(rippleGlow);
+    svgEl.appendChild(rippleRingGroup);
     svgEl.appendChild(nodeLayer);
     svgEl.appendChild(labelLayer);
 
@@ -822,15 +837,16 @@ export function SkillGraph() {
 
       // ── update mouse ripple visual ─────────────────────────────────
       if (mouseIsDown) {
-        rippleOuter.style.display = "";
-        rippleInner.style.display = "";
-        rippleOuter.setAttribute("cx", String(mouseSVGX));
-        rippleOuter.setAttribute("cy", String(mouseSVGY));
-        rippleInner.setAttribute("cx", String(mouseSVGX));
-        rippleInner.setAttribute("cy", String(mouseSVGY));
+        const tx = String(mouseSVGX);
+        const ty = String(mouseSVGY);
+        rippleGlow.style.display = "";
+        rippleGlow.setAttribute("cx", tx);
+        rippleGlow.setAttribute("cy", ty);
+        rippleRingGroup.setAttribute("transform", `translate(${tx},${ty})`);
+        rippleRingGroup.style.display = "";
       } else {
-        rippleOuter.style.display = "none";
-        rippleInner.style.display = "none";
+        rippleGlow.style.display = "none";
+        rippleRingGroup.style.display = "none";
       }
 
       // ── update vacuum‑pack hulls ────────────────────────────────────
@@ -1042,7 +1058,7 @@ export function SkillGraph() {
 
       const hit = findNode(px, py);
       if (!hit) {
-        // start mouse repulsion mode
+        e.preventDefault();
         mouseIsDown = true;
         mouseSVGX = px;
         mouseSVGY = py;
