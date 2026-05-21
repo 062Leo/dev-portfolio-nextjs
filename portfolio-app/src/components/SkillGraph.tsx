@@ -1233,19 +1233,11 @@ export function SkillGraph() {
     <section id="skills" className="relative w-full py-16 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <h2
-          className="mb-2 text-center text-3xl font-bold md:text-4xl"
+          className="mb-6 text-center text-3xl font-bold md:text-4xl"
           style={{ color: "rgba(239,68,68,1)", textShadow: "0 0 20px rgba(239,68,68,0.35)" }}
         >
           Skills &amp; Expertise
         </h2>
-        <p
-          className="mb-10 text-center text-sm md:text-base"
-          style={{ color: "rgba(213,220,232,0.6)" }}
-        >
-          {language === "de"
-            ? "Jede Blase ist eine Technologie &mdash; je gr&ouml;sser, desto mehr Erfahrung. Ziehe Knoten mit der Maus umher."
-            : "Each bubble is a technology &mdash; the bigger, the more experience. Drag nodes with your mouse."}
-        </p>
       </div>
       <div
         ref={containerRef}
@@ -1262,10 +1254,11 @@ export function SkillGraph() {
       {/* ── Filter‑Controls ──────────────────────────────────────────── */}
       <div className="container mx-auto max-w-7xl px-4 mt-6">
         {/* Rating row */}
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <span className="text-xs mr-1" style={{ color: "rgba(213,220,232,0.6)" }}>
+        <div className="flex flex-col items-center gap-1.5">
+          <span className="text-xs" style={{ color: "rgba(213,220,232,0.6)" }}>
             {language === "de" ? "Bewertung:" : "Rating:"}
           </span>
+          <div className="flex flex-wrap items-center justify-center gap-2">
           {[1, 2, 3, 4, 5].map((r) => {
             const color = ratingColor(r);
             return (
@@ -1290,6 +1283,7 @@ export function SkillGraph() {
               </button>
             );
           })}
+          </div>
         </div>
 
         {/* Category row — responsive grid, balanced columns */}
