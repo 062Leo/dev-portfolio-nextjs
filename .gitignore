@@ -1,44 +1,53 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
+# Root-Level Dependencies & OS Files
+node_modules/
 .DS_Store
 *.pem
+/Temp/
 
-# debug
+# Editor & IDE Configs (Windows/VS Code)
+.vs/
+.vscode/
+
+# Root-Level Debug Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
-# local env files
-.env*.local
+# Root-Level Environment Files
 .env
+.env*
+.env*.local
 
-# vercel
-.vercel
+# Root-Level HTML-Backups & JSON-Caches
+*.html
+*.json
+*.md
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# -----------------------------------------------------------------------------
+# Nest.js / Next.js Sub-Project (portfolio-app)
+# -----------------------------------------------------------------------------
+portfolio-app/node_modules/
+portfolio-app/.next/
+portfolio-app/out/
+portfolio-app/build/
+portfolio-app/.pnp
+portfolio-app/.pnp.*
+portfolio-app/.yarn/*
+!portfolio-app/.yarn/patches
+!portfolio-app/.yarn/plugins
+!portfolio-app/.yarn/releases
+!portfolio-app/.yarn/versions
 
+# Testing & Vercel (portfolio-app)
+portfolio-app/coverage/
+portfolio-app/.vercel
 
-
-
-
-#temp 
-
-/Temp
+# TypeScript & Debug (portfolio-app)
+portfolio-app/*.tsbuildinfo
+portfolio-app/next-env.d.ts
+portfolio-app/npm-debug.log*
+portfolio-app/yarn-debug.log*
+portfolio-app/yarn-error.log*
