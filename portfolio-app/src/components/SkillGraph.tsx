@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback, useMemo, useState } from "react";
 import {
   forceSimulation,
   forceLink,
@@ -11,6 +11,8 @@ import {
 } from "d3-force";
 import type { SimulationNodeDatum, SimulationLinkDatum, Simulation } from "d3-force";
 import skillsData from "@/data/skills_rated.json";
+import skillsDataEn from "@/data/skills_rated_en.json";
+import { useLanguage } from "@/context/LanguageContext";
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  CATEGORY DEFINITIONS
@@ -40,9 +42,6 @@ const CATEGORIES: { key: CatKey; color: string }[] = [
   { key: "Unity Netcode",    color: "rgba(45,212,191,0.25)" },
   { key: "Web",              color: "rgba(56,189,248,0.25)" },
 ];
-
-const CAT_COLOR_MAP: Record<CatKey, string> = {};
-for (const c of CATEGORIES) CAT_COLOR_MAP[c.key] = c.color;
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  RATING SCALE
@@ -259,9 +258,8 @@ export function ratingColor(rating: number): string {
   return RATING_COLORS[idx] || RATING_COLORS[1];
 }
 
-function getSkillCategories(): Map<CatKey, Record<string, number>> {
-  const map = new Map<CatKey, Record<string, number>>();
-  const src = skillsData as Record<string, Record<string, number>>;
+function getSkillCategories(src: Record<string, Record<string, number>>): Map<string, Record<string, number>> {
+  const map = new Map<string, Record<string, number>>();
   for (const [cat, skills] of Object.entries(src)) {
     map.set(cat, skills);
   }
@@ -466,6 +464,10 @@ interface SimLink extends SimulationLinkDatum<SimNode> {
 // ══════════════════════════════════════════════════════════════════════════════
 
 export function SkillGraph() {
+  const { language } = useLanguage();
+  const currentData: Record<string, Record<string, number>> =
+    language === "en" ? (skillsDataEn as Record<string, Record<string, number>>) : (skillsData as Record<string, Record<string, number>>);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
@@ -477,6 +479,15 @@ export function SkillGraph() {
   // filter state: index 1..5 → true = selected
   const [filterToggles, setFilterToggles] = useState<boolean[]>([false, true, true, true, true, true]);
   const [filterActive, setFilterActive] = useState(false);
+
+  // category filter
+  const allCategoryKeys = useMemo(() => Array.from(getSkillCategories(currentData).keys()), [currentData]);
+  const filterCategoriesRef = useRef<Set<string> | null>(null);
+  const [categoryToggles, setCategoryToggles] = useState<Record<string, boolean>>(() => {
+    const init: Record<string, boolean> = {};
+    for (const key of Array.from(getSkillCategories(currentData).keys())) init[key] = true;
+    return init;
+  });
 
   const buildSimulation = useCallback(() => {
     const container = containerRef.current;
@@ -490,7 +501,7 @@ export function SkillGraph() {
     svgEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
     svgEl.style.userSelect = "none";
 
-    const merged = getSkillCategories();
+    const merged = getSkillCategories(currentData);
     const categories = Array.from(merged.keys());
 
     const nodes: SimNode[] = [];
@@ -502,8 +513,10 @@ export function SkillGraph() {
 
       const groupNodes: SimNode[] = [];
       entries.forEach(([name, rating]) => {
-        const allowed = filterRatingsRef.current;
-        if (allowed && !allowed.has(rating)) return;
+        const allowedRating = filterRatingsRef.current;
+        const allowedCat = filterCategoriesRef.current;
+        if (allowedRating && !allowedRating.has(rating)) return;
+        if (allowedCat && !allowedCat.has(category)) return;
         const node: SimNode = {
           id: `${category}:${name}`,
           name,
@@ -603,8 +616,8 @@ export function SkillGraph() {
 
     // glow filters per category
     const defs = document.createElementNS(ns, "defs");
-    categories.forEach((cat, i) => {
-      const base = CAT_COLOR_MAP[cat] || "rgba(167,139,250,0.4)";
+    categories.forEach((_cat, i) => {
+      const base = CATEGORIES[i]?.color || "rgba(167,139,250,0.4)";
       const glowColor = base.replace(/[\d.]+\)$/, `${GLOW_FLOOD_ALPHA})`);
       const filter = document.createElementNS(ns, "filter");
       filter.setAttribute("id", `sg-glow-${i}`);
@@ -781,8 +794,7 @@ export function SkillGraph() {
         const groupNodes = nodes.filter((n) => n.groupIndex === gi);
         if (groupNodes.length < HULL_MIN_NODES) continue;
 
-        const cat = groupNodes[0].category;
-        const baseColor = CAT_COLOR_MAP[cat] || "rgba(167,139,250,0.25)";
+        const baseColor = CATEGORIES[gi]?.color || "rgba(167,139,250,0.25)";
         const fillColor = baseColor.replace(/[\d.]+\)$/, `${HULL_FILL_OPACITY})`);
         const strokeColor = baseColor.replace(/[\d.]+\)$/, `${HULL_STROKE_OPACITY})`);
 
@@ -1160,37 +1172,53 @@ export function SkillGraph() {
       svgEl.removeEventListener("dblclick", onDblClick);
       window.removeEventListener("pointerup", onPointerUp);
     };
-  }, []);
+  }, [currentData]);
 
   const applyFilter = useCallback(() => {
-    const selected = new Set<number>();
+    const selectedRatings = new Set<number>();
     for (let r = 1; r <= 5; r++) {
-      if (filterToggles[r]) selected.add(r);
+      if (filterToggles[r]) selectedRatings.add(r);
     }
 
-    if (selected.size === 0) return;
-    if (selected.size >= 5) {
+    if (selectedRatings.size >= 5) {
       filterRatingsRef.current = null;
-      setFilterActive(false);
     } else {
-      filterRatingsRef.current = selected;
-      setFilterActive(true);
+      filterRatingsRef.current = selectedRatings;
     }
+
+    const selectedCategories = new Set<string>();
+    for (const [key, enabled] of Object.entries(categoryToggles)) {
+      if (enabled) selectedCategories.add(key);
+    }
+
+    if (selectedCategories.size >= allCategoryKeys.length) {
+      filterCategoriesRef.current = null;
+    } else {
+      filterCategoriesRef.current = selectedCategories;
+    }
+
+    const anyFilterActive = filterRatingsRef.current !== null || filterCategoriesRef.current !== null;
+    setFilterActive(anyFilterActive);
 
     if (cleanupRef.current) cleanupRef.current();
     const cleanup = buildSimulation();
     cleanupRef.current = cleanup ?? null;
-  }, [filterToggles, buildSimulation]);
+  }, [filterToggles, categoryToggles, allCategoryKeys.length, buildSimulation]);
 
   const resetFilter = useCallback(() => {
     filterRatingsRef.current = null;
+    filterCategoriesRef.current = null;
     setFilterActive(false);
     setFilterToggles([false, true, true, true, true, true]);
+
+    const resetCatToggles: Record<string, boolean> = {};
+    for (const key of allCategoryKeys) resetCatToggles[key] = true;
+    setCategoryToggles(resetCatToggles);
 
     if (cleanupRef.current) cleanupRef.current();
     const cleanup = buildSimulation();
     cleanupRef.current = cleanup ?? null;
-  }, [buildSimulation]);
+  }, [allCategoryKeys, buildSimulation]);
 
   useEffect(() => {
     if (cleanupRef.current) cleanupRef.current();
@@ -1214,8 +1242,9 @@ export function SkillGraph() {
           className="mb-10 text-center text-sm md:text-base"
           style={{ color: "rgba(213,220,232,0.6)" }}
         >
-          Jede Blase ist eine Technologie &mdash; je gr&ouml;sser, desto mehr Erfahrung.
-          Ziehe Knoten mit der Maus umher.
+          {language === "de"
+            ? "Jede Blase ist eine Technologie &mdash; je gr&ouml;sser, desto mehr Erfahrung. Ziehe Knoten mit der Maus umher."
+            : "Each bubble is a technology &mdash; the bigger, the more experience. Drag nodes with your mouse."}
         </p>
       </div>
       <div
@@ -1230,11 +1259,12 @@ export function SkillGraph() {
         <svg ref={svgRef} className="h-full w-full" />
       </div>
 
-      {/* ── Rating‑Filter ─────────────────────────────────────────────── */}
+      {/* ── Filter‑Controls ──────────────────────────────────────────── */}
       <div className="container mx-auto max-w-7xl px-4 mt-6">
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <span className="text-sm mr-2" style={{ color: "rgba(213,220,232,0.6)" }}>
-            Rating:
+        {/* Rating row */}
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <span className="text-xs mr-1" style={{ color: "rgba(213,220,232,0.6)" }}>
+            {language === "de" ? "Bewertung:" : "Rating:"}
           </span>
           {[1, 2, 3, 4, 5].map((r) => {
             const color = ratingColor(r);
@@ -1248,10 +1278,10 @@ export function SkillGraph() {
                     return next;
                   });
                 }}
-                className="rounded px-3 py-1 font-mono text-xs font-bold transition-all duration-150"
+                className="rounded px-3 py-1 font-mono text-sm font-bold transition-all duration-150"
                 style={{
                   backgroundColor: filterToggles[r] ? color : "rgba(30,30,40,0.6)",
-                  color: filterToggles[r] ? "#fff" : "rgba(150,150,160,0.5)",
+                  color: filterToggles[r] ? "#111" : "rgba(150,150,160,0.5)",
                   border: `1px solid ${filterToggles[r] ? color : "rgba(60,60,70,0.4)"}`,
                   opacity: filterToggles[r] ? 1 : 0.55,
                 }}
@@ -1260,36 +1290,65 @@ export function SkillGraph() {
               </button>
             );
           })}
-          {(() => {
-            const selCount = filterToggles.filter(Boolean).length;
-            const canApply = selCount > 0;
+        </div>
+
+        {/* Category row — responsive grid, balanced columns */}
+        <div className="text-center mt-2">
+          <span className="text-xs mb-1 inline-block" style={{ color: "rgba(213,220,232,0.6)" }}>
+            {language === "de" ? "Kategorie:" : "Category:"}
+          </span>
+        </div>
+        <div className="grid grid-cols-[repeat(4,auto)] sm:grid-cols-[repeat(5,auto)] lg:grid-cols-[repeat(7,auto)] justify-center gap-x-2 gap-y-1">
+          {allCategoryKeys.map((cat) => {
+            const idx = allCategoryKeys.indexOf(cat);
+            const baseColor = CATEGORIES[idx]?.color || "rgba(167,139,250,0.25)";
+            const activeBg = baseColor.replace(/[\d.]+\)$/, "0.55)");
+            const active = categoryToggles[cat] !== false;
             return (
               <button
-                onClick={canApply ? applyFilter : undefined}
-                disabled={!canApply}
-                className="ml-2 rounded px-4 py-1 font-mono text-xs font-semibold transition-all duration-150"
+                key={cat}
+                onClick={() => {
+                  setCategoryToggles(prev => ({ ...prev, [cat]: !active }));
+                }}
+                className="rounded px-2 py-0.5 font-mono text-xs font-bold transition-all duration-150"
                 style={{
-                  backgroundColor: canApply ? "rgba(99,102,241,0.6)" : "rgba(60,60,70,0.4)",
-                  color: canApply ? "#fff" : "rgba(120,120,130,0.5)",
-                  border: `1px solid ${canApply ? "rgba(99,102,241,0.7)" : "rgba(80,80,90,0.3)"}`,
-                  cursor: canApply ? "pointer" : "not-allowed",
+                  backgroundColor: active ? activeBg : "rgba(30,30,40,0.6)",
+                  color: active ? "#111" : "rgba(150,150,160,0.5)",
+                  border: `1px solid ${active ? baseColor : "rgba(60,60,70,0.4)"}`,
+                  opacity: active ? 1 : 0.5,
                 }}
               >
-                Filter anwenden
+                {cat}
               </button>
             );
-          })()}
+          })}
+        </div>
+
+        {/* Action row */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-3">
+          <button
+            onClick={applyFilter}
+            className="rounded px-4 py-1 font-mono text-xs font-semibold transition-all duration-150"
+            style={{
+              backgroundColor: "rgba(99,102,241,0.6)",
+              color: "#fff",
+              border: "1px solid rgba(99,102,241,0.7)",
+              cursor: "pointer",
+            }}
+          >
+            {language === "de" ? "Filter anwenden" : "Apply Filter"}
+          </button>
           {filterActive && (
             <button
               onClick={resetFilter}
-              className="ml-1 rounded px-3 py-1 font-mono text-xs transition-all duration-150"
+              className="rounded px-3 py-1 font-mono text-xs transition-all duration-150"
               style={{
                 backgroundColor: "rgba(30,30,40,0.6)",
                 color: "rgba(213,220,232,0.6)",
                 border: "1px solid rgba(99,102,241,0.3)",
               }}
             >
-              Zur&uuml;cksetzen
+              {language === "de" ? "Zur&uuml;cksetzen" : "Reset"}
             </button>
           )}
         </div>
