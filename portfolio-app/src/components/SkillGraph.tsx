@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import {
   forceSimulation,
   forceLink,
@@ -445,56 +445,14 @@ export function SkillGraph() {
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
-  const saveNodesRef = useRef<SimNode[]>([]);
-  const targetsRef = useRef<Map<number, [number, number]>>(new Map());
   const simRef = useRef<Simulation<SimNode, SimLink> | null>(null);
 
-  const handleSave = useCallback(() => {
-    const nodes = saveNodesRef.current;
-    if (!nodes.length) return;
+  // filter: null = all nodes, Set<number> = only these ratings
+  const filterRatingsRef = useRef<Set<number> | null>(null);
 
-    const groups = new Map<number, { xs: number[]; ys: number[]; cat: string }>();
-    for (const n of nodes) {
-      if (n.x == null || n.y == null) continue;
-      let g = groups.get(n.groupIndex);
-      if (!g) {
-        g = { xs: [], ys: [], cat: n.category };
-        groups.set(n.groupIndex, g);
-      }
-      g.xs.push(n.x);
-      g.ys.push(n.y);
-    }
-
-    const lines: string[] = [];
-    const sorted = Array.from(groups.entries()).sort((a, b) => a[0] - b[0]);
-    for (const [idx, g] of sorted) {
-      const avgX = Math.round(g.xs.reduce((s, v) => s + v, 0) / g.xs.length);
-      const avgY = Math.round(g.ys.reduce((s, v) => s + v, 0) / g.ys.length);
-      lines.push(`${idx}: ${avgX}  ${avgY}   // ${g.cat}`);
-      targetsRef.current.set(idx, [avgX, avgY]);
-    }
-
-    // unfix all nodes so simulation re-settles around new targets
-    for (const n of nodes) {
-      n.fx = null;
-      n.fy = null;
-    }
-    simRef.current?.alphaTarget(REHEAT_ALPHA).restart();
-
-    const output = `TARGETS (saved):\n${lines.join("\n")}\n---\n[${sorted.map(([i, g]) => {
-      const x = Math.round(g.xs.reduce((s, v) => s + v, 0) / g.xs.length);
-      const y = Math.round(g.ys.reduce((s, v) => s + v, 0) / g.ys.length);
-      return `[${x}, ${y}]`;
-    }).join(", ")}]`;
-
-    console.log(output);
-
-    const ta = document.getElementById("sg-save-output") as HTMLTextAreaElement | null;
-    if (ta) {
-      ta.value = output;
-      ta.style.display = "block";
-    }
-  }, []);
+  // filter state: index 1..5 → true = selected
+  const [filterToggles, setFilterToggles] = useState<boolean[]>([false, true, true, true, true, true]);
+  const [filterActive, setFilterActive] = useState(false);
 
   const buildSimulation = useCallback(() => {
     const container = containerRef.current;
@@ -519,6 +477,8 @@ export function SkillGraph() {
 
       const groupNodes: SimNode[] = [];
       entries.forEach(([name, rating]) => {
+        const allowed = filterRatingsRef.current;
+        if (allowed && !allowed.has(rating)) return;
         const node: SimNode = {
           id: `${category}:${name}`,
           name,
@@ -588,8 +548,6 @@ export function SkillGraph() {
         }
       }
     });
-
-    saveNodesRef.current = nodes;
 
     const simulation = forceSimulation<SimNode>(nodes)
       .force(
@@ -1027,19 +985,6 @@ export function SkillGraph() {
     svgEl.addEventListener("dblclick", onDblClick);
     window.addEventListener("pointerup", onPointerUp);
 
-    // debug coordinate display
-    const onDebugMove = (e: PointerEvent) => {
-      const dbg = document.getElementById("sg-debug-coords");
-      if (!dbg) return;
-      const rect = svgEl.getBoundingClientRect();
-      const scaleX = width / rect.width;
-      const scaleY = height / rect.height;
-      const px = Math.round((e.clientX - rect.left) * scaleX);
-      const py = Math.round((e.clientY - rect.top) * scaleY);
-      dbg.textContent = `x: ${px} \u00a0 y: ${py}`;
-    };
-    svgEl.addEventListener("pointermove", onDebugMove);
-
     // ── resize ──────────────────────────────────────────────────────────
     const onResize = () => {
       const w = container.clientWidth;
@@ -1064,10 +1009,39 @@ export function SkillGraph() {
       svgEl.removeEventListener("pointerdown", onPointerDown);
       svgEl.removeEventListener("pointermove", onPointerMove);
       svgEl.removeEventListener("dblclick", onDblClick);
-      svgEl.removeEventListener("pointermove", onDebugMove);
       window.removeEventListener("pointerup", onPointerUp);
     };
   }, []);
+
+  const applyFilter = useCallback(() => {
+    const selected = new Set<number>();
+    for (let r = 1; r <= 5; r++) {
+      if (filterToggles[r]) selected.add(r);
+    }
+
+    if (selected.size === 0) return;
+    if (selected.size >= 5) {
+      filterRatingsRef.current = null;
+      setFilterActive(false);
+    } else {
+      filterRatingsRef.current = selected;
+      setFilterActive(true);
+    }
+
+    if (cleanupRef.current) cleanupRef.current();
+    const cleanup = buildSimulation();
+    cleanupRef.current = cleanup ?? null;
+  }, [filterToggles, buildSimulation]);
+
+  const resetFilter = useCallback(() => {
+    filterRatingsRef.current = null;
+    setFilterActive(false);
+    setFilterToggles([false, true, true, true, true, true]);
+
+    if (cleanupRef.current) cleanupRef.current();
+    const cleanup = buildSimulation();
+    cleanupRef.current = cleanup ?? null;
+  }, [buildSimulation]);
 
   useEffect(() => {
     if (cleanupRef.current) cleanupRef.current();
@@ -1105,26 +1079,75 @@ export function SkillGraph() {
         }}
       >
         <svg ref={svgRef} className="h-full w-full" />
-        <div
-          id="sg-debug-coords"
-          className="pointer-events-none absolute right-2 top-2 rounded bg-black/70 px-2 py-1 font-mono text-xs text-lime-400"
-          style={{ zIndex: 50 }}
-        >
-          x: — &nbsp; y: —
+      </div>
+
+      {/* ── Rating‑Filter ─────────────────────────────────────────────── */}
+      <div className="container mx-auto max-w-7xl px-4 mt-6">
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <span className="text-sm mr-2" style={{ color: "rgba(213,220,232,0.6)" }}>
+            Rating:
+          </span>
+          {[1, 2, 3, 4, 5].map((r) => {
+            const color = ratingColor(r);
+            return (
+              <button
+                key={r}
+                onClick={() => {
+                  setFilterToggles(prev => {
+                    const next = [...prev];
+                    next[r] = !next[r];
+                    return next;
+                  });
+                }}
+                className="rounded px-3 py-1 font-mono text-xs font-bold transition-all duration-150"
+                style={{
+                  backgroundColor: filterToggles[r] ? color : "rgba(30,30,40,0.6)",
+                  color: filterToggles[r] ? "#fff" : "rgba(150,150,160,0.5)",
+                  border: `1px solid ${filterToggles[r] ? color : "rgba(60,60,70,0.4)"}`,
+                  opacity: filterToggles[r] ? 1 : 0.55,
+                }}
+              >
+                {r}
+              </button>
+            );
+          })}
+          {(() => {
+            const selCount = filterToggles.filter(Boolean).length;
+            const canApply = selCount > 0;
+            return (
+              <button
+                onClick={canApply ? applyFilter : undefined}
+                disabled={!canApply}
+                className="ml-2 rounded px-4 py-1 font-mono text-xs font-semibold transition-all duration-150"
+                style={{
+                  backgroundColor: filterActive
+                    ? "rgba(239,68,68,0.7)"
+                    : canApply
+                      ? "rgba(99,102,241,0.6)"
+                      : "rgba(60,60,70,0.4)",
+                  color: canApply ? "#fff" : "rgba(120,120,130,0.5)",
+                  border: `1px solid ${filterActive ? "rgba(239,68,68,0.8)" : canApply ? "rgba(99,102,241,0.7)" : "rgba(80,80,90,0.3)"}`,
+                  cursor: canApply ? "pointer" : "not-allowed",
+                }}
+              >
+                Filter anwenden
+              </button>
+            );
+          })()}
+          {filterActive && (
+            <button
+              onClick={resetFilter}
+              className="ml-1 rounded px-3 py-1 font-mono text-xs transition-all duration-150"
+              style={{
+                backgroundColor: "rgba(30,30,40,0.6)",
+                color: "rgba(213,220,232,0.6)",
+                border: "1px solid rgba(99,102,241,0.3)",
+              }}
+            >
+              Zur&uuml;cksetzen
+            </button>
+          )}
         </div>
-        <button
-          onClick={handleSave}
-          className="absolute left-2 top-2 z-50 rounded bg-purple-700/80 px-3 py-1 font-mono text-xs text-white transition hover:bg-purple-600"
-        >
-          Save
-        </button>
-        <textarea
-          id="sg-save-output"
-          className="absolute bottom-2 left-2 z-50 hidden w-72 rounded bg-black/85 p-2 font-mono text-[10px] leading-tight text-lime-400"
-          rows={12}
-          readOnly
-          onClick={(e) => (e.target as HTMLTextAreaElement).select()}
-        />
       </div>
     </section>
   );
