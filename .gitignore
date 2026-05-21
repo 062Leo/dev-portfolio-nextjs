@@ -42,3 +42,15 @@ next-env.d.ts
 #temp 
 
 /Temp
+.od-skills/web-prototype/assets/template.html
+.od-skills/web-prototype/example.html
+.od-skills/web-prototype/open-design.json
+.od-skills/web-prototype/references/checklist.md
+.od-skills/web-prototype/references/layouts.md
+/.od-skills
+AGENTS.md
+home-v1-green.html
+home-v2-cyan.html
+home-v3-amber.html
+mpcqe1fs-skills_rated.json
+OpendesignDoc.md
