@@ -986,7 +986,7 @@ export function SkillGraph() {
 
         // Init wobbly rope target for this category
         if (!ropeTargetsRef.current.has(gi)) {
-          ropeTargetsRef.current.set(gi, { start: { x: 0, y: 0 }, end: { x: 0, y: 0 } });
+          ropeTargetsRef.current.set(gi, { start: { x: 0, y: 0 }, end: { x: 0, y: 0 }, outputX: 0, outputY: 0, outputAngle: 0 });
         }
         if (!ropeColorMapRef.current.has(gi)) {
           const catColor = CATEGORIES[gi]?.color || "rgba(106,176,112,0.25)";
@@ -1279,7 +1279,7 @@ export function SkillGraph() {
           const lineEndX = cx + dirX * avgDist;
           const anchorX = cx + dirX * (avgDist + PRICETAG_LINE_LENGTH);
 
-          // Update wobbly rope target
+          // Use wobbly rope output position for pricetag
           const rt = ropeTargetsRef.current.get(pd.gi);
           if (rt) {
             rt.start.x = lineEndX;
@@ -1288,7 +1288,19 @@ export function SkillGraph() {
             rt.end.y = cy;
           }
 
-          pd.g.setAttribute("transform", `translate(${anchorX}, ${cy})`);
+          const rx = (rt && rt.outputX) || anchorX;
+          const ry = (rt && rt.outputY) || cy;
+          const neutralAngle = isLeft ? Math.PI : 0;
+          let rotDeg = 0;
+          if (rt) {
+            let rot = rt.outputAngle - neutralAngle;
+            if (rot > Math.PI) rot -= 2 * Math.PI;
+            if (rot < -Math.PI) rot += 2 * Math.PI;
+            const maxRot = 35 * Math.PI / 180;
+            rot = Math.max(-maxRot, Math.min(maxRot, rot));
+            rotDeg = rot * 180 / Math.PI;
+          }
+          pd.g.setAttribute("transform", `translate(${rx}, ${ry}) rotate(${rotDeg})`);
 
           // build pricetag geometry based on direction
           const name = pd.text.textContent || "";

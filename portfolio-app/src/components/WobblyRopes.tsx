@@ -24,6 +24,9 @@ interface RopeState {
 export interface RopeTarget {
   start: { x: number; y: number };
   end: { x: number; y: number };
+  outputX: number;
+  outputY: number;
+  outputAngle: number;
 }
 
 interface WobblyRopesProps {
@@ -39,8 +42,8 @@ interface WobblyRopesProps {
 export const WobblyRopes: React.FC<WobblyRopesProps> = ({
   ropeTargetsRef,
   colors = new Map(),
-  damping = 0.5,
-  stiffness = 0.3,
+  damping = 0.88,
+  stiffness = 0.25,
   segments = 10,
   lineWidth = 3,
   defaultColor = "rgba(106,176,112,0.45)",
@@ -69,7 +72,7 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
         const t = i / segments;
         const px = target.start.x + (target.end.x - target.start.x) * t;
         const py = target.start.y + (target.end.y - target.start.y) * t;
-        points.push({ x: px, y: py, oldX: px, oldY: py, pinned: i === 0 || i === segments });
+        points.push({ x: px, y: py, oldX: px, oldY: py, pinned: i === 0 });
       }
       const links: RopeLink[] = [];
       for (let i = 0; i < segments; i++) {
@@ -116,28 +119,37 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
 
         const lastIdx = points.length - 1;
 
+        // Pin start point (hull boundary)
         points[0].x = target.start.x;
         points[0].y = target.start.y;
-        points[lastIdx].x = target.end.x;
-        points[lastIdx].y = target.end.y;
 
-        for (const p of points) {
-          if (p.pinned) {
-            p.oldX = p.x;
-            p.oldY = p.y;
-            continue;
-          }
+        const tx = target.end.x;
+        const ty = target.end.y;
+
+        // Verlet integration for all non-start points (last point is free → wobbles)
+        for (let i = 1; i <= lastIdx; i++) {
+          const p = points[i];
           const vx = (p.x - p.oldX) * damping;
           const vy = (p.y - p.oldY) * damping;
           p.oldX = p.x;
           p.oldY = p.y;
           p.x += vx;
           p.y += vy;
+
+          // Soft spring toward anchor on last point (pricetag swings freely)
+          if (i === lastIdx) {
+            p.x += (tx - p.x) * 0.015;
+            p.y += (ty - p.y) * 0.015;
+          }
         }
 
+        // Constraint resolution (only start point is pinned)
         const iterations = 5;
         for (let k = 0; k < iterations; k++) {
           for (const link of links) {
+            const isP1Pinned = link.p1 === points[0];
+            const isP2Pinned = link.p2 === points[0];
+
             const dx = link.p2.x - link.p1.x;
             const dy = link.p2.y - link.p1.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
@@ -147,15 +159,22 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
             const offX = dx * percent;
             const offY = dy * percent;
 
-            if (!link.p1.pinned) { link.p1.x -= offX; link.p1.y -= offY; }
-            if (!link.p2.pinned) { link.p2.x += offX; link.p2.y += offY; }
+            if (!isP1Pinned) { link.p1.x -= offX; link.p1.y -= offY; }
+            if (!isP2Pinned) { link.p2.x += offX; link.p2.y += offY; }
           }
         }
 
-        points[0].x = target.start.x;
-        points[0].y = target.start.y;
-        points[lastIdx].x = target.end.x;
-        points[lastIdx].y = target.end.y;
+        target.outputX = points[lastIdx].x;
+        target.outputY = points[lastIdx].y;
+
+        const avgSegs = Math.min(3, lastIdx);
+        let avgDx = 0;
+        let avgDy = 0;
+        for (let i = lastIdx - avgSegs; i < lastIdx; i++) {
+          avgDx += points[i + 1].x - points[i].x;
+          avgDy += points[i + 1].y - points[i].y;
+        }
+        target.outputAngle = Math.atan2(avgDy, avgDx);
       }
     };
 
