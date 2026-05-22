@@ -13,6 +13,8 @@ import type { SimulationNodeDatum, SimulationLinkDatum, Simulation } from "d3-fo
 import skillsData from "@/data/skills.json";
 import skillsDataEn from "@/data/skills.json";
 import { useLanguage } from "@/context/LanguageContext";
+import { WobblyRopes } from "./WobblyRopes";
+import type { RopeTarget } from "./WobblyRopes";
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  DATA FLATTENING  (skills.json has 3‑level structure; we flatten to 2 levels)
@@ -524,6 +526,8 @@ export function SkillGraph() {
   const svgRef = useRef<SVGSVGElement>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
   const simRef = useRef<Simulation<SimNode, SimLink> | null>(null);
+  const ropeTargetsRef = useRef<Map<number, RopeTarget>>(new Map());
+  const ropeColorMapRef = useRef<Map<number, string>>(new Map());
 
   // filter: null = all nodes, Set<number> = only these ratings
   const filterRatingsRef = useRef<Set<number> | null>(null);
@@ -557,6 +561,10 @@ export function SkillGraph() {
     tooltipVisibleRef.current = false;
     activeNodeRef.current = null;
     setTooltipContent(null);
+
+    // ── clear wobbly rope state on rebuild ───────────────────────────
+    ropeTargetsRef.current.clear();
+    ropeColorMapRef.current.clear();
 
     const merged = getSkillCategories(currentData);
     const categories = Array.from(merged.keys());
@@ -975,6 +983,15 @@ export function SkillGraph() {
         pricetagLayer.appendChild(g);
 
         pricetagData.push({ gi, g, line, tri, rect, dot, text });
+
+        // Init wobbly rope target for this category
+        if (!ropeTargetsRef.current.has(gi)) {
+          ropeTargetsRef.current.set(gi, { start: { x: 0, y: 0 }, end: { x: 0, y: 0 } });
+        }
+        if (!ropeColorMapRef.current.has(gi)) {
+          const catColor = CATEGORIES[gi]?.color || "rgba(106,176,112,0.25)";
+          ropeColorMapRef.current.set(gi, catColor.replace(/[\d.]+\)$/, "0.55)"));
+        }
       }
     }
 
@@ -1239,7 +1256,7 @@ export function SkillGraph() {
             pd.g.style.display = "none";
             continue;
           }
-          pd.line.style.display = "";
+          pd.line.style.display = "none";
           pd.g.style.display = "";
 
           // centroid
@@ -1262,10 +1279,14 @@ export function SkillGraph() {
           const lineEndX = cx + dirX * avgDist;
           const anchorX = cx + dirX * (avgDist + PRICETAG_LINE_LENGTH);
 
-          pd.line.setAttribute("x1", String(lineEndX));
-          pd.line.setAttribute("y1", String(cy));
-          pd.line.setAttribute("x2", String(anchorX));
-          pd.line.setAttribute("y2", String(cy));
+          // Update wobbly rope target
+          const rt = ropeTargetsRef.current.get(pd.gi);
+          if (rt) {
+            rt.start.x = lineEndX;
+            rt.start.y = cy;
+            rt.end.x = anchorX;
+            rt.end.y = cy;
+          }
 
           pd.g.setAttribute("transform", `translate(${anchorX}, ${cy})`);
 
@@ -1592,6 +1613,7 @@ export function SkillGraph() {
         }}
       >
         <svg ref={svgRef} className="h-full w-full" />
+        <WobblyRopes ropeTargetsRef={ropeTargetsRef} colors={ropeColorMapRef.current} />
 
         {/* ── Tooltip (sub‑entries of hovered / dragged node) ──────── */}
         <div
