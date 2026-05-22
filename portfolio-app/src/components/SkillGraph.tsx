@@ -10,9 +10,37 @@ import {
   forceY,
 } from "d3-force";
 import type { SimulationNodeDatum, SimulationLinkDatum, Simulation } from "d3-force";
-import skillsData from "@/data/skills_rated.json";
-import skillsDataEn from "@/data/skills_rated_en.json";
+import skillsData from "@/data/skills.json";
+import skillsDataEn from "@/data/skills.json";
 import { useLanguage } from "@/context/LanguageContext";
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  DATA FLATTENING  (skills.json has 3‑level structure; we flatten to 2 levels)
+// ══════════════════════════════════════════════════════════════════════════════
+
+type SkillsDataNested = Record<string, Record<string, Record<string, number> | number>>;
+
+function flattenSkillsData(data: SkillsDataNested): Record<string, Record<string, number>> {
+  const result: Record<string, Record<string, number>> = {};
+  for (const [category, nodes] of Object.entries(data)) {
+    const flattened: Record<string, number> = {};
+    for (const [nodeName, value] of Object.entries(nodes)) {
+      if (typeof value === "number") {
+        flattened[nodeName] = value;
+      } else {
+        const ratings = Object.values(value);
+        if (ratings.length > 0) {
+          flattened[nodeName] = Math.round(ratings.reduce((a, b) => a + b, 0) / ratings.length);
+        }
+      }
+    }
+    result[category] = flattened;
+  }
+  return result;
+}
+
+const skillsDataFlat = flattenSkillsData(skillsData as SkillsDataNested);
+const skillsDataEnFlat = flattenSkillsData(skillsDataEn as SkillsDataNested);
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  CATEGORY DEFINITIONS
@@ -21,26 +49,20 @@ import { useLanguage } from "@/context/LanguageContext";
 type CatKey = string;
 
 const CATEGORIES: { key: CatKey; color: string }[] = [
-  { key: ".NET",             color: "rgba(129,140,248,0.25)" },
-  { key: "Architektur",      color: "rgba(99,102,241,0.25)" },
-  { key: "Backend",          color: "rgba(74,222,128,0.25)" },
-  { key: "Daten & SQL",      color: "rgba(14,165,233,0.25)" },
-  { key: "DevOps",           color: "rgba(251,146,60,0.25)" },
-  { key: "Game Design",      color: "rgba(168,85,247,0.25)" },
-  { key: "Hardware",         color: "rgba(245,158,11,0.25)" },
-  { key: "KI & ML",          color: "rgba(250,204,21,0.25)" },
-  { key: "KI-Tools",         color: "rgba(236,72,153,0.25)" },
-  { key: "ML Training",      color: "rgba(253,224,71,0.25)" },
-  { key: "PM",               color: "rgba(148,163,184,0.25)" },
-  { key: "Softw. Engineering",color: "rgba(94,234,212,0.25)" },
-  { key: "Sonstiges",        color: "rgba(156,163,175,0.25)" },
-  { key: "Sprachen",         color: "rgba(167,139,250,0.25)" },
-  { key: "Testing",          color: "rgba(239,68,68,0.25)" },
-  { key: "Tools",            color: "rgba(244,114,182,0.25)" },
-  { key: "Unity",            color: "rgba(52,211,153,0.25)" },
-  { key: "Unity Monet.",     color: "rgba(34,197,94,0.25)" },
-  { key: "Unity Netcode",    color: "rgba(45,212,191,0.25)" },
-  { key: "Web",              color: "rgba(56,189,248,0.25)" },
+  { key: "Programmierung",               color: "rgba(167,139,250,0.25)" },
+  { key: "Web & Frontend",               color: "rgba(56,189,248,0.25)" },
+  { key: "Backend & .NET Ökosystem",     color: "rgba(129,140,248,0.25)" },
+  { key: "Datenbank & Datenformate",     color: "rgba(14,165,233,0.25)" },
+  { key: "Software Engineering & Qualität", color: "rgba(94,234,212,0.25)" },
+  { key: "Entwicklungs-Ansätze",         color: "rgba(74,222,128,0.25)" },
+  { key: "Tools & Versionskontrolle",    color: "rgba(244,114,182,0.25)" },
+  { key: "DevOps & Cloud",               color: "rgba(251,146,60,0.25)" },
+  { key: "Künstliche Intelligenz",       color: "rgba(250,204,21,0.25)" },
+  { key: "KI-Assistenten & IDEs",        color: "rgba(236,72,153,0.25)" },
+  { key: "Game Development",             color: "rgba(52,211,153,0.25)" },
+  { key: "Cross-Platform Entwicklung",   color: "rgba(45,212,191,0.25)" },
+  { key: "Hardware & Embedded",          color: "rgba(245,158,11,0.25)" },
+  { key: "Projektmanagement & Agile",    color: "rgba(148,163,184,0.25)" },
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -75,33 +97,33 @@ const LINK_STROKE_WIDTH = 1;                        // connection line stroke wi
 //  GRAPH TOPOLOGY (intra-group connections)
 // ══════════════════════════════════════════════════════════════════════════════
 
-const GROUP_EXTRA_LINK_START_OFFSET = 3;  // skip N neighbours before additional links start
+const GROUP_EXTRA_LINK_START_OFFSET = 1;  // skip N neighbours before additional links start
 const GROUP_EXTRA_LINK_MAX_LOOKAHEAD = 4; // how many nodes ahead are eligible as extra targets
-const GROUP_EXTRA_LINK_MAX = 4;           // absolute max extra connections per node (1‑4)
-const MAX_DEGREE_HIGH = 4;                // max total degree for the high-count node
-const MAX_DEGREE_NORMAL = 2;              // max total degree for all other nodes
+const GROUP_EXTRA_LINK_MAX = 6;           // absolute max extra connections per node (1‑4)
+const MAX_DEGREE_HIGH = 5;                // max total degree for the high-count node
+const MAX_DEGREE_NORMAL = 5;              // max total degree for all other nodes
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  FORCE SIMULATION — dynamic scaling based on visible node count
 // ══════════════════════════════════════════════════════════════════════════════
 
-const LINK_DISTANCE = 28;           // target length of link edges
+const LINK_DISTANCE = 50;           // target length of link edges
 
 // —— anchor points for force interpolation (nodeCount → force values) ——
-const MAX_NODES = 126;
+const MAX_NODES = 60;
 const MIN_NODES = 6;
 
-// values at 126 nodes (all ratings — known perfect)
-const CHARGE_AT_MAX   = -85;
-const CENTER_Y_AT_MAX = 0.1;
+// values at max nodes (all ratings — known perfect)
+const CHARGE_AT_MAX   = -105;
+const CENTER_Y_AT_MAX = 0.06;
 
 // values at 6 nodes (rating 1 only — ADJUST THESE UNTIL LAYOUT LOOKS GOOD)
 const CHARGE_AT_MIN   = -200;
 const CENTER_Y_AT_MIN = 0.045;
 
 const ALPHA_DECAY = 0.01;          // cooling rate per tick (higher = faster settle)
-const ALPHA_MIN = 0.001;          // simulation stops when alpha drops below this
-const COLLIDE_PADDING = 2;        // extra px between node edges for forceCollide
+const ALPHA_MIN = 0.000000001;          // simulation stops when alpha drops below this
+const COLLIDE_PADDING = 10;        // extra px between node edges for forceCollide
 const REHEAT_ALPHA = 0.2;         // alpha / alphaTarget when re-energizing (drag, resize, etc.)
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -466,7 +488,7 @@ interface SimLink extends SimulationLinkDatum<SimNode> {
 export function SkillGraph() {
   const { language } = useLanguage();
   const currentData: Record<string, Record<string, number>> =
-    language === "en" ? (skillsDataEn as Record<string, Record<string, number>>) : (skillsData as Record<string, Record<string, number>>);
+    language === "en" ? skillsDataEnFlat : skillsDataFlat;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -509,7 +531,7 @@ export function SkillGraph() {
 
     categories.forEach((category, ci) => {
       const skills = merged.get(category)!;
-      const entries = Object.entries(skills).sort((a, b) => b[1] - a[1]);
+      const entries = Object.entries(skills).sort(() => Math.random() - 0.5);
 
       const groupNodes: SimNode[] = [];
       entries.forEach(([name, rating]) => {
