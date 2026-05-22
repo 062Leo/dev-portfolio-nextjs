@@ -1342,7 +1342,7 @@ export function SkillGraph() {
                 border: "1px solid rgba(99,102,241,0.3)",
               }}
             >
-              {language === "de" ? "Zur&uuml;cksetzen" : "Reset"}
+              {language === "de" ? "Zurücksetzen" : "Reset"}
             </button>
           )}
         </div>

@@ -32,11 +32,11 @@ export function HomePreviewSection() {
         >
           {language === "de" ? (
             <>
-              Projekte <span style={{ color: colors.homePreviewSectionAccentColor }}>(Auswahl)</span>
+              Ausgewählte <span style={{ color: colors.homePreviewSectionAccentColor }}>Projekte</span>
             </>
           ) : (
             <>
-              Projects <span style={{ color: colors.homePreviewSectionAccentColor }}>(Selection)</span>
+              Featured <span style={{ color: colors.homePreviewSectionAccentColor }}>Projects</span>
             </>
           )}
         </h2>
