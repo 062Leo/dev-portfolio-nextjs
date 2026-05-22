@@ -1272,24 +1272,41 @@ export function SkillGraph() {
           }
           avgDist /= gn.length;
 
-          // direction toward nearest edge
-          const isLeft = cx >= halfW;
-          const dirX = isLeft ? -1 : 1;
+          // direction toward nearest edge (outward from center)
+          const distLeft = cx;
+          const distRight = width - cx;
+          const distTop = cy;
+          const distBottom = height - cy;
+          const minDist = Math.min(distLeft, distRight, distTop, distBottom);
+
+          let dirX = 0, dirY = 0;
+          if (minDist === distLeft) dirX = -1;
+          else if (minDist === distRight) dirX = 1;
+          else if (minDist === distTop) dirY = -1;
+          else if (minDist === distBottom) dirY = 1;
 
           const lineEndX = cx + dirX * avgDist;
-          const anchorX = cx + dirX * (avgDist + PRICETAG_LINE_LENGTH);
+          const lineEndY = cy + dirY * avgDist;
+          const EDGE_MARGIN = 60;
+          const isLeft = cx < halfW;
+
+          let anchorX = cx, anchorY = cy;
+          if (dirX < 0) anchorX = EDGE_MARGIN;
+          else if (dirX > 0) anchorX = width - EDGE_MARGIN;
+          else if (dirY < 0) anchorY = EDGE_MARGIN;
+          else if (dirY > 0) anchorY = height - EDGE_MARGIN;
 
           // Use wobbly rope output position for pricetag
           const rt = ropeTargetsRef.current.get(pd.gi);
           if (rt) {
             rt.start.x = lineEndX;
-            rt.start.y = cy;
+            rt.start.y = lineEndY;
             rt.end.x = anchorX;
-            rt.end.y = cy;
+            rt.end.y = anchorY;
           }
 
           const rx = (rt && rt.outputX) || anchorX;
-          const ry = (rt && rt.outputY) || cy;
+          const ry = (rt && rt.outputY) || anchorY;
           const neutralAngle = isLeft ? Math.PI : 0;
           let rotDeg = 0;
           if (rt) {
@@ -1302,11 +1319,10 @@ export function SkillGraph() {
           }
           pd.g.setAttribute("transform", `translate(${rx}, ${ry}) rotate(${rotDeg})`);
 
-          // build pricetag geometry based on direction
+          // build pricetag geometry (immer horizontal — gleiches Design)
           const name = pd.text.textContent || "";
           const tw = name.length * FONT_SZ * 0.6 + PAD * 2;
           if (isLeft) {
-            // flipped: triangle on RIGHT, body on LEFT
             pd.tri.setAttribute("points", `0,0 ${-T},${-H/2} ${-T},${H/2}`);
             pd.rect.setAttribute("x", String(-T - tw));
             pd.rect.setAttribute("width", String(tw));
@@ -1314,7 +1330,6 @@ export function SkillGraph() {
             pd.text.setAttribute("x", String(-T - tw / 2));
             pd.text.setAttribute("text-anchor", "middle");
           } else {
-            // normal: triangle on LEFT, body on RIGHT
             pd.tri.setAttribute("points", `0,0 ${T},${-H/2} ${T},${H/2}`);
             pd.rect.setAttribute("x", String(T));
             pd.rect.setAttribute("width", String(tw));
