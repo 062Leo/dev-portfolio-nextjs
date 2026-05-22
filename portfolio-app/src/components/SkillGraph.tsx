@@ -118,7 +118,7 @@ const CHARGE_AT_MAX   = -105;
 const CENTER_Y_AT_MAX = 0.06;
 
 // values at 6 nodes (rating 1 only — ADJUST THESE UNTIL LAYOUT LOOKS GOOD)
-const CHARGE_AT_MIN   = -200;
+const CHARGE_AT_MIN   = -250;
 const CENTER_Y_AT_MIN = 0.045;
 
 const ALPHA_DECAY = 0.01;          // cooling rate per tick (higher = faster settle)
