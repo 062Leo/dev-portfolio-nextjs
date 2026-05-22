@@ -134,7 +134,7 @@ const RATING_1_COLOR = "rgb(255, 0, 0)";    // red
 const RATING_2_COLOR = "rgb(255, 102, 0)";    // orange
 const RATING_3_COLOR = "rgb(242, 255, 0)";    // yellow
 const RATING_4_COLOR = "rgb(111, 255, 0)";    // yellow-green
-const RATING_5_COLOR = "rgb(32, 184, 85)";      // bright green
+const RATING_5_COLOR = "rgb(21, 169, 73)";      // bright green
 
 const RATING_COLORS = [
   "",
@@ -215,7 +215,12 @@ const CONTAINER_BORDER_COLOR = "rgba(167,139,250,0.25)";
 const CONTAINER_BG_COLOR = "rgb(11, 13, 23)";
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  HULL  –  vacuum‑pack enclosure around category groups
+//  PRICETAG
+// ══════════════════════════════════════════════════════════════════════════════
+
+const PRICETAG_ENABLED = true;           // Master-Schalter
+const PRICETAG_SCALE = 0.55;              // globale Grösse (1 = Original)
+const PRICETAG_LINE_LENGTH = 50;          // Abstand vom Hüllenrand zum Pricetag (px)
 //  Jeder Parameter ist hier einstellbar; Kommentar erklärt, was er tut.
 // ══════════════════════════════════════════════════════════════════════════════
 
@@ -490,6 +495,31 @@ export function SkillGraph() {
   const currentData: Record<string, Record<string, number>> =
     language === "en" ? skillsDataEnFlat : skillsDataFlat;
 
+  // raw nested data for tooltip lookup
+  const rawNestedData = useMemo<SkillsDataNested>(
+    () => (language === "en" ? skillsDataEn : skillsData) as SkillsDataNested,
+    [language]
+  );
+
+  // ── tooltip state ──────────────────────────────────────────────────────
+  interface TooltipContent {
+    name: string;
+    entries: [string, number][];
+    direct: boolean;
+  }
+  const [tooltipContent, setTooltipContent] = useState<TooltipContent | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const tooltipVisibleRef = useRef(false);
+  const activeNodeRef = useRef<SimNode | null>(null);
+  const tooltipTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function clearTooltipTimer() {
+    if (tooltipTimeoutRef.current !== null) {
+      clearTimeout(tooltipTimeoutRef.current);
+      tooltipTimeoutRef.current = null;
+    }
+  }
+
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
@@ -522,6 +552,11 @@ export function SkillGraph() {
     svgEl.innerHTML = "";
     svgEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
     svgEl.style.userSelect = "none";
+
+    // ── clear tooltip on rebuild ────────────────────────────────────
+    tooltipVisibleRef.current = false;
+    activeNodeRef.current = null;
+    setTooltipContent(null);
 
     const merged = getSkillCategories(currentData);
     const categories = Array.from(merged.keys());
@@ -699,6 +734,7 @@ export function SkillGraph() {
     const hullLayer = document.createElementNS(ns, "g");
     const linkLayer = document.createElementNS(ns, "g");
     const nodeLayer = document.createElementNS(ns, "g");
+    const pricetagLayer = document.createElementNS(ns, "g");
     const labelLayer = document.createElementNS(ns, "g");
 
     // ── mouse ripple visual — subtle glow + 3 expanding ripple rings ─
@@ -725,6 +761,7 @@ export function SkillGraph() {
     svgEl.appendChild(rippleGlow);
     svgEl.appendChild(rippleRingGroup);
     svgEl.appendChild(nodeLayer);
+    svgEl.appendChild(pricetagLayer);
     svgEl.appendChild(labelLayer);
 
     // link elements
@@ -753,10 +790,6 @@ export function SkillGraph() {
       circle.setAttribute("filter", `url(#sg-glow-${n.groupIndex})`);
       circle.style.cursor = "grab";
       circle.style.transition = NODE_TRANSITION;
-
-      const title = document.createElementNS(ns, "title");
-      title.textContent = `${n.name}  (${n.rating}/${RATING_MAX})  —  ${n.category}`;
-      circle.appendChild(title);
 
       // ── connecting line (node edge → label) ───────────────────────────
       const line = document.createElementNS(ns, "line");
@@ -790,6 +823,32 @@ export function SkillGraph() {
         text.setAttribute("font-size", String(fs * 1.2));
         labelLineEls[ni].setAttribute("stroke", LABEL_LINE_COLOR_HOVER);
         labelLineEls[ni].setAttribute("stroke-width", String(LABEL_LINE_WIDTH_HOVER));
+
+        // ── cancel lingering timer, then show tooltip ──────────────────
+        clearTooltipTimer();
+        activeNodeRef.current = n;
+        const catData = rawNestedData[n.category];
+        if (catData) {
+          const value = catData[n.name];
+          if (typeof value === "object" && value !== null) {
+            const entries = Object.entries(value) as [string, number][];
+            setTooltipContent({ name: n.name, entries, direct: false });
+            tooltipVisibleRef.current = true;
+          } else if (typeof value === "number") {
+            setTooltipContent({ name: n.name, entries: [[n.name, value]], direct: true });
+            tooltipVisibleRef.current = true;
+          } else {
+            tooltipVisibleRef.current = false;
+            setTooltipContent(null);
+          }
+        } else {
+          tooltipVisibleRef.current = false;
+          setTooltipContent(null);
+        }
+        if (tooltipVisibleRef.current && tooltipRef.current) {
+          tooltipRef.current.style.display = "block";
+          updateTooltipPos(n.x ?? 0, n.y ?? 0);
+        }
       });
       circle.addEventListener("pointerleave", () => {
         circle.setAttribute("r", String(r));
@@ -801,6 +860,19 @@ export function SkillGraph() {
         text.setAttribute("font-size", String(fs));
         labelLineEls[ni].setAttribute("stroke", LABEL_LINE_COLOR);
         labelLineEls[ni].setAttribute("stroke-width", String(LABEL_LINE_WIDTH));
+
+        // ── tooltip: 4‑second linger on leave ──────────────────────────
+        // (but not while dragging – speed‑based control is active)
+        if (!dragNode) {
+          clearTooltipTimer();
+          tooltipVisibleRef.current = true;
+          tooltipTimeoutRef.current = setTimeout(() => {
+            tooltipVisibleRef.current = false;
+            activeNodeRef.current = null;
+            setTooltipContent(null);
+            tooltipTimeoutRef.current = null;
+          }, 4000);
+        }
       });
 
       nodeLayer.appendChild(circle);
@@ -831,6 +903,81 @@ export function SkillGraph() {
       }
     }
 
+    // ── pricetags (one per category group) ────────────────────────────
+    interface PricetagData {
+      gi: number;
+      g: SVGGElement;
+      line: SVGLineElement;
+      tri: SVGElement;
+      rect: SVGRectElement;
+      dot: SVGCircleElement;
+      text: SVGTextElement;
+    }
+    const pricetagData: PricetagData[] = [];
+
+    if (PRICETAG_ENABLED) {
+      const S = PRICETAG_SCALE;
+      const H = 38 * S;
+      const T = 19 * S;
+      const R = 4 * S;
+      const PAD = 3 * S;
+      const FONT_SZ = 22 * S;
+
+      for (const gi of groupIndices) {
+        const name = categories[gi];
+        const textW = name.length * FONT_SZ * 0.6 + PAD * 2;
+
+        // connector line
+        const line = document.createElementNS(ns, "line");
+        line.setAttribute("stroke", "rgba(106,176,112,0.35)");
+        line.setAttribute("stroke-width", "1.5");
+        line.setAttribute("stroke-dasharray", "3,4");
+        pricetagLayer.appendChild(line);
+
+        // pricetag group (origin = triangle tip)
+        const g = document.createElementNS(ns, "g");
+        g.setAttribute("pointer-events", "none");
+
+        // — triangle
+        const tri = document.createElementNS(ns, "polygon");
+        tri.setAttribute("points", `0,0 ${T},${-H/2} ${T},${H/2}`);
+        tri.setAttribute("fill", "#6ab070");
+
+        // — body rect
+        const rect = document.createElementNS(ns, "rect");
+        rect.setAttribute("x", String(T));
+        rect.setAttribute("y", String(-H/2));
+        rect.setAttribute("width", String(textW));
+        rect.setAttribute("height", String(H));
+        rect.setAttribute("rx", String(R));
+        rect.setAttribute("fill", "#6ab070");
+
+        // — dot
+        const dot = document.createElementNS(ns, "circle");
+        dot.setAttribute("cx", String(T - 9 * S));
+        dot.setAttribute("cy", "0");
+        dot.setAttribute("r", String(2 * S));
+        dot.setAttribute("fill", "white");
+
+        // — text (dummy; real x is set per-frame below)
+        const text = document.createElementNS(ns, "text");
+        text.textContent = name;
+        text.setAttribute("y", String(FONT_SZ * 0.35));
+        text.setAttribute("fill", "white");
+        text.setAttribute("font-family", "monospace");
+        text.setAttribute("font-size", String(FONT_SZ));
+        text.setAttribute("font-weight", "300");
+
+        g.appendChild(tri);
+        g.appendChild(rect);
+        g.appendChild(dot);
+        g.appendChild(text);
+        pricetagLayer.appendChild(g);
+
+        pricetagData.push({ gi, g, line, tri, rect, dot, text });
+      }
+    }
+
     // ── bounding helper ──────────────────────────────────────────────────
     function clampNode(n: SimNode, r: number) {
       // soft boundary — push nodes back inside the margin
@@ -839,6 +986,21 @@ export function SkillGraph() {
       if (n.x != null && n.x > width - margin - r) n.vx = (n.vx ?? 0) - (n.x - (width - margin - r)) * BOUNDARY_PUSH_FACTOR;
       if (n.y != null && n.y < margin + r) n.vy = (n.vy ?? 0) + (margin + r - n.y) * BOUNDARY_PUSH_FACTOR;
       if (n.y != null && n.y > height - margin - r) n.vy = (n.vy ?? 0) - (n.y - (height - margin - r)) * BOUNDARY_PUSH_FACTOR;
+    }
+
+    // ── tooltip positioning (flips left when near right edge) ─────────
+    const TOOLTIP_MARGIN = 12;
+    const TOOLTIP_ESTIMATE = 180;
+    function updateTooltipPos(nx: number, ny: number) {
+      const el = tooltipRef.current;
+      if (!el) return;
+      const tw = el.offsetWidth || TOOLTIP_ESTIMATE;
+      if (nx + 20 + tw > width - TOOLTIP_MARGIN) {
+        el.style.left = `${nx - tw - 8}px`;
+      } else {
+        el.style.left = `${nx + 20}px`;
+      }
+      el.style.top = `${ny - 8}px`;
     }
 
     // ── tick ────────────────────────────────────────────────────────────
@@ -1054,10 +1216,94 @@ export function SkillGraph() {
         labelLineEls[i].setAttribute("x2", String(p.ax));
         labelLineEls[i].setAttribute("y2", String(p.ay));
       }
+
+      // ── update tooltip position (follows node during drag) ─────────
+      if (tooltipVisibleRef.current && tooltipRef.current && activeNodeRef.current) {
+        const an = activeNodeRef.current;
+        updateTooltipPos(an.x ?? 0, an.y ?? 0);
+      }
+
+      // ── update pricetag positions ─────────────────────────────────
+      if (PRICETAG_ENABLED && pricetagData.length > 0) {
+        const halfW = width / 2;
+        const S = PRICETAG_SCALE;
+        const H = 38 * S;
+        const T = 19 * S;
+        const PAD = 3 * S;
+        const FONT_SZ = 22 * S;
+
+        for (const pd of pricetagData) {
+          const gn = nodes.filter((n) => n.groupIndex === pd.gi);
+          if (gn.length < HULL_MIN_NODES) {
+            pd.line.style.display = "none";
+            pd.g.style.display = "none";
+            continue;
+          }
+          pd.line.style.display = "";
+          pd.g.style.display = "";
+
+          // centroid
+          let cx = 0, cy = 0;
+          for (const n of gn) { cx += n.x ?? 0; cy += n.y ?? 0; }
+          cx /= gn.length;
+          cy /= gn.length;
+
+          // hull radius (avg dist from centroid)
+          let avgDist = 0;
+          for (const n of gn) {
+            avgDist += Math.sqrt(((n.x ?? 0) - cx) ** 2 + ((n.y ?? 0) - cy) ** 2);
+          }
+          avgDist /= gn.length;
+
+          // direction toward nearest edge
+          const isLeft = cx >= halfW;
+          const dirX = isLeft ? -1 : 1;
+
+          const lineEndX = cx + dirX * avgDist;
+          const anchorX = cx + dirX * (avgDist + PRICETAG_LINE_LENGTH);
+
+          pd.line.setAttribute("x1", String(lineEndX));
+          pd.line.setAttribute("y1", String(cy));
+          pd.line.setAttribute("x2", String(anchorX));
+          pd.line.setAttribute("y2", String(cy));
+
+          pd.g.setAttribute("transform", `translate(${anchorX}, ${cy})`);
+
+          // build pricetag geometry based on direction
+          const name = pd.text.textContent || "";
+          const tw = name.length * FONT_SZ * 0.6 + PAD * 2;
+          if (isLeft) {
+            // flipped: triangle on RIGHT, body on LEFT
+            pd.tri.setAttribute("points", `0,0 ${-T},${-H/2} ${-T},${H/2}`);
+            pd.rect.setAttribute("x", String(-T - tw));
+            pd.rect.setAttribute("width", String(tw));
+            pd.dot.setAttribute("cx", String(-T + 9 * S));
+            pd.text.setAttribute("x", String(-T - tw / 2));
+            pd.text.setAttribute("text-anchor", "middle");
+          } else {
+            // normal: triangle on LEFT, body on RIGHT
+            pd.tri.setAttribute("points", `0,0 ${T},${-H/2} ${T},${H/2}`);
+            pd.rect.setAttribute("x", String(T));
+            pd.rect.setAttribute("width", String(tw));
+            pd.dot.setAttribute("cx", String(T - 9 * S));
+            pd.text.setAttribute("x", String(T + tw / 2));
+            pd.text.setAttribute("text-anchor", "middle");
+          }
+        }
+      }
     });
 
     // ── drag (D3-style: fix single node → link forces pull group) ──────
     let dragNode: SimNode | null = null;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let lastMoveTime = 0;
+    let lastMoveX = 0;
+    let lastMoveY = 0;
+    let slowShowTimer: ReturnType<typeof setTimeout> | null = null;
+    const DRAG_TOOLTIP_SPEED_THRESHOLD = 180; // px/s — hide tooltip when moving faster
+    const SLOW_DEBOUNCE_MS = 1000; // ms of slow movement before tooltip reappears
+    const CLICK_MOVE_THRESHOLD = 8; // px — max movement to still count as "click"
 
     // ── mouse repulsion state (LMB on empty canvas) ─────────────────
     let mouseIsDown = false;
@@ -1093,6 +1339,11 @@ export function SkillGraph() {
       const hit = findNode(px, py);
       if (!hit) {
         e.preventDefault();
+        // ── clicking empty canvas cancels tooltip ──────────────────────
+        clearTooltipTimer();
+        tooltipVisibleRef.current = false;
+        activeNodeRef.current = null;
+        setTooltipContent(null);
         mouseIsDown = true;
         mouseSVGX = px;
         mouseSVGY = py;
@@ -1103,6 +1354,8 @@ export function SkillGraph() {
 
       e.preventDefault();
       dragNode = hit;
+      dragStartX = px;
+      dragStartY = py;
       hit.fx = hit.x;
       hit.fy = hit.y;
       if (svgRef.current) svgRef.current.style.cursor = "grabbing";
@@ -1129,6 +1382,40 @@ export function SkillGraph() {
 
       dragNode.fx = px;
       dragNode.fy = py;
+
+      // ── speed-based tooltip visibility during drag ────────────────
+      const now = performance.now();
+      if (lastMoveTime > 0) {
+        const dt = (now - lastMoveTime) / 1000;
+        if (dt > 0.008) {
+          const dist = Math.sqrt((px - lastMoveX) ** 2 + (py - lastMoveY) ** 2);
+          const speed = dist / dt;
+          if (speed > DRAG_TOOLTIP_SPEED_THRESHOLD) {
+            // fast → hide tooltip immediately
+            if (tooltipVisibleRef.current) {
+              tooltipVisibleRef.current = false;
+              if (tooltipRef.current) tooltipRef.current.style.display = "none";
+            }
+            // reset timer: show tooltip after 1s of no fast movement
+            if (slowShowTimer !== null) clearTimeout(slowShowTimer);
+            slowShowTimer = setTimeout(() => {
+              tooltipVisibleRef.current = true;
+              if (tooltipRef.current) tooltipRef.current.style.display = "block";
+              slowShowTimer = null;
+            }, SLOW_DEBOUNCE_MS);
+          } else if (!tooltipVisibleRef.current && slowShowTimer === null) {
+            // slow and hidden → set timer once
+            slowShowTimer = setTimeout(() => {
+              tooltipVisibleRef.current = true;
+              if (tooltipRef.current) tooltipRef.current.style.display = "block";
+              slowShowTimer = null;
+            }, SLOW_DEBOUNCE_MS);
+          }
+        }
+      }
+      lastMoveTime = now;
+      lastMoveX = px;
+      lastMoveY = py;
     }
 
     function onPointerUp(_e: PointerEvent) {
@@ -1142,6 +1429,35 @@ export function SkillGraph() {
       if (mouseIsDown) {
         mouseIsDown = false;
         simulation.alphaTarget(0);
+      }
+
+      // ── clean up drag-speed timer ──────────────────────────────────
+      if (slowShowTimer !== null) {
+        clearTimeout(slowShowTimer);
+        slowShowTimer = null;
+      }
+
+      // ── tooltip: after pointerup, always restore visibility ────────
+      //     (the speed-based logic only hides during active dragging)
+      if (tooltipContent) {
+        tooltipVisibleRef.current = true;
+        if (tooltipRef.current) tooltipRef.current.style.display = "block";
+      }
+
+      // ── click (minimal movement) → 4‑second linger ────────────────
+      if (tooltipContent) {
+        const dx = lastMoveX - dragStartX;
+        const dy = lastMoveY - dragStartY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < CLICK_MOVE_THRESHOLD) {
+          clearTooltipTimer();
+          tooltipTimeoutRef.current = setTimeout(() => {
+            tooltipVisibleRef.current = false;
+            activeNodeRef.current = null;
+            setTooltipContent(null);
+            tooltipTimeoutRef.current = null;
+          }, 4000);
+        }
       }
 
       if (svgRef.current) svgRef.current.style.cursor = "default";
@@ -1188,13 +1504,18 @@ export function SkillGraph() {
     return () => {
       simulation.stop();
       simRef.current = null;
+      if (slowShowTimer !== null) clearTimeout(slowShowTimer);
+      clearTooltipTimer();
+      tooltipVisibleRef.current = false;
+      activeNodeRef.current = null;
+      setTooltipContent(null);
       window.removeEventListener("resize", onResize);
       svgEl.removeEventListener("pointerdown", onPointerDown);
       svgEl.removeEventListener("pointermove", onPointerMove);
       svgEl.removeEventListener("dblclick", onDblClick);
       window.removeEventListener("pointerup", onPointerUp);
     };
-  }, [currentData]);
+  }, [currentData, rawNestedData]);
 
   const applyFilter = useCallback(() => {
     const selectedRatings = new Set<number>();
@@ -1271,6 +1592,49 @@ export function SkillGraph() {
         }}
       >
         <svg ref={svgRef} className="h-full w-full" />
+
+        {/* ── Tooltip (sub‑entries of hovered / dragged node) ──────── */}
+        <div
+          ref={tooltipRef}
+          className="absolute z-50 pointer-events-none"
+          style={{
+            display: tooltipContent ? "block" : "none",
+            color: "rgba(213,220,232,0.9)",
+            backgroundColor: "rgba(11,13,23,0.95)",
+            border: "1px solid rgba(167,139,250,0.3)",
+            borderRadius: "8px",
+            padding: "8px 12px",
+            fontFamily: "monospace",
+            fontSize: "11px",
+            lineHeight: "1.6",
+            minWidth: "140px",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {tooltipContent && (
+            <>
+              {tooltipContent.direct ? (
+                <div style={{ display: "flex", justifyContent: "space-between", gap: "16px", color: "rgba(255,255,255,0.95)" }}>
+                  <span style={{ fontWeight: "bold" }}>{tooltipContent.name}</span>
+                  <span style={{ color: ratingColor(tooltipContent.entries[0][1]), fontWeight: "bold" }}>{tooltipContent.entries[0][1]}</span>
+                </div>
+              ) : (
+                <>
+                  <div style={{ fontWeight: "bold", marginBottom: "4px", color: "rgba(255,255,255,0.95)" }}>
+                    {tooltipContent.name}
+                  </div>
+                  {tooltipContent.entries.map(([entryName, entryRating]) => (
+                    <div key={entryName} style={{ display: "flex", justifyContent: "space-between", gap: "16px" }}>
+                      <span>{entryName}</span>
+                      <span style={{ color: ratingColor(entryRating), fontWeight: "bold" }}>{entryRating}</span>
+                    </div>
+                  ))}
+                </>
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       {/* ── Filter‑Controls ──────────────────────────────────────────── */}
