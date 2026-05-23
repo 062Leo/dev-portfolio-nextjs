@@ -1248,7 +1248,22 @@ export function SkillGraph() {
         const T = 19 * S;
         const PAD = 3 * S;
         const FONT_SZ = 22 * S;
+        const EDGE_MARGIN = 20;
 
+        interface TagPos {
+          pd: PricetagData;
+          isTop: boolean;
+          isLeft: boolean;
+          tagLeft: number;
+          tagRight: number;
+          rx: number;
+          ry: number;
+          tw: number;
+          name: string;
+        }
+        const allPositions: TagPos[] = [];
+
+        // ---- first pass: compute raw positions & feed rope targets ----
         for (const pd of pricetagData) {
           const gn = nodes.filter((n) => n.groupIndex === pd.gi);
           if (gn.length < HULL_MIN_NODES) {
@@ -1259,44 +1274,30 @@ export function SkillGraph() {
           pd.line.style.display = "none";
           pd.g.style.display = "";
 
-          // centroid
           let cx = 0, cy = 0;
           for (const n of gn) { cx += n.x ?? 0; cy += n.y ?? 0; }
           cx /= gn.length;
           cy /= gn.length;
 
-          // hull radius (avg dist from centroid)
           let avgDist = 0;
           for (const n of gn) {
             avgDist += Math.sqrt(((n.x ?? 0) - cx) ** 2 + ((n.y ?? 0) - cy) ** 2);
           }
           avgDist /= gn.length;
 
-          // direction toward nearest edge (outward from center)
-          const distLeft = cx;
-          const distRight = width - cx;
-          const distTop = cy;
-          const distBottom = height - cy;
-          const minDist = Math.min(distLeft, distRight, distTop, distBottom);
-
-          let dirX = 0, dirY = 0;
-          if (minDist === distLeft) dirX = -1;
-          else if (minDist === distRight) dirX = 1;
-          else if (minDist === distTop) dirY = -1;
-          else if (minDist === distBottom) dirY = 1;
-
-          const lineEndX = cx + dirX * avgDist;
-          const lineEndY = cy + dirY * avgDist;
-          const EDGE_MARGIN = 60;
+          const isTop = cy < height / 2;
+          const dirY = isTop ? -1 : 1;
           const isLeft = cx < halfW;
 
-          let anchorX = cx, anchorY = cy;
-          if (dirX < 0) anchorX = EDGE_MARGIN;
-          else if (dirX > 0) anchorX = width - EDGE_MARGIN;
-          else if (dirY < 0) anchorY = EDGE_MARGIN;
-          else if (dirY > 0) anchorY = height - EDGE_MARGIN;
+          const lineEndX = cx;
+          const lineEndY = cy + dirY * avgDist;
 
-          // Use wobbly rope output position for pricetag
+          const anchorX = cx;
+          const TAG_HOVER_DIST = 50;
+          const anchorY = isTop
+            ? Math.max(EDGE_MARGIN + H / 2, lineEndY - TAG_HOVER_DIST)
+            : Math.min(height - EDGE_MARGIN - H / 2, lineEndY + TAG_HOVER_DIST);
+
           const rt = ropeTargetsRef.current.get(pd.gi);
           if (rt) {
             rt.start.x = lineEndX;
@@ -1305,23 +1306,64 @@ export function SkillGraph() {
             rt.end.y = anchorY;
           }
 
-          const rx = (rt && rt.outputX) || anchorX;
-          const ry = (rt && rt.outputY) || anchorY;
-          const neutralAngle = isLeft ? Math.PI : 0;
-          let rotDeg = 0;
-          if (rt) {
-            let rot = rt.outputAngle - neutralAngle;
-            if (rot > Math.PI) rot -= 2 * Math.PI;
-            if (rot < -Math.PI) rot += 2 * Math.PI;
-            const maxRot = 35 * Math.PI / 180;
-            rot = Math.max(-maxRot, Math.min(maxRot, rot));
-            rotDeg = rot * 180 / Math.PI;
-          }
-          pd.g.setAttribute("transform", `translate(${rx}, ${ry}) rotate(${rotDeg})`);
+          let rx = (rt && rt.outputX) || anchorX;
+          let ry = (rt && rt.outputY) || anchorY;
 
-          // build pricetag geometry (immer horizontal — gleiches Design)
           const name = pd.text.textContent || "";
           const tw = name.length * FONT_SZ * 0.6 + PAD * 2;
+          const tagLeft = isLeft ? T + tw : 0;
+          const tagRight = isLeft ? 0 : T + tw;
+
+          // hard edge blockade
+          rx = Math.max(EDGE_MARGIN + tagLeft, Math.min(width - EDGE_MARGIN - tagRight, rx));
+          ry = Math.max(EDGE_MARGIN + H / 2, Math.min(height - EDGE_MARGIN - H / 2, ry));
+
+          allPositions.push({ pd, isTop, isLeft, tagLeft, tagRight, rx, ry, tw, name });
+        }
+
+        // ---- tag-tag collision resolution ----
+        for (let iter = 0; iter < 5; iter++) {
+          for (let i = 0; i < allPositions.length; i++) {
+            for (let j = i + 1; j < allPositions.length; j++) {
+              const a = allPositions[i];
+              const b = allPositions[j];
+              // Y overlap?
+              const aTop = a.ry - H / 2;
+              const aBot = a.ry + H / 2;
+              const bTop = b.ry - H / 2;
+              const bBot = b.ry + H / 2;
+              if (aBot <= bTop || bBot <= aTop) continue;
+              // X overlap?
+              const aL = a.rx - a.tagLeft;
+              const aR = a.rx + a.tagRight;
+              const bL = b.rx - b.tagLeft;
+              const bR = b.rx + b.tagRight;
+              const overlap = Math.min(aR, bR) - Math.max(aL, bL);
+              if (overlap <= 0) continue;
+
+              const push = overlap / 2 + 2;
+              a.rx -= push;
+              b.rx += push;
+              // re-clamp to edges
+              a.rx = Math.max(EDGE_MARGIN + a.tagLeft, Math.min(width - EDGE_MARGIN - a.tagRight, a.rx));
+              b.rx = Math.max(EDGE_MARGIN + b.tagLeft, Math.min(width - EDGE_MARGIN - b.tagRight, b.rx));
+            }
+          }
+        }
+
+        // ---- apply final positions & geometry ----
+        for (const tp of allPositions) {
+          const { pd, isLeft, tagLeft, tagRight, rx, ry, tw, name } = tp;
+
+          const rt = ropeTargetsRef.current.get(pd.gi);
+          if (rt) {
+            rt.end.x = rx;
+            rt.outputX = Math.max(EDGE_MARGIN + tagLeft, Math.min(width - EDGE_MARGIN - tagRight, rx));
+            rt.outputY = Math.max(EDGE_MARGIN + H / 2, Math.min(height - EDGE_MARGIN - H / 2, ry));
+          }
+
+          pd.g.setAttribute("transform", `translate(${rx}, ${ry})`);
+
           if (isLeft) {
             pd.tri.setAttribute("points", `0,0 ${-T},${-H/2} ${-T},${H/2}`);
             pd.rect.setAttribute("x", String(-T - tw));
