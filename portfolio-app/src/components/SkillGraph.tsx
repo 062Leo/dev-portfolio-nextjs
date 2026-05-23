@@ -110,6 +110,10 @@ const GROUP_EXTRA_LINK_MAX_LOOKAHEAD = 4; // how many nodes ahead are eligible a
 const GROUP_EXTRA_LINK_MAX = 6;           // absolute max extra connections per node (1‑4)
 const MAX_DEGREE_HIGH = 5;                // max total degree for the high-count node
 const MAX_DEGREE_NORMAL = 5;              // max total degree for all other nodes
+const CHAIN_MIN_ANGLE_DEG = 27;           // minimum angle (degrees) between consecutive chain links
+const CHAIN_ANGLE_FORCE = 30;             // strength of the angle-enforcing force
+
+
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  FORCE SIMULATION — dynamic scaling based on visible node count
@@ -192,7 +196,6 @@ const LABEL_FONT_SIZE_MAX = 14;       // px für Rating 5
 const LABEL_FONT_FAMILY = "monospace";
 
 // ——  Farben ———————————————————————————————————————————————————————————————————
-const LABEL_COLOR_NORMAL = "rgba(213,220,232,0.55)";  // text-farbe normal
 const LABEL_COLOR_HOVER = "rgba(255,255,255,1)";      // text-farbe wenn knoten gehovert
 
 // ——  Verbindungslinie Label → Knoten —————————————————————————————————————————
@@ -246,7 +249,7 @@ const HULL_RADIAL_BUCKETS = 90;         // Winkel‑Eimer (360° / BUCKETS = ° 
 //      Verhindert, dass die Hülle zu weit innen liegende Punkte mitnimmt
 //      (z.B. Knoten die tief im Gruppen-Inneren sitzen).
 const HULL_INNER_FILTER = true;         // true  = innere Punkte werden entfernt
-const HULL_INNER_THRESHOLD = 0.60;      // 0…1   Abstand zum Zentroid relativ zum
+const HULL_INNER_THRESHOLD = 0.50;      // 0…1   Abstand zum Zentroid relativ zum
                                         //        Durchschnitt aller Hüllen-Punkte.
                                         //   Punkte mit Abstand < Schwellwert × Ø
                                         //   werden ausgeblendet.
@@ -281,6 +284,60 @@ const HULL_STROKE_OPACITY = 0.45;       // 0 … 1
 export function ratingColor(rating: number): string {
   const idx = Math.round(rating);
   return RATING_COLORS[idx] || RATING_COLORS[1];
+}
+
+function createChainAngleForce(links: SimLink[], minAngleDeg: number, strength: number) {
+  let nodes: SimNode[];
+  const minCos = Math.cos(minAngleDeg * Math.PI / 180);
+
+  function force(alpha: number) {
+    for (const node of nodes) {
+      const chainNeighbors: SimNode[] = [];
+      for (const link of links) {
+        if (!link.chain) continue;
+        const s = link.source as SimNode;
+        const t = link.target as SimNode;
+        if (s === node) chainNeighbors.push(t);
+        else if (t === node) chainNeighbors.push(s);
+      }
+      if (chainNeighbors.length !== 2) continue;
+
+      const [a, c] = chainNeighbors;
+      const bx = node.x ?? 0, by = node.y ?? 0;
+      const ax = a.x ?? 0, ay = a.y ?? 0;
+      const cx = c.x ?? 0, cy = c.y ?? 0;
+
+      const ux = ax - bx, uy = ay - by;
+      const vx = cx - bx, vy = cy - by;
+      const uLen = Math.sqrt(ux * ux + uy * uy);
+      const vLen = Math.sqrt(vx * vx + vy * vy);
+      if (uLen < 0.5 || vLen < 0.5) continue;
+
+      const cosAngle = (ux * vx + uy * vy) / (uLen * vLen);
+      if (Math.abs(cosAngle) <= minCos) continue;
+
+      const acx = cx - ax, acy = cy - ay;
+      const acLen = Math.sqrt(acx * acx + acy * acy);
+      if (acLen < 0.5) continue;
+
+      const perpX = -acy / acLen;
+      const perpY = acx / acLen;
+      const cross = acx * (by - ay) - acy * (bx - ax);
+      const sign = cross > 0 ? 1 : -1;
+
+      const severity = Math.abs(cosAngle) - minCos;
+      const f = severity * alpha * strength;
+
+      node.vx = (node.vx ?? 0) + perpX * sign * f;
+      node.vy = (node.vy ?? 0) + perpY * sign * f;
+    }
+  }
+
+  force.initialize = function (n: SimNode[]) {
+    nodes = n;
+  };
+
+  return force;
 }
 
 function getSkillCategories(src: Record<string, Record<string, number>>): Map<string, Record<string, number>> {
@@ -482,6 +539,7 @@ interface SimNode extends SimulationNodeDatum {
 interface SimLink extends SimulationLinkDatum<SimNode> {
   source: string | SimNode;
   target: string | SimNode;
+  chain?: boolean;
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -596,7 +654,7 @@ export function SkillGraph() {
 
       // chain connections
       for (let i = 0; i < groupNodes.length - 1; i++) {
-        links.push({ source: groupNodes[i].id, target: groupNodes[i + 1].id });
+        links.push({ source: groupNodes[i].id, target: groupNodes[i + 1].id, chain: true });
         degree[i]++;
         degree[i + 1]++;
       }
@@ -668,6 +726,7 @@ export function SkillGraph() {
       .force("collide", forceCollide<SimNode>().radius(d => radiusScale(d.rating) + COLLIDE_PADDING))
       .force("x", forceX<SimNode>(width / 2).strength(dynCenterX))
       .force("y", forceY<SimNode>(height / 2).strength(dynCenterY))
+      .force("chainAngle", createChainAngleForce(links, CHAIN_MIN_ANGLE_DEG, CHAIN_ANGLE_FORCE))
       .alphaDecay(ALPHA_DECAY)
       .alphaMin(ALPHA_MIN);
 
