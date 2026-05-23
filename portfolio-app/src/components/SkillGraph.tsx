@@ -216,10 +216,10 @@ const LABEL_FONT_FAMILY = "monospace";
 const LABEL_COLOR_HOVER = "rgba(255,255,255,1)";      // text-farbe wenn knoten gehovert
 
 // ——  Verbindungslinie Label → Knoten —————————————————————————————————————————
-const LABEL_LINE_COLOR = "rgba(192,184,213,0.28)";    // farbe der mini-linie
-const LABEL_LINE_WIDTH = 0.5;                         // strichstärke (px)
-const LABEL_LINE_COLOR_HOVER = "rgba(255,255,255,0.6)"; // linien-farbe bei hover
-const LABEL_LINE_WIDTH_HOVER = 1.0;                   // strichstärke bei hover
+const LABEL_LINE_COLOR = "rgba(192, 184, 213, 0.74)";    // farbe der mini-linie
+const LABEL_LINE_WIDTH = 1;                         // strichstärke (px)
+const LABEL_LINE_COLOR_HOVER = "rgb(255, 255, 255)"; // linien-farbe bei hover
+const LABEL_LINE_WIDTH_HOVER = 1.5;                   // strichstärke bei hover
 
 // ——  Richtungs‑Priorität (höher = wird zuerst probiert) ——————————————————————
 //      0=unten  1=oben  2=rechts  3=links  4=u.rechts  5=o.rechts  6=u.links  7=o.links
