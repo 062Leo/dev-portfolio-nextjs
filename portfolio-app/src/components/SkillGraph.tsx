@@ -17,6 +17,7 @@ import { WobblyRopes } from "./WobblyRopes";
 import type { RopeTarget } from "./WobblyRopes";
 import {
   PRICETAG_ENABLED,
+  PT_H,
   type PricetagData,
   createPricetags,
   updatePricetags,
@@ -1039,6 +1040,8 @@ export function SkillGraph() {
       }
 
       // ── update vacuum‑pack hulls ────────────────────────────────────
+      const ropeStartMap = new Map<number, { x: number; y: number }>();
+
       if (HULL_ENABLED) {
         for (const gi of groupIndices) {
           const path = hullPaths[gi];
@@ -1062,6 +1065,22 @@ export function SkillGraph() {
           }
 
           path.setAttribute("d", catmullRomClosedPath(hullPts, HULL_CURVE_TENSION));
+
+          const anchorY = cy < height / 2
+            ? 10 + PT_H / 2
+            : height - 10 - PT_H / 2;
+          let bestDist = Infinity;
+          let bestPt: { x: number; y: number } = { x: cx, y: cy };
+          for (const [hx, hy] of hullPts) {
+            const dx = hx - cx;
+            const dy = hy - anchorY;
+            const d = dx * dx + dy * dy;
+            if (d < bestDist) {
+              bestDist = d;
+              bestPt = { x: hx, y: hy };
+            }
+          }
+          ropeStartMap.set(gi, bestPt);
         }
       }
 
@@ -1217,7 +1236,7 @@ export function SkillGraph() {
       }
 
       // ── update pricetag positions ─────────────────────────────────
-      updatePricetags(pricetagData, nodes, width, height, HULL_MIN_NODES, ropeTargetsRef);
+      updatePricetags(pricetagData, nodes, width, height, HULL_MIN_NODES, ropeTargetsRef, ropeStartMap);
     });
 
     // ── drag (D3-style: fix single node → link forces pull group) ──────

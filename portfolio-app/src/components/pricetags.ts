@@ -148,6 +148,7 @@ export function updatePricetags(
   height: number,
   hullMinNodes: number,
   ropeTargetsRef: React.MutableRefObject<Map<number, RopeTarget>>,
+  ropeStartMap?: Map<number, { x: number; y: number }>,
 ) {
   if (!PRICETAG_ENABLED || pricetagData.length === 0) return;
 
@@ -180,8 +181,9 @@ export function updatePricetags(
     const dirY = isTop ? -1 : 1;
     const isLeft = cx < halfW;
 
-    const lineEndX = cx;
-    const lineEndY = cy + dirY * avgDist;
+    const hullStart = ropeStartMap?.get(pd.gi);
+    const lineEndX = hullStart ? hullStart.x : cx;
+    const lineEndY = hullStart ? hullStart.y : cy + dirY * avgDist;
 
     const anchorX = cx;
     const anchorY = isTop ? EDGE_MARGIN + PT_H / 2 : height - EDGE_MARGIN - PT_H / 2;
