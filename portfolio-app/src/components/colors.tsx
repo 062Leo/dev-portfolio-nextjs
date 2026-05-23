@@ -150,6 +150,10 @@ export type ThemeColorSet = {
 
     // LanguageToggle Colors
     languageToggleBgColor: string;
+
+    // Home Featured Preview
+    homePreviewSectionTitleColor: string;
+    homePreviewSectionAccentColor: string;
 };
 
 const darkColors: ThemeColorSet = {
@@ -173,7 +177,7 @@ const darkColors: ThemeColorSet = {
 
     // Network Background Component
     // networkBackground: Radial gradient for NetworkBackground canvas (NetworkBackground.tsx)
-    networkBackground: "radial-gradient(circle at center, rgba(41, 41, 94, 0.9), rgba(0, 0, 0, 1))",
+    networkBackground: "radial-gradient(circle at center, rgba(24, 18, 56, 0.95), rgba(0, 0, 0, 1))",
     // networkStroke: Lines in network animation (NetworkBackground.tsx)
     networkStroke: "rgba(239, 68, 68, 1)",
     // networkCircle: Circles in network animation (NetworkBackground.tsx)
@@ -323,6 +327,10 @@ const darkColors: ThemeColorSet = {
 
     // LanguageToggle Colors
     languageToggleBgColor: "rgba(255, 255, 255, 1)",
+
+    // Home Featured Preview
+    homePreviewSectionTitleColor: "rgba(239, 68, 68, 1)",
+    homePreviewSectionAccentColor: "rgba(248, 113, 113, 1)",
 };
 
 // Light mode is aliased to dark mode for now (will be implemented later)

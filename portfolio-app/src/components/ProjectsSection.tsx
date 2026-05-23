@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { ArrowRight, Download, ExternalLink } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
@@ -12,20 +12,11 @@ import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function ProjectsShowcase() {
-  const [isReady, setIsReady] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
   const { language } = useLanguage();
 
-  useEffect(() => {
-    setIsReady(true);
-  }, []);
-
   const colors = useThemeColors(true);
-
-  if (!isReady) {
-    return null;
-  }
 
   const projects = (language === "en" ? portfolioDataEn : portfolioData).projects;
   const moreProjectsSource = language === "en" ? otherProjectsEn : otherProjects;

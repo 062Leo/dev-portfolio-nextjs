@@ -52,7 +52,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ id: s
         <DetailComponent id={id} />
       </main>
 
-      <div className="relative z-10">
+      <div className="relative">
         <Footer />
       </div>
     </div>

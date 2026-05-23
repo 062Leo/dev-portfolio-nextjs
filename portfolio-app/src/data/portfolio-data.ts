@@ -216,7 +216,7 @@ export const portfolioData = {
       videoBig: "/Videos/Big/FoodCheck_Video.mp4",
       custom1Link: "https://github.com/062Leo/FoodCheck-Scanner/releases",
       custom1BTNText: "APK HERUNTERLADEN",
-      customLabel: "",
+      customLabel: "GitHub",
       demotext: "",
       demoControls: [],
       misctext: "",

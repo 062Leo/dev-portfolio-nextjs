@@ -1,6 +1,5 @@
 "use client";
 
-import { } from "react";
 import { ArrowDown } from "lucide-react";
 import { portfolioData } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
@@ -10,7 +9,6 @@ import { useLanguage } from "@/context/LanguageContext";
 const hoverText = " onClick={reload}";
 
 export function HomeSection() {
-  const isReady = true;
   const { language } = useLanguage();
   const colors = useThemeColors(true);
 
@@ -26,10 +24,6 @@ export function HomeSection() {
       window.location.reload();
     }
   };
-
-  if (!isReady) {
-    return null;
-  }
 
   const currentPortfolioData = language === "en" ? portfolioDataEn : portfolioData;
 
@@ -108,6 +102,7 @@ export function HomeSection() {
             </a>
           </div>
         </div>
+
       </div>
       <button
         type="button"
