@@ -71,7 +71,7 @@ export function Footer() {
     <>
       <footer className="relative border-t border-[rgba(167,139,250,0.15)]">
         <div className="container mx-auto max-w-6xl px-4 pb-8 pt-12">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-[2fr_1fr_2fr]">
             {/* Brand */}
             <div>
               <span className="text-xl font-bold">
