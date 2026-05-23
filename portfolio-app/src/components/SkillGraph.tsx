@@ -582,6 +582,7 @@ export function SkillGraph() {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
   const simRef = useRef<Simulation<SimNode, SimLink> | null>(null);
   const ropeTargetsRef = useRef<Map<number, RopeTarget>>(new Map());
@@ -1560,8 +1561,47 @@ export function SkillGraph() {
     };
   }, [buildSimulation]);
 
+  useEffect(() => {
+    let lockTicks = 0;
+    const LOCK_MAX = 3;
+    let inside = false;
+    let consumed = false;
+
+    const handleWheel = (e: WheelEvent) => {
+      const el = containerRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const nowInside = rect.top >= -700 && rect.top <= 700;
+
+      if (!nowInside) {
+        inside = false;
+        consumed = false;
+        lockTicks = 0;
+        return;
+      }
+
+      if (consumed) return;
+
+      if (!inside) {
+        inside = true;
+        lockTicks = 0;
+        document.documentElement.scrollTop = rect.top + window.scrollY - 52;
+      }
+
+      if (lockTicks < LOCK_MAX) {
+        e.preventDefault();
+        lockTicks++;
+      } else {
+        consumed = true;
+      }
+    };
+
+    document.addEventListener("wheel", handleWheel, { passive: false });
+    return () => document.removeEventListener("wheel", handleWheel);
+  }, []);
+
   return (
-    <section id="skills" className="relative w-full py-16 md:py-24">
+    <section ref={sectionRef} id="skills" className="relative w-full py-16 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <h2
           className="mb-6 text-center text-3xl font-bold md:text-4xl"
