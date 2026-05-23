@@ -591,14 +591,8 @@ export function SkillGraph() {
   const [filterToggles, setFilterToggles] = useState<boolean[]>([false, true, true, true, true, true]);
   const [filterActive, setFilterActive] = useState(false);
 
-  // category filter
-  const allCategoryKeys = useMemo(() => Array.from(getSkillCategories(currentData).keys()), [currentData]);
-  const filterCategoriesRef = useRef<Set<string> | null>(null);
-  const [categoryToggles, setCategoryToggles] = useState<Record<string, boolean>>(() => {
-    const init: Record<string, boolean> = {};
-    for (const key of Array.from(getSkillCategories(currentData).keys())) init[key] = true;
-    return init;
-  });
+  // pricetag toggle: hidden group indices
+  const hiddenGroupsRef = useRef<Set<number>>(new Set());
 
   const buildSimulation = useCallback(() => {
     const container = containerRef.current;
@@ -634,9 +628,7 @@ export function SkillGraph() {
       const groupNodes: SimNode[] = [];
       entries.forEach(([name, rating]) => {
         const allowedRating = filterRatingsRef.current;
-        const allowedCat = filterCategoriesRef.current;
         if (allowedRating && !allowedRating.has(rating)) return;
-        if (allowedCat && !allowedCat.has(category)) return;
         const node: SimNode = {
           id: `${category}:${name}`,
           name,
@@ -969,8 +961,45 @@ export function SkillGraph() {
 
     // ── pricetags (one per category group) ────────────────────────────
     const pricetagData: PricetagData[] = PRICETAG_ENABLED
-      ? createPricetags(pricetagLayer, categories, groupIndices, ropeTargetsRef, ropeColorMapRef, CATEGORIES)
+      ? createPricetags(pricetagLayer, categories, groupIndices, ropeTargetsRef, ropeColorMapRef, CATEGORIES, hiddenGroupsRef.current, toggleGroup)
       : [];
+
+    function applyGroupVisibility() {
+      const hidden = hiddenGroupsRef.current;
+
+      for (let i = 0; i < nodes.length; i++) {
+        const isHidden = hidden.has(nodes[i].groupIndex);
+        const opacity = isHidden ? "0" : "";
+        nodeEls[i].style.opacity = opacity;
+        labelEls[i].style.opacity = opacity;
+        labelLineEls[i].style.opacity = opacity;
+      }
+
+      for (const gi of groupIndices) {
+        const path = hullPaths[gi];
+        if (!path) continue;
+        path.style.opacity = hidden.has(gi) ? "0" : "";
+      }
+
+      for (let i = 0; i < links.length; i++) {
+        const s = links[i].source as SimNode;
+        const t = links[i].target as SimNode;
+        linkEls[i].style.opacity = hidden.has(s.groupIndex) ? "0" : "";
+      }
+    }
+
+    function toggleGroup(gi: number) {
+      const hidden = hiddenGroupsRef.current;
+      if (hidden.has(gi)) {
+        hidden.delete(gi);
+      } else {
+        hidden.add(gi);
+      }
+      applyGroupVisibility();
+      simulation.alphaTarget(REHEAT_ALPHA).restart();
+    }
+
+    applyGroupVisibility();
 
     // ── bounding helper ──────────────────────────────────────────────────
     function clampNode(n: SimNode, r: number) {
@@ -1236,7 +1265,9 @@ export function SkillGraph() {
       }
 
       // ── update pricetag positions ─────────────────────────────────
-      updatePricetags(pricetagData, nodes, width, height, HULL_MIN_NODES, ropeTargetsRef, ropeStartMap);
+      updatePricetags(pricetagData, nodes, width, height, HULL_MIN_NODES, ropeTargetsRef, ropeStartMap, hiddenGroupsRef.current);
+
+      applyGroupVisibility();
     });
 
     // ── drag (D3-style: fix single node → link forces pull group) ──────
@@ -1475,39 +1506,22 @@ export function SkillGraph() {
       filterRatingsRef.current = selectedRatings;
     }
 
-    const selectedCategories = new Set<string>();
-    for (const [key, enabled] of Object.entries(categoryToggles)) {
-      if (enabled) selectedCategories.add(key);
-    }
-
-    if (selectedCategories.size >= allCategoryKeys.length) {
-      filterCategoriesRef.current = null;
-    } else {
-      filterCategoriesRef.current = selectedCategories;
-    }
-
-    const anyFilterActive = filterRatingsRef.current !== null || filterCategoriesRef.current !== null;
-    setFilterActive(anyFilterActive);
+    setFilterActive(filterRatingsRef.current !== null);
 
     if (cleanupRef.current) cleanupRef.current();
     const cleanup = buildSimulation();
     cleanupRef.current = cleanup ?? null;
-  }, [filterToggles, categoryToggles, allCategoryKeys.length, buildSimulation]);
+  }, [filterToggles, buildSimulation]);
 
   const resetFilter = useCallback(() => {
     filterRatingsRef.current = null;
-    filterCategoriesRef.current = null;
     setFilterActive(false);
     setFilterToggles([false, true, true, true, true, true]);
-
-    const resetCatToggles: Record<string, boolean> = {};
-    for (const key of allCategoryKeys) resetCatToggles[key] = true;
-    setCategoryToggles(resetCatToggles);
 
     if (cleanupRef.current) cleanupRef.current();
     const cleanup = buildSimulation();
     cleanupRef.current = cleanup ?? null;
-  }, [allCategoryKeys, buildSimulation]);
+  }, [buildSimulation]);
 
   useEffect(() => {
     if (cleanupRef.current) cleanupRef.current();
@@ -1617,38 +1631,6 @@ export function SkillGraph() {
             );
           })}
           </div>
-        </div>
-
-        {/* Category row — responsive grid, balanced columns */}
-        <div className="text-center mt-2">
-          <span className="text-xs mb-1 inline-block" style={{ color: "rgba(213,220,232,0.6)" }}>
-            {language === "de" ? "Kategorie:" : "Category:"}
-          </span>
-        </div>
-        <div className="grid grid-cols-[repeat(4,auto)] sm:grid-cols-[repeat(5,auto)] lg:grid-cols-[repeat(7,auto)] justify-center gap-x-2 gap-y-1">
-          {allCategoryKeys.map((cat) => {
-            const idx = allCategoryKeys.indexOf(cat);
-            const baseColor = CATEGORIES[idx]?.color || "rgba(167,139,250,0.25)";
-            const activeBg = baseColor.replace(/[\d.]+\)$/, "0.55)");
-            const active = categoryToggles[cat] !== false;
-            return (
-              <button
-                key={cat}
-                onClick={() => {
-                  setCategoryToggles(prev => ({ ...prev, [cat]: !active }));
-                }}
-                className="rounded px-2 py-0.5 font-mono text-xs font-bold transition-all duration-150"
-                style={{
-                  backgroundColor: active ? activeBg : "rgba(30,30,40,0.6)",
-                  color: active ? "#111" : "rgba(150,150,160,0.5)",
-                  border: `1px solid ${active ? baseColor : "rgba(60,60,70,0.4)"}`,
-                  opacity: active ? 1 : 0.5,
-                }}
-              >
-                {cat}
-              </button>
-            );
-          })}
         </div>
 
         {/* Action row */}

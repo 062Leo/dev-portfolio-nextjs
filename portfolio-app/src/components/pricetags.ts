@@ -65,6 +65,8 @@ export function createPricetags(
   ropeTargetsRef: React.MutableRefObject<Map<number, RopeTarget>>,
   ropeColorMapRef: React.MutableRefObject<Map<number, string>>,
   CATEGORIES: CatEntry[],
+  hiddenGroups?: Set<number>,
+  onToggle?: (gi: number) => void,
 ): PricetagData[] {
   const pricetagData: PricetagData[] = [];
 
@@ -79,7 +81,16 @@ export function createPricetags(
     pricetagLayer.appendChild(line);
 
     const g = document.createElementNS(NS, "g");
-    g.setAttribute("pointer-events", "none");
+    g.setAttribute("pointer-events", "auto");
+    g.style.cursor = "pointer";
+
+    const currentHidden = hiddenGroups?.has(gi) ?? false;
+    g.style.opacity = currentHidden ? "0.45" : "1";
+
+    g.addEventListener("click", (e) => {
+      e.stopPropagation();
+      onToggle?.(gi);
+    });
 
     const catColor = CATEGORIES[gi]?.color || "rgba(106,176,112,0.25)";
     const fillColor = catColor.replace(/[\d.]+\)$/, "0.7)");
@@ -149,6 +160,7 @@ export function updatePricetags(
   hullMinNodes: number,
   ropeTargetsRef: React.MutableRefObject<Map<number, RopeTarget>>,
   ropeStartMap?: Map<number, { x: number; y: number }>,
+  hiddenGroups?: Set<number>,
 ) {
   if (!PRICETAG_ENABLED || pricetagData.length === 0) return;
 
@@ -165,6 +177,7 @@ export function updatePricetags(
     }
     pd.line.style.display = "none";
     pd.g.style.display = "";
+    pd.g.style.opacity = hiddenGroups?.has(pd.gi) ? "0.45" : "1";
 
     let cx = 0, cy = 0;
     for (const n of gn) { cx += n.x ?? 0; cy += n.y ?? 0; }
@@ -190,10 +203,17 @@ export function updatePricetags(
 
     const rt = ropeTargetsRef.current.get(pd.gi);
     if (rt) {
-      rt.start.x = lineEndX;
-      rt.start.y = lineEndY;
-      rt.end.x = anchorX;
-      rt.end.y = anchorY;
+      if (hiddenGroups?.has(pd.gi)) {
+        rt.start.x = 0;
+        rt.start.y = 0;
+        rt.end.x = 0;
+        rt.end.y = 0;
+      } else {
+        rt.start.x = lineEndX;
+        rt.start.y = lineEndY;
+        rt.end.x = anchorX;
+        rt.end.y = anchorY;
+      }
     }
 
     let rx = anchorX; // always restart from group centroid, never accumulate
@@ -245,7 +265,7 @@ export function updatePricetags(
     const { pd, isLeft, isTop, tagLeft, tagRight, rx, ry, tw, cx } = tp;
 
     const rt = ropeTargetsRef.current.get(pd.gi);
-    if (rt) {
+    if (rt && !hiddenGroups?.has(pd.gi)) {
       rt.end.x = rx; // rope end fixed to pricetag hole
       rt.end.y = ry;
       rt.outputX = Math.max(EDGE_MARGIN + tagLeft, Math.min(width - EDGE_MARGIN - tagRight, rx));
