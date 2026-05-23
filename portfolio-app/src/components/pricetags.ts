@@ -65,7 +65,7 @@ export function createPricetags(
   ropeTargetsRef: React.MutableRefObject<Map<number, RopeTarget>>,
   ropeColorMapRef: React.MutableRefObject<Map<number, string>>,
   CATEGORIES: CatEntry[],
-  filterCategories?: Set<string>,
+  hiddenGroups?: Set<number>,
   onToggle?: (categoryName: string) => void,
   pricetagPositionsRef?: React.MutableRefObject<Map<number, { x: number; y: number; isLeft: boolean; isTop: boolean }>>,
 ): PricetagData[] {
@@ -85,7 +85,7 @@ export function createPricetags(
     g.setAttribute("pointer-events", "auto");
     g.style.cursor = "pointer";
 
-    const toggledOff = filterCategories?.has(name) ?? false;
+    const toggledOff = hiddenGroups?.has(gi) ?? false;
     g.style.opacity = toggledOff ? "0.45" : "1";
 
     g.addEventListener("click", (e) => {
@@ -178,7 +178,7 @@ export function updatePricetags(
   hullMinNodes: number,
   ropeTargetsRef: React.MutableRefObject<Map<number, RopeTarget>>,
   ropeStartMap?: Map<number, { x: number; y: number }>,
-  filterCategories?: Set<string>,
+  hiddenGroups?: Set<number>,
   pricetagPositionsRef?: React.MutableRefObject<Map<number, { x: number; y: number; isLeft: boolean; isTop: boolean }>>,
 ) {
   if (!PRICETAG_ENABLED || pricetagData.length === 0) return;
@@ -210,28 +210,32 @@ export function updatePricetags(
   for (const pd of pricetagData) {
     const gn = nodes.filter((n) => n.groupIndex === pd.gi);
     const catName = pd.text.textContent || "";
-    const isFilteredOut = filterCategories?.has(catName) ?? false;
+    const isFilteredOut = hiddenGroups?.has(pd.gi) ?? false;
 
-    if (gn.length < hullMinNodes) {
+    if (isFilteredOut) {
       pd.line.style.display = "none";
       const rt = ropeTargetsRef.current.get(pd.gi);
       if (rt) { rt.start.x = 0; rt.start.y = 0; rt.end.x = 0; rt.end.y = 0; }
 
-      if (isFilteredOut) {
-        const stored = pricetagPositionsRef?.current.get(pd.gi);
-        if (stored) {
-          pd.g.style.display = "";
-          pd.g.style.opacity = "0.45";
-          const tw = catName.length * FONT_SZ * 0.6 + PAD * 2;
-          const tagLeft = stored.isLeft ? PT_T + tw : 0;
-          const tagRight = stored.isLeft ? 0 : PT_T + tw;
-          allPositions.push({ pd, isTop: stored.isTop, isLeft: stored.isLeft, tagLeft, tagRight, rx: stored.x, ry: stored.y, cx: stored.x, tw, name: catName });
-        } else {
-          pd.g.style.display = "none";
-        }
+      const stored = pricetagPositionsRef?.current.get(pd.gi);
+      if (stored) {
+        pd.g.style.display = "";
+        pd.g.style.opacity = "0.45";
+        const tw = catName.length * FONT_SZ * 0.6 + PAD * 2;
+        const tagLeft = stored.isLeft ? PT_T + tw : 0;
+        const tagRight = stored.isLeft ? 0 : PT_T + tw;
+        allPositions.push({ pd, isTop: stored.isTop, isLeft: stored.isLeft, tagLeft, tagRight, rx: stored.x, ry: stored.y, cx: stored.x, tw, name: catName });
       } else {
         pd.g.style.display = "none";
       }
+      continue;
+    }
+
+    if (gn.length < hullMinNodes) {
+      pd.line.style.display = "none";
+      pd.g.style.display = "none";
+      const rt = ropeTargetsRef.current.get(pd.gi);
+      if (rt) { rt.start.x = 0; rt.start.y = 0; rt.end.x = 0; rt.end.y = 0; }
       continue;
     }
     pd.line.style.display = "none";
@@ -315,7 +319,7 @@ export function updatePricetags(
     const { pd, isLeft, isTop, tagLeft, tagRight, rx, ry, tw, name } = tp;
 
     const catName2 = pd.text.textContent || "";
-    const isFiltered = filterCategories?.has(catName2) ?? false;
+    const isFiltered = hiddenGroups?.has(pd.gi) ?? false;
 
     if (!isFiltered) {
       const rt = ropeTargetsRef.current.get(pd.gi);
