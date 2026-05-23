@@ -13,7 +13,7 @@
     "C": 2,
     "Dart": 3
   },
-  "Web & Frontend": {
+  "Web & UI": {
     "React Ökosystem": {
       "React": 4,
       "Next.js": 3
@@ -29,7 +29,7 @@
     },
     "UX Design": 3
   },
-  "Backend & .NET Ökosystem": {
+  "Backend & .NET ": {
     ".NET & C# Framework": {
       ".NET": 5,
       "ASP.NET": 3,
@@ -46,7 +46,7 @@
     },
     "Microservices": 3
   },
-  "Datenbank & Datenformate": {
+  "Daten & DB": {
     "SQL Datenbanken": {
       "SQL": 3,
       "SQLite": 3
@@ -58,7 +58,7 @@
     },
     "JSON": 5
   },
-  "Software Engineering & Qualität": {
+  "SWE & Qualität": {
     "Clean Code & Refactoring": {
       "Clean Code": 5,
       "Refactoring": 5,
@@ -76,7 +76,7 @@
     },
    "Technische Dokumentation": 4
   },
-  "Entwicklungs-Ansätze": {
+  "Methodik": {
     "Allgemeine Entwicklung": {
       "Softwareentwicklung": 5,
       "Prototyping": 4
@@ -87,7 +87,7 @@
     "App-Entwicklung": 4
     
   },
-  "Tools & Versionskontrolle": {
+  "Tools & VCS": {
     "Git & Repositories": {
       "Git": 5,
       "Github": 5
@@ -111,7 +111,7 @@
       "Docker": 2
     }
   },
-  "Künstliche Intelligenz": {
+  "KI / ML": {
     "KI Grundlagen": {
       "Künstliche Intelligenz": 5,
       "Prompt Engineering": 4
@@ -136,7 +136,7 @@
       "Hyperparameter Tuning": 3
     }
   },
-  "KI-Assistenten & IDEs": {
+  "KI-Tools & IDE's": {
     "Code-Assistenten": {
       "Claude Code": 4,
       "GitHub Copilot": 4,
@@ -148,7 +148,7 @@
       "Cursor": 3
     }
   },
-  "Game Development": {
+  "Game Dev": {
     "Unity Core": {
       "Unity": 5,
       "Unity Physics Engine": 4,
@@ -180,7 +180,7 @@
       "Unity Ads": 1
     }
   },
-  "Cross-Platform Entwicklung": {
+  "Cross-Platform": {
     "Mobile": {
       "Flutter": 3,
       "Android": 3,
@@ -191,7 +191,7 @@
       "WPF": 3
     }
   },
-  "Hardware & Embedded": {
+  "Hardware & IoT": {
     "Microcontroller & Robotik": {
       "Microcontroller": 2,
       "Elegoo Smart Robot": 2
@@ -207,7 +207,7 @@
       "Blender": 1
     }
   },
-  "Projektmanagement & Agile": {
+  "PM & Agile": {
     "Scrum & Agile Methoden": {
       "Scrum": 4,
       "Scrum Master": 3,

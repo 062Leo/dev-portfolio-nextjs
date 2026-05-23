@@ -57,20 +57,20 @@ const skillsDataEnFlat = flattenSkillsData(skillsDataEn as SkillsDataNested);
 type CatKey = string;
 
 const CATEGORIES: { key: CatKey; color: string }[] = [
-  { key: "Programmierung",               color: "rgba(167,139,250,0.25)" },
-  { key: "Web & Frontend",               color: "rgba(56,189,248,0.25)" },
-  { key: "Backend & .NET Ökosystem",     color: "rgba(129,140,248,0.25)" },
-  { key: "Datenbank & Datenformate",     color: "rgba(14,165,233,0.25)" },
-  { key: "Software Engineering & Qualität", color: "rgba(94,234,212,0.25)" },
-  { key: "Entwicklungs-Ansätze",         color: "rgba(74,222,128,0.25)" },
-  { key: "Tools & Versionskontrolle",    color: "rgba(244,114,182,0.25)" },
-  { key: "DevOps & Cloud",               color: "rgba(251,146,60,0.25)" },
-  { key: "Künstliche Intelligenz",       color: "rgba(250,204,21,0.25)" },
-  { key: "KI-Assistenten & IDEs",        color: "rgba(236,72,153,0.25)" },
-  { key: "Game Development",             color: "rgba(52,211,153,0.25)" },
-  { key: "Cross-Platform Entwicklung",   color: "rgba(45,212,191,0.25)" },
-  { key: "Hardware & Embedded",          color: "rgba(245,158,11,0.25)" },
-  { key: "Projektmanagement & Agile",    color: "rgba(148,163,184,0.25)" },
+  { key: "Programmierung",           color: "hsla(280, 80%, 55%, 0.25)" }, // Purple
+  { key: "Web & UI",                 color: "hsla(210, 80%, 55%, 0.25)" }, // Blue
+  { key: "Backend & .NET ",          color: "hsla(190, 80%, 50%, 0.25)" }, // Cyan
+  { key: "Daten & DB",               color: "hsla(160, 80%, 45%, 0.25)" }, // Teal
+  { key: "SWE & Qualität",           color: "hsla(130, 70%, 45%, 0.25)" }, // Green
+  { key: "Methodik",                 color: "hsla(80, 75%, 45%, 0.25)" },  // Lime
+  { key: "Tools & VCS",              color: "hsla(340, 80%, 55%, 0.25)" }, // Pink
+  { key: "DevOps & Cloud",           color: "hsla(20, 85%, 55%, 0.25)" },  // Orange
+  { key: "KI / ML",                  color: "hsla(45, 85%, 50%, 0.25)" },  // Gold
+  { key: "KI-Tools & IDE's",         color: "hsla(0, 80%, 55%, 0.25)" },   // Red
+  { key: "Game Dev",                 color: "hsla(310, 70%, 50%, 0.25)" }, // Magenta
+  { key: "Cross-Platform",           color: "hsla(175, 75%, 40%, 0.25)" }, // Deep teal
+  { key: "Hardware & IoT",           color: "hsla(250, 75%, 60%, 0.25)" }, // Indigo
+  { key: "PM & Agile",               color: "hsla(100, 60%, 40%, 0.25)" }, // Forest
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════

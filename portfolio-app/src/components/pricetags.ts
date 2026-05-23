@@ -81,9 +81,12 @@ export function createPricetags(
     const g = document.createElementNS(NS, "g");
     g.setAttribute("pointer-events", "none");
 
+    const catColor = CATEGORIES[gi]?.color || "rgba(106,176,112,0.25)";
+    const fillColor = catColor.replace(/[\d.]+\)$/, "0.7)");
+
     const tri = document.createElementNS(NS, "polygon");
     tri.setAttribute("points", `0,0 ${PT_T},${-PT_H / 2} ${PT_T},${PT_H / 2}`);
-    tri.setAttribute("fill", "#6ab070");
+    tri.setAttribute("fill", fillColor);
 
     const rect = document.createElementNS(NS, "rect");
     rect.setAttribute("x", String(PT_T));
@@ -91,7 +94,7 @@ export function createPricetags(
     rect.setAttribute("width", String(textW));
     rect.setAttribute("height", String(PT_H));
     rect.setAttribute("rx", String(R));
-    rect.setAttribute("fill", "#6ab070");
+    rect.setAttribute("fill", fillColor);
 
     const dot = document.createElementNS(NS, "circle");
     dot.setAttribute("cx", String(PT_T - 9 * S));
@@ -125,7 +128,6 @@ export function createPricetags(
       });
     }
     if (!ropeColorMapRef.current.has(gi)) {
-      const catColor = CATEGORIES[gi]?.color || "rgba(106,176,112,0.25)";
       ropeColorMapRef.current.set(gi, catColor.replace(/[\d.]+\)$/, "0.55)"));
     }
   }
