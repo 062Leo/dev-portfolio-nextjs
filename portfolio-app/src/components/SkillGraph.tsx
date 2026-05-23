@@ -591,8 +591,10 @@ export function SkillGraph() {
   const [filterToggles, setFilterToggles] = useState<boolean[]>([false, true, true, true, true, true]);
   const [filterActive, setFilterActive] = useState(false);
 
-  // pricetag toggle: hidden group indices
-  const hiddenGroupsRef = useRef<Set<number>>(new Set());
+  // pricetag toggle: categories hidden via pricetag click
+  const filterCategoriesRef = useRef<Set<string>>(new Set());
+  const pricetagPositionsRef = useRef<Map<number, { x: number; y: number; isLeft: boolean; isTop: boolean }>>(new Map());
+  const buildSimulationRef = useRef<(() => (() => void) | undefined) | null>(null);
 
   const buildSimulation = useCallback(() => {
     const container = containerRef.current;
@@ -629,6 +631,7 @@ export function SkillGraph() {
       entries.forEach(([name, rating]) => {
         const allowedRating = filterRatingsRef.current;
         if (allowedRating && !allowedRating.has(rating)) return;
+        if (filterCategoriesRef.current.has(category)) return;
         const node: SimNode = {
           id: `${category}:${name}`,
           name,
@@ -937,6 +940,7 @@ export function SkillGraph() {
 
     // ── hull paths (one per group, purely visual) ───────────────────────
     const groupIndices = [...new Set(nodes.map((n) => n.groupIndex))].sort((a, b) => a - b);
+    const allGroupIndices = categories.map((_, i) => i);
     const hullPaths: SVGPathElement[] = [];
 
     if (HULL_ENABLED) {
@@ -961,45 +965,10 @@ export function SkillGraph() {
 
     // ── pricetags (one per category group) ────────────────────────────
     const pricetagData: PricetagData[] = PRICETAG_ENABLED
-      ? createPricetags(pricetagLayer, categories, groupIndices, ropeTargetsRef, ropeColorMapRef, CATEGORIES, hiddenGroupsRef.current, toggleGroup)
+      ? createPricetags(pricetagLayer, categories, allGroupIndices, ropeTargetsRef, ropeColorMapRef, CATEGORIES, filterCategoriesRef.current, (categoryName) => {
+          togglePricetagCategory(categoryName);
+        }, pricetagPositionsRef)
       : [];
-
-    function applyGroupVisibility() {
-      const hidden = hiddenGroupsRef.current;
-
-      for (let i = 0; i < nodes.length; i++) {
-        const isHidden = hidden.has(nodes[i].groupIndex);
-        const opacity = isHidden ? "0" : "";
-        nodeEls[i].style.opacity = opacity;
-        labelEls[i].style.opacity = opacity;
-        labelLineEls[i].style.opacity = opacity;
-      }
-
-      for (const gi of groupIndices) {
-        const path = hullPaths[gi];
-        if (!path) continue;
-        path.style.opacity = hidden.has(gi) ? "0" : "";
-      }
-
-      for (let i = 0; i < links.length; i++) {
-        const s = links[i].source as SimNode;
-        const t = links[i].target as SimNode;
-        linkEls[i].style.opacity = hidden.has(s.groupIndex) ? "0" : "";
-      }
-    }
-
-    function toggleGroup(gi: number) {
-      const hidden = hiddenGroupsRef.current;
-      if (hidden.has(gi)) {
-        hidden.delete(gi);
-      } else {
-        hidden.add(gi);
-      }
-      applyGroupVisibility();
-      simulation.alphaTarget(REHEAT_ALPHA).restart();
-    }
-
-    applyGroupVisibility();
 
     // ── bounding helper ──────────────────────────────────────────────────
     function clampNode(n: SimNode, r: number) {
@@ -1265,9 +1234,7 @@ export function SkillGraph() {
       }
 
       // ── update pricetag positions ─────────────────────────────────
-      updatePricetags(pricetagData, nodes, width, height, HULL_MIN_NODES, ropeTargetsRef, ropeStartMap, hiddenGroupsRef.current);
-
-      applyGroupVisibility();
+      updatePricetags(pricetagData, nodes, width, height, HULL_MIN_NODES, ropeTargetsRef, ropeStartMap, filterCategoriesRef.current, pricetagPositionsRef);
     });
 
     // ── drag (D3-style: fix single node → link forces pull group) ──────
@@ -1494,6 +1461,20 @@ export function SkillGraph() {
     };
   }, [currentData, rawNestedData]);
 
+  buildSimulationRef.current = buildSimulation;
+
+  const togglePricetagCategory = useCallback((categoryName: string) => {
+    const set = filterCategoriesRef.current;
+    if (set.has(categoryName)) {
+      set.delete(categoryName);
+    } else {
+      set.add(categoryName);
+    }
+    if (cleanupRef.current) cleanupRef.current();
+    const cleanup = buildSimulationRef.current?.();
+    cleanupRef.current = cleanup ?? null;
+  }, []);
+
   const applyFilter = useCallback(() => {
     const selectedRatings = new Set<number>();
     for (let r = 1; r <= 5; r++) {
@@ -1515,6 +1496,8 @@ export function SkillGraph() {
 
   const resetFilter = useCallback(() => {
     filterRatingsRef.current = null;
+    filterCategoriesRef.current.clear();
+    pricetagPositionsRef.current.clear();
     setFilterActive(false);
     setFilterToggles([false, true, true, true, true, true]);
 

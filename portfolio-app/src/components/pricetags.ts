@@ -65,8 +65,9 @@ export function createPricetags(
   ropeTargetsRef: React.MutableRefObject<Map<number, RopeTarget>>,
   ropeColorMapRef: React.MutableRefObject<Map<number, string>>,
   CATEGORIES: CatEntry[],
-  hiddenGroups?: Set<number>,
-  onToggle?: (gi: number) => void,
+  filterCategories?: Set<string>,
+  onToggle?: (categoryName: string) => void,
+  pricetagPositionsRef?: React.MutableRefObject<Map<number, { x: number; y: number; isLeft: boolean; isTop: boolean }>>,
 ): PricetagData[] {
   const pricetagData: PricetagData[] = [];
 
@@ -84,12 +85,12 @@ export function createPricetags(
     g.setAttribute("pointer-events", "auto");
     g.style.cursor = "pointer";
 
-    const currentHidden = hiddenGroups?.has(gi) ?? false;
-    g.style.opacity = currentHidden ? "0.45" : "1";
+    const toggledOff = filterCategories?.has(name) ?? false;
+    g.style.opacity = toggledOff ? "0.45" : "1";
 
     g.addEventListener("click", (e) => {
       e.stopPropagation();
-      onToggle?.(gi);
+      onToggle?.(name);
     });
 
     const catColor = CATEGORIES[gi]?.color || "rgba(106,176,112,0.25)";
@@ -125,6 +126,23 @@ export function createPricetags(
     g.appendChild(rect);
     g.appendChild(dot);
     g.appendChild(text);
+
+    if (toggledOff) {
+      const stored = pricetagPositionsRef?.current.get(gi);
+      if (stored) {
+        const tw2 = name.length * FONT_SZ * 0.6 + PAD * 2;
+        g.setAttribute("transform", `translate(${stored.x}, ${stored.y})`);
+        if (stored.isLeft) {
+          tri.setAttribute("points", `0,0 ${-PT_T},${-PT_H / 2} ${-PT_T},${PT_H / 2}`);
+          rect.setAttribute("x", String(-PT_T - tw2));
+          rect.setAttribute("width", String(tw2));
+          dot.setAttribute("cx", String(-PT_T + 9 * S));
+          text.setAttribute("x", String(-PT_T - tw2 / 2));
+          text.setAttribute("text-anchor", "middle");
+        }
+      }
+    }
+
     pricetagLayer.appendChild(g);
 
     pricetagData.push({ gi, g, line, tri, rect, dot, text });
@@ -160,24 +178,65 @@ export function updatePricetags(
   hullMinNodes: number,
   ropeTargetsRef: React.MutableRefObject<Map<number, RopeTarget>>,
   ropeStartMap?: Map<number, { x: number; y: number }>,
-  hiddenGroups?: Set<number>,
+  filterCategories?: Set<string>,
+  pricetagPositionsRef?: React.MutableRefObject<Map<number, { x: number; y: number; isLeft: boolean; isTop: boolean }>>,
 ) {
   if (!PRICETAG_ENABLED || pricetagData.length === 0) return;
 
   const halfW = width / 2;
   const allPositions: TagPos[] = [];
 
+  function applyGeometry(pd: PricetagData, px: number, _py: number, isLeft: boolean, name: string) {
+    const tw = name.length * FONT_SZ * 0.6 + PAD * 2;
+    if (isLeft) {
+      pd.tri.setAttribute("points", `0,0 ${-PT_T},${-PT_H / 2} ${-PT_T},${PT_H / 2}`);
+      pd.rect.setAttribute("x", String(-PT_T - tw));
+      pd.rect.setAttribute("width", String(tw));
+      pd.dot.setAttribute("cx", String(-PT_T + 9 * S));
+      pd.text.setAttribute("x", String(-PT_T - tw / 2));
+      pd.text.setAttribute("text-anchor", "middle");
+    } else {
+      pd.tri.setAttribute("points", `0,0 ${PT_T},${-PT_H / 2} ${PT_T},${PT_H / 2}`);
+      pd.rect.setAttribute("x", String(PT_T));
+      pd.rect.setAttribute("width", String(tw));
+      pd.dot.setAttribute("cx", String(PT_T - 9 * S));
+      pd.text.setAttribute("x", String(PT_T + tw / 2));
+      pd.text.setAttribute("text-anchor", "middle");
+    }
+    pd.g.setAttribute("transform", `translate(${px}, ${_py})`);
+  }
+
   // ---- first pass: compute raw positions & feed rope targets ----
   for (const pd of pricetagData) {
     const gn = nodes.filter((n) => n.groupIndex === pd.gi);
+    const catName = pd.text.textContent || "";
+    const isFilteredOut = filterCategories?.has(catName) ?? false;
+
     if (gn.length < hullMinNodes) {
       pd.line.style.display = "none";
-      pd.g.style.display = "none";
+      const rt = ropeTargetsRef.current.get(pd.gi);
+      if (rt) { rt.start.x = 0; rt.start.y = 0; rt.end.x = 0; rt.end.y = 0; }
+
+      if (isFilteredOut) {
+        const stored = pricetagPositionsRef?.current.get(pd.gi);
+        if (stored) {
+          pd.g.style.display = "";
+          pd.g.style.opacity = "0.45";
+          const tw = catName.length * FONT_SZ * 0.6 + PAD * 2;
+          const tagLeft = stored.isLeft ? PT_T + tw : 0;
+          const tagRight = stored.isLeft ? 0 : PT_T + tw;
+          allPositions.push({ pd, isTop: stored.isTop, isLeft: stored.isLeft, tagLeft, tagRight, rx: stored.x, ry: stored.y, cx: stored.x, tw, name: catName });
+        } else {
+          pd.g.style.display = "none";
+        }
+      } else {
+        pd.g.style.display = "none";
+      }
       continue;
     }
     pd.line.style.display = "none";
     pd.g.style.display = "";
-    pd.g.style.opacity = hiddenGroups?.has(pd.gi) ? "0.45" : "1";
+    pd.g.style.opacity = "1";
 
     let cx = 0, cy = 0;
     for (const n of gn) { cx += n.x ?? 0; cy += n.y ?? 0; }
@@ -203,20 +262,13 @@ export function updatePricetags(
 
     const rt = ropeTargetsRef.current.get(pd.gi);
     if (rt) {
-      if (hiddenGroups?.has(pd.gi)) {
-        rt.start.x = 0;
-        rt.start.y = 0;
-        rt.end.x = 0;
-        rt.end.y = 0;
-      } else {
-        rt.start.x = lineEndX;
-        rt.start.y = lineEndY;
-        rt.end.x = anchorX;
-        rt.end.y = anchorY;
-      }
+      rt.start.x = lineEndX;
+      rt.start.y = lineEndY;
+      rt.end.x = anchorX;
+      rt.end.y = anchorY;
     }
 
-    let rx = anchorX; // always restart from group centroid, never accumulate
+    let rx = anchorX;
     const ry = anchorY;
 
     const name = pd.text.textContent || "";
@@ -224,7 +276,6 @@ export function updatePricetags(
     const tagLeft = isLeft ? PT_T + tw : 0;
     const tagRight = isLeft ? 0 : PT_T + tw;
 
-    // hard edge blockade (X axis)
     rx = Math.max(EDGE_MARGIN + tagLeft, Math.min(width - EDGE_MARGIN - tagRight, rx));
 
     allPositions.push({ pd, isTop, isLeft, tagLeft, tagRight, rx, ry, cx, tw, name });
@@ -235,26 +286,25 @@ export function updatePricetags(
     const sideTags = allPositions.filter(t => t.isTop === side);
     sideTags.sort((a, b) => a.cx - b.cx);
 
-    for (let iter = 0; iter < 5; iter++) {
+    for (let iter = 0; iter < 8; iter++) {
       for (let i = 0; i < sideTags.length; i++) {
         const a = sideTags[i];
-        const aR = a.rx + a.tagRight;
         for (let j = i + 1; j < sideTags.length; j++) {
           const b = sideTags[j];
+          const aR = a.rx + a.tagRight;
           const bL = b.rx - b.tagLeft;
           const gap = bL - aR;
           if (gap >= 15) break;
 
-          // skip if no vertical overlap (different balloon heights)
           const aTop = a.ry - PT_H / 2;
           const aBot = a.ry + PT_H / 2;
           const bTop = b.ry - PT_H / 2;
           const bBot = b.ry + PT_H / 2;
           if (aBot <= bTop || bBot <= aTop) continue;
 
-          // push right tag to ensure 15px gap
-          b.rx = Math.max(b.rx, aR + 15 + b.tagLeft);
-          b.rx = Math.min(width - EDGE_MARGIN - b.tagRight, b.rx);
+          const overlapHalf = (15 - gap) / 2;
+          a.rx = Math.max(EDGE_MARGIN + a.tagLeft, a.rx - overlapHalf);
+          b.rx = Math.min(width - EDGE_MARGIN - b.tagRight, b.rx + overlapHalf);
         }
       }
     }
@@ -262,32 +312,23 @@ export function updatePricetags(
 
   // ---- apply final positions & geometry ----
   for (const tp of allPositions) {
-    const { pd, isLeft, isTop, tagLeft, tagRight, rx, ry, tw, cx } = tp;
+    const { pd, isLeft, isTop, tagLeft, tagRight, rx, ry, tw, name } = tp;
 
-    const rt = ropeTargetsRef.current.get(pd.gi);
-    if (rt && !hiddenGroups?.has(pd.gi)) {
-      rt.end.x = rx; // rope end fixed to pricetag hole
-      rt.end.y = ry;
-      rt.outputX = Math.max(EDGE_MARGIN + tagLeft, Math.min(width - EDGE_MARGIN - tagRight, rx));
-      rt.outputY = ry;
+    const catName2 = pd.text.textContent || "";
+    const isFiltered = filterCategories?.has(catName2) ?? false;
+
+    if (!isFiltered) {
+      const rt = ropeTargetsRef.current.get(pd.gi);
+      if (rt) {
+        rt.end.x = rx;
+        rt.end.y = ry;
+        rt.outputX = Math.max(EDGE_MARGIN + tagLeft, Math.min(width - EDGE_MARGIN - tagRight, rx));
+        rt.outputY = ry;
+      }
     }
 
-    pd.g.setAttribute("transform", `translate(${rx}, ${ry})`);
+    pricetagPositionsRef?.current.set(pd.gi, { x: rx, y: ry, isLeft, isTop });
 
-    if (isLeft) {
-      pd.tri.setAttribute("points", `0,0 ${-PT_T},${-PT_H / 2} ${-PT_T},${PT_H / 2}`);
-      pd.rect.setAttribute("x", String(-PT_T - tw));
-      pd.rect.setAttribute("width", String(tw));
-      pd.dot.setAttribute("cx", String(-PT_T + 9 * S));
-      pd.text.setAttribute("x", String(-PT_T - tw / 2));
-      pd.text.setAttribute("text-anchor", "middle");
-    } else {
-      pd.tri.setAttribute("points", `0,0 ${PT_T},${-PT_H / 2} ${PT_T},${PT_H / 2}`);
-      pd.rect.setAttribute("x", String(PT_T));
-      pd.rect.setAttribute("width", String(tw));
-      pd.dot.setAttribute("cx", String(PT_T - 9 * S));
-      pd.text.setAttribute("x", String(PT_T + tw / 2));
-      pd.text.setAttribute("text-anchor", "middle");
-    }
+    applyGeometry(pd, rx, ry, isLeft, name);
   }
 }
