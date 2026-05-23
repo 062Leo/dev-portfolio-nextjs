@@ -58,7 +58,12 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
     const states = ropeStatesRef.current;
 
     for (const gi of states.keys()) {
-      if (!targets.has(gi)) states.delete(gi);
+      const target = targets.get(gi);
+      if (!target) {
+        states.delete(gi);
+      } else if (target.start.x === 0 && target.start.y === 0 && target.end.x === 0 && target.end.y === 0) {
+        states.delete(gi);
+      }
     }
 
     for (const [gi, target] of targets.entries()) {
