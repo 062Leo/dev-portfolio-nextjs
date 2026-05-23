@@ -125,11 +125,18 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
         points[0].x = target.start.x;
         points[0].y = target.start.y;
 
-        const tx = target.end.x;
-        const ty = target.end.y;
+        // dynamically adjust rest length to match current hull→tag distance
+        const currentDist = Math.sqrt(
+          (target.end.x - target.start.x) ** 2 +
+          (target.end.y - target.start.y) ** 2
+        );
+        if (currentDist > 0.1) {
+          const segLen = currentDist / lastIdx;
+          for (const link of links) link.length = segLen;
+        }
 
-        // Verlet integration for all non-start points (last point is free → wobbles)
-        for (let i = 1; i <= lastIdx; i++) {
+        // Verlet integration for all non-start, non-end points
+        for (let i = 1; i < lastIdx; i++) {
           const p = points[i];
           const vx = (p.x - p.oldX) * damping;
           const vy = (p.y - p.oldY) * damping;
@@ -137,20 +144,14 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
           p.oldY = p.y;
           p.x += vx;
           p.y += vy;
-
-          // Soft spring toward anchor on last point (pricetag swings freely)
-          if (i === lastIdx) {
-            p.x += (tx - p.x) * springStrength;
-            p.y += (ty - p.y) * springStrength;
-          }
         }
 
-        // Constraint resolution (only start point is pinned)
+        // Constraint resolution (start & end point are pinned)
         const iterations = 5;
         for (let k = 0; k < iterations; k++) {
           for (const link of links) {
-            const isP1Pinned = link.p1 === points[0];
-            const isP2Pinned = link.p2 === points[0];
+            const isP1Pinned = link.p1 === points[0] || link.p1 === points[lastIdx];
+            const isP2Pinned = link.p2 === points[0] || link.p2 === points[lastIdx];
 
             const dx = link.p2.x - link.p1.x;
             const dy = link.p2.y - link.p1.y;
@@ -166,8 +167,11 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
           }
         }
 
-        target.outputX = points[lastIdx].x;
-        target.outputY = points[lastIdx].y;
+        // hard-pin end point to tag hole (welded)
+        points[lastIdx].oldX = points[lastIdx].x = target.end.x;
+        points[lastIdx].oldY = points[lastIdx].y = target.end.y;
+        target.outputX = target.end.x;
+        target.outputY = target.end.y;
 
         const avgSegs = Math.min(3, lastIdx);
         let avgDx = 0;

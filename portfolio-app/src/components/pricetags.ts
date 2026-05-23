@@ -192,7 +192,7 @@ export function updatePricetags(
       rt.end.y = anchorY;
     }
 
-    let rx = (rt && rt.outputX) || anchorX;
+    let rx = anchorX; // always restart from group centroid, never accumulate
     const ry = anchorY;
 
     const name = pd.text.textContent || "";
@@ -218,8 +218,15 @@ export function updatePricetags(
         for (let j = i + 1; j < sideTags.length; j++) {
           const b = sideTags[j];
           const bL = b.rx - b.tagLeft;
-          const gap = bL - aR; // positive = gap, negative = overlap
-          if (gap >= 15) break; // enough spacing, subsequent are further right
+          const gap = bL - aR;
+          if (gap >= 15) break;
+
+          // skip if no vertical overlap (different balloon heights)
+          const aTop = a.ry - PT_H / 2;
+          const aBot = a.ry + PT_H / 2;
+          const bTop = b.ry - PT_H / 2;
+          const bBot = b.ry + PT_H / 2;
+          if (aBot <= bTop || bBot <= aTop) continue;
 
           // push right tag to ensure 15px gap
           b.rx = Math.max(b.rx, aR + 15 + b.tagLeft);
@@ -235,7 +242,7 @@ export function updatePricetags(
 
     const rt = ropeTargetsRef.current.get(pd.gi);
     if (rt) {
-      rt.end.x = cx; // rope stays straight above/below group — never follow collision push
+      rt.end.x = rx; // rope end fixed to pricetag hole
       rt.end.y = ry;
       rt.outputX = Math.max(EDGE_MARGIN + tagLeft, Math.min(width - EDGE_MARGIN - tagRight, rx));
       rt.outputY = ry;

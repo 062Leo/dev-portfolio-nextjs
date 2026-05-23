@@ -1460,7 +1460,7 @@ export function SkillGraph() {
         }}
       >
         <svg ref={svgRef} className="h-full w-full" />
-        <WobblyRopes ropeTargetsRef={ropeTargetsRef} colors={ropeColorMapRef.current} segments={12} springStrength={0.03} stiffness={0.3} />
+        <WobblyRopes ropeTargetsRef={ropeTargetsRef} colors={ropeColorMapRef.current} segments={12} springStrength={0.06} stiffness={0.5} />
 
         {/* ── Tooltip (sub‑entries of hovered / dragged node) ──────── */}
         <div
