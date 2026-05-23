@@ -1248,7 +1248,7 @@ export function SkillGraph() {
         const T = 19 * S;
         const PAD = 3 * S;
         const FONT_SZ = 22 * S;
-        const EDGE_MARGIN = 20;
+        const EDGE_MARGIN = 10;
 
         interface TagPos {
           pd: PricetagData;
@@ -1293,10 +1293,7 @@ export function SkillGraph() {
           const lineEndY = cy + dirY * avgDist;
 
           const anchorX = cx;
-          const TAG_HOVER_DIST = 50;
-          const anchorY = isTop
-            ? Math.max(EDGE_MARGIN + H / 2, lineEndY - TAG_HOVER_DIST)
-            : Math.min(height - EDGE_MARGIN - H / 2, lineEndY + TAG_HOVER_DIST);
+          const anchorY = isTop ? EDGE_MARGIN + H / 2 : height - EDGE_MARGIN - H / 2;
 
           const rt = ropeTargetsRef.current.get(pd.gi);
           if (rt) {
@@ -1314,52 +1311,67 @@ export function SkillGraph() {
           const tagLeft = isLeft ? T + tw : 0;
           const tagRight = isLeft ? 0 : T + tw;
 
-          // hard edge blockade
+          // hard edge blockade (10px min, 50px max from edge for Y)
           rx = Math.max(EDGE_MARGIN + tagLeft, Math.min(width - EDGE_MARGIN - tagRight, rx));
-          ry = Math.max(EDGE_MARGIN + H / 2, Math.min(height - EDGE_MARGIN - H / 2, ry));
+          const yMin = isTop ? EDGE_MARGIN + H / 2 : height - EDGE_MARGIN - H / 2 - 40;
+          const yMax = isTop ? EDGE_MARGIN + H / 2 + 40 : height - EDGE_MARGIN - H / 2;
+          ry = Math.max(yMin, Math.min(yMax, ry));
 
           allPositions.push({ pd, isTop, isLeft, tagLeft, tagRight, rx, ry, tw, name });
         }
 
-        // ---- tag-tag collision resolution ----
+        // ---- tag-tag collision: vertical stagger (keep ropes vertical & short) ----
         for (let iter = 0; iter < 5; iter++) {
           for (let i = 0; i < allPositions.length; i++) {
             for (let j = i + 1; j < allPositions.length; j++) {
               const a = allPositions[i];
               const b = allPositions[j];
-              // Y overlap?
-              const aTop = a.ry - H / 2;
-              const aBot = a.ry + H / 2;
-              const bTop = b.ry - H / 2;
-              const bBot = b.ry + H / 2;
-              if (aBot <= bTop || bBot <= aTop) continue;
+              // same side only — on opposite sides they never overlap vertically
+              if (a.isTop !== b.isTop) continue;
               // X overlap?
               const aL = a.rx - a.tagLeft;
               const aR = a.rx + a.tagRight;
               const bL = b.rx - b.tagLeft;
               const bR = b.rx + b.tagRight;
-              const overlap = Math.min(aR, bR) - Math.max(aL, bL);
-              if (overlap <= 0) continue;
+              const overlapX = Math.min(aR, bR) - Math.max(aL, bL);
+              if (overlapX <= 0) continue;
+              // Y overlap?
+              const aTop = a.ry - H / 2;
+              const aBot = a.ry + H / 2;
+              const bTop = b.ry - H / 2;
+              const bBot = b.ry + H / 2;
+              const overlapY = Math.min(aBot, bBot) - Math.max(aTop, bTop);
+              if (overlapY <= 0) continue;
 
-              const push = overlap / 2 + 2;
-              a.rx -= push;
-              b.rx += push;
-              // re-clamp to edges
-              a.rx = Math.max(EDGE_MARGIN + a.tagLeft, Math.min(width - EDGE_MARGIN - a.tagRight, a.rx));
-              b.rx = Math.max(EDGE_MARGIN + b.tagLeft, Math.min(width - EDGE_MARGIN - b.tagRight, b.rx));
+              // stagger vertically: push one toward the edge, the other away
+              const push = overlapY / 2 + 2;
+              if (a.isTop) {
+                a.ry -= push;
+                b.ry += push;
+                a.ry = Math.max(EDGE_MARGIN + H / 2, a.ry);
+                b.ry = Math.min(EDGE_MARGIN + H / 2 + 40, Math.max(EDGE_MARGIN + H / 2, b.ry));
+              } else {
+                a.ry += push;
+                b.ry -= push;
+                a.ry = Math.min(height - EDGE_MARGIN - H / 2, a.ry);
+                b.ry = Math.max(height - EDGE_MARGIN - H / 2 - 40, Math.min(height - EDGE_MARGIN - H / 2, b.ry));
+              }
             }
           }
         }
 
         // ---- apply final positions & geometry ----
         for (const tp of allPositions) {
-          const { pd, isLeft, tagLeft, tagRight, rx, ry, tw, name } = tp;
+          const { pd, isLeft, isTop, tagLeft, tagRight, rx, ry, tw, name } = tp;
 
           const rt = ropeTargetsRef.current.get(pd.gi);
           if (rt) {
             rt.end.x = rx;
+            rt.end.y = ry;
             rt.outputX = Math.max(EDGE_MARGIN + tagLeft, Math.min(width - EDGE_MARGIN - tagRight, rx));
-            rt.outputY = Math.max(EDGE_MARGIN + H / 2, Math.min(height - EDGE_MARGIN - H / 2, ry));
+            const yOutMin = isTop ? EDGE_MARGIN + H / 2 : height - EDGE_MARGIN - H / 2 - 40;
+            const yOutMax = isTop ? EDGE_MARGIN + H / 2 + 40 : height - EDGE_MARGIN - H / 2;
+            rt.outputY = Math.max(yOutMin, Math.min(yOutMax, ry));
           }
 
           pd.g.setAttribute("transform", `translate(${rx}, ${ry})`);
@@ -1682,7 +1694,7 @@ export function SkillGraph() {
         }}
       >
         <svg ref={svgRef} className="h-full w-full" />
-        <WobblyRopes ropeTargetsRef={ropeTargetsRef} colors={ropeColorMapRef.current} />
+        <WobblyRopes ropeTargetsRef={ropeTargetsRef} colors={ropeColorMapRef.current} segments={12} springStrength={0.03} stiffness={0.3} />
 
         {/* ── Tooltip (sub‑entries of hovered / dragged node) ──────── */}
         <div

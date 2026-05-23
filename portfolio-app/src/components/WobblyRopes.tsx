@@ -35,6 +35,7 @@ interface WobblyRopesProps {
   damping?: number;
   stiffness?: number;
   segments?: number;
+  springStrength?: number;
   lineWidth?: number;
   defaultColor?: string;
 }
@@ -44,6 +45,7 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
   colors = new Map(),
   damping = 0.88,
   stiffness = 0.25,
+  springStrength = 0.015,
   segments = 10,
   lineWidth = 3,
   defaultColor = "rgba(106,176,112,0.45)",
@@ -138,8 +140,8 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
 
           // Soft spring toward anchor on last point (pricetag swings freely)
           if (i === lastIdx) {
-            p.x += (tx - p.x) * 0.015;
-            p.y += (ty - p.y) * 0.015;
+            p.x += (tx - p.x) * springStrength;
+            p.y += (ty - p.y) * springStrength;
           }
         }
 
