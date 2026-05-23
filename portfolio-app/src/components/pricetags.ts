@@ -231,11 +231,11 @@ export function updatePricetags(
 
   // ---- apply final positions & geometry ----
   for (const tp of allPositions) {
-    const { pd, isLeft, isTop, tagLeft, tagRight, rx, ry, tw } = tp;
+    const { pd, isLeft, isTop, tagLeft, tagRight, rx, ry, tw, cx } = tp;
 
     const rt = ropeTargetsRef.current.get(pd.gi);
     if (rt) {
-      rt.end.x = rx;
+      rt.end.x = cx; // rope stays straight above/below group — never follow collision push
       rt.end.y = ry;
       rt.outputX = Math.max(EDGE_MARGIN + tagLeft, Math.min(width - EDGE_MARGIN - tagRight, rx));
       rt.outputY = ry;
