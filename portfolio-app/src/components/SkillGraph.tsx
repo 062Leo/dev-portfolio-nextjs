@@ -24,10 +24,30 @@ import {
 } from "./pricetags";
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  DATA FLATTENING  (skills.json has 3‑level structure; we flatten to 2 levels)
+//  TYPES
 // ══════════════════════════════════════════════════════════════════════════════
 
+type CatKey = string;
+
 type SkillsDataNested = Record<string, Record<string, Record<string, number> | number>>;
+
+interface SimNode extends SimulationNodeDatum {
+  id: string;
+  name: string;
+  rating: number;
+  category: string;
+  groupIndex: number;
+}
+
+interface SimLink extends SimulationLinkDatum<SimNode> {
+  source: string | SimNode;
+  target: string | SimNode;
+  chain?: boolean;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  DATA FLATTENING  (skills.json has 3‑level structure; we flatten to 2 levels)
+// ══════════════════════════════════════════════════════════════════════════════
 
 function flattenSkillsData(data: SkillsDataNested): Record<string, Record<string, number>> {
   const result: Record<string, Record<string, number>> = {};
@@ -54,8 +74,6 @@ const skillsDataEnFlat = flattenSkillsData(skillsDataEn as SkillsDataNested);
 // ══════════════════════════════════════════════════════════════════════════════
 //  CATEGORY DEFINITIONS
 // ══════════════════════════════════════════════════════════════════════════════
-
-type CatKey = string;
 
 const CATEGORIES: { key: CatKey; color: string }[] = [
   { key: "Programmierung",           color: "hsla(280, 80%, 55%, 0.25)" }, // Purple
@@ -113,8 +131,6 @@ const MAX_DEGREE_HIGH = 5;                // max total degree for the high-count
 const MAX_DEGREE_NORMAL = 5;              // max total degree for all other nodes
 const CHAIN_MIN_ANGLE_DEG = 27;           // minimum angle (degrees) between consecutive chain links
 const CHAIN_ANGLE_FORCE = 30;             // strength of the angle-enforcing force
-
-
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  FORCE SIMULATION — dynamic scaling based on visible node count
@@ -227,7 +243,7 @@ const CONTAINER_BORDER_COLOR = "rgba(167,139,250,0.25)";
 const CONTAINER_BG_COLOR = "rgb(11, 13, 23)";
 
 const HULL_ENABLED = true;              // Master‑Schalter  true | false
-const HULL_MIN_NODES = 2;               // Gruppe braucht ≥ N Knoten, sonst keine Hülle
+const HULL_MIN_NODES = 1;               // Gruppe braucht ≥ N Knoten, sonst keine Hülle
 
 // ——  Umfang‑Sampling pro Knoten  ————————————————————————————————————————————
 const HULL_CIRCLE_SAMPLES = 20;         // Abtastpunkte auf dem Knotenumfang (mehr = feiner)
@@ -285,60 +301,6 @@ const HULL_STROKE_OPACITY = 0.35;       // 0 … 1
 export function ratingColor(rating: number): string {
   const idx = Math.round(rating);
   return RATING_COLORS[idx] || RATING_COLORS[1];
-}
-
-function createChainAngleForce(links: SimLink[], minAngleDeg: number, strength: number) {
-  let nodes: SimNode[];
-  const minCos = Math.cos(minAngleDeg * Math.PI / 180);
-
-  function force(alpha: number) {
-    for (const node of nodes) {
-      const chainNeighbors: SimNode[] = [];
-      for (const link of links) {
-        if (!link.chain) continue;
-        const s = link.source as SimNode;
-        const t = link.target as SimNode;
-        if (s === node) chainNeighbors.push(t);
-        else if (t === node) chainNeighbors.push(s);
-      }
-      if (chainNeighbors.length !== 2) continue;
-
-      const [a, c] = chainNeighbors;
-      const bx = node.x ?? 0, by = node.y ?? 0;
-      const ax = a.x ?? 0, ay = a.y ?? 0;
-      const cx = c.x ?? 0, cy = c.y ?? 0;
-
-      const ux = ax - bx, uy = ay - by;
-      const vx = cx - bx, vy = cy - by;
-      const uLen = Math.sqrt(ux * ux + uy * uy);
-      const vLen = Math.sqrt(vx * vx + vy * vy);
-      if (uLen < 0.5 || vLen < 0.5) continue;
-
-      const cosAngle = (ux * vx + uy * vy) / (uLen * vLen);
-      if (Math.abs(cosAngle) <= minCos) continue;
-
-      const acx = cx - ax, acy = cy - ay;
-      const acLen = Math.sqrt(acx * acx + acy * acy);
-      if (acLen < 0.5) continue;
-
-      const perpX = -acy / acLen;
-      const perpY = acx / acLen;
-      const cross = acx * (by - ay) - acy * (bx - ax);
-      const sign = cross > 0 ? 1 : -1;
-
-      const severity = Math.abs(cosAngle) - minCos;
-      const f = severity * alpha * strength;
-
-      node.vx = (node.vx ?? 0) + perpX * sign * f;
-      node.vy = (node.vy ?? 0) + perpY * sign * f;
-    }
-  }
-
-  force.initialize = function (n: SimNode[]) {
-    nodes = n;
-  };
-
-  return force;
 }
 
 function getSkillCategories(src: Record<string, Record<string, number>>): Map<string, Record<string, number>> {
@@ -420,7 +382,8 @@ function computeGroupHull(
 
     for (let s = 0; s < HULL_CIRCLE_SAMPLES; s++) {
       const t = s / (HULL_CIRCLE_SAMPLES - 1);
-      const sampleAngle = toNodeAngle - HULL_ARC_SPAN / 2 + t * HULL_ARC_SPAN;
+      const arcSpan = groupNodes.length === 1 ? Math.PI * 2 : HULL_ARC_SPAN;
+      const sampleAngle = toNodeAngle - arcSpan / 2 + t * arcSpan;
       const px = nx + Math.cos(sampleAngle) * hullR;
       const py = ny + Math.sin(sampleAngle) * hullR;
 
@@ -526,21 +489,61 @@ function computeGroupHull(
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  TYPES
+//  CHAIN ANGLE FORCE  (prevents collinear chain links)
 // ══════════════════════════════════════════════════════════════════════════════
 
-interface SimNode extends SimulationNodeDatum {
-  id: string;
-  name: string;
-  rating: number;
-  category: string;
-  groupIndex: number;
-}
+function createChainAngleForce(links: SimLink[], minAngleDeg: number, strength: number) {
+  let nodes: SimNode[];
+  const minCos = Math.cos(minAngleDeg * Math.PI / 180);
 
-interface SimLink extends SimulationLinkDatum<SimNode> {
-  source: string | SimNode;
-  target: string | SimNode;
-  chain?: boolean;
+  function force(alpha: number) {
+    for (const node of nodes) {
+      const chainNeighbors: SimNode[] = [];
+      for (const link of links) {
+        if (!link.chain) continue;
+        const s = link.source as SimNode;
+        const t = link.target as SimNode;
+        if (s === node) chainNeighbors.push(t);
+        else if (t === node) chainNeighbors.push(s);
+      }
+      if (chainNeighbors.length !== 2) continue;
+
+      const [a, c] = chainNeighbors;
+      const bx = node.x ?? 0, by = node.y ?? 0;
+      const ax = a.x ?? 0, ay = a.y ?? 0;
+      const cx = c.x ?? 0, cy = c.y ?? 0;
+
+      const ux = ax - bx, uy = ay - by;
+      const vx = cx - bx, vy = cy - by;
+      const uLen = Math.sqrt(ux * ux + uy * uy);
+      const vLen = Math.sqrt(vx * vx + vy * vy);
+      if (uLen < 0.5 || vLen < 0.5) continue;
+
+      const cosAngle = (ux * vx + uy * vy) / (uLen * vLen);
+      if (Math.abs(cosAngle) <= minCos) continue;
+
+      const acx = cx - ax, acy = cy - ay;
+      const acLen = Math.sqrt(acx * acx + acy * acy);
+      if (acLen < 0.5) continue;
+
+      const perpX = -acy / acLen;
+      const perpY = acx / acLen;
+      const cross = acx * (by - ay) - acy * (bx - ax);
+      const sign = cross > 0 ? 1 : -1;
+
+      const severity = Math.abs(cosAngle) - minCos;
+      const f = severity * alpha * strength;
+
+      node.vx = (node.vx ?? 0) + perpX * sign * f;
+      node.vy = (node.vy ?? 0) + perpY * sign * f;
+    }
+  }
+
+  force.initialize = function (n: SimNode[]) {
+    nodes = n;
+  };
+
+  return force;
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
