@@ -1,0 +1,221 @@
+{
+  "Programming": {
+    "Object-Oriented Languages": {
+      "C#": 5,
+      "Java": 4
+    },
+    "Scripting Languages": {
+      "Python": 3,
+      "JavaScript": 3,
+      "TypeScript": 4
+    },
+    "C++": 3,
+    "C": 2,
+    "Dart": 3
+  },
+  "Web & UI": {
+    "React Ecosystem": {
+      "React": 4,
+      "Next.js": 3
+    },
+    "Alternative Frameworks": {
+      "Angular": 3,
+      "VueJS": 3
+    },
+    "Styling & Markup": {
+      "Tailwind": 3,
+      "CSS": 3,
+      "HTML": 3
+    },
+    "UX Design": 3
+  },
+  "Backend & .NET ": {
+    ".NET & C# Framework": {
+      ".NET": 5,
+      "ASP.NET": 3,
+      "Entity Framework Core": 3
+    },
+    "NuGet": 4,
+    "Dynamic Backend": {
+      "NodeJS": 3,
+      "Django": 3
+    },
+    "API Architecture": {
+      "REST API": 4,
+      "Client-Server Architecture": 3
+    },
+    "Microservices": 3
+  },
+  "Data & DB": {
+    "SQL Databases": {
+      "SQL": 3,
+      "SQLite": 3
+    },
+    "Markup & Data Formats": {
+      "Markdown": 4,
+      "YAML": 3,
+      "XML": 2
+    },
+    "JSON": 5
+  },
+  "SWE & Quality": {
+    "Clean Code & Refactoring": {
+      "Clean Code": 5,
+      "Refactoring": 5,
+      "SOLID Principle": 4
+    },
+    "OOP": 5,
+    "Testing": {
+      "Unit Testing": 3,
+      "Integration Testing": 3,
+      "Software Testing": 3
+    },
+    "Security": {
+      "Security": 4,
+      "Cryptography": 2
+    },
+    "Technical Documentation": 4
+  },
+  "Methodology": {
+    "General Development": {
+      "Software Development": 5,
+      "Prototyping": 4
+    },
+    "Backend Development": 4,
+    "Frontend Development": 3,
+    "Full Stack Development": 3,
+    "App Development": 4
+  },
+  "Tools & VCS": {
+    "Git & Repositories": {
+      "Git": 5,
+      "GitHub": 5
+    },
+    "IDEs & Editors": {
+      "VS / VS Code": 5,
+      "Rider": 3,
+      "IntelliJ": 3,
+      "Eclipse": 2
+    },
+    "Postman": 3
+  },
+  "DevOps & Cloud": {
+    "CI/CD": {
+      "CI/CD": 3,
+      "Jenkins": 3,
+      "GitHub Actions": 2
+    },
+    "Cloud Platforms & Container": {
+      "Azure": 3,
+      "Docker": 2
+    }
+  },
+  "AI / ML": {
+    "AI Fundamentals": {
+      "Artificial Intelligence": 5,
+      "Prompt Engineering": 4
+    },
+    "Machine Learning Fundamentals": {
+      "ML/RL": 4,
+      "Self-learning Systems": 3
+    },
+    "Data Science & Analysis": {
+      "Data Analysis": 3,
+      "Data Science": 3
+    },
+    "Deep Learning Tools": {
+      "TensorFlow": 3,
+      "TensorBoard": 4
+    },
+    "Reinforcement Learning": {
+      "PPO (Proximal Policy Optimization)": 4,
+      "Reward Shaping": 4,
+      "Curriculum Learning": 3,
+      "Domain Randomization": 3,
+      "Hyperparameter Tuning": 3
+    }
+  },
+  "AI Tools & IDEs": {
+    "Code Assistants": {
+      "Claude Code": 4,
+      "GitHub Copilot": 4,
+      "OpenCode": 4
+    },
+    "AI IDEs": {
+      "Windsurf": 4,
+      "Antigravity": 3,
+      "Cursor": 3
+    }
+  },
+  "Game Dev": {
+    "Unity Core": {
+      "Unity": 5,
+      "Unity Physics Engine": 4,
+      "Unity Tilemap": 4
+    },
+    "Unity Visual Effects": {
+      "ProBuilder": 3,
+      "Unity Animator": 2,
+      "Unity Particle System": 2,
+      "Unity Shader Graph": 2
+    },
+    "Unity ML-Agents": 5,
+    "Multiplayer Networking": {
+      "Multiplayer Game Development": 3,
+      "Netcode for GameObjects": 3,
+      "Photon PUN 2": 3,
+      "Unity Relay": 3,
+      "Unity Transport": 3
+    },
+    "Game Design & Mechanics": {
+      "Game Mechanics": 5,
+      "Level Design": 2,
+      "Game Design": 3
+    },
+    "Monetization": {
+      "IronSource": 2,
+      "Unity IAP": 2,
+      "Google AdMob": 1,
+      "Unity Ads": 1
+    }
+  },
+  "Cross-Platform": {
+    "Mobile": {
+      "Flutter": 3,
+      "Android": 3,
+      "Dart": 2
+    },
+    "Desktop & Web UI": {
+      "Blazor": 3,
+      "WPF": 3
+    }
+  },
+  "Hardware & IoT": {
+    "Microcontroller & Robotics": {
+      "Microcontroller": 2,
+      "Elegoo Smart Robot": 2
+    },
+    "Embedded Systems": 1,
+    "3D & CAD": {
+      "3D Printing": 2,
+      "Autodesk Fusion 360": 2,
+      "CAD": 2
+    },
+    "3D Modeling": {
+      "3D Modeling": 2,
+      "Blender": 1
+    }
+  },
+  "PM & Agile": {
+    "Scrum & Agile Methods": {
+      "Scrum": 4,
+      "Scrum Master": 3,
+      "Agile Project Management": 4
+    },
+    "Process Optimization": 4,
+    "Collaboration Tools": {
+      "Confluence": 3,
+      "JIRA": 3
+    }
+  }
+}

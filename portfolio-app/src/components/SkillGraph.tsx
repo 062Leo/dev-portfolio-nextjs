@@ -11,7 +11,7 @@ import {
 } from "d3-force";
 import type { SimulationNodeDatum, SimulationLinkDatum, Simulation } from "d3-force";
 import skillsData from "@/data/skills.json";
-import skillsDataEn from "@/data/skills.json";
+import skillsDataEn from "@/data/skills_en.json";
 import { useLanguage } from "@/context/LanguageContext";
 import { WobblyRopes } from "./WobblyRopes";
 import type { RopeTarget } from "./WobblyRopes";
