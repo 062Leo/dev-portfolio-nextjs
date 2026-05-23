@@ -138,11 +138,11 @@ const REHEAT_ALPHA = 0.2;         // alpha / alphaTarget when re-energizing (dra
 //  RATING COLORS — one constant per rating, set manually as rgba
 // ══════════════════════════════════════════════════════════════════════════════
 
-const RATING_1_COLOR = "rgb(255, 0, 0)";    // red
-const RATING_2_COLOR = "rgb(255, 102, 0)";    // orange
-const RATING_3_COLOR = "rgb(242, 255, 0)";    // yellow
-const RATING_4_COLOR = "rgb(111, 255, 0)";    // yellow-green
-const RATING_5_COLOR = "rgb(21, 169, 73)";      // bright green
+const RATING_1_COLOR = "rgba(255, 0, 0, 0.51)";    // red
+const RATING_2_COLOR = "rgba(255, 102, 0, 0.54)";    // orange
+const RATING_3_COLOR = "rgba(242, 255, 0, 0.61)";    // yellow
+const RATING_4_COLOR = "rgba(77, 199, 28, 0.79)";    // yellow-green
+const RATING_5_COLOR = "rgb(33, 211, 24)";      // bright green
 
 const RATING_COLORS = [
   "",
@@ -218,7 +218,7 @@ const LABEL_DIR_PRIORITY: Record<number, number> = {
 //  CONTAINER STYLES
 // ══════════════════════════════════════════════════════════════════════════════
 
-const CONTAINER_HEIGHT = "clamp(500px, 70vh, 850px)";
+const CONTAINER_HEIGHT = "clamp(400px, 90vh, 540px)";
 const CONTAINER_BORDER_COLOR = "rgba(167,139,250,0.25)";
 const CONTAINER_BG_COLOR = "rgb(11, 13, 23)";
 
@@ -255,7 +255,7 @@ const HULL_INNER_THRESHOLD = 0.60;      // 0…1   Abstand zum Zentroid relativ 
                                         //   0.0   = alles weg 😄
 
 // ——  Vakuum‑Effekt (eingesaugte Stellen zwischen entfernten Knoten)  —————————
-const HULL_VACUUM_THRESHOLD = 2.2;      // Lücken‑Schwelle  (Vielfaches des Eimer‑Bogens)
+const HULL_VACUUM_THRESHOLD = 5.2;      // Lücken‑Schwelle  (Vielfaches des Eimer‑Bogens)
                                         //   je kleiner → mehr / häufigere Vakuum‑Punkte
 const HULL_VACUUM_STRENGTH = 0.15;      // Einsaug‑Stärke  (Bruchteil der Lückenweite)
                                         //   0     = kein Vakuum (hull überspannt Lücken gerade)
