@@ -15,6 +15,12 @@ import skillsDataEn from "@/data/skills.json";
 import { useLanguage } from "@/context/LanguageContext";
 import { WobblyRopes } from "./WobblyRopes";
 import type { RopeTarget } from "./WobblyRopes";
+import {
+  PRICETAG_ENABLED,
+  type PricetagData,
+  createPricetags,
+  updatePricetags,
+} from "./pricetags";
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  DATA FLATTENING  (skills.json has 3‑level structure; we flatten to 2 levels)
@@ -215,16 +221,6 @@ const LABEL_DIR_PRIORITY: Record<number, number> = {
 const CONTAINER_HEIGHT = "clamp(500px, 70vh, 850px)";
 const CONTAINER_BORDER_COLOR = "rgba(167,139,250,0.25)";
 const CONTAINER_BG_COLOR = "rgb(11, 13, 23)";
-
-// ══════════════════════════════════════════════════════════════════════════════
-//  PRICETAG
-// ══════════════════════════════════════════════════════════════════════════════
-
-const PRICETAG_ENABLED = true;           // Master-Schalter
-const PRICETAG_SCALE = 0.55;              // globale Grösse (1 = Original)
-const PRICETAG_LINE_LENGTH = 50;          // Abstand vom Hüllenrand zum Pricetag (px)
-//  Jeder Parameter ist hier einstellbar; Kommentar erklärt, was er tut.
-// ══════════════════════════════════════════════════════════════════════════════
 
 const HULL_ENABLED = true;              // Master‑Schalter  true | false
 const HULL_MIN_NODES = 2;               // Gruppe braucht ≥ N Knoten, sonst keine Hülle
@@ -912,88 +908,9 @@ export function SkillGraph() {
     }
 
     // ── pricetags (one per category group) ────────────────────────────
-    interface PricetagData {
-      gi: number;
-      g: SVGGElement;
-      line: SVGLineElement;
-      tri: SVGElement;
-      rect: SVGRectElement;
-      dot: SVGCircleElement;
-      text: SVGTextElement;
-    }
-    const pricetagData: PricetagData[] = [];
-
-    if (PRICETAG_ENABLED) {
-      const S = PRICETAG_SCALE;
-      const H = 38 * S;
-      const T = 19 * S;
-      const R = 4 * S;
-      const PAD = 3 * S;
-      const FONT_SZ = 22 * S;
-
-      for (const gi of groupIndices) {
-        const name = categories[gi];
-        const textW = name.length * FONT_SZ * 0.6 + PAD * 2;
-
-        // connector line
-        const line = document.createElementNS(ns, "line");
-        line.setAttribute("stroke", "rgba(106,176,112,0.35)");
-        line.setAttribute("stroke-width", "1.5");
-        line.setAttribute("stroke-dasharray", "3,4");
-        pricetagLayer.appendChild(line);
-
-        // pricetag group (origin = triangle tip)
-        const g = document.createElementNS(ns, "g");
-        g.setAttribute("pointer-events", "none");
-
-        // — triangle
-        const tri = document.createElementNS(ns, "polygon");
-        tri.setAttribute("points", `0,0 ${T},${-H/2} ${T},${H/2}`);
-        tri.setAttribute("fill", "#6ab070");
-
-        // — body rect
-        const rect = document.createElementNS(ns, "rect");
-        rect.setAttribute("x", String(T));
-        rect.setAttribute("y", String(-H/2));
-        rect.setAttribute("width", String(textW));
-        rect.setAttribute("height", String(H));
-        rect.setAttribute("rx", String(R));
-        rect.setAttribute("fill", "#6ab070");
-
-        // — dot
-        const dot = document.createElementNS(ns, "circle");
-        dot.setAttribute("cx", String(T - 9 * S));
-        dot.setAttribute("cy", "0");
-        dot.setAttribute("r", String(2 * S));
-        dot.setAttribute("fill", "white");
-
-        // — text (dummy; real x is set per-frame below)
-        const text = document.createElementNS(ns, "text");
-        text.textContent = name;
-        text.setAttribute("y", String(FONT_SZ * 0.35));
-        text.setAttribute("fill", "white");
-        text.setAttribute("font-family", "monospace");
-        text.setAttribute("font-size", String(FONT_SZ));
-        text.setAttribute("font-weight", "300");
-
-        g.appendChild(tri);
-        g.appendChild(rect);
-        g.appendChild(dot);
-        g.appendChild(text);
-        pricetagLayer.appendChild(g);
-
-        pricetagData.push({ gi, g, line, tri, rect, dot, text });
-
-        // Init wobbly rope target for this category
-        if (!ropeTargetsRef.current.has(gi)) {
-          ropeTargetsRef.current.set(gi, { start: { x: 0, y: 0 }, end: { x: 0, y: 0 }, outputX: 0, outputY: 0, outputAngle: 0 });
-        }
-        if (!ropeColorMapRef.current.has(gi)) {
-          const catColor = CATEGORIES[gi]?.color || "rgba(106,176,112,0.25)";
-          ropeColorMapRef.current.set(gi, catColor.replace(/[\d.]+\)$/, "0.55)"));
-        }
-      }
-    }
+    const pricetagData: PricetagData[] = PRICETAG_ENABLED
+      ? createPricetags(pricetagLayer, categories, groupIndices, ropeTargetsRef, ropeColorMapRef, CATEGORIES)
+      : [];
 
     // ── bounding helper ──────────────────────────────────────────────────
     function clampNode(n: SimNode, r: number) {
@@ -1241,158 +1158,7 @@ export function SkillGraph() {
       }
 
       // ── update pricetag positions ─────────────────────────────────
-      if (PRICETAG_ENABLED && pricetagData.length > 0) {
-        const halfW = width / 2;
-        const S = PRICETAG_SCALE;
-        const H = 38 * S;
-        const T = 19 * S;
-        const PAD = 3 * S;
-        const FONT_SZ = 22 * S;
-        const EDGE_MARGIN = 10;
-
-        interface TagPos {
-          pd: PricetagData;
-          isTop: boolean;
-          isLeft: boolean;
-          tagLeft: number;
-          tagRight: number;
-          rx: number;
-          ry: number;
-          tw: number;
-          name: string;
-        }
-        const allPositions: TagPos[] = [];
-
-        // ---- first pass: compute raw positions & feed rope targets ----
-        for (const pd of pricetagData) {
-          const gn = nodes.filter((n) => n.groupIndex === pd.gi);
-          if (gn.length < HULL_MIN_NODES) {
-            pd.line.style.display = "none";
-            pd.g.style.display = "none";
-            continue;
-          }
-          pd.line.style.display = "none";
-          pd.g.style.display = "";
-
-          let cx = 0, cy = 0;
-          for (const n of gn) { cx += n.x ?? 0; cy += n.y ?? 0; }
-          cx /= gn.length;
-          cy /= gn.length;
-
-          let avgDist = 0;
-          for (const n of gn) {
-            avgDist += Math.sqrt(((n.x ?? 0) - cx) ** 2 + ((n.y ?? 0) - cy) ** 2);
-          }
-          avgDist /= gn.length;
-
-          const isTop = cy < height / 2;
-          const dirY = isTop ? -1 : 1;
-          const isLeft = cx < halfW;
-
-          const lineEndX = cx;
-          const lineEndY = cy + dirY * avgDist;
-
-          const anchorX = cx;
-          const anchorY = isTop ? EDGE_MARGIN + H / 2 : height - EDGE_MARGIN - H / 2;
-
-          const rt = ropeTargetsRef.current.get(pd.gi);
-          if (rt) {
-            rt.start.x = lineEndX;
-            rt.start.y = lineEndY;
-            rt.end.x = anchorX;
-            rt.end.y = anchorY;
-          }
-
-          let rx = (rt && rt.outputX) || anchorX;
-          let ry = (rt && rt.outputY) || anchorY;
-
-          const name = pd.text.textContent || "";
-          const tw = name.length * FONT_SZ * 0.6 + PAD * 2;
-          const tagLeft = isLeft ? T + tw : 0;
-          const tagRight = isLeft ? 0 : T + tw;
-
-          // hard edge blockade (10px min, 50px max from edge for Y)
-          rx = Math.max(EDGE_MARGIN + tagLeft, Math.min(width - EDGE_MARGIN - tagRight, rx));
-          const yMin = isTop ? EDGE_MARGIN + H / 2 : height - EDGE_MARGIN - H / 2 - 40;
-          const yMax = isTop ? EDGE_MARGIN + H / 2 + 40 : height - EDGE_MARGIN - H / 2;
-          ry = Math.max(yMin, Math.min(yMax, ry));
-
-          allPositions.push({ pd, isTop, isLeft, tagLeft, tagRight, rx, ry, tw, name });
-        }
-
-        // ---- tag-tag collision: vertical stagger (keep ropes vertical & short) ----
-        for (let iter = 0; iter < 5; iter++) {
-          for (let i = 0; i < allPositions.length; i++) {
-            for (let j = i + 1; j < allPositions.length; j++) {
-              const a = allPositions[i];
-              const b = allPositions[j];
-              // same side only — on opposite sides they never overlap vertically
-              if (a.isTop !== b.isTop) continue;
-              // X overlap?
-              const aL = a.rx - a.tagLeft;
-              const aR = a.rx + a.tagRight;
-              const bL = b.rx - b.tagLeft;
-              const bR = b.rx + b.tagRight;
-              const overlapX = Math.min(aR, bR) - Math.max(aL, bL);
-              if (overlapX <= 0) continue;
-              // Y overlap?
-              const aTop = a.ry - H / 2;
-              const aBot = a.ry + H / 2;
-              const bTop = b.ry - H / 2;
-              const bBot = b.ry + H / 2;
-              const overlapY = Math.min(aBot, bBot) - Math.max(aTop, bTop);
-              if (overlapY <= 0) continue;
-
-              // stagger vertically: push one toward the edge, the other away
-              const push = overlapY / 2 + 2;
-              if (a.isTop) {
-                a.ry -= push;
-                b.ry += push;
-                a.ry = Math.max(EDGE_MARGIN + H / 2, a.ry);
-                b.ry = Math.min(EDGE_MARGIN + H / 2 + 40, Math.max(EDGE_MARGIN + H / 2, b.ry));
-              } else {
-                a.ry += push;
-                b.ry -= push;
-                a.ry = Math.min(height - EDGE_MARGIN - H / 2, a.ry);
-                b.ry = Math.max(height - EDGE_MARGIN - H / 2 - 40, Math.min(height - EDGE_MARGIN - H / 2, b.ry));
-              }
-            }
-          }
-        }
-
-        // ---- apply final positions & geometry ----
-        for (const tp of allPositions) {
-          const { pd, isLeft, isTop, tagLeft, tagRight, rx, ry, tw, name } = tp;
-
-          const rt = ropeTargetsRef.current.get(pd.gi);
-          if (rt) {
-            rt.end.x = rx;
-            rt.end.y = ry;
-            rt.outputX = Math.max(EDGE_MARGIN + tagLeft, Math.min(width - EDGE_MARGIN - tagRight, rx));
-            const yOutMin = isTop ? EDGE_MARGIN + H / 2 : height - EDGE_MARGIN - H / 2 - 40;
-            const yOutMax = isTop ? EDGE_MARGIN + H / 2 + 40 : height - EDGE_MARGIN - H / 2;
-            rt.outputY = Math.max(yOutMin, Math.min(yOutMax, ry));
-          }
-
-          pd.g.setAttribute("transform", `translate(${rx}, ${ry})`);
-
-          if (isLeft) {
-            pd.tri.setAttribute("points", `0,0 ${-T},${-H/2} ${-T},${H/2}`);
-            pd.rect.setAttribute("x", String(-T - tw));
-            pd.rect.setAttribute("width", String(tw));
-            pd.dot.setAttribute("cx", String(-T + 9 * S));
-            pd.text.setAttribute("x", String(-T - tw / 2));
-            pd.text.setAttribute("text-anchor", "middle");
-          } else {
-            pd.tri.setAttribute("points", `0,0 ${T},${-H/2} ${T},${H/2}`);
-            pd.rect.setAttribute("x", String(T));
-            pd.rect.setAttribute("width", String(tw));
-            pd.dot.setAttribute("cx", String(T - 9 * S));
-            pd.text.setAttribute("x", String(T + tw / 2));
-            pd.text.setAttribute("text-anchor", "middle");
-          }
-        }
-      }
+      updatePricetags(pricetagData, nodes, width, height, HULL_MIN_NODES, ropeTargetsRef);
     });
 
     // ── drag (D3-style: fix single node → link forces pull group) ──────
