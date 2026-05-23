@@ -18,10 +18,10 @@ export default function Home() {
         <SkillGraph />
         <HomePreviewSection />
       </main>
-      <div className="relative z-10">
+      <div className="relative">
         <Footer />
       </div>
-      <div className="relative z-10">
+      <div className="relative">
         <Toaster />
       </div>
     </div>

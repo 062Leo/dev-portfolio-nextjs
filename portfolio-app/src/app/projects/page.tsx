@@ -13,7 +13,7 @@ export default function ProjectsPage() {
         <ProjectsShowcase />
       </main>
 
-     <div className="relative z-10">
+     <div className="relative">
         <Footer />
       </div>
     </div>
