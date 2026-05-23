@@ -273,9 +273,9 @@ const HULL_CURVE_TENSION = 0.1;        // Catmull‑Rom Spannung  0 … 1
                                         //   1     = straff / eckiger
 
 // ——  Darstellung  ————————————————————————————————————————————————————————————
-const HULL_STROKE_WIDTH = 1.5;          // px
-const HULL_FILL_OPACITY = 0.1;          // 0 … 1
-const HULL_STROKE_OPACITY = 0.45;       // 0 … 1
+const HULL_STROKE_WIDTH = 2;          // px
+const HULL_FILL_OPACITY = 0.07;          // 0 … 1
+const HULL_STROKE_OPACITY = 0.35;       // 0 … 1
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  HELPER FUNCTIONS
