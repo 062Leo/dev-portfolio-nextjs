@@ -388,43 +388,44 @@ export const portfolioData = {
   { icon: "Code",   label: "Umfang",         value: "Kompletter Gameplay-Prototyp" },
   { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" }
 ]
-    },
-    {
-      id: "coming-soon",
-      title: "Bald verfügbar",
-      subtitle: "",
-      description:
-        "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
-      longDescription:
-        "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentiert.",
-      image: "/Bilder/dummy.png",
-      images: [] as ProjectImage[],
-      detailComponent: "",
-      videos: [],
-      tags: ["Bald verfügbar", "Portfolio", "Mehr Projekte"],
-      features: [
-        "Platzhalter für zukünftige Projekte",
-        "In Vorbereitung"
-      ],
-      techStack: ["Noch geheim"],
-      demoLink: "",
-      demoImage: "",
-      demoDownload: "",
-      githubUrl: "",
-      videoBig: "",
-      custom1Link: "",
-      custom1BTNText: "",
-      customLabel: "",
-      demotext: "",
-      demoControls: [],
-      misctext: "",
-      miscimage: "",
-      miscTitle: "",
-      stats: [
-        { icon: "Layers", label: "Kategorie", value: "Streng Geheim" },
-        { icon: "Clock", label: "Zeitplan", value: "Bald verfügbar" }
-        
-      ]
     }
+    // ,
+    // {
+    //   id: "coming-soon",
+    //   title: "Bald verfügbar",
+    //   subtitle: "",
+    //   description:
+    //     "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
+    //   longDescription:
+    //     "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentiert.",
+    //   image: "/Bilder/dummy.png",
+    //   images: [] as ProjectImage[],
+    //   detailComponent: "",
+    //   videos: [],
+    //   tags: ["Bald verfügbar", "Portfolio", "Mehr Projekte"],
+    //   features: [
+    //     "Platzhalter für zukünftige Projekte",
+    //     "In Vorbereitung"
+    //   ],
+    //   techStack: ["Noch geheim"],
+    //   demoLink: "",
+    //   demoImage: "",
+    //   demoDownload: "",
+    //   githubUrl: "",
+    //   videoBig: "",
+    //   custom1Link: "",
+    //   custom1BTNText: "",
+    //   customLabel: "",
+    //   demotext: "",
+    //   demoControls: [],
+    //   misctext: "",
+    //   miscimage: "",
+    //   miscTitle: "",
+    //   stats: [
+    //     { icon: "Layers", label: "Kategorie", value: "Streng Geheim" },
+    //     { icon: "Clock", label: "Zeitplan", value: "Bald verfügbar" }
+        
+    //   ]
+    // }
   ]
 };
