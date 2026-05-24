@@ -30,3 +30,28 @@ npm run dev
 
 http://localhost:3000
 
+## Passwortschutz
+
+Die Website ist per Middleware (`proxy.ts`) passwortgeschützt. Besucher ohne gültigen Cookie werden auf `/login` umgeleitet.
+
+### Konfiguration
+
+Das Passwort wird über die Umgebungsvariable `SITE_PASSWORD` in `.env.local` gesetzt:
+
+```
+SITE_PASSWORD=dein-passwort
+```
+
+Ohne diese Variable ist der Schutz deaktiviert.
+
+### Login per URL-Parameter überspringen
+
+Statt das Passwort im Login-Formular einzugeben, kann es direkt als URL-Parameter übergeben werden:
+
+```
+http://localhost:3000?key=dein-passwort
+http://localhost:3000/projects?key=dein-passwort
+```
+
+Der Proxy erkennt den `key`-Parameter, setzt den Auth-Cookie und leitet auf die saubere URL (ohne `key`) weiter.
+
