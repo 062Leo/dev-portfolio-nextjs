@@ -230,6 +230,55 @@ export const portfolioData = {
       ]
     },
     {
+      id: "song-voyage",
+      title: "SongVoyage",
+      subtitle: "Random music discovery without the algorithm bubble",
+      description:
+        "Fully client-side Single Page Web Application for random music discovery across 126 years of music history. No algorithms, no server backend.",
+      longDescription:
+        "**SongVoyage** is a fully client-side, platform-independent **Single Page Web Application (SPA)** for unbiased music discovery. The application strictly follows a **Zero-Backend philosophy**: all user data remains decentralized and exclusively in the user's browser.\n\n" +
+        "The app randomly selects songs from the MusicBrainz archive (1900-2026) and plays the corresponding YouTube videos, without algorithmic pre-filtering and without the YouTube Data API (zero-quota through HTML scraping). Users rate songs with 0-5 stars, create playlists, and can block artists.\n\n" +
+        "Technically, SongVoyage is built with **Vue 3** (Composition API), **Pinia** for state management, and **Dexie.js** as an IndexedDB wrapper for local data storage. The **Dual-Player** with two YouTube IFrame instances enables gapless playback without noticeable delay.",
+      image: "/Bilder/SongVoyage/Bild.png",
+      images: [] as ProjectImage[],
+      detailComponent: "",
+      videos: [],
+      tags: ["Vue 3", "TypeScript", "SPA", "Zero-Backend", "IndexedDB", "MusicBrainz", "YouTube"],
+      features: [
+        "Random music discovery via MusicBrainz API — truly random selection across 126 years of music history",
+        "YouTube video playback with gapless dual-player (two IFrame instances)",
+        "0-5 star rating with keyboard shortcuts (keys 0-5, S for skip)",
+        "Custom playlists and automatic rating playlists (one per rating level)",
+        "Artist blocking with permanent filtering",
+        "Full data export/import as JSON (data portability)",
+        "Password protection with SHA-256 auto-login via URL parameter",
+        "Fully client-side — no server data storage, no tracking, no cookies",
+        "Zero-quota YouTube search via HTML scraping (no YouTube Data API)",
+        "No registration — runs anonymously in the browser"
+      ],
+      techStack: ["Vue 3", "TypeScript", "Pinia", "Dexie.js", "Vite", "Vitest", "Vercel", "MusicBrainz API v2"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "https://github.com/062Leo/song-voyage",
+      videoBig: "",
+      custom1Link: "https://song-voyage.vercel.app/?key=LeoDev2026",
+      custom1BTNText: "SongVoyage Website",
+      customLabel: "SongVoyage",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Architecture", value: "Zero-Backend · Client-Only SPA" },
+        { icon: "Zap", label: "Music sources", value: "MusicBrainz + YouTube (Zero-Quota Scraping)" },
+        { icon: "Code", label: "Concept", value: "True random selection · 126 years of music history" },
+        { icon: "Users", label: "Development", value: "Solo project" },
+        { icon: "Award", label: "Website password", value: "LeoDev2026" }
+      ]
+    },
+    {
       id: "broforce-clone",
       title: "BoomForce",
       subtitle: "(Broforce clone)",
