@@ -75,7 +75,7 @@ export function Navbar() {
       )}
       style={{ backgroundColor: isScrolled ? `${colors.navbarBackground}cc` : "transparent" }}
     >
-      <div className="container flex items-center justify-between">
+      <div className="mx-auto w-full max-w-3xl md:max-w-4xl xl:max-w-[1440px] 2xl:max-w-[1800px] grid grid-cols-[1fr_auto_1fr] items-center">
         <Link href="/" className="flex items-center text-xl font-bold group">
           <span className="relative z-10 flex items-baseline">
               <span
@@ -96,7 +96,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden space-x-8 md:flex flex-1 ml-185">
+        <div className="hidden space-x-8 md:flex justify-center">
           {navItems.map((item) => (
             <Link
               key={item.name}
@@ -111,7 +111,7 @@ export function Navbar() {
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-4 ml-auto">
+        <div className="hidden md:flex items-center justify-end gap-4">
           {/* Language Toggle Button */}
           <button
             onClick={toggleLanguage}

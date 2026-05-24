@@ -238,7 +238,7 @@ const LABEL_DIR_PRIORITY: Record<number, number> = {
 //  CONTAINER STYLES
 // ══════════════════════════════════════════════════════════════════════════════
 
-const CONTAINER_HEIGHT = "clamp(400px, 90vh, 540px)";
+const CONTAINER_HEIGHT = "clamp(400px, 88vh, 900px)";
 const CONTAINER_BORDER_COLOR = "rgba(167,139,250,0.25)";
 const CONTAINER_BG_COLOR = "rgb(11, 13, 23)";
 
@@ -1602,7 +1602,7 @@ export function SkillGraph() {
 
   return (
     <section ref={sectionRef} id="skills" className="relative w-full py-16 md:py-24">
-      <div className="container mx-auto max-w-7xl px-4">
+      <div className="mx-auto w-full max-w-3xl md:max-w-4xl xl:max-w-[1440px] 2xl:max-w-[1800px] px-4">
         <h2
           className="mb-6 text-center text-3xl font-bold md:text-4xl"
           style={{ color: "rgba(239,68,68,1)", textShadow: "0 0 20px rgba(239,68,68,0.35)" }}
@@ -1612,7 +1612,7 @@ export function SkillGraph() {
       </div>
       <div
         ref={containerRef}
-        className="relative mx-auto w-full max-w-7xl overflow-hidden rounded-xl border"
+        className="relative mx-auto w-full max-w-3xl md:max-w-4xl xl:max-w-[1440px] 2xl:max-w-[1800px] overflow-hidden rounded-xl border"
         style={{
           height: CONTAINER_HEIGHT,
           borderColor: CONTAINER_BORDER_COLOR,
@@ -1667,7 +1667,7 @@ export function SkillGraph() {
       </div>
 
       {/* ── Filter‑Controls ──────────────────────────────────────────── */}
-      <div className="container mx-auto max-w-7xl px-4 mt-6">
+      <div className="mx-auto w-full max-w-3xl md:max-w-4xl xl:max-w-7xl 2xl:max-w-[1600px] px-4 mt-6">
         {/* Rating row */}
         <div className="flex flex-col items-center gap-1.5">
           <span className="text-xs" style={{ color: "rgba(213,220,232,0.6)" }}>

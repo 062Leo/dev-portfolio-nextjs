@@ -33,9 +33,9 @@ export function HomeSection() {
       className="relative flex min-h-screen flex-col items-center justify-center px-4"
       style={{ backgroundImage: colors.homeSectionBackgroundGradient }}
     >
-      <div className="container z-10 mx-auto max-w-7xl text-center">
+      <div className="mx-auto w-full max-w-3xl md:max-w-4xl xl:max-w-[1440px] 2xl:max-w-[1800px] text-center">
         <div
-          className="mx-auto flex w-full flex-col gap-8 rounded-[40px] border px-6 py-12 md:px-10"
+          className="mx-auto flex w-full flex-col gap-8 rounded-[40px] border px-6 py-12 md:px-10 2xl:px-16 2xl:py-16"
           style={{
             borderColor: colors.homeSectionAccentLine,
             boxShadow: colors.homeSectionBorderGlow,
@@ -43,7 +43,7 @@ export function HomeSection() {
           }}
         >
           <h1
-            className="text-4xl font-bold tracking-tight opacity-0 animate-fade-in md:text-6xl"
+            className="text-fluid-hero font-bold tracking-tight opacity-0 animate-fade-in"
             style={{
               color: colors.homeSectionTitleColor,
               textShadow: colors.homeSectionTitleGlow,
@@ -78,7 +78,7 @@ export function HomeSection() {
           </h1>
 
           <p
-            className="mx-auto text-lg opacity-0 animate-fade-in-delay-3 md:text-xl"
+            className="mx-auto text-lg opacity-0 animate-fade-in-delay-3 md:text-xl 2xl:text-2xl"
             style={{ color: colors.homeSectionDescriptionText }}
           >
             {currentPortfolioData.personal.role}
