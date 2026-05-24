@@ -234,12 +234,12 @@ export const portfolioData = {
       title: "SongVoyage",
       subtitle: "Zufällige Musikentdeckung ohne Algorithmus-Bubble",
       description:
-        "Vollständig clientseitige Single Page Application zur zufälligen Musikentdeckung über 126 Jahre Musikgeschichte — ganz ohne Algorithmus, Server-Backend oder Betriebskosten.",
+        "Vollständig clientseitige Single Page Web Application zur zufälligen Musikentdeckung über 126 Jahre Musikgeschichte. Ganz ohne Algorithmus oder Server-Backend.",
       longDescription:
-        "**SongVoyage** ist eine vollständig clientseitige, platformunabhängige **Single Page Application (SPA)** zur unvoreingenommenen Musikentdeckung. Die Anwendung folgt strikt einer **Zero-Backend-Philosophie**: sämtliche Nutzerdaten verbleiben dezentral und ausschließlich im Browser des Nutzers.\n\n" +
+        "**SongVoyage** ist eine vollständig clientseitige, platformunabhängige **Single Page Web Application (SPA)** zur unvoreingenommenen Musikentdeckung. Die Anwendung folgt strikt einer **Zero-Backend-Philosophie**: sämtliche Nutzerdaten verbleiben dezentral und ausschließlich im Browser des Nutzers.\n\n" +
         "Die App wählt per Zufall Songs aus dem MusicBrainz-Archiv (1900-2026) aus und spielt die zugehörigen YouTube-Videos ab, ohne algorithmische Vorfilterung und ohne YouTube Data API (Zero-Quota durch HTML-Scraping). Nutzer bewerten Songs mit 0-5 Sternen, legen Playlists an und können Künstler blockieren.\n\n" +
         "Technisch setzt SongVoyage auf **Vue 3** (Composition API), **Pinia** für State Management und **Dexie.js** als IndexedDB-Wrapper für die lokale Datenhaltung. Der **Dual-Player** mit zwei YouTube-IFrame-Instanzen ermöglicht gapless Playback ohne spürbare Verzögerung. \n\n" ,
-      image: "/Bilder/dummy.png",
+      image: "/Bilder/SongVoyage/Bild.png",
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
@@ -260,32 +260,22 @@ export const portfolioData = {
       demoLink: "",
       demoImage: "",
       demoDownload: "",
-      githubUrl: "https://github.com/LeosArchiv/song-voyage",
+      githubUrl: "https://github.com/062Leo/song-voyage",
       videoBig: "",
-      custom1Link: "",
-      custom1BTNText: "",
-      customLabel: "",
-      demotext: "**SongVoyage** ist eine Web-App, die dich auf eine zufällige Musikreise durch die Jahrzehnte mitnimmt. Kein Algorithmus entscheidet, was du hörst — nur der Zufall.\n\n**Erste Schritte:**\n1. App im Browser öffnen\n2. Passwort eingeben\n3. Auf **„Begin Your Voyage\u201C** klicken\n4. Der erste Song startet automatisch in der Mitte des Videos\n\n**Daten sichern:** In den Settings kannst du alle Daten als JSON exportieren, importieren oder zurücksetzen.",
-      demoControls: [
-        {
-          title: "Tastatur & Maus",
-          items: [
-            "Song überspringen: S oder 0 (auch per Klick auf \u201ESkip\u201C)",
-            "Bewerten (1\u20135 Sterne): Tasten 1\u20135 (auch per Klick auf Sterne)",
-            "Song pausieren: Klick in den Player",
-            "Künstler blockieren: Klick auf \u201EBlock Artist\u201C",
-            "Zu Playlist hinzufügen: \u22EE \u2192 \u201EAdd to Playlist\u201C",
-          ],
-        },
-      ],
+      custom1Link: "https://song-voyage.vercel.app/?key=LeoDev2026",
+      custom1BTNText: "SongVoyage Webseite",
+      customLabel: "SongVoyage",
+      demotext: "",
+      demoControls: [],
       misctext: "",
-      miscimage: "/Bilder/dummy.png",
+      miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Layers", label: "Codeumfang", value: "~12.500 Zeilen TypeScript + Vue" },
-        { icon: "Code", label: "Dateien", value: "36 TS + 12 Vue + 25 Tests" },
-        { icon: "Zap", label: "Betriebskosten", value: "0 € / Monat (Vercel Free)" },
-        { icon: "Star", label: "Entwicklung", value: "Solo-Projekt · 50 Commits" }
+        { icon: "Layers", label: "Architektur", value: "Zero-Backend · Client-Only SPA" },
+        { icon: "Zap", label: "Musikquellen", value: "MusicBrainz + YouTube (Zero-Quota Scraping)" },
+        { icon: "Code", label: "Konzept", value: "Echte Zufallsauswahl · 126 Jahre Musikgeschichte" },
+        { icon: "Star", label: "Entwicklung", value: "Solo-Projekt" },
+        { icon: "Award", label: "Website-Passwort", value: "LeoDev2026" }
       ]
     },
     {
