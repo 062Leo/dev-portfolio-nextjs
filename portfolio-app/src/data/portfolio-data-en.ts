@@ -411,44 +411,43 @@ export const portfolioData = {
         { icon: "Code", label: "Scope", value: "Complete gameplay prototype" },
         { icon: "Users", label: "Development", value: "Solo project" },
       ]
-    },
-    
-    
-    {
-      id: "coming-soon",
-      title: "Coming soon",
-      subtitle: "",
-      description:
-        "This project is still secret - more information coming soon.",
-      longDescription:
-        "This entry is a placeholder. In the future, additional projects will be presented here.",
-      image: "/Bilder/dummy.png",
-      images: [] as ProjectImage[],
-      detailComponent: "",
-      videos: [],
-      tags: ["Coming soon", "Portfolio", "More projects"],
-      features: [
-        "Placeholder for future projects",
-        "In preparation"
-      ],
-      techStack: ["Still secret"],
-      demoLink: "",
-      demoImage: "",
-      demoDownload: "",
-      githubUrl: "",
-      videoBig: "",
-      custom1Link: "",
-      custom1BTNText: "",
-      customLabel: "",
-      demotext: "",
-      demoControls: [],
-      misctext: "",
-      miscimage: "",
-      miscTitle: "",
-      stats: [
-        { icon: "Eye", label: "Category", value: "Top secret" },
-        { icon: "Clock", label: "Schedule", value: "Coming soon" }
-      ]
     }
+    //,
+    // {
+    //   id: "coming-soon",
+    //   title: "Coming soon",
+    //   subtitle: "",
+    //   description:
+    //     "This project is still secret - more information coming soon.",
+    //   longDescription:
+    //     "This entry is a placeholder. In the future, additional projects will be presented here.",
+    //   image: "/Bilder/dummy.png",
+    //   images: [] as ProjectImage[],
+    //   detailComponent: "",
+    //   videos: [],
+    //   tags: ["Coming soon", "Portfolio", "More projects"],
+    //   features: [
+    //     "Placeholder for future projects",
+    //     "In preparation"
+    //   ],
+    //   techStack: ["Still secret"],
+    //   demoLink: "",
+    //   demoImage: "",
+    //   demoDownload: "",
+    //   githubUrl: "",
+    //   videoBig: "",
+    //   custom1Link: "",
+    //   custom1BTNText: "",
+    //   customLabel: "",
+    //   demotext: "",
+    //   demoControls: [],
+    //   misctext: "",
+    //   miscimage: "",
+    //   miscTitle: "",
+    //   stats: [
+    //     { icon: "Eye", label: "Category", value: "Top secret" },
+    //     { icon: "Clock", label: "Schedule", value: "Coming soon" }
+    //   ]
+    // }
   ]
 };
