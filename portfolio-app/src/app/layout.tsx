@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
+import KeyCleaner from "@/components/KeyCleaner";
 
 export const metadata: Metadata = {
    title: "leo.dev — Portfolio",
@@ -16,7 +18,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <Suspense>
+            <KeyCleaner />
+          </Suspense>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

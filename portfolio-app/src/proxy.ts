@@ -29,9 +29,7 @@ export async function proxy(request: NextRequest) {
 
   const key = request.nextUrl.searchParams.get("key");
   if (key === process.env.SITE_PASSWORD) {
-    const url = request.nextUrl.clone();
-    url.searchParams.delete("key");
-    const response = NextResponse.redirect(url);
+    const response = NextResponse.next();
     response.cookies.set("site-auth", expectedHash, {
       httpOnly: true,
       secure: true,
