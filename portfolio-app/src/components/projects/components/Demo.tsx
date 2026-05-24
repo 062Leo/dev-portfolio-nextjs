@@ -118,7 +118,7 @@ export function DetailPage({ id }: { id: string }) {
                 .font-press-start { font-family: 'Press Start 2P', cursive; }
             `}</style>
 
-            <main className="relative z-10 mx-auto w-full max-w-3xl md:max-w-4xl xl:max-w-5xl 2xl:max-w-[1800px] px-4 py-24">
+            <main className="relative z-10 container mx-auto max-w-5xl px-4 py-24">
                 <div className="mb-8">
                     <Link
                         href={`/projects/${id}`}

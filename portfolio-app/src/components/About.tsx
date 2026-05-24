@@ -16,9 +16,9 @@ export function About() {
 
   return (
     <section id="about" className="relative px-4 py-24">
-      <div className="mx-auto w-full max-w-3xl md:max-w-4xl xl:max-w-[1440px] 2xl:max-w-[1800px]">
+      <div className="container mx-auto max-w-5xl">
         <h2
-          className="mb-12 text-center text-fluid-section font-bold"
+          className="mb-12 text-center text-3xl font-bold md:text-4xl"
           style={{ color: colors.aboutSectionTitleColor }}
         >
           {language === "de" ? (
