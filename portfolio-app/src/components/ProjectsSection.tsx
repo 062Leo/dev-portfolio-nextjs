@@ -23,10 +23,10 @@ export function ProjectsShowcase() {
   const moreProjects = moreProjectsSource.projects.filter((project) => project.id && project.id.trim() !== "");
 
   return (
-    <section className="relative py-24">
-      <div className="mx-auto w-full max-w-5xl lg:max-w-6xl xl:max-w-[1440px] 2xl:max-w-[1800px] px-2">
+    <section className="relative px-4 py-24">
+      <div className="container mx-auto max-w-6xl px-4">
         <h2
-          className="mb-4 text-center text-fluid-section font-bold"
+          className="mb-4 text-center text-3xl font-bold md:text-4xl"
           style={{ color: colors.projectsSectionTitleColor }}
         >
           {language === "de" ? (
@@ -39,13 +39,13 @@ export function ProjectsShowcase() {
             </>
           )}
         </h2>
-        <p className="mx-auto mb-12 max-w-3xl text-center text-fluid-body" style={{ color: colors.projectsSectionSubtitleColor }}>
+        <p className="mx-auto mb-12 max-w-3xl text-center" style={{ color: colors.projectsSectionSubtitleColor }}>
           {language === "de"
             ? "Hier sind einige meiner aktuellen Projekte, die Design, Performance und sauberen Code verbinden."
             : "Here are some of my recent projects that combine design, performance, and clean code."}
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 lg:gap-4">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
           {projects.map((project) => (
             <div
               key={project.id}
@@ -70,7 +70,7 @@ export function ProjectsShowcase() {
                 </Link>
               </div>
 
-              <div className="p-4">
+              <div className="p-6">
 
                 <Link href={`/projects/${project.id}`}>
                   <div className="mb-1 flex items-baseline gap-2 flex-wrap">
@@ -94,11 +94,11 @@ export function ProjectsShowcase() {
                     )}
                   </div>
                 </Link>
-                <p className="mb-3 text-sm" style={{ color: colors.projectsSectionSubtitleColor }}>
+                <p className="mb-4 text-sm" style={{ color: colors.projectsSectionSubtitleColor }}>
                   {project.description}
                 </p>
 
-                <div className="mb-3 flex flex-wrap gap-1.5">
+                <div className="mb-4 flex flex-wrap gap-2">
                   {project.tags.map((tag, index) => {
                     if (!tag || tag.trim() === "") {
                       return null;
@@ -120,7 +120,7 @@ export function ProjectsShowcase() {
                   })}
                 </div>
                 
-                <div>
+                <div className="mb-4">
                   <Link
                     href={`/projects/${project.id}`}
                     className="inline-flex items-center gap-1 text-sm font-semibold transition-colors"
@@ -186,13 +186,13 @@ export function ProjectsShowcase() {
 
         {/* Weitere Projekte / More Projects */}
         <h3
-          className="mt-16 mb-4 text-center text-fluid-section font-semibold pt-4"
+          className="mt-16 mb-4 text-center text-2xl font-semibold md:text-3xl pt-4"
           style={{ color: colors.projectsSectionTitleColor }}
         >
           {language === "de" ? "Weitere Projekte" : "More Projects"}
         </h3>
         <p
-          className="mx-auto mb-12 max-w-3xl text-center text-fluid-body"
+          className="mx-auto mb-12 max-w-3xl text-center"
           style={{ color: colors.projectsSectionSubtitleColor }}
         >
           {language === "de"
@@ -200,7 +200,7 @@ export function ProjectsShowcase() {
             : "Additional projects and experiments that complement my portfolio."}
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 lg:gap-4">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
           {moreProjects.map((project) => (
             <div
               key={project.id}
@@ -225,7 +225,7 @@ export function ProjectsShowcase() {
                 </Link>
               </div>
 
-              <div className="p-4">
+              <div className="p-6">
                 <Link href={`/projects/${project.id}`}>
                   <div className="mb-1 flex items-baseline gap-2 flex-wrap">
                     <h3
@@ -248,11 +248,11 @@ export function ProjectsShowcase() {
                     )}
                   </div>
                 </Link>
-                <p className="mb-3 text-sm" style={{ color: colors.projectsSectionSubtitleColor }}>
+                <p className="mb-4 text-sm" style={{ color: colors.projectsSectionSubtitleColor }}>
                   {project.description}
                 </p>
 
-                <div className="mb-3 flex flex-wrap gap-1.5">
+                <div className="mb-4 flex flex-wrap gap-2">
                   {project.tags.map((tag, index) => {
                     if (!tag || tag.trim() === "") {
                       return null;
@@ -274,7 +274,7 @@ export function ProjectsShowcase() {
                   })}
                 </div>
 
-                <div>
+                <div className="mb-4">
                   <Link
                     href={`/projects/${project.id}`}
                     className="inline-flex items-center gap-1 text-sm font-semibold transition-colors"

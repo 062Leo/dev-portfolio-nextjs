@@ -25,9 +25,9 @@ export function HomePreviewSection() {
 
   return (
     <section className="relative px-4 py-24">
-      <div className="mx-auto w-full max-w-3xl md:max-w-4xl xl:max-w-[1440px] 2xl:max-w-[1800px]">
+      <div className="container mx-auto max-w-6xl">
         <h2
-          className="mb-4 text-center text-fluid-section font-bold"
+          className="mb-4 text-center text-3xl font-bold md:text-4xl"
           style={{ color: colors.homePreviewSectionTitleColor }}
         >
           {language === "de" ? (
@@ -40,18 +40,18 @@ export function HomePreviewSection() {
             </>
           )}
         </h2>
-        <p className="mx-auto mb-12 max-w-3xl text-center text-fluid-body" style={{ color: colors.projectsSectionSubtitleColor }}>
+        <p className="mx-auto mb-12 max-w-3xl text-center" style={{ color: colors.projectsSectionSubtitleColor }}>
           {language === "de"
             ? `3 von ${totalCount} Projekten — von AI über Mobile bis Game Development.`
             : `3 of ${totalCount} projects — from AI to mobile to game development.`}
         </p>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {displayed.map((project) => (
             <Link
               key={project.id}
               href={`/projects/${project.id}`}
-              className="card-hover group overflow-hidden rounded-lg shadow-sm min-w-0"
+              className="card-hover group overflow-hidden rounded-lg shadow-sm"
               style={{
                 backgroundColor: colors.projectsSectionCardBackground,
                 borderColor: colors.projectsSectionCardBorder,
@@ -60,13 +60,13 @@ export function HomePreviewSection() {
                 borderStyle: "solid",
               }}
             >
-              <div className="relative h-44 2xl:h-56 overflow-hidden">
+              <div className="h-44 overflow-hidden">
                 <Image
                   src={project.image}
                   alt={project.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1536px) 33vw, 25vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  width={600}
+                  height={400}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
 

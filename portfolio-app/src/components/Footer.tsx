@@ -70,7 +70,7 @@ export function Footer() {
   return (
     <>
       <footer className="relative border-t border-[rgba(167,139,250,0.15)]">
-        <div className="mx-auto w-full max-w-3xl md:max-w-4xl xl:max-w-[1440px] 2xl:max-w-[1800px] px-4 pb-8 pt-12">
+        <div className="container mx-auto max-w-6xl px-4 pb-8 pt-12">
           <div className="grid grid-cols-1 gap-10 md:grid-cols-[2fr_1fr_2fr]">
             {/* Brand */}
             <div>

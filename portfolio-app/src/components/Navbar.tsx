@@ -75,7 +75,7 @@ export function Navbar() {
       )}
       style={{ backgroundColor: isScrolled ? `${colors.navbarBackground}cc` : "transparent" }}
     >
-      <div className="mx-auto w-full max-w-3xl md:max-w-4xl xl:max-w-[1440px] 2xl:max-w-[1800px] grid grid-cols-[1fr_auto_1fr] items-center">
+      <div className="container grid grid-cols-[1fr_auto_1fr] items-center">
         <Link href="/" className="flex items-center text-xl font-bold group">
           <span className="relative z-10 flex items-baseline">
               <span
