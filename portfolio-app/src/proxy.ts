@@ -27,6 +27,21 @@ export async function proxy(request: NextRequest) {
   const cookie = request.cookies.get("site-auth")?.value;
   if (cookie === expectedHash) return NextResponse.next();
 
+  const key = request.nextUrl.searchParams.get("key");
+  if (key === process.env.SITE_PASSWORD) {
+    const url = request.nextUrl.clone();
+    url.searchParams.delete("key");
+    const response = NextResponse.redirect(url);
+    response.cookies.set("site-auth", expectedHash, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30,
+    });
+    return response;
+  }
+
   const loginUrl = new URL("/login", request.url);
   return NextResponse.redirect(loginUrl);
 }
