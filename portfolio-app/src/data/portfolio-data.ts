@@ -160,7 +160,7 @@ export const portfolioData = {
       id: "food-check-scanner-app",
       title: "FoodCheck Scanner App",
       subtitle: "Barcode-Scanner zur Analyse von Zutaten, NOVA-Klassifizierung und Ernährungsrisiko-Bewertung",
-      description: "Datenschutzorientierte mobile App (Expo/React Native), die Lebensmittel-Barcodes scannt, Zutaten und Zusatzstoffe gegen 683 Gesundheitsregeln bewertet und Verarbeitungsstufen klassifiziert – ohne proprietären Backend, ohne Tracking, ohne Werbung.",
+      description: "Datenschutzorientierte mobile App (Expo/React Native), die Lebensmittel-Barcodes scannt, Zutaten und Zusatzstoffe gegen 683 Gesundheitsregeln bewertet und Verarbeitungsstufen klassifiziert - ohne proprietären Backend, ohne Tracking, ohne Werbung.",
       longDescription:
         "FoodCheck ist eine React Native (Expo) App, die EAN-8/EAN-13 Barcodes via Kamera erkennt, Produktdaten lokal in SQLite zwischenspeichert und Zutaten auf gesundheitliche Risikofaktoren überprüft.\n\n" +
         "Die App kombiniert lokale SQLite-Persistierung, on-device ML Kit OCR für Zutatenlisten und Abfragen gegen die Open Food Facts API v2. Sie enthält ein umfassendes Risiko-Bewertungssystem mit 683 Kern-Regeln in 19 Kategorien (E-Nummern, Süßstoffe, Konservierungsstoffe, Emulgatoren, gehärtete Fette, Phosphate etc.), mehrsprachige Zutatendarstellungen in 8 Sprachen (de/en/fr/it/es/nl/pt/pl) und NOVA-/Nutri-Score-Klassifizierung mit farblich gekennzeichneten Ampel-Bewertungen. KI-gestützte Insights von Robotoff ergänzen die Analyse mit Confidence-Scores für Kategorien, Labels und Zutaten.\n\n" +
@@ -190,7 +190,7 @@ export const portfolioData = {
         "Swipeable Bildergalerie mit lokalem File Caching (expo-file-system)",
         "Backup & Restore: kompletter SQLite Export/Import als JSON über Native Share Sheet",
         "Dark Mode First Design",
-        "Privacy-by-Design: kein Backend, keine Cloud-Sync, kein Tracking, keine Ads – Daten bleiben auf dem Gerät"
+        "Privacy-by-Design: kein Backend, keine Cloud-Sync, kein Tracking, keine Ads - Daten bleiben auf dem Gerät"
       ],
       techStack: [
         "TypeScript 5.9 (strict)",
@@ -227,6 +227,65 @@ export const portfolioData = {
         { icon: "Zap", label: "OCR", value: "On-Device ML Kit + OFF Cloud Vision" },
         { icon: "Code", label: "Tests", value: "265 Tests über 23 Suites" },
         { icon: "Eye", label: "Datenschutz", value: "Dezentral · Ohne Tracking · Werbefrei" }
+      ]
+    },
+    {
+      id: "song-voyage",
+      title: "SongVoyage",
+      subtitle: "Zufällige Musikentdeckung ohne Algorithmus-Bubble",
+      description:
+        "Vollständig clientseitige Single Page Application zur zufälligen Musikentdeckung über 126 Jahre Musikgeschichte — ganz ohne Algorithmus, Server-Backend oder Betriebskosten.",
+      longDescription:
+        "**SongVoyage** ist eine vollständig clientseitige, platformunabhängige **Single Page Application (SPA)** zur unvoreingenommenen Musikentdeckung. Die Anwendung folgt strikt einer **Zero-Backend-Philosophie**: sämtliche Nutzerdaten verbleiben dezentral und ausschließlich im Browser des Nutzers.\n\n" +
+        "Die App wählt per Zufall Songs aus dem MusicBrainz-Archiv (1900-2026) aus und spielt die zugehörigen YouTube-Videos ab, ohne algorithmische Vorfilterung und ohne YouTube Data API (Zero-Quota durch HTML-Scraping). Nutzer bewerten Songs mit 0-5 Sternen, legen Playlists an und können Künstler blockieren.\n\n" +
+        "Technisch setzt SongVoyage auf **Vue 3** (Composition API), **Pinia** für State Management und **Dexie.js** als IndexedDB-Wrapper für die lokale Datenhaltung. Der **Dual-Player** mit zwei YouTube-IFrame-Instanzen ermöglicht gapless Playback ohne spürbare Verzögerung. \n\n" ,
+      image: "/Bilder/dummy.png",
+      images: [] as ProjectImage[],
+      detailComponent: "",
+      videos: [],
+      tags: ["Vue 3", "TypeScript", "SPA", "Zero-Backend", "IndexedDB", "MusicBrainz", "YouTube"],
+      features: [
+        "Zufällige Musikentdeckung per MusicBrainz API, echte Zufallsauswahl über 126 Jahre Musikgeschichte",
+        "YouTube-Videoplayback mit Gapless Dual-Player (zwei IFrame-Instanzen)",
+        "0-5 Sterne Bewertung mit Tastatur-Shortcuts (Tasten 0-5, S für Skip)",
+        "Benutzerdefinierte Playlists und automatische Rating-Playlists (je Bewertungsstufe)",
+        "Künstler-Blockierung mit permanenter Filterung",
+        "Vollständiger Daten-Export/Import als JSON (Datenportabilität)",
+        "Passwortschutz mit SHA-256-Auto-Login via URL-Parameter",
+        "Vollständig clientseitig, keine Server-Datenhaltung, kein Tracking, keine Cookies",
+        "Zero-Quota YouTube-Suche per HTML-Scraping (keine YouTube Data API)",
+        "Keine Registrierung, läuft anonym im Browser"
+      ],
+      techStack: ["Vue 3", "TypeScript", "Pinia", "Dexie.js", "Vite", "Vitest", "Vercel", "MusicBrainz API v2"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "https://github.com/LeosArchiv/song-voyage",
+      videoBig: "",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
+      demotext: "**SongVoyage** ist eine Web-App, die dich auf eine zufällige Musikreise durch die Jahrzehnte mitnimmt. Kein Algorithmus entscheidet, was du hörst — nur der Zufall.\n\n**Erste Schritte:**\n1. App im Browser öffnen\n2. Passwort eingeben\n3. Auf **„Begin Your Voyage\u201C** klicken\n4. Der erste Song startet automatisch in der Mitte des Videos\n\n**Daten sichern:** In den Settings kannst du alle Daten als JSON exportieren, importieren oder zurücksetzen.",
+      demoControls: [
+        {
+          title: "Tastatur & Maus",
+          items: [
+            "Song überspringen: S oder 0 (auch per Klick auf \u201ESkip\u201C)",
+            "Bewerten (1\u20135 Sterne): Tasten 1\u20135 (auch per Klick auf Sterne)",
+            "Song pausieren: Klick in den Player",
+            "Künstler blockieren: Klick auf \u201EBlock Artist\u201C",
+            "Zu Playlist hinzufügen: \u22EE \u2192 \u201EAdd to Playlist\u201C",
+          ],
+        },
+      ],
+      misctext: "",
+      miscimage: "/Bilder/dummy.png",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Codeumfang", value: "~12.500 Zeilen TypeScript + Vue" },
+        { icon: "Code", label: "Dateien", value: "36 TS + 12 Vue + 25 Tests" },
+        { icon: "Zap", label: "Betriebskosten", value: "0 € / Monat (Vercel Free)" },
+        { icon: "Star", label: "Entwicklung", value: "Solo-Projekt · 50 Commits" }
       ]
     },
     {
