@@ -1,17 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { portfolioData } from "@/data/portfolio-data";
-import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
-import { otherProjects } from "@/data/other_projects";
-import { otherProjects as otherProjectsEn } from "@/data/other_projects_en";
+import { usePortfolioData, useOtherProjects } from "@/data/index";
 import { ArrowLeft, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Eye, TrendingUp, DollarSign, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
+import { renderMarkdownText } from "@/lib/markdown";
 import ProjectVideos from "./components/ProjectVideos";
 
-// Icon map for dynamic stat rendering
 const iconMap = {
     Clock,
     Star,
@@ -27,38 +24,6 @@ const iconMap = {
     DollarSign
 };
 
-// Helper function to render markdown-like formatting
-const renderMarkdownText = (text: string, color: string) => {
-    if (!text) return null;
-    
-    // Split by double newlines to create paragraphs
-    const paragraphs = text.split('\n\n');
-
-    return paragraphs.map((paragraph, pIndex) => {
-        const lines = paragraph.split('\n');
-
-        return (
-            <p key={pIndex} className="mb-4 last:mb-0">
-                {lines.map((line, lineIndex) => (
-                    <span key={lineIndex}>
-                        {line.split(/(\*\*.*?\*\*)/g).map((part, index) => {
-                            if (part.startsWith('**') && part.endsWith('**')) {
-                                return (
-                                    <strong key={index} style={{ color }}>
-                                        {part.slice(2, -2)}
-                                    </strong>
-                                );
-                            }
-                            return <span key={index} style={{ color }}>{part}</span>;
-                        })}
-                        {lineIndex < lines.length - 1 && <br />}
-                    </span>
-                ))}
-            </p>
-        );
-    });
-};
-
 export function DetailPage({ id }: { id: string }) {
     const [isReady, setIsReady] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
@@ -68,24 +33,22 @@ export function DetailPage({ id }: { id: string }) {
     const [pendingCustomLabel, setPendingCustomLabel] = useState<string>("");
     const [selectedImage, setSelectedImage] = useState<{ url: string; caption?: string } | null>(null);
     const { language } = useLanguage();
+    const portfolioData = usePortfolioData();
+    const otherProjects = useOtherProjects();
     const [project, setProject] = useState<
         (typeof portfolioData.projects)[number] | (typeof otherProjects.projects)[number] | null
     >(null);
 
     useEffect(() => {
-        const data = language === "en" ? portfolioDataEn : portfolioData;
-        const otherSource = language === "en" ? otherProjectsEn : otherProjects;
-
-        // Zuerst in den Hauptprojekten suchen (DE/EN), dann in den weiteren Projekten (DE/EN) als Fallback
         const foundProject =
-            data.projects.find((p) => p.id === id) ||
-            otherSource.projects.find((p) => p.id === id) ||
+            portfolioData.projects.find((p) => p.id === id) ||
+            otherProjects.projects.find((p) => p.id === id) ||
             null;
 
         setProject(foundProject);
 
         setIsReady(true);
-    }, [id, language]);
+    }, [id, portfolioData, otherProjects]);
     const colors = useThemeColors(true);
 
     if (!isReady) {

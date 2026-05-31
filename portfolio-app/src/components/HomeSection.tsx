@@ -1,8 +1,7 @@
 "use client";
 
 import { ArrowDown } from "lucide-react";
-import { portfolioData } from "@/data/portfolio-data";
-import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
+import { usePortfolioData } from "@/data/index";
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -25,7 +24,7 @@ export function HomeSection() {
     }
   };
 
-  const currentPortfolioData = language === "en" ? portfolioDataEn : portfolioData;
+  const currentPortfolioData = usePortfolioData();
 
   return (
     <section

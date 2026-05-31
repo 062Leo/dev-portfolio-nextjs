@@ -57,3 +57,6 @@ OpendesignDoc.md
 /portfolio-app/.next
 /portfolio-app/node_modules
 /portfolio-app/out
+/.opencode
+/graphify-out
+/portfolio-app/graphify-out

@@ -2,17 +2,14 @@
 
 import { type ReactNode } from "react";
 import { Bot, Briefcase, ChartNoAxesCombined, Code, Workflow } from "lucide-react";
-import { portfolioData } from "@/data/portfolio-data";
-import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
+import { usePortfolioData } from "@/data/index";
 import { useThemeColors, type ThemeColorSet } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function About() {
   const { language } = useLanguage();
-
   const colors = useThemeColors(true);
-
-  const currentPortfolioData = language === "en" ? portfolioDataEn : portfolioData;
+  const currentPortfolioData = usePortfolioData();
 
   return (
     <section id="about" className="relative px-4 py-24">
