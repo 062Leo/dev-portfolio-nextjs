@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { ProjectImage } from '@/data/portfolio-data';
+import { renderMarkdownText } from '@/lib/markdown';
 
 interface ProjectVideosProps {
   videoBig?: string;
@@ -11,37 +12,6 @@ interface ProjectVideosProps {
     boomforceProjectDescriptionText: string;
   };
 }
-
-// Helper function to render markdown-like formatting
-const renderMarkdownText = (text: string, color: string) => {
-    if (!text) return null;
-    
-    // First split by double newlines to handle paragraphs
-    return text.split('\n\n').map((paragraph, pIndex, arr) => {
-        // Then split each paragraph by single newlines
-        const lines = paragraph.split('\n');
-        
-        return (
-            <p key={pIndex} className={pIndex < arr.length - 1 ? 'mb-4' : 'mb-0'}>
-                {lines.map((line, lineIndex) => (
-                    <React.Fragment key={lineIndex}>
-                        {lineIndex > 0 && <br />}
-                        {line.split(/(\*\*.*?\*\*)/g).map((part, partIndex) => {
-                            if (part.startsWith('**') && part.endsWith('**')) {
-                                return (
-                                    <strong key={partIndex} style={{ color }}>
-                                        {part.slice(2, -2)}
-                                    </strong>
-                                );
-                            }
-                            return <span key={partIndex} style={{ color }}>{part}</span>;
-                        })}
-                    </React.Fragment>
-                ))}
-            </p>
-        );
-    });
-};
 
 const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors }) => {
   const hasBigVideo = !!videoBig && videoBig.trim() !== "";

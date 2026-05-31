@@ -10,8 +10,7 @@ import {
   forceY,
 } from "d3-force";
 import type { SimulationNodeDatum, SimulationLinkDatum, Simulation } from "d3-force";
-import skillsData from "@/data/skills.json";
-import skillsDataEn from "@/data/skills_en.json";
+import { useSkillsData } from "@/data/index";
 import { useLanguage } from "@/context/LanguageContext";
 import { WobblyRopes } from "./WobblyRopes";
 import type { RopeTarget } from "./WobblyRopes";
@@ -67,9 +66,6 @@ function flattenSkillsData(data: SkillsDataNested): Record<string, Record<string
   }
   return result;
 }
-
-const skillsDataFlat = flattenSkillsData(skillsData as SkillsDataNested);
-const skillsDataEnFlat = flattenSkillsData(skillsDataEn as SkillsDataNested);
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  CATEGORY DEFINITIONS
@@ -552,13 +548,16 @@ function createChainAngleForce(links: SimLink[], minAngleDeg: number, strength: 
 
 export function SkillGraph() {
   const { language } = useLanguage();
-  const currentData: Record<string, Record<string, number>> =
-    language === "en" ? skillsDataEnFlat : skillsDataFlat;
+  const skillsDataRaw = useSkillsData() as SkillsDataNested;
 
-  // raw nested data for tooltip lookup
+  const currentData = useMemo<Record<string, Record<string, number>>>(
+    () => flattenSkillsData(skillsDataRaw),
+    [skillsDataRaw]
+  );
+
   const rawNestedData = useMemo<SkillsDataNested>(
-    () => (language === "en" ? skillsDataEn : skillsData) as SkillsDataNested,
-    [language]
+    () => skillsDataRaw,
+    [skillsDataRaw]
   );
 
   // ── tooltip state ──────────────────────────────────────────────────────

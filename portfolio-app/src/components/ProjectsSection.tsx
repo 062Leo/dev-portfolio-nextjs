@@ -3,10 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { ArrowRight, Download, ExternalLink } from "lucide-react";
-import { portfolioData } from "@/data/portfolio-data";
-import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
-import { otherProjects } from "@/data/other_projects";
-import { otherProjects as otherProjectsEn } from "@/data/other_projects_en";
+import { usePortfolioData, useOtherProjects } from "@/data/index";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
@@ -18,9 +15,8 @@ export function ProjectsShowcase() {
 
   const colors = useThemeColors(true);
 
-  const projects = (language === "en" ? portfolioDataEn : portfolioData).projects;
-  const moreProjectsSource = language === "en" ? otherProjectsEn : otherProjects;
-  const moreProjects = moreProjectsSource.projects.filter((project) => project.id && project.id.trim() !== "");
+  const projects = usePortfolioData().projects;
+  const moreProjects = useOtherProjects().projects.filter((project) => project.id && project.id.trim() !== "");
 
   return (
     <section className="relative px-4 py-24">

@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { portfolioData, type DemoControlsGroup } from "@/data/portfolio-data";
-import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
+import { usePortfolioData, type DemoControlsGroup } from "@/data/index";
 import { ArrowLeft,  Play,  Clock, Star, Code, Zap, Users, Target, Award, Layers } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
+import { renderMarkdownText } from "@/lib/markdown";
 
-// Icon map for dynamic stat rendering
 const iconMap = {
   Clock,
   Star,
@@ -18,38 +17,6 @@ const iconMap = {
   Target,
   Award,
   Layers
-};
-
-// Helper function to render markdown-like formatting
-const renderMarkdownText = (text: string, color: string) => {
-    if (!text) return null;
-    
-    // Split by double newlines to create paragraphs
-    const paragraphs = text.split('\n\n');
-
-    return paragraphs.map((paragraph, pIndex) => {
-        const lines = paragraph.split('\n');
-
-        return (
-            <p key={pIndex} className="mb-4 last:mb-0">
-                {lines.map((line, lineIndex) => (
-                    <span key={lineIndex}>
-                        {line.split(/(\*\*.*?\*\*)/g).map((part, index) => {
-                            if (part.startsWith('**') && part.endsWith('**')) {
-                                return (
-                                    <strong key={index} style={{ color }}>
-                                        {part.slice(2, -2)}
-                                    </strong>
-                                );
-                            }
-                            return <span key={index} style={{ color }}>{part}</span>;
-                        })}
-                        {lineIndex < lines.length - 1 && <br />}
-                    </span>
-                ))}
-            </p>
-        );
-    });
 };
 
 const isGroupedControls = (
@@ -68,15 +35,15 @@ export function DetailPage({ id }: { id: string }) {
     const [isReady, setIsReady] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
     const { language } = useLanguage();
+    const portfolioData = usePortfolioData();
     const [project, setProject] = useState<(typeof portfolioData.projects)[number] | null>(null);
 
     useEffect(() => {
-        const data = language === "en" ? portfolioDataEn : portfolioData;
-        const foundProject = data.projects.find((p) => p.id === id) || null;
+        const foundProject = portfolioData.projects.find((p) => p.id === id) || null;
         setProject(foundProject);
 
         setIsReady(true);
-    }, [id, language]);
+    }, [id, portfolioData]);
     const colors = useThemeColors(true);
 
     if (!isReady) {

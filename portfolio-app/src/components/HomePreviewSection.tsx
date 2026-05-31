@@ -1,9 +1,6 @@
 "use client";
 
-import { portfolioData } from "@/data/portfolio-data";
-import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
-import { otherProjects } from "@/data/other_projects";
-import { otherProjects as otherProjectsEn } from "@/data/other_projects_en";
+import { usePortfolioData, useOtherProjects } from "@/data/index";
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
 import { ArrowRight } from "lucide-react";
@@ -13,10 +10,10 @@ import Link from "next/link";
 export function HomePreviewSection() {
   const { language } = useLanguage();
   const colors = useThemeColors(true);
-  const mainProjects = (language === "en" ? portfolioDataEn : portfolioData).projects.filter(
+  const mainProjects = usePortfolioData().projects.filter(
     (p) => p.id !== "coming-soon"
   );
-  const otherProjectsList = (language === "en" ? otherProjectsEn : otherProjects).projects.filter(
+  const otherProjectsList = useOtherProjects().projects.filter(
     (p) => p.id && p.id.trim() !== "" && p.id !== "coming-soon"
   );
   const allProjects = [...mainProjects, ...otherProjectsList];
