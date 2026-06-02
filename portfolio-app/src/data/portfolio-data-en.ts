@@ -4,7 +4,18 @@ export type ProjectImage = {
 };
 
 export type ProjectStat = {
-  icon: "Clock" | "Star" | "Code" | "Zap" | "Users" | "Target" | "DollarSign" | "Layers" | "Download" | "Eye" | "TrendingUp";
+  icon:
+    | "Clock"
+    | "Star"
+    | "Code"
+    | "Zap"
+    | "Users"
+    | "Target"
+    | "DollarSign"
+    | "Layers"
+    | "Download"
+    | "Eye"
+    | "TrendingUp";
   label: string;
   value: string;
 };
@@ -45,16 +56,16 @@ export type Project = {
 export const portfolioData = {
   personal: {
     firstName: "Leo",
-    role: "Software Developer (B.Sc. Software Engineering, focus on Games Engineering)",
+    role: "Software Developer (B.Sc. Software Engineering, GPA 2.1) with expertise in AI, automation, and clean code",
   },
   about: {
     title: "About Me",
     description: [
-      "I am a software developer with a successfully completed Bachelor of Science in Software Engineering (focus on Games Engineering) at Heilbronn University.",
-      "During my studies and in practical projects, I gained extensive experience in developing 2D and 3D games with Unity and C# as well as implementing web and desktop applications.",
-      "In the process I have worked intensively with clean code, refactoring and improving existing C# and .NET applications.",
-      "I place great value on structured ways of working, high-quality software and continuous development - both professionally and personally."
-    ]
+      "I am a software developer with a successfully completed Bachelor of Science in Software Engineering at Heilbronn University. I completed my thesis with a 1.0 grade, with an overall GPA of 2.1.",
+      "During my studies and in hands-on projects, I have gained experience across multiple domains: 2D and 3D game development with Unity and C#, web applications, desktop tools, and specialized tooling. For me, Unity is not just a game engine, but a versatile tool with applications across many industries.",
+      "I am particularly interested in artificial intelligence and its practical application in everyday workflows, as well as its integration into projects and apps. I am equally passionate about automation, whether through Python scripts, TypeScript tools for browsers, or other workflows that reduce repetitive tasks.",
+      "I take initiative, think critically, make decisions, and work independently. I spend much of my free time on projects that span planning, implementation, and research, continuously advancing my skills through hands-on work.",
+    ],
   },
   projects: [
     {
@@ -80,7 +91,14 @@ export const portfolioData = {
         "Python automation script for controlling long training runs and dynamic hyperparameters",
         "Evaluation of training runs with TensorBoard (rewards, losses, success rates)",
       ],
-      techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
+      techStack: [
+        "Unity",
+        "ML-Agents Toolkit",
+        "C#",
+        "Python",
+        "PPO",
+        "TensorBoard",
+      ],
       demoLink: "",
       demoImage: "",
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
@@ -95,15 +113,35 @@ export const portfolioData = {
       miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Layers", label: "Training levels", value: "13 levels + 1 generalization level" },
-        { icon: "Zap", label: "Parkour variants", value: "31 different parkours" },
-        { icon: "Target", label: "Success rate training levels", value: "approx. 92 %" },
-        { icon: "TrendingUp", label: "Success rate generalization level", value: "43-53 %" },
-        { icon: "Clock", label: "Total training time of all models", value: "711.17 hours" },
-        { icon: "Code", label: "Trained models", value: "approx. 88" },
-        { icon: "Users", label: "Development", value: "Solo project" },
+        {
+          icon: "Layers",
+          label: "Training levels",
+          value: "13 levels + 1 generalization level",
+        },
+        {
+          icon: "Layers",
+          label: "Parkour variants",
+          value: "31 different parkours",
+        },
+        {
+          icon: "Target",
+          label: "Success rate training levels",
+          value: "approx. 92 %",
+        },
+        {
+          icon: "Star",
+          label: "Success rate generalization level",
+          value: "43-53 %",
+        },
+        {
+          icon: "Clock",
+          label: "Total training time of all models",
+          value: "711.17 hours",
+        },
+        { icon: "Zap", label: "Trained models", value: "approx. 88" },
+        { icon: "Star", label: "Development", value: "Solo project" },
         { icon: "Award", label: "Grade", value: "1.0" },
-      ]
+      ],
     },
     {
       id: "play-mode-saver",
@@ -112,12 +150,20 @@ export const portfolioData = {
       description:
         "Unity Editor tool that captures and reapplies Play Mode changes to Edit Mode, so your iteration progress is not lost after testing.",
       longDescription:
-        "**Problem:** In professional **Unity** production workflows, important scene tweaks are often made during **Play Mode**, but Unity discards them when Play Mode ends. This repeatedly forces manual rework, slows iteration, and increases the risk of missing or inconsistent changes.\n\n**Solution:** Play Mode Changes Saver was built as a production-focused **Editor tool** that automatically snapshots scenes, tracks changes across **transforms**, all Unity components, custom components and scripts attached to GameObjects, materials, and names, and provides guided side-by-side review so only validated changes are applied back to Edit Mode. It includes inspector integration, multi-scene handling, undo/redo support, and robust object matching via **hybrid GUID+path identification** that remains stable across renames.\n\n**Result:** This is not just a prototype. It is a **production-ready product** published on the **Unity Asset Store**, demonstrating end-to-end delivery from problem analysis to a shipped solution that improves day-to-day developer and level-design workflows.\n\nMore information about the tool is available on the Unity Asset Store page.",
+        "**Problem:** In professional **Unity** production workflows, important scene tweaks are often made during **Play Mode**, but Unity discards them when Play Mode ends. This repeatedly forces manual rework, slows iteration, and increases the risk of missing or inconsistent changes.\n\n**Solution:** Play Mode Changes Saver was built as a production-focused **Editor tool** that automatically snapshots scenes, tracks changes across **transforms**, all Unity components, custom components and scripts attached to GameObjects, materials, and names, and provides guided side-by-side review so only validated changes are applied back to Edit Mode. It includes inspector integration, multi-scene handling, undo/redo support, and robust object matching via **hybrid GUID+path identification** that remains stable across renames.\n\n**Result:** This is not just a prototype. It is a **production-ready product** published on the **Unity Asset Store**, demonstrating end-to-end delivery from problem analysis to a shipped solution that improves day-to-day developer and level-design workflows.\n\nMore information about the tool is available on the Unity Asset Store page.\n\nAccess the asset on the Unity Asset Store.",
       image: "/Bilder/RuntimeSaver/TitleImage.jpg",
       images: [],
       detailComponent: "",
       videos: [],
-      tags: ["Unity","Published", "Editor Tool", "Game Development", "Play Mode", "C#", "Workflow"],
+      tags: [
+        "Unity",
+        "Published",
+        "Editor Tool",
+        "Game Development",
+        "Play Mode",
+        "C#",
+        "Workflow",
+      ],
       features: [
         "Automatic baseline snapshots on Play Mode entry",
         "Inspector integration with a dedicated overrides button",
@@ -130,9 +176,16 @@ export const portfolioData = {
         "Full undo/redo integration",
         "Granular property-level control",
         "Original value retention for full revert",
-        "Zero runtime overhead (editor-only)"
+        "Zero runtime overhead (editor-only)",
       ],
-      techStack: ["C#", "Unity Editor", "GlobalObjectId", "SerializedObject / SerializedProperty", "ScriptableObject", "EditorGUI"],
+      techStack: [
+        "C#",
+        "Unity Editor",
+        "GlobalObjectId",
+        "SerializedObject / SerializedProperty",
+        "ScriptableObject",
+        "EditorGUI",
+      ],
       demoLink: "",
       demoImage: "",
       demoDownload: "",
@@ -147,20 +200,26 @@ export const portfolioData = {
       miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Download",     label: "Sales",               value: "> 750" },
-        { icon: "Eye",          label: "Page Views",          value: "> 1,000" },
-        { icon: "TrendingUp",   label: "Conversion Rate",     value: "~71.33%" },
-        { icon: "Star",         label: "Average Rating",      value: "5/5 Stars" },
-        { icon: "DollarSign",        label: "Pricing",             value: "Free" },
-        { icon: "Zap",          label: "Runtime Overhead",    value: "None" },
-        { icon: "Target",       label: "Object Identification", value: "Hybrid GUID + Path" }
-      ]
+        { icon: "Download", label: "Sales", value: "> 750" },
+        { icon: "Eye", label: "Page Views", value: "> 1,000" },
+        { icon: "TrendingUp", label: "Conversion Rate", value: "~71.33%" },
+        { icon: "Star", label: "Average Rating", value: "5/5 Stars" },
+        { icon: "DollarSign", label: "Pricing", value: "Free" },
+        { icon: "Zap", label: "Runtime Overhead", value: "None" },
+        {
+          icon: "Target",
+          label: "Object Identification",
+          value: "Hybrid GUID + Path",
+        },
+      ],
     },
     {
       id: "food-check-scanner-app",
       title: "FoodCheck Scanner App",
-      subtitle: "Barcode scanner for ingredient analysis, NOVA classification & nutritional risk assessment",
-      description: "Privacy-first mobile app (Expo/React Native) that scans food barcodes, evaluates ingredients and additives against 683 health rules, and classifies processing levels — no proprietary backend, no tracking, no ads.",
+      subtitle:
+        "Barcode scanner for ingredient analysis, NOVA classification & nutritional risk assessment",
+      description:
+        "Privacy-first mobile app (Expo/React Native) that scans food barcodes, evaluates ingredients and additives against 683 health rules, and classifies processing levels — no proprietary backend, no tracking, no ads.",
       longDescription:
         "FoodCheck is a React Native (Expo) app that recognizes EAN-8/EAN-13 barcodes via the camera, caches product data locally in SQLite, and checks ingredients for health-related risk factors.\n\n" +
         "The app combines local SQLite persistence, on-device ML Kit OCR for ingredient scans, and lookups against the Open Food Facts API v2. It includes an extensive red-flag system with 683 seed rules across 19 categories (E-numbers, sweeteners, preservatives, emulsifiers, hydrogenated fats, phosphates, etc.), multilingual ingredient displays in 8 languages (de/en/fr/it/es/nl/pt/pl), and NOVA / Nutri-Score classification with color-coded traffic-light ratings. AI-powered insights from Robotoff complement the analysis with confidence-scored predictions for categories, labels, and ingredients.\n\n" +
@@ -168,29 +227,39 @@ export const portfolioData = {
         "Privacy is a core principle: there is no FoodCheck-owned server, no user accounts, no cloud sync, no tracking, and no ads. Personal data (favorites, filter rules, settings, API keys) stays exclusively on the device. Product data is fetched from the public Open Food Facts database and cached locally for fast re-access. Uploads to OFF are strictly opt-in and user-initiated.\n\n" +
         "The architecture is strictly layered (screens → store → domain → infrastructure), follows SOLID principles, and is fully typed in TypeScript strict mode. The app is currently not published in an app store; a later release is possible. Anyone can build it from source or download a build from the GitHub releases.",
       image: "/Bilder/FoodCheck/AppIcon.png",
-      images: [] as ProjectImage[], 
+      images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
-      tags: ["React Native", "Expo", "TypeScript", "Mobile App", "Food Tech", "Health", "Privacy", "OCR", "Open Food Facts"],
+      tags: [
+        "React Native",
+        "Expo",
+        "TypeScript",
+        "Mobile App",
+        "Food Tech",
+        "Health",
+        "Privacy",
+        "OCR",
+        "Open Food Facts",
+      ],
       features: [
-        "Instant camera scanning of EAN-8 / EAN-13 barcodes (expo-camera) with haptic feedback",
-        "Cache-first architecture: local SQLite database with 7-day stale detection for fast re-access",
+        "Real-time scanning of EAN-8/EAN-13 barcodes with haptic feedback",
+        "Cache-first architecture: local SQLite with intelligent 7-day stale detection",
         "Traffic-light product rating (Green/Yellow/Red) based on red flags + NOVA score",
-        "Red-flag detection: 683 seed rules in 19 categories (additives, sugars, hydrogenated fats, E-numbers, etc.)",
-        "Custom filter rules: user-defined ingredient keywords and nutrient thresholds with multi-language auto-translation",
+        "Risk assessment: 683 seed rules across 19 categories (additives, sugar, hydrogenated fats, E-numbers, etc.)",
+        "Custom filters: user-defined ingredient keywords and nutrient thresholds with multi-language auto-translation",
         "NOVA classification (1-4, unprocessed to ultra-processed) and Nutri-Score (A-E), both color-coded",
-        "On-device ML Kit OCR for ingredient lists and nutrition tables with language auto-detection",
-        "OFF Cloud Vision OCR fallback (Google Cloud Vision pipeline via OFF) with crop tool and result editing",
-        "Full product catalog with text search (SQLite LIKE), filter chips (OK/Warning/Critical), sorting, and swipe-to-delete",
-        "Favorites management with inline toggle from product detail and catalog",
-        "Product editing in 8 languages: OCR capture, manual text, auto-translation (DeepL / MyMemory), batch translate",
-        "Optional contribution to Open Food Facts (requires OFF account, stored in SecureStore)",
-        "Robotoff AI insights with confidence-bar visualization",
-        "Multi-language UI: German / English, runtime switch persisted in SecureStore",
-        "Swipeable product image gallery with local file caching (expo-file-system)",
+        "On-device ML Kit OCR for ingredient lists and nutrition tables with automatic language detection",
+        "Cloud Vision OCR fallback with crop tool and editing capability",
+        "Product catalog with text search, risk filters (OK/Warning/Critical), sorting, and swipe-to-delete",
+        "Favorites management with quick toggle from product detail and catalog",
+        "Product editing in 8 languages: OCR capture, manual input, auto-translation (DeepL/MyMemory), batch translate",
+        "Optional contribution to Open Food Facts (requires OFF account)",
+        "Robotoff AI insights with confidence visualization",
+        "Multi-language UI: German/English with runtime switching",
+        "Swipeable product image gallery with local file caching",
         "Backup & restore: full SQLite export/import as JSON via native share sheet",
         "Dark mode first design",
-        "No proprietary backend: no FoodCheck accounts, no cloud sync, no tracking, no ads — personal data never leaves the device"
+        "Privacy-by-design: no backend, no cloud sync, no tracking, no ads. Data stays on device",
       ],
       techStack: [
         "TypeScript 5.9 (strict)",
@@ -208,8 +277,9 @@ export const portfolioData = {
         "DeepL Free API + MyMemory (translation)",
         "SymSpell (spell correction for ingredient matching)",
         "ESLint 10 (flat config) + Prettier 3",
-        "Jest + jest-expo (23 suites, 265 tests)"
-      ],demoLink: "",
+        "Jest + jest-expo (23 suites, 265 tests)",
+      ],
+      demoLink: "",
       demoImage: "",
       demoDownload: "",
       githubUrl: "https://github.com/062Leo/FoodCheck-Scanner",
@@ -223,11 +293,23 @@ export const portfolioData = {
       miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Layers", label: "Seed rules", value: "683 rules in 19 categories" },
-        { icon: "Zap", label: "OCR", value: "On-device ML Kit + OFF Cloud Vision" },
-        { icon: "Code", label: "Tests", value: "23 suites, 265 tests" },
-        { icon: "Eye", label: "Privacy", value: "No own backend · No tracking · No ads" }
-      ]
+        {
+          icon: "Layers",
+          label: "Risk rules",
+          value: "683 seed rules in 19 categories",
+        },
+        {
+          icon: "Zap",
+          label: "OCR",
+          value: "On-device ML Kit + OFF Cloud Vision",
+        },
+        { icon: "Code", label: "Tests", value: "265 tests across 23 suites" },
+        {
+          icon: "Eye",
+          label: "Privacy",
+          value: "Decentralized · No tracking · Ad-free",
+        },
+      ],
     },
     {
       id: "song-voyage",
@@ -238,12 +320,20 @@ export const portfolioData = {
       longDescription:
         "**SongVoyage** is a fully client-side, platform-independent **Single Page Web Application (SPA)** for unbiased music discovery. The application strictly follows a **Zero-Backend philosophy**: all user data remains decentralized and exclusively in the user's browser.\n\n" +
         "The app randomly selects songs from the MusicBrainz archive (1900-2026) and plays the corresponding YouTube videos, without algorithmic pre-filtering and without the YouTube Data API (zero-quota through HTML scraping). Users rate songs with 0-5 stars, create playlists, and can block artists.\n\n" +
-        "Technically, SongVoyage is built with **Vue 3** (Composition API), **Pinia** for state management, and **Dexie.js** as an IndexedDB wrapper for local data storage. The **Dual-Player** with two YouTube IFrame instances enables gapless playback without noticeable delay.",
+        "Technically, SongVoyage is built with **Vue 3** (Composition API), **Pinia** for state management, and **Dexie.js** as an IndexedDB wrapper for local data storage. The **Dual-Player** with two YouTube IFrame instances enables gapless playback without noticeable delay.\n\n",
       image: "/Bilder/SongVoyage/Bild.png",
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
-      tags: ["Vue 3", "TypeScript", "SPA", "Zero-Backend", "IndexedDB", "MusicBrainz", "YouTube"],
+      tags: [
+        "Vue 3",
+        "TypeScript",
+        "SPA",
+        "Zero-Backend",
+        "IndexedDB",
+        "MusicBrainz",
+        "YouTube",
+      ],
       features: [
         "Random music discovery via MusicBrainz API — truly random selection across 126 years of music history",
         "YouTube video playback with gapless dual-player (two IFrame instances)",
@@ -254,9 +344,18 @@ export const portfolioData = {
         "Password protection with SHA-256 auto-login via URL parameter",
         "Fully client-side — no server data storage, no tracking, no cookies",
         "Zero-quota YouTube search via HTML scraping (no YouTube Data API)",
-        "No registration — runs anonymously in the browser"
+        "No registration — runs anonymously in the browser",
       ],
-      techStack: ["Vue 3", "TypeScript", "Pinia", "Dexie.js", "Vite", "Vitest", "Vercel", "MusicBrainz API v2"],
+      techStack: [
+        "Vue 3",
+        "TypeScript",
+        "Pinia",
+        "Dexie.js",
+        "Vite",
+        "Vitest",
+        "Vercel",
+        "MusicBrainz API v2",
+      ],
       demoLink: "",
       demoImage: "",
       demoDownload: "",
@@ -271,12 +370,24 @@ export const portfolioData = {
       miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Layers", label: "Architecture", value: "Zero-Backend · Client-Only SPA" },
-        { icon: "Zap", label: "Music sources", value: "MusicBrainz + YouTube (Zero-Quota Scraping)" },
-        { icon: "Code", label: "Concept", value: "True random selection · 126 years of music history" },
-        { icon: "Users", label: "Development", value: "Solo project" },
-        { icon: "Award", label: "Website password", value: "LeoDev2026" }
-      ]
+        {
+          icon: "Layers",
+          label: "Architecture",
+          value: "Zero-Backend · Client-Only SPA",
+        },
+        {
+          icon: "Zap",
+          label: "Music sources",
+          value: "MusicBrainz + YouTube (Zero-Quota Scraping)",
+        },
+        {
+          icon: "Code",
+          label: "Concept",
+          value: "True random selection · 126 years of music history",
+        },
+        { icon: "Star", label: "Development", value: "Solo project" },
+        { icon: "Award", label: "Website password", value: "LeoDev2026" },
+      ],
     },
     {
       id: "broforce-clone",
@@ -285,7 +396,7 @@ export const portfolioData = {
       description:
         "2D side-scrolling shooter with destructible environment, chain-reaction engine and physics-based explosion system.",
       longDescription:
-        "**BoomForce** was created as a project for the Game Engines course in my studies. I developed the prototype of a physics-based 2D side-scrolling shooter that focuses on **destructible environments** and **complex chain reactions**.\n\nThe game demonstrates advanced gameplay mechanics: a **sophisticated explosion system** calculates damage based on distance and object type. A **robust state management system** manages multiple simultaneous chain reactions without performance issues.\n\nPlayers interact with a dynamic world of **destructible blocks**, **falling rocks** and **different barrel types** - each with its own explosion radius and fire effects. The project demonstrates a deep understanding of **physics systems**, **event handling** and **optimization techniques**.\n\n More information and technical details can be found in the **README on GitHub**.",
+        "**BoomForce** was created as a project for the Game Engines course in my studies. I developed the prototype of a physics-based 2D side-scrolling shooter that focuses on **destructible environments** and **complex chain reactions**.\n\nThe game demonstrates advanced gameplay mechanics: a **sophisticated explosion system** calculates damage based on distance and object type. A **robust state management system** manages multiple simultaneous chain reactions without performance issues.\n\nPlayers interact with a dynamic world of **destructible blocks**, **falling rocks** and **different barrel types** - each with its own explosion radius and fire effects. The project demonstrates a deep understanding of **physics systems**, **event handling** and **optimization techniques**.\n\nMore information and technical details can be found in the **README on GitHub**.",
       image: "/Bilder/BoomForce/BoomForce.png",
       images: [] as ProjectImage[],
       detailComponent: "",
@@ -311,7 +422,13 @@ export const portfolioData = {
             "Complex chain reaction:\n Multiple barrels trigger each other and affect the surrounding blocks:\n\n Blocks in color categories:\n Instant destruction; burns and dies; burns and survives;\n (depending on the number and radius of the barrels that trigger the block) ",
         },
       ],
-      tags: ["Unity 2D", "Physics Engine", "Destructible Environment", "State Management", "C#"],
+      tags: [
+        "Unity 2D",
+        "Physics Engine",
+        "Destructible Environment",
+        "State Management",
+        "C#",
+      ],
       features: [
         "Tilemap-based grid system with destructible blocks",
         "Physics-based explosion system with radius calculation",
@@ -342,7 +459,7 @@ export const portfolioData = {
       misctext: "",
       miscimage: "",
       miscTitle: "",
-      stats: [{ icon: "Users", label: "Development", value: "Solo project" }],
+      stats: [{ icon: "Star", label: "Development", value: "Solo project" }],
     },
     {
       id: "prop-hunt",
@@ -356,7 +473,14 @@ export const portfolioData = {
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
-      tags: ["Unity 3D", "C#", "Netcode for GameObjects", "Online Multiplayer", "Survival Horror", "Prop Hunt"],
+      tags: [
+        "Unity 3D",
+        "C#",
+        "Netcode for GameObjects",
+        "Online Multiplayer",
+        "Survival Horror",
+        "Prop Hunt",
+      ],
       features: [
         "Asymmetric 4 vs 1 gameplay (4 survivors vs. 1 killer)",
         "Prop mechanic: transform into almost any object in the environment",
@@ -406,12 +530,20 @@ export const portfolioData = {
       miscimage: "/Bilder/HideAndHunt/Map.png",
       miscTitle: "The map:",
       stats: [
-        { icon: "Users", label: "Player roles", value: "1 killer, up to 4 survivors" },
-        { icon: "Target", label: "Game structure", value: "Asymmetric 4v1 setup" },
+        {
+          icon: "Users",
+          label: "Player roles",
+          value: "1 killer, up to 4 survivors",
+        },
+        {
+          icon: "Layers",
+          label: "Game structure",
+          value: "Asymmetric 4v1 setup",
+        },
         { icon: "Code", label: "Scope", value: "Complete gameplay prototype" },
-        { icon: "Users", label: "Development", value: "Solo project" },
-      ]
-    }
+        { icon: "Star", label: "Development", value: "Solo project" },
+      ],
+    },
     //,
     // {
     //   id: "coming-soon",
@@ -449,5 +581,5 @@ export const portfolioData = {
     //     { icon: "Clock", label: "Schedule", value: "Coming soon" }
     //   ]
     // }
-  ]
+  ],
 };

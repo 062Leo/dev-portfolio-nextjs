@@ -1,7 +1,13 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { Bot, Briefcase, ChartNoAxesCombined, Code, Workflow } from "lucide-react";
+import {
+  Bot,
+  Briefcase,
+  ChartNoAxesCombined,
+  Code,
+  Workflow,
+} from "lucide-react";
 import { usePortfolioData } from "@/data/index";
 import { useThemeColors, type ThemeColorSet } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
@@ -20,11 +26,15 @@ export function About() {
         >
           {language === "de" ? (
             <>
-              Über <span style={{ color: colors.aboutSectionAccentColor }}>mich</span>
+              Über{" "}
+              <span style={{ color: colors.aboutSectionAccentColor }}>
+                mich
+              </span>
             </>
           ) : (
             <>
-              About <span style={{ color: colors.aboutSectionAccentColor }}>Me</span>
+              About{" "}
+              <span style={{ color: colors.aboutSectionAccentColor }}>Me</span>
             </>
           )}
         </h2>
@@ -39,13 +49,13 @@ export function About() {
             }}
           >
             <h3 className="text-2xl font-semibold">
-              {language === "de" ? "Softwareentwickler mit Fokus auf Anwendungen, Tools & AI" : "Software Developer focused on applications, tools & AI"}
+              {language === "de"
+                ? "Softwareentwickler mit Fokus auf Anwendungen, Tools & AI"
+                : "Software Developer focused on applications, tools & AI"}
             </h3>
 
             {currentPortfolioData.about.description.map((paragraph, index) => (
-              <p key={index}>
-                {paragraph}
-              </p>
+              <p key={index}>{paragraph}</p>
             ))}
           </div>
 
@@ -53,22 +63,28 @@ export function About() {
             <InfoCard
               icon={<Code className="h-6 w-6" />}
               title={
-                language === "de" ? "Software Development" : "Software Development"
+                language === "de"
+                  ? "Software Development"
+                  : "Software Development"
               }
               description={
                 language === "de"
-                  ? "Entwicklung moderner Anwendungen - von Web-Frontends über Desktop- bis Backend-Lösungen - mit Fokus auf sauberer Architektur, wartbarem Code und praxisnaher Umsetzbarkeit."
-                  : "Development of modern applications - from web frontends to desktop and backend solutions - with a focus on clean architecture, maintainable code and practical delivery."
+                  ? "Entwicklung moderner Anwendungen von Web-Frontends über Desktop bis zu Backend-Lösungen mit Fokus auf sauberer Architektur, wartbarem Code und praxisnaher Umsetzbarkeit."
+                  : "Development of modern applications from web frontends to desktop and backend solutions with a focus on clean architecture, maintainable code and practical delivery."
               }
               colors={colors}
             />
             <InfoCard
               icon={<Workflow className="h-6 w-6" />}
-              title={language === "de" ? "Interactive Systems" : "Interactive Systems"}
+              title={
+                language === "de"
+                  ? "Interactive Systems"
+                  : "Interactive Systems"
+              }
               description={
                 language === "de"
-                  ? "Konzeption und Umsetzung interaktiver Systeme mit Unity und C# - von Spielen und Simulationen bis zu Anwendungen, in denen Echtzeit-Interaktion, Physik oder komplexe Abläufe gefragt sind."
-                  : "Concept and implementation of interactive systems with Unity and C# - from games and simulations to applications where real-time interaction, physics or complex workflows matter."
+                  ? "Konzeption und Umsetzung interaktiver Systeme mit Unity und C# von Spielen und Simulationen bis zu Anwendungen, in denen Echtzeit-Interaktion, Physik oder komplexe Abläufe gefragt sind."
+                  : "Concept and implementation of interactive systems with Unity and C# from games and simulations to applications where real-time interaction, physics or complex workflows matter."
               }
               colors={colors}
             />
@@ -77,14 +93,18 @@ export function About() {
               title={language === "de" ? "AI & Automation" : "AI & Automation"}
               description={
                 language === "de"
-                  ? "Großes Interesse an Künstlicher Intelligenz (KI), insbesondere ihrem produktiven Einsatz im Arbeitsalltag und dem sinnvollen Einbau in Projekte und Apps - kombiniert mit Automatisierung via Python, TypeScript oder Browser-Workflows."
-                  : "Strong interest in AI, its productive use in everyday work and its integration into projects and apps - combined with automation via Python, TypeScript or browser workflows."
+                  ? "Großes Interesse an Künstlicher Intelligenz (KI), insbesondere ihrem produktiven Einsatz im Arbeitsalltag und dem sinnvollen Einbau in Projekte und Apps, kombiniert mit Automatisierung via Python, TypeScript oder Browser-Workflows."
+                  : "Strong interest in AI, its productive use in everyday work and its integration into projects and apps, combined with automation via Python, TypeScript or browser workflows."
               }
               colors={colors}
             />
             <InfoCard
               icon={<ChartNoAxesCombined className="h-6 w-6" />}
-              title={language === "de" ? "Collaboration & Communication" : "Collaboration & Communication"}
+              title={
+                language === "de"
+                  ? "Collaboration & Communication"
+                  : "Collaboration & Communication"
+              }
               description={
                 language === "de"
                   ? "Zusammenarbeit in agilen Projekten mit klarer Kommunikation, strukturierter Abstimmung und einem verlässlichen Vorgehen von der Planung bis zur Umsetzung."
@@ -94,7 +114,11 @@ export function About() {
             />
             <InfoCard
               icon={<Briefcase className="h-6 w-6" />}
-              title={language === "de" ? "Ownership & Mindset" : "Ownership & Mindset"}
+              title={
+                language === "de"
+                  ? "Ownership & Mindset"
+                  : "Ownership & Mindset"
+              }
               description={
                 language === "de"
                   ? "Eigeninitiative, selbstständiges Arbeiten, aktives Mitdenken und die Bereitschaft, Entscheidungen zu treffen und sich durch Projekte und Recherche kontinuierlich weiterzuentwickeln."
@@ -137,10 +161,15 @@ function InfoCard({ icon, title, description, colors }: InfoCardProps) {
           {icon}
         </div>
         <div>
-          <h4 className="text-lg font-semibold" style={{ color: colors.aboutSectionTitleColor }}>
+          <h4
+            className="text-lg font-semibold"
+            style={{ color: colors.aboutSectionTitleColor }}
+          >
             {title}
           </h4>
-          <p style={{ color: colors.aboutSectionDescriptionText }}>{description}</p>
+          <p style={{ color: colors.aboutSectionDescriptionText }}>
+            {description}
+          </p>
         </div>
       </div>
     </div>
