@@ -222,6 +222,8 @@ export const portfolioData = {
       description:
         "Plattform, die eingehende Anfragen (E-Mail, Tickets, Webhooks, ...) als Cases führt. Eine KI schlägt die nächste Aktion vor, der Mensch entscheidet, ob sie ausgeführt wird. Jeder Schritt wird auditiert.",
       longDescription:
+        "Problem: Überall, wo eingehende Anfragen verarbeitet werden (Support, Kundenkommunikation, interne Aufgaben, Vereine, Projekte), läuft dasselbe Muster: Eine Nachricht kommt rein, jemand entscheidet, eine Folge-Aktion wird ausgelöst. An der Schnittstelle zwischen fachführenden Systemen (Systems of Record) und unstrukturierten Kundenanfragen ist die manuelle Sachbearbeitung ineffizient, fehleranfällig und kaum skalierbar. Klassische Backoffice-Prozesse haben dabei vier typische Schwachstellen: Kontext-Fragmentierung, weil Mitarbeiter Informationen aus vielen Systemen zusammensuchen müssen, Ineffizienz bei Routineaufgaben wie Antworten oder Systemaktionen, fehlende Revisionssicherheit durch Medienbrüche zwischen Systemen, und Kontrollverlust durch jede Form von Blindautomatisierung. Denn egal ob rein deterministisch (zu starr) oder rein KI-gesteuert (Halluzinationen): beides nimmt dem Menschen die Entscheidung, ohne sie verlässlich genug zurückzugeben.\n\n" +
+        "Lösung: ACMS greift jede dieser Schwachstellen einzeln auf. Der case-zentrierte Ansatz bündelt Daten, Nachrichten und Historien automatisch an einem Ort und löst die Kontext-Fragmentierung. KI-Agenten übernehmen das zeitaufwendige Analysieren, Strukturieren und Vorbereiten, geben aber nichts selbst aus. Statt Blindautomatisierung gilt ein natives Human-in-the-Loop-Prinzip: die KI schlägt vor, der Mensch gibt frei. Und weil alle Aktionen über definierte Capabilities laufen, entsteht ein lückenloser, auditierbarer Verlauf als Grundlage für Revisionssicherheit und Compliance.\n\n" +
         "ACMS ist die denkende, koordinierende Schicht zwischen Eingangskanälen, KI und Aussenwelt. Das System nimmt beliebige eingehende Anfragen (E-Mails, Tickets, Webhooks, Formulare, Chat, API-Calls, ...) entgegen, führt sie als strukturierte Cases, lässt eine KI Vorschläge für die nächste Aktion generieren und führt diese Aktionen am Ende über versionierte, auditierte Capabilities aus, niemals autonom, sondern erst nach expliziter Freigabe durch einen Menschen.\n\n" +
         "Architektur: ACMS trennt strikt in drei Rollen. **Ingress** (Channel-Adapter) nimmt Anfragen entgegen und normalisiert sie. **Brain** (KI) bekommt einen unveränderlichen Snapshot des Cases und entscheidet, was als nächstes passieren sollte, ohne direkten Zugriff auf Datenbank oder Aussenwelt, sie liefert nur JSON-Vorschläge. **Hands** (Capabilities) sind benannte, versionierte, auditierte Aktionen wie `send_email`, `query_database` oder `create_github_issue`, die niemals autonom laufen. Dazwischen sitzt der Mensch: Er sieht den KI-Vorschlag und hat mehrere explizite Optionen z.B. Approve / Edit / Reprompt / Reject / Resubmit.\n\n" +
         "Sicherheitsgrenze: Der AI-Service ist ein eigenständiger Microservice ohne Datenbank-Connection-String. Er bekommt nur über HTTP einen unveränderlichen Snapshot und liefert einen Vorschlag zurück. Das ist die explizite Grenze gegen Prompt-Injection: Selbst wenn die KI kompromittiert wird, kann sie nur Vorschläge machen, die der Mensch noch genehmigen muss.\n\n" +
@@ -229,7 +231,7 @@ export const portfolioData = {
         "Erweiterbarkeit: Neue Capabilities werden zur Laufzeit per `definition.json` + Executable registriert, ohne Code-Deploy. Eingehende Channels sind über ein `IInputChannel`-Interface frei konfigurierbar (E-Mail, Web-Formulare, REST-API, Chat, Ticket-Systeme, Webhooks, IoT). Das LLM ist über ein `ILlmClient`-Interface austauschbar, sodass allerlei Provider wie NVIDIA NIM, OpenAI, Anthropic, Azure OpenAI, lokale Modelle (Ollama, llama.cpp, vLLM) oder Multi-Provider-Setups möglich sind.\n\n" +
         "Datenmodell: Case-zentriert mit `Case`, `Message`, `ExtractedData`, `CapabilityResults`, `LatestProposal`, `ResubmitAt` / `ResubmitConditions` und einem append-only, unveränderlichen `AuditLog`. PostgreSQL mit `jsonb`-Spalten erlaubt ein mitwachsendes Schema ohne ständige Migrationen.\n\n" +
         "Engineering: strikte Schicht-Trennung (Domain / Infrastructure / API), Domain-Driven Design, Plugin-Architektur, SignalR-basierte Real-Time-Updates, Fire-and-Forget-Background-Tasks, vollständige Test-Pyramide (Vitest, pytest, xUnit) und reproduzierbares Docker-Compose-Setup mit Healthchecks für alle Services.",
-      image: "/Bilder/dummy.png",
+      image: "/Bilder/ACMS/cases_view.png",
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
@@ -242,15 +244,15 @@ export const portfolioData = {
         "In Entwicklung",
       ],
       features: [
-        "Kanal-agnostischer Eingang über ein einheitliches IInputChannel-Interface",
+        "Kanal-agnostischer Eingang über ein einheitliches IInputChannel-Interface, alle Daten, Nachrichten und Historien werden automatisch im Case gebündelt",
         "Case-zentriertes Datenmodell mit expliziter State Machine von 'neu' bis 'Resolved'",
         "Matching & Merge: System prüft bestehende Cases per Scoring mit Mismatch-Resolver auf Feldebene",
         "Phase-2-Planung mit Self-Check: KI prüft selbst, ob sie genug Infos hat oder erst eine Daten-Beschaffungs-Capability vorschlagen sollte",
-        "Human-in-the-Loop mit mehreren expliziten Optionen pro Vorschlag",
+        "Human-in-the-Loop mit mehreren expliziten Optionen pro Vorschlag, z.B. Approve / Edit / Reprompt / Reject / Resubmit, deterministische und KI-gestützte Aktionen bleiben dabei strikt getrennt",
         "Capability-Plugin-System: neue Aktionen werden zur Laufzeit per definition.json + Executable registriert, ohne Code-Deploy",
         "Versionierte, auditierte Capabilities mit strukturiertem Ergebnis",
         "Auto-Loop: nach reinen Daten-Beschaffungs-Capabilities springt das System automatisch zurück zur Planung",
-        "Append-only Audit-Log als unveränderliche Spur jeder Aktion (Actor, Event, Payload, Zeit)",
+        "Append-only Audit-Log als unveränderliche Spur jeder Aktion (Actor, Event, Payload, Zeit), medienbruchfrei vom Eingang bis zur ausgeführten Capability",
         "Sicherheitsgrenze: AI-Service als eigenständiger Microservice ohne Datenbank-Zugriff (Snapshot-Pattern)",
         "Provider-agnostisches LLM über ILlmClient-Interface, unterstützt allerlei Provider wie NVIDIA NIM, OpenAI, Anthropic, lokale Modelle oder Multi-Provider-Setups",
         "Real-Time-Updates via SignalR, abstrahiert hinter einem INotificationBus-Interface",
@@ -308,6 +310,11 @@ export const portfolioData = {
           icon: "Star",
           label: "Status",
           value: "In Entwicklung",
+        },
+        {
+          icon: "Target",
+          label: "Backoffice-Schwachstellen",
+          value: "4 abgedeckt (Kontext, Routine, Kontrolle, Revision)",
         },
       ],
     },
