@@ -647,8 +647,6 @@ export const portfolioData = {
       miscTitle: "",
       stats: [{ icon: "Star", label: "Development", value: "Solo project" }],
     },
-
-    ,
     {
       id: "coming-soon",
       title: "Coming soon",
