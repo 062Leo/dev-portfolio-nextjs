@@ -1,11 +1,18 @@
-
 export type ProjectImage = {
   url: string;
   caption?: string;
 };
 
 export type ProjectStat = {
-  icon: "Clock" | "Star" | "Code" | "Zap" | "Users" | "Target" | "Award" | "Layers";
+  icon:
+    | "Clock"
+    | "Star"
+    | "Code"
+    | "Zap"
+    | "Users"
+    | "Target"
+    | "Award"
+    | "Layers";
   label: string;
   value: string;
 };
@@ -44,7 +51,7 @@ export type Project = {
 
 export const otherProjects = {
   projects: [
-{
+    {
       id: "kryptodash",
       title: "KryptoDash",
       subtitle: "Zentrales Crypto-Dashboard mit Lern- und Tradingplattform",
@@ -56,20 +63,20 @@ export const otherProjects = {
       images: [
         {
           url: "/Bilder/KryptoDash/fakeWallet.png",
-          caption: "Fake-Wallet-Trading mit virtuellem Geld"
+          caption: "Fake-Wallet-Trading mit virtuellem Geld",
         },
         {
           url: "/Bilder/KryptoDash/wallet.png",
-          caption: "Wallet-Übersicht mit Kreisdiagramm der Assets"
+          caption: "Wallet-Übersicht mit Kreisdiagramm der Assets",
         },
         {
           url: "/Bilder/KryptoDash/fakeWalletSettings.png",
-          caption: "Einstellungen und Verwaltung der Fake-Wallet"
+          caption: "Einstellungen und Verwaltung der Fake-Wallet",
         },
         {
           url: "/Bilder/KryptoDash/quiz.png",
-          caption: "Learning-Plattform mit Quiz zu historischen Ereignissen"
-        }
+          caption: "Learning-Plattform mit Quiz zu historischen Ereignissen",
+        },
       ] as ProjectImage[],
       detailComponent: "",
       videos: [],
@@ -78,13 +85,13 @@ export const otherProjects = {
         "TradingView",
         "Lernplattform",
         "Fake-Wallet",
-        "API-Integration"
+        "API-Integration",
       ],
       features: [
         "Zentrale Übersicht über Krypto-Bestände und Kurse verschiedener Börsen",
         "Integration mehrerer Anbieter (z. B. Binance, KuCoin, Bitget, Coinbase) über API-Keys",
         "TradingView-Charts für interaktive Analysen von Krypto und Aktien mit Indikatoren",
-        "Lernplattform mit Quizzen und Fake-Wallet-Trading ohne Risiko"
+        "Lernplattform mit Quizzen und Fake-Wallet-Trading ohne Risiko",
       ],
       techStack: ["Angular", "TypeScript", "Django", "Python", "REST API"],
       demoLink: "",
@@ -101,59 +108,61 @@ export const otherProjects = {
         {
           icon: "Layers",
           label: "Architektur",
-          value: "Angular-Frontend & Django-Backend"
+          value: "Angular-Frontend & Django-Backend",
         },
         {
           icon: "Users",
           label: "Zielgruppe",
-          value: "Krypto-Enthusiasten und Trading-Einsteiger"
+          value: "Krypto-Enthusiasten und Trading-Einsteiger",
         },
         {
           icon: "Zap",
           label: "Funktionen",
-          value: "Live-Kurse, Wallet-Übersicht, Fake-Wallet & Coin-Exchange"
+          value: "Live-Kurse, Wallet-Übersicht, Fake-Wallet & Coin-Exchange",
         },
         {
           icon: "Star",
           label: "Entwicklung",
-          value: "2-Personen-Team"
-        }
-      ]
+          value: "2-Personen-Team",
+        },
+      ],
     },
     {
-          id: "game-of-life",
-          title: "Conway's Game of Life",
-          subtitle: "",
-          description: "Desktop-Anwendung zur Simulation von Conways Game of Life.",
-          longDescription:
-            "Eine interaktive Desktop-Anwendung für Conways Game of Life. Sie bietet einen freies Zeichen Modus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Canvasgrößen- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
-          image: "/Bilder/GameOfLife/GameOfLife.png",
-          images: [] as ProjectImage[],
-          detailComponent: "",
-          videos: [],
-          tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
-          features: [
-            "Freies Zeichnen und Prefab-Modus für Zellkonfigurationen",
-            "Umschaltbares Dark/Light Theme",
-            "Pinsel- und Canvasgrößen Zoom-Regler für präzises Editing",
-            "Anpassbare Simulationsgeschwindigkeit mit Start/Stopp-Steuerung"
-          ],
-          techStack: ["C#", ".NET", "WPF", "XAML"],
-          demoLink: "",
-          demoImage: "",
-          demoDownload: "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
-          githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
-          videoBig: "/Videos/Big/GameOfLife.mp4",
-          custom1Link: "",
-          custom1BTNText: "",
-          customLabel: "",
-          demotext: "",
-          demoControls: [],
-          misctext: "",
-          miscimage: "",
-          miscTitle: "",
-          stats: [{ icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" },]
-        },
+      id: "game-of-life",
+      title: "Conway's Game of Life",
+      subtitle: "",
+      description: "Desktop-Anwendung zur Simulation von Conways Game of Life.",
+      longDescription:
+        "Eine interaktive Desktop-Anwendung für Conways Game of Life. Sie bietet einen freies Zeichen Modus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Canvasgrößen- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
+      image: "/Bilder/GameOfLife/GameOfLife.png",
+      images: [] as ProjectImage[],
+      detailComponent: "",
+      videos: [],
+      tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
+      features: [
+        "Freies Zeichnen und Prefab-Modus für Zellkonfigurationen",
+        "Umschaltbares Dark/Light Theme",
+        "Pinsel- und Canvasgrößen Zoom-Regler für präzises Editing",
+        "Anpassbare Simulationsgeschwindigkeit mit Start/Stopp-Steuerung",
+      ],
+      techStack: ["C#", ".NET", "WPF", "XAML"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload:
+        "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
+      githubUrl:
+        "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
+      videoBig: "/Videos/Big/GameOfLife.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [{ icon: "Star", label: "Entwicklung", value: "Solo-Projekt" }],
+    },
     {
       id: "doom-mobility-prototype",
       title: "DOOM Movement Prototype",
@@ -180,7 +189,7 @@ export const otherProjects = {
         "Kleine und große Trampoline mit unterschiedlicher Sprunghöhe",
         "Powerup, das den Dash sofort wieder verfügbar macht",
         "Mehrere Spawnpoints und Tod beim Fallen aus der Map",
-        "Wall-Climbing nur in definierten Blickwinkeln für DOOM-typisches Movement"
+        "Wall-Climbing nur in definierten Blickwinkeln für DOOM-typisches Movement",
       ],
       techStack: ["Unity", "C#", "Netcode for GameObjects"],
       demoLink: "",
@@ -188,35 +197,33 @@ export const otherProjects = {
       demoDownload: "",
       githubUrl: "",
       videoBig: "/Videos/Big/Doom_Showcase.mp4",
-      demotext: "Kurzer Showcase des High-Mobility-Movements (Dashes, Trampoline, Wall-Climbing).",
+      demotext:
+        "Kurzer Showcase des High-Mobility-Movements (Dashes, Trampoline, Wall-Climbing).",
       demoControls: [],
-      misctext:
-        "",
+      misctext: "",
       miscimage: "",
       miscTitle: "",
       stats: [
         {
           icon: "Zap",
           label: "Fokus",
-          value: "High-Mobility-Movement und Networking"
+          value: "High-Mobility-Movement und Networking",
         },
         {
           icon: "Layers",
           label: "Genre",
-          value: "First-Person Movement Prototype"
+          value: "First-Person Movement Prototype",
         },
         {
           icon: "Clock",
           label: "Typ",
-          value: "Experimenteller Prototyp"
+          value: "Experimenteller Prototyp",
         },
-        { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" }
-      ]
+        { icon: "Star", label: "Entwicklung", value: "Solo-Projekt" },
+      ],
     },
 
-    
-    
-     {
+    {
       id: "arcanoid-3d",
       title: "Arcanoid 3D",
       subtitle: "",
@@ -228,13 +235,7 @@ export const otherProjects = {
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
-      tags: [
-        "Unity 3D",
-        "Arcanoid",
-        "Powerups",
-        "Score System",
-        "Prototype"
-      ],
+      tags: ["Unity 3D", "Arcanoid", "Powerups", "Score System", "Prototype"],
       features: [
         "Unterschiedliche Brick-Typen mit 1x, 2x oder 3x Treffern",
         "Powerups nach jeweils drei zerstörten Bricks",
@@ -243,7 +244,7 @@ export const otherProjects = {
         "Blaues Powerup: zwei Schüsse, die wie Balltreffer zählen",
         "Game-Over- und Won-Game-Screens mit Restart-Möglichkeit",
         "Score-System mit Punkten für Bricks und Abzug bei Lebensverlust",
-        "Anzeige von Leben und Powerup-Dauer auf der oberen Mauer mit Animation"
+        "Anzeige von Leben und Powerup-Dauer auf der oberen Mauer mit Animation",
       ],
       techStack: ["Unity", "C#"],
       demoLink: "",
@@ -261,26 +262,23 @@ export const otherProjects = {
         {
           icon: "Zap",
           label: "Fokus",
-          value: "Arcanoid-Gameplay mit Powerups und Score-System"
+          value: "Arcanoid-Gameplay mit Powerups und Score-System",
         },
         {
           icon: "Layers",
           label: "Genre",
-          value: "3D Brick-Breaker Prototype"
+          value: "3D Brick-Breaker Prototype",
         },
         {
           icon: "Clock",
           label: "Status",
-          value: "Fertiger Prototyp mit Restart-Logik"
+          value: "Fertiger Prototyp mit Restart-Logik",
         },
-        { icon: "Star",   label: "Entwicklung",      value: "Solo-Projekt" }
-      ]
+        { icon: "Star", label: "Entwicklung", value: "Solo-Projekt" },
+      ],
     },
 
-
-    
-    
-     {
+    {
       id: "smart-color-following-car",
       title: "Smart Color Following Car",
       subtitle: "",
@@ -297,15 +295,15 @@ export const otherProjects = {
         "Elegoo Smart Robot Car",
         "Pixy2 Kamera",
         "Autonomes Fahren",
-        "Farberkennung"
+        "Farberkennung",
       ],
       features: [
         "Autonomes Folgen eines farbigen Zielobjekts mittels Pixy2-Kamera",
         "Auswertung von Farbsignaturen zur Objekterkennung",
         "Steuerung eines Elegoo Smart Robot Car V3 über Arduino Uno",
-        "Kreative Workarounds bei Hardware-Problemen und Motorsteuerung"
+        "Kreative Workarounds bei Hardware-Problemen und Motorsteuerung",
       ],
-      techStack: [ "Arduino C++", "Pixy2", "Elegoo Smart Robot Car"],
+      techStack: ["Arduino C++", "Pixy2", "Elegoo Smart Robot Car"],
       demoLink: "",
       demoImage: "",
       demoDownload: "",
@@ -322,54 +320,40 @@ export const otherProjects = {
         {
           icon: "Layers",
           label: "Kategorie",
-          value: "Embedded / Robotik-Projekt"
+          value: "Embedded / Robotik-Projekt",
         },
         {
           icon: "Target",
           label: "Ziel",
-          value: "Autonomes Farbverfolgungsfahrzeug"
+          value: "Autonomes Farbverfolgungsfahrzeug",
         },
         {
           icon: "Clock",
           label: "Status",
-          value: "Funktionsfähiger Prototyp"
+          value: "Funktionsfähiger Prototyp",
         },
         {
           icon: "Star",
           label: "Entwicklung",
-          value: "Solo-Projekt"
-        }
-      ]
+          value: "Solo-Projekt",
+        },
+      ],
     },
-
-
-
-
-
-
-
-
-
-    
-     {
-      id: "",
-      title: "",
+    {
+      id: "coming-soon",
+      title: "Bald verfügbar",
       subtitle: "",
-      description: "",
+      description:
+        "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
       longDescription:
-        "",
-      image: "",
+        "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentieren.",
+      image: "/Bilder/dummy.png",
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
-      tags: ["", "", "", "", ""],
-      features: [
-        "",
-        "",
-        "",
-        ""
-      ],
-      techStack: ["", "", "", ""],
+      tags: ["Bald verfügbar", "Portfolio", "Mehr Projekte"],
+      features: ["Platzhalter für zukünftige Projekte", "In Vorbereitung"],
+      techStack: ["Noch geheim"],
       demoLink: "",
       demoImage: "",
       demoDownload: "",
@@ -380,77 +364,67 @@ export const otherProjects = {
       misctext: "",
       miscimage: "",
       miscTitle: "",
-      stats: []
-    },
-
-
-
-
-    {
-      id: "",
-      title: "2D Online Multiplayer Mobile Kartenspiel",
-      subtitle: "",
-      description: "Privatprojekt mit Unity, C# und Photon PUN 2 für Android.",
-      longDescription: "Ein 2D Online Multiplayer Kartenspiel für Mobile (Android), entwickelt als Privatprojekt. Es nutzt Photon PUN 2 für den Multiplayer-Part und bietet eine optimierte Mobile UI/UX.",
-      image: "/Bilder/dummy.png", // Placeholder
-      images: [],
-      detailComponent: "",
-      videos: [],
-      tags: ["Unity 2D", "Photon PUN 2", "Android", "Mobile"],
-      features: [
-        "Online Multiplayer",
-        "Android Build",
-        "Mobile UI/UX",
-        "Komplexe Kartenlogik"
+      stats: [
+        { icon: "Layers", label: "Kategorie", value: "Streng Geheim" },
+        { icon: "Clock", label: "Zeitplan", value: "Bald verfügbar" },
       ],
-      techStack: ["Unity", "C#", "Photon PUN 2"],
-      demoLink: "",
-      demoImage: "",
-      demoDownload: "",
-      githubUrl: "#",
-      youtubeLink: "",
-      demotext: "",
-      demoControls: [],
-      misctext: "",
-      miscimage: "",
-      miscTitle: "",
-      stats: []
     },
-    
-    
-    {
-          id: "coming-soon",
-          title: "Bald verfügbar",
-          subtitle: "",
-          description:
-            "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
-          longDescription:
-            "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentieren.",
-          image: "/Bilder/dummy.png",
-          images: [] as ProjectImage[],
-          detailComponent: "",
-          videos: [],
-          tags: ["Bald verfügbar", "Portfolio", "Mehr Projekte"],
-          features: [
-            "Platzhalter für zukünftige Projekte",
-            "In Vorbereitung"
-          ],
-          techStack: ["Noch geheim"],
-          demoLink: "",
-          demoImage: "",
-          demoDownload: "",
-          githubUrl: "",
-          videoBig: "",
-          demotext: "",
-          demoControls: [],
-          misctext: "",
-          miscimage: "",
-          miscTitle: "",
-          stats: [
-            { icon: "Layers", label: "Kategorie", value: "Streng Geheim" },
-            { icon: "Clock", label: "Zeitplan", value: "Bald verfügbar" }
-            
-          ]
-        }
-  ]
+
+    // {
+    //   id: "",
+    //   title: "",
+    //   subtitle: "",
+    //   description: "",
+    //   longDescription: "",
+    //   image: "",
+    //   images: [] as ProjectImage[],
+    //   detailComponent: "",
+    //   videos: [],
+    //   tags: ["", "", "", "", ""],
+    //   features: ["", "", "", ""],
+    //   techStack: ["", "", "", ""],
+    //   demoLink: "",
+    //   demoImage: "",
+    //   demoDownload: "",
+    //   githubUrl: "",
+    //   videoBig: "",
+    //   demotext: "",
+    //   demoControls: [],
+    //   misctext: "",
+    //   miscimage: "",
+    //   miscTitle: "",
+    //   stats: [],
+    // },
+    // {
+    //   id: "",
+    //   title: "2D Online Multiplayer Mobile Kartenspiel",
+    //   subtitle: "",
+    //   description: "Privatprojekt mit Unity, C# und Photon PUN 2 für Android.",
+    //   longDescription:
+    //     "Ein 2D Online Multiplayer Kartenspiel für Mobile (Android), entwickelt als Privatprojekt. Es nutzt Photon PUN 2 für den Multiplayer-Part und bietet eine optimierte Mobile UI/UX.",
+    //   image: "/Bilder/dummy.png", // Placeholder
+    //   images: [],
+    //   detailComponent: "",
+    //   videos: [],
+    //   tags: ["Unity 2D", "Photon PUN 2", "Android", "Mobile"],
+    //   features: [
+    //     "Online Multiplayer",
+    //     "Android Build",
+    //     "Mobile UI/UX",
+    //     "Komplexe Kartenlogik",
+    //   ],
+    //   techStack: ["Unity", "C#", "Photon PUN 2"],
+    //   demoLink: "",
+    //   demoImage: "",
+    //   demoDownload: "",
+    //   githubUrl: "#",
+    //   youtubeLink: "",
+    //   demotext: "",
+    //   demoControls: [],
+    //   misctext: "",
+    //   miscimage: "",
+    //   miscTitle: "",
+    //   stats: [],
+    // },
+  ],
 };
