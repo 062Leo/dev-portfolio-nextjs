@@ -229,7 +229,7 @@ export const portfolioData = {
         "Erweiterbarkeit: Neue Capabilities werden zur Laufzeit per `definition.json` + Executable registriert, ohne Code-Deploy. Eingehende Channels sind über ein `IInputChannel`-Interface frei konfigurierbar (E-Mail, Web-Formulare, REST-API, Chat, Ticket-Systeme, Webhooks, IoT). Das LLM ist über ein `ILlmClient`-Interface austauschbar, sodass allerlei Provider wie NVIDIA NIM, OpenAI, Anthropic, Azure OpenAI, lokale Modelle (Ollama, llama.cpp, vLLM) oder Multi-Provider-Setups möglich sind.\n\n" +
         "Datenmodell: Case-zentriert mit `Case`, `Message`, `ExtractedData`, `CapabilityResults`, `LatestProposal`, `ResubmitAt` / `ResubmitConditions` und einem append-only, unveränderlichen `AuditLog`. PostgreSQL mit `jsonb`-Spalten erlaubt ein mitwachsendes Schema ohne ständige Migrationen.\n\n" +
         "Engineering: strikte Schicht-Trennung (Domain / Infrastructure / API), Domain-Driven Design, Plugin-Architektur, SignalR-basierte Real-Time-Updates, Fire-and-Forget-Background-Tasks, vollständige Test-Pyramide (Vitest, pytest, xUnit) und reproduzierbares Docker-Compose-Setup mit Healthchecks für alle Services.",
-      image: "",
+      image: "/Bilder/dummy.png",
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
