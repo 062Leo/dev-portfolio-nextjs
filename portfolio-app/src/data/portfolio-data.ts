@@ -216,17 +216,17 @@ export const portfolioData = {
     },
     {
       id: "acms",
-      title: "ACMS – Agentic Case Management System",
+      title: "ACMS - Agentic Case Management System",
       subtitle:
-        "Offene Orchestrierungs-Plattform zwischen Eingangskanälen, KI und ausführbaren Capabilities (in Entwicklung)",
+        "Orchestrierungs-Plattform zwischen Eingangskanälen, KI und ausführbaren Capabilities (in Entwicklung)",
       description:
-        "Modulare, kanal- und provider-agnostische Plattform, die eingehende Anfragen als strukturierte Cases führt, einer KI Vorschläge für die nächste Aktion machen lässt, aber niemals autonom ausführt. Der Mensch genehmigt jeden Vorschlag explizit, bevor eine Capability läuft. Jeder Schritt wird auditiert.",
+        "Plattform, die eingehende Anfragen (E-Mail, Tickets, Webhooks, ...) als Cases führt. Eine KI schlägt die nächste Aktion vor, der Mensch entscheidet, ob sie ausgeführt wird. Jeder Schritt wird auditiert.",
       longDescription:
         "ACMS ist die denkende, koordinierende Schicht zwischen Eingangskanälen, KI und Aussenwelt. Das System nimmt beliebige eingehende Anfragen (E-Mails, Tickets, Webhooks, Formulare, Chat, API-Calls, ...) entgegen, führt sie als strukturierte Cases, lässt eine KI Vorschläge für die nächste Aktion generieren und führt diese Aktionen am Ende über versionierte, auditierte Capabilities aus, niemals autonom, sondern erst nach expliziter Freigabe durch einen Menschen.\n\n" +
         "Architektur: ACMS trennt strikt in drei Rollen. **Ingress** (Channel-Adapter) nimmt Anfragen entgegen und normalisiert sie. **Brain** (KI) bekommt einen unveränderlichen Snapshot des Cases und entscheidet, was als nächstes passieren sollte, ohne direkten Zugriff auf Datenbank oder Aussenwelt, sie liefert nur JSON-Vorschläge. **Hands** (Capabilities) sind benannte, versionierte, auditierte Aktionen wie `send_email`, `query_database` oder `create_github_issue`, die niemals autonom laufen. Dazwischen sitzt der Mensch: Er sieht den KI-Vorschlag und hat mehrere explizite Optionen z.B. Approve / Edit / Reprompt / Reject / Resubmit.\n\n" +
         "Sicherheitsgrenze: Der AI-Service ist ein eigenständiger Microservice ohne Datenbank-Connection-String. Er bekommt nur über HTTP einen unveränderlichen Snapshot und liefert einen Vorschlag zurück. Das ist die explizite Grenze gegen Prompt-Injection: Selbst wenn die KI kompromittiert wird, kann sie nur Vorschläge machen, die der Mensch noch genehmigen muss.\n\n" +
-        "End-to-End-Durchlauf: Jede Anfrage wird als Case geführt, egal aus welchem Channel. Phase 1: Die KI extrahiert strukturierte Felder (Name, IDs, Thema, Dringlichkeit, ...). Phase 2: Matching gegen bestehende Cases. Phase 3: Promote / Merge / Reject durch den Menschen. Phase 4: Die KI bekommt den vollständigen Snapshot (Extrahiertes, Capability-Historie, verfügbare Capabilities, Konversations-Historie, optionale Reprompt-Instruction) und schlägt konkrete Folge-Capabilities vor. Sie bekommt alle verfügbaren Capabilities vorgelegt und prüft per Self-Check selbst, ob sie genug Informationen hat, um z.B. direkt eine Antwortmail vorzuschlagen, oder ob sie als ersten Schritt eine Daten-Beschaffungs-Capability wie eine Datenbank-Abfrage vorschlagen sollte. Phase 5: Human-in-the-Loop. Phase 6: Execution. Phase 7: Auto-Loop, wenn nur Daten-Beschaffungs-Capabilities gelaufen sind, springt das System automatisch zurück zu Phase 4 und fragt die KI nach dem nächsten Schritt.\n\n" +
-        "Erweiterbarkeit: Neue Capabilities werden zur Laufzeit per `definition.json` + Executable registriert, ohne Code-Deploy. Eingehende Channels sind über ein `IInputChannel`-Interface frei konfigurierbar (E-Mail, Web-Formulare, REST-API, Chat, Ticket-Systeme, Webhooks, IoT). Das LLM ist über ein `ILlmClient`-Interface austauschbar, produktiv läuft NVIDIA NIM, möglich sind OpenAI, Anthropic, Azure OpenAI, lokale Modelle (Ollama, llama.cpp, vLLM) oder Multi-Provider-Setups.\n\n" +
+        "End-to-End-Durchlauf: Jede Anfrage wird als Case geführt, egal aus welchem Channel. Phase 1: Die KI extrahiert strukturierte Felder (Name, IDs, Thema, ...). Phase 2: Matching gegen bestehende Cases. Phase 3: Promote / Merge / Reject durch den Menschen. Phase 4: Die KI bekommt den vollständigen Snapshot (Extrahiertes, Capability-Historie, verfügbare Capabilities, Konversations-Historie, optionale Reprompt-Instruction) und schlägt konkrete Folge-Capabilities vor. Sie bekommt alle verfügbaren Capabilities vorgelegt und prüft per Self-Check selbst, ob sie genug Informationen hat, um z.B. direkt eine Antwortmail vorzuschlagen, oder ob sie als ersten Schritt eine Daten-Beschaffungs-Capability wie eine Datenbank-Abfrage vorschlagen sollte. Phase 5: Human-in-the-Loop. Phase 6: Execution. Phase 7: Auto-Loop, wenn nur Daten-Beschaffungs-Capabilities gelaufen sind, springt das System automatisch zurück zu Phase 4 und fragt die KI nach dem nächsten Schritt.\n\n" +
+        "Erweiterbarkeit: Neue Capabilities werden zur Laufzeit per `definition.json` + Executable registriert, ohne Code-Deploy. Eingehende Channels sind über ein `IInputChannel`-Interface frei konfigurierbar (E-Mail, Web-Formulare, REST-API, Chat, Ticket-Systeme, Webhooks, IoT). Das LLM ist über ein `ILlmClient`-Interface austauschbar, sodass allerlei Provider wie NVIDIA NIM, OpenAI, Anthropic, Azure OpenAI, lokale Modelle (Ollama, llama.cpp, vLLM) oder Multi-Provider-Setups möglich sind.\n\n" +
         "Datenmodell: Case-zentriert mit `Case`, `Message`, `ExtractedData`, `CapabilityResults`, `LatestProposal`, `ResubmitAt` / `ResubmitConditions` und einem append-only, unveränderlichen `AuditLog`. PostgreSQL mit `jsonb`-Spalten erlaubt ein mitwachsendes Schema ohne ständige Migrationen.\n\n" +
         "Engineering: strikte Schicht-Trennung (Domain / Infrastructure / API), Domain-Driven Design, Plugin-Architektur, SignalR-basierte Real-Time-Updates, Fire-and-Forget-Background-Tasks, vollständige Test-Pyramide (Vitest, pytest, xUnit) und reproduzierbares Docker-Compose-Setup mit Healthchecks für alle Services.",
       image: "",
@@ -235,31 +235,27 @@ export const portfolioData = {
       videos: [],
       tags: [
         "Agentic AI",
-        "Human-in-the-Loop",
-        "Case Management",
         "LLM-Integration",
         "Plugin-Architektur",
-        "Audit-Log",
         "Channel-agnostisch",
         "Provider-agnostisch",
         "In Entwicklung",
       ],
       features: [
-        "Kanal-agnostischer Eingang: einheitliches IInputChannel-Interface für E-Mail, Web-Formulare, REST-API, Chat, Ticket-Systeme, Webhooks und IoT-Daten",
-        "Case-zentriertes Datenmodell: jeder eingehende Vorgang wird von 'neu' bis 'Resolved' + optional 'Archived' durch eine explizite State Machine geführt",
-        "Phase-1-Extraktion: KI extrahiert strukturierte Felder (Name, IDs, Thema, Dringlichkeit, ...) und persistiert sie in Case.ExtractedData",
-        "Matching & Merge: System prüft bestehende Cases per Scoring, Mismatch-Resolver lässt den Menschen pro Feld entscheiden welche Version übernommen wird",
-        "Phase-2-Planung mit Self-Check: KI bekommt alle verfügbaren Capabilities vorgelegt und prüft selbst, ob sie genug Infos hat (z.B. für eine Antwortmail) oder ob sie dem Menschen als ersten Schritt eine Daten-Beschaffungs-Capability wie eine Datenbank-Abfrage vorschlagen sollte",
-        "Human-in-the-Loop mit fünf expliziten Optionen pro Vorschlag: Approve / Edit / Reprompt / Reject / Resubmit (Wiedervorlage)",
+        "Kanal-agnostischer Eingang über ein einheitliches IInputChannel-Interface",
+        "Case-zentriertes Datenmodell mit expliziter State Machine von 'neu' bis 'Resolved'",
+        "Matching & Merge: System prüft bestehende Cases per Scoring mit Mismatch-Resolver auf Feldebene",
+        "Phase-2-Planung mit Self-Check: KI prüft selbst, ob sie genug Infos hat oder erst eine Daten-Beschaffungs-Capability vorschlagen sollte",
+        "Human-in-the-Loop mit mehreren expliziten Optionen pro Vorschlag",
         "Capability-Plugin-System: neue Aktionen werden zur Laufzeit per definition.json + Executable registriert, ohne Code-Deploy",
-        "Versionierte, auditierte Capabilities: jede Aktion liefert ein strukturiertes Ergebnis (success, data, errorReason) und schreibt in den Audit-Log",
-        "Auto-Loop: nach reinen Daten-Beschaffungs-Capabilities springt das System automatisch zurück zur Planung und fragt die KI nach dem nächsten Schritt",
-        "Append-only Audit-Log: jede Aktion hinterlässt eine unveränderliche Spur (Actor, Event, Payload, Zeit) als Grundlage für Nachvollziehbarkeit und Compliance",
-        "Sicherheitsgrenze 'KI hat keinen Datenbank-Zugriff': AI-Service ist eigenständiger Microservice ohne Connection-String, bekommt nur unveränderliche Snapshots",
-        "Provider-agnostisches LLM: ILlmClient-Interface, produktiv NVIDIA NIM, austauschbar gegen OpenAI, Anthropic, Azure OpenAI, lokale Modelle oder Multi-Provider-Setups",
-        "Real-Time-Updates: SignalR-basierte Push-Notifications im Frontend, abstrahiert hinter einem INotificationBus-Interface",
-        "Resubmit / Wiedervorlage: Cases können mit Timer (ResubmitAt) und Bedingungen (ResubmitConditions) auf Wiedervorlage gesetzt werden",
-        "Rollen- und Rechtemanagement: Admin-Account richtet Mitarbeiter ein und vergibt pro Person, welche Capabilities sie nutzen dürfen",
+        "Versionierte, auditierte Capabilities mit strukturiertem Ergebnis",
+        "Auto-Loop: nach reinen Daten-Beschaffungs-Capabilities springt das System automatisch zurück zur Planung",
+        "Append-only Audit-Log als unveränderliche Spur jeder Aktion (Actor, Event, Payload, Zeit)",
+        "Sicherheitsgrenze: AI-Service als eigenständiger Microservice ohne Datenbank-Zugriff (Snapshot-Pattern)",
+        "Provider-agnostisches LLM über ILlmClient-Interface, unterstützt allerlei Provider wie NVIDIA NIM, OpenAI, Anthropic, lokale Modelle oder Multi-Provider-Setups",
+        "Real-Time-Updates via SignalR, abstrahiert hinter einem INotificationBus-Interface",
+        "Resubmit / Wiedervorlage mit Timer (ResubmitAt) und Bedingungen (ResubmitConditions)",
+        "Rollen- und Rechtemanagement: Admin-Account richtet Accounts und Gruppen ein (z.B. Admins, Seniors, Juniors) und vergibt Capabilities pro Person oder pro Gruppe (erlauben / verbieten)",
       ],
       techStack: [
         "Next.js 14 (App Router)",
@@ -294,11 +290,6 @@ export const portfolioData = {
           value: "3 strikt getrennte Rollen (Ingress / Brain / Hands)",
         },
         {
-          icon: "Target",
-          label: "Human-in-the-Loop",
-          value: "5 explizite Optionen pro KI-Vorschlag",
-        },
-        {
           icon: "Zap",
           label: "Eingangskanäle",
           value: "Kanal-agnostisch (E-Mail, API, Webhooks, Chat, ...)",
@@ -306,7 +297,7 @@ export const portfolioData = {
         {
           icon: "Code",
           label: "LLM-Provider",
-          value: "Provider-agnostisch (NVIDIA NIM als Default)",
+          value: "Provider-agnostisch",
         },
         {
           icon: "Users",
@@ -314,15 +305,9 @@ export const portfolioData = {
           value: "Offenes Plugin-System, zur Laufzeit erweiterbar",
         },
         {
-          icon: "Award",
-          label: "Sicherheitsgrenze",
-          value: "AI-Service ohne DB-Zugriff (Snapshot-Pattern)",
-        },
-        { icon: "Star", label: "Status", value: "In Entwicklung" },
-        {
-          icon: "Clock",
-          label: "Fokus",
-          value: "System (branchenübergreifend), nicht die Demo",
+          icon: "Star",
+          label: "Status",
+          value: "In Entwicklung",
         },
       ],
     },
@@ -503,78 +488,6 @@ export const portfolioData = {
       ],
     },
     {
-      id: "broforce-clone",
-      title: "BoomForce",
-      subtitle: "(Broforce Klon)",
-      description:
-        "2D-Side-Scrolling-Shooter mit zerstörbarer Umgebung, Kettenreaktions-Engine und physikbasiertem Explosionssystem.",
-      longDescription:
-        "**BoomForce** entstand als Projekt für den Game Engines-Kurs meines Studiums. Ich habe den Prototyp eines physikbasiertes 2D-Side-Scrolling-Shooters entwickelt, das sich auf **zerstörbare Umgebungen** und **komplexe Kettenreaktionen** konzentriert.\n\nDas Spiel demonstriert fortgeschrittene Spielmechaniken: Ein **ausgefeiltes Explosionssystem** berechnet Schäden basierend auf Nähe und Objekttyp. Ein **robustes State-Management** verwaltet mehrere gleichzeitige Kettenreaktionen ohne Performance-Probleme.\n\nSpieler interagieren mit einer dynamischen Welt aus **zerstörbaren Blöcken**, **fallenden Steinen** und **verschiedenen Fasstypen** - jedes mit eigenen Explosionsradien und Brandeffekten. Das Projekt zeigt tiefes Verständnis für **Physik-Systeme**, **Event-Handling** und **Optimierungstechniken**.\n\n Mehr Informationen und technische Details  im **README auf GitHub**.",
-      image: "/Bilder/BoomForce/BoomForce.png",
-      images: [] as ProjectImage[],
-      detailComponent: "",
-      videos: [
-        {
-          url: "/Videos/BoomForce/KettenReaktionen.mp4",
-          caption:
-            "Kettenreaktion in Aktion:\n Mehrere Explosionen lösen sich gegenseitig aus und erzeugen eine Kaskade von Zerstörung.",
-        },
-        {
-          url: "/Videos/BoomForce/Steine.mp4",
-          caption:
-            "Fallende Steine:\n\n Auslösebedingungen:\nTreffer durch Kugeln; Feuerkontakt; Kollision mit Spieler;\n\n Verhalten:\n Fällt, wenn nichts drunter ist; Fällt, wenn nur ein Nachber-Block vorhanden ist.",
-        },
-        {
-          url: "/Videos/BoomForce/Radius2.mp4",
-          caption:
-            "Explosionsradius eines Fasses:\n Radius = 2 Kacheln.\n Innere Kachel: Sofortige Zerstörung. \n Äußere Kacheln: 4s Brandeffekt.",
-        },
-        {
-          url: "/Videos/BoomForce/radius.mp4",
-          caption:
-            "Komplexe Kettenreaktion:\n Mehrere Fässer triggern sich gegenseitig und beeinflussen die Umliegenden Blöcke:\n\n Blöcke in Farb-Kategorien:\n Sofortige Zerstörung; Brennt und stirbt; Brennt und bleibt am leben;\n (je nach Anzahl und Radius der Fässer die den Block triggern) ",
-        },
-      ],
-      tags: [
-        "Unity 2D",
-        "Physics Engine",
-        "Destructible Environment",
-        "State Management",
-        "C#",
-      ],
-      features: [
-        "Tilemap-basiertes Grid-System mit zerstörbaren Blöcken",
-        "Physikbasiertes Explosionssystem mit Radiusberechnung",
-        "Kettenreaktions-Engine mit Zustandsverfolgung",
-        "Mehrere Fasstypen (Schwarz, Rot, Fliegend) mit unterschiedlichem Verhalten und Zündzeiten",
-        "Brandausbreitungs-Mechanik mit Zeitsteuerung",
-        "Robustes Input-Handling und Spieler-Steuerung",
-        "Dynamische Objektzerstörung und Speicheroptimierung",
-      ],
-      techStack: ["Unity", "C#", "Physics2D", "Tilemap System"],
-      demoLink: "https://062leo.itch.io/boomforce",
-      demoImage: "/Bilder/BoomForce/demo.png",
-      demoDownload: "",
-      githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
-      videoBig: "/Videos/Big/BroforceShowcase.mp4",
-      custom1Link: "",
-      custom1BTNText: "",
-      customLabel: "",
-      demotext:
-        "**Hinweis zur Demo:** Zu Beginn siehst du alle Objekttypen. Gehe durch das blaue Portal, um in den Testbereich teleportiert zu werden, in dem du das Verhalten der einzelnen Objekte ausprobieren kannst. Läufst du anschließend weiter nach rechts, gelangst du nach dem Testbereich zu einem weiteren Portal, das dich ins Demolevel bringt. Alternativ kannst du auch einfach nach unten springen, falls du das Portal nicht erreichst. \n\n PS: Auf den fliegenden Fässern kannst du mitreiten, indem du dich auf sie stellst, nachdem du sie mit einem Schuss aktiviert hast.",
-      demoControls: [
-        "Links/Rechts: A/D oder Pfeiltasten ⬅️➡️",
-        "Leitern: W/S oder Pfeiltasten ⬆️⬇️",
-        "Springen: Leertaste",
-        "Schießen: Linke Maustaste",
-        "Menü öffnen: Tab",
-      ],
-      misctext: "",
-      miscimage: "",
-      miscTitle: "",
-      stats: [{ icon: "Star", label: "Entwicklung", value: "Solo-Projekt" }],
-    },
-    {
       id: "prop-hunt",
       title: "Hide'n Hunt",
       subtitle: "",
@@ -662,67 +575,136 @@ export const portfolioData = {
       ],
     },
     {
-      id: "",
-      title: "dummy",
-      subtitle: "",
-      description: "",
-      longDescription: "",
-      image: "",
+      id: "broforce-clone",
+      title: "BoomForce",
+      subtitle: "(Broforce Klon)",
+      description:
+        "2D-Side-Scrolling-Shooter mit zerstörbarer Umgebung, Kettenreaktions-Engine und physikbasiertem Explosionssystem.",
+      longDescription:
+        "**BoomForce** entstand als Projekt für den Game Engines-Kurs meines Studiums. Ich habe den Prototyp eines physikbasiertes 2D-Side-Scrolling-Shooters entwickelt, das sich auf **zerstörbare Umgebungen** und **komplexe Kettenreaktionen** konzentriert.\n\nDas Spiel demonstriert fortgeschrittene Spielmechaniken: Ein **ausgefeiltes Explosionssystem** berechnet Schäden basierend auf Nähe und Objekttyp. Ein **robustes State-Management** verwaltet mehrere gleichzeitige Kettenreaktionen ohne Performance-Probleme.\n\nSpieler interagieren mit einer dynamischen Welt aus **zerstörbaren Blöcken**, **fallenden Steinen** und **verschiedenen Fasstypen** - jedes mit eigenen Explosionsradien und Brandeffekten. Das Projekt zeigt tiefes Verständnis für **Physik-Systeme**, **Event-Handling** und **Optimierungstechniken**.\n\n Mehr Informationen und technische Details  im **README auf GitHub**.",
+      image: "/Bilder/BoomForce/BoomForce.png",
       images: [] as ProjectImage[],
       detailComponent: "",
-      videos: [],
-      tags: ["", "", "", "", ""],
-      features: ["", "", "", ""],
-      techStack: ["", "", "", ""],
-      demoLink: "",
-      demoImage: "",
+      videos: [
+        {
+          url: "/Videos/BoomForce/KettenReaktionen.mp4",
+          caption:
+            "Kettenreaktion in Aktion:\n Mehrere Explosionen lösen sich gegenseitig aus und erzeugen eine Kaskade von Zerstörung.",
+        },
+        {
+          url: "/Videos/BoomForce/Steine.mp4",
+          caption:
+            "Fallende Steine:\n\n Auslösebedingungen:\nTreffer durch Kugeln; Feuerkontakt; Kollision mit Spieler;\n\n Verhalten:\n Fällt, wenn nichts drunter ist; Fällt, wenn nur ein Nachber-Block vorhanden ist.",
+        },
+        {
+          url: "/Videos/BoomForce/Radius2.mp4",
+          caption:
+            "Explosionsradius eines Fasses:\n Radius = 2 Kacheln.\n Innere Kachel: Sofortige Zerstörung. \n Äußere Kacheln: 4s Brandeffekt.",
+        },
+        {
+          url: "/Videos/BoomForce/radius.mp4",
+          caption:
+            "Komplexe Kettenreaktion:\n Mehrere Fässer triggern sich gegenseitig und beeinflussen die Umliegenden Blöcke:\n\n Blöcke in Farb-Kategorien:\n Sofortige Zerstörung; Brennt und stirbt; Brennt und bleibt am leben;\n (je nach Anzahl und Radius der Fässer die den Block triggern) ",
+        },
+      ],
+      tags: [
+        "Unity 2D",
+        "Physics Engine",
+        "Destructible Environment",
+        "State Management",
+        "C#",
+      ],
+      features: [
+        "Tilemap-basiertes Grid-System mit zerstörbaren Blöcken",
+        "Physikbasiertes Explosionssystem mit Radiusberechnung",
+        "Kettenreaktions-Engine mit Zustandsverfolgung",
+        "Mehrere Fasstypen (Schwarz, Rot, Fliegend) mit unterschiedlichem Verhalten und Zündzeiten",
+        "Brandausbreitungs-Mechanik mit Zeitsteuerung",
+        "Robustes Input-Handling und Spieler-Steuerung",
+        "Dynamische Objektzerstörung und Speicheroptimierung",
+      ],
+      techStack: ["Unity", "C#", "Physics2D", "Tilemap System"],
+      demoLink: "https://062leo.itch.io/boomforce",
+      demoImage: "/Bilder/BoomForce/demo.png",
       demoDownload: "",
-      githubUrl: "",
-      videoBig: "",
-      demotext: "",
-      demoControls: [],
+      githubUrl: "https://github.com/LeosGmbH/BoomForce-BroforceClone",
+      videoBig: "/Videos/Big/BroforceShowcase.mp4",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
+      demotext:
+        "**Hinweis zur Demo:** Zu Beginn siehst du alle Objekttypen. Gehe durch das blaue Portal, um in den Testbereich teleportiert zu werden, in dem du das Verhalten der einzelnen Objekte ausprobieren kannst. Läufst du anschließend weiter nach rechts, gelangst du nach dem Testbereich zu einem weiteren Portal, das dich ins Demolevel bringt. Alternativ kannst du auch einfach nach unten springen, falls du das Portal nicht erreichst. \n\n PS: Auf den fliegenden Fässern kannst du mitreiten, indem du dich auf sie stellst, nachdem du sie mit einem Schuss aktiviert hast.",
+      demoControls: [
+        "Links/Rechts: A/D oder Pfeiltasten ⬅️➡️",
+        "Leitern: W/S oder Pfeiltasten ⬆️⬇️",
+        "Springen: Leertaste",
+        "Schießen: Linke Maustaste",
+        "Menü öffnen: Tab",
+      ],
       misctext: "",
       miscimage: "",
       miscTitle: "",
-      stats: [],
+      stats: [{ icon: "Star", label: "Entwicklung", value: "Solo-Projekt" }],
     },
-    // ,
+
     // {
-    //   id: "coming-soon",
-    //   title: "Bald verfügbar",
+    //   id: "",
+    //   title: "",
     //   subtitle: "",
-    //   description:
-    //     "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
-    //   longDescription:
-    //     "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentiert.",
-    //   image: "/Bilder/dummy.png",
+    //   description: "",
+    //   longDescription: "",
+    //   image: "",
     //   images: [] as ProjectImage[],
     //   detailComponent: "",
     //   videos: [],
-    //   tags: ["Bald verfügbar", "Portfolio", "Mehr Projekte"],
-    //   features: [
-    //     "Platzhalter für zukünftige Projekte",
-    //     "In Vorbereitung"
-    //   ],
-    //   techStack: ["Noch geheim"],
+    //   tags: ["", "", "", "", ""],
+    //   features: ["", "", "", ""],
+    //   techStack: ["", "", "", ""],
     //   demoLink: "",
     //   demoImage: "",
     //   demoDownload: "",
     //   githubUrl: "",
     //   videoBig: "",
-    //   custom1Link: "",
-    //   custom1BTNText: "",
-    //   customLabel: "",
     //   demotext: "",
     //   demoControls: [],
     //   misctext: "",
     //   miscimage: "",
     //   miscTitle: "",
-    //   stats: [
-    //     { icon: "Layers", label: "Kategorie", value: "Streng Geheim" },
-    //     { icon: "Clock", label: "Zeitplan", value: "Bald verfügbar" }
-
-    //   ]
-    // }
+    //   stats: [],
+    // },
+    // ,
+    {
+      id: "coming-soon",
+      title: "Bald verfügbar",
+      subtitle: "",
+      description:
+        "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
+      longDescription:
+        "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentiert.",
+      image: "/Bilder/dummy.png",
+      images: [] as ProjectImage[],
+      detailComponent: "",
+      videos: [],
+      tags: ["Bald verfügbar", "Portfolio", "Mehr Projekte"],
+      features: ["Platzhalter für zukünftige Projekte", "In Vorbereitung"],
+      techStack: ["Noch geheim"],
+      demoLink: "",
+      demoImage: "",
+      demoDownload: "",
+      githubUrl: "",
+      videoBig: "",
+      custom1Link: "",
+      custom1BTNText: "",
+      customLabel: "",
+      demotext: "",
+      demoControls: [],
+      misctext: "",
+      miscimage: "",
+      miscTitle: "",
+      stats: [
+        { icon: "Layers", label: "Kategorie", value: "Streng Geheim" },
+        { icon: "Clock", label: "Zeitplan", value: "Bald verfügbar" },
+      ],
+    },
   ],
 };
