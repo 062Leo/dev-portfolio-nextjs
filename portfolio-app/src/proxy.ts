@@ -1,49 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
-
-function toHex(buffer: ArrayBuffer): string {
-  return Array.from(new Uint8Array(buffer))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-async function getExpectedHash(): Promise<string | null> {
-  const password = process.env.SITE_PASSWORD;
-  if (!password) return null;
-  const encoder = new TextEncoder();
-  const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(password));
-  return toHex(hashBuffer);
-}
+import {
+  AUTH_COOKIE_NAME,
+  authCookieOptions,
+  createAuthToken,
+  isValidAuthCookie,
+  readAuthEnv,
+  verifyPassword,
+  wrongPasswordDelay,
+} from "@/lib/auth";
 
 export async function proxy(request: NextRequest) {
-  const expectedHash = await getExpectedHash();
-  if (!expectedHash) return NextResponse.next();
+  if (!readAuthEnv()) return NextResponse.next();
 
-  const { pathname } = request.nextUrl;
-
-  if (pathname.match(/\.\w{2,6}$/)) {
-    return NextResponse.next();
-  }
-
-  const cookie = request.cookies.get("site-auth")?.value;
-  if (cookie === expectedHash) return NextResponse.next();
+  const cookie = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+  if (await isValidAuthCookie(cookie)) return NextResponse.next();
 
   const key = request.nextUrl.searchParams.get("key");
-  if (key === process.env.SITE_PASSWORD) {
-    const response = NextResponse.next();
-    response.cookies.set("site-auth", expectedHash, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 30,
-    });
-    return response;
+  if (key !== null) {
+    if (await verifyPassword(key)) {
+      // Redirect to the same URL without the key, so the password neither stays in the
+      // address bar nor lands in the browser history.
+      const cleanUrl = new URL(request.url);
+      cleanUrl.searchParams.delete("key");
+      const response = NextResponse.redirect(cleanUrl, 303);
+      response.cookies.set(AUTH_COOKIE_NAME, await createAuthToken(), authCookieOptions());
+      return response;
+    }
+    await wrongPasswordDelay();
   }
 
-  const loginUrl = new URL("/login", request.url);
-  return NextResponse.redirect(loginUrl);
+  return NextResponse.redirect(new URL("/login", request.url));
 }
 
+// Everything is protected, including /_next/image (the image optimizer would otherwise
+// serve every file under public/ without the password) and every file under public/.
+// Exclusions: framework chunks, the login page, the favicon, the UI icons and the fonts
+// that globals.css loads on the login page.
 export const config = {
-  matcher: ["/((?!_next|api|login).*)"],
+  matcher: ["/((?!_next/static|_next/data|login|favicon\\.ico|Icons/|fonts/).*)"],
 };

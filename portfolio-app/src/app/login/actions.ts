@@ -2,25 +2,24 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { createHash } from "crypto";
+import {
+  AUTH_COOKIE_NAME,
+  authCookieOptions,
+  createAuthToken,
+  verifyPassword,
+  wrongPasswordDelay,
+} from "@/lib/auth";
 
 export async function authenticate(_prevState: { error: string | null }, formData: FormData) {
-  const password = formData.get("password") as string;
+  const password = formData.get("password");
 
-  if (!password || password !== process.env.SITE_PASSWORD) {
+  if (typeof password !== "string" || !(await verifyPassword(password))) {
+    await wrongPasswordDelay();
     return { error: "Invalid password" };
   }
 
-  const hash = createHash("sha256").update(password).digest("hex");
-
   const cookieStore = await cookies();
-  cookieStore.set("site-auth", hash, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30,
-  });
+  cookieStore.set(AUTH_COOKIE_NAME, await createAuthToken(), authCookieOptions());
 
   redirect("/");
 }

@@ -48,3 +48,35 @@ for (const path of PAGES) {
     });
   });
 }
+
+// Images and videos under public/ are behind the password like every page (issue #76).
+const MEDIA = ["/Bilder/Arcanoid/arcanoid.png", "/Videos/Big/Arcanoid.mp4"];
+
+test.describe("media", () => {
+  test("is served with a session", async ({ request }) => {
+    for (const path of MEDIA) {
+      const response = await request.get(path);
+      expect(response.status(), path).toBe(200);
+    }
+  });
+
+  test("redirects to /login without a session", async ({ playwright, baseURL }) => {
+    // A context created here inherits the project's storageState, so the session is
+    // removed explicitly.
+    const anonymous = await playwright.request.newContext({
+      baseURL,
+      storageState: { cookies: [], origins: [] },
+    });
+    try {
+      for (const path of MEDIA) {
+        const response = await anonymous.get(path, { maxRedirects: 0 });
+        expect([302, 303, 307], path).toContain(response.status());
+        expect(new URL(response.headers()["location"], response.url()).pathname, path).toBe(
+          "/login",
+        );
+      }
+    } finally {
+      await anonymous.dispose();
+    }
+  });
+});

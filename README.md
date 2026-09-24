@@ -38,13 +38,19 @@ Die Website ist per Middleware (`proxy.ts`) passwortgeschützt. Besucher ohne g�
 
 ### Konfiguration
 
-Das Passwort wird über die Umgebungsvariable `SITE_PASSWORD` in `.env.local` gesetzt:
+Das Passwort und der Cookie-Schlüssel werden über Umgebungsvariablen in `.env.local` gesetzt:
 
 ```
 SITE_PASSWORD=dein-passwort
+AUTH_SECRET=zufaelliger-string
+AUTH_VERSION=1
 ```
 
-Ohne diese Variable ist der Schutz deaktiviert.
+- `SITE_PASSWORD`: das Passwort. Ohne diese Variable ist der Schutz deaktiviert.
+- `AUTH_SECRET`: zufälliger String (z. B. `openssl rand -hex 32`), mit dem der Auth-Cookie signiert wird. In Produktion Pflicht; fehlt er, wird ersatzweise das Passwort als Schlüssel verwendet, dann lässt sich der Cookie aus dem Passwort allein ableiten.
+- `AUTH_VERSION`: optional, Standard `1`. Wert erhöhen, um alle Besucher auf einmal auszuloggen.
+
+Der Cookie gilt 7 Tage. Bilder und Videos liegen ebenfalls hinter dem Passwort; nur `/login`, die Schriften und Icons sind frei erreichbar.
 
 ### Login per URL-Parameter überspringen
 
