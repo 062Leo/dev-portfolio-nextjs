@@ -61,3 +61,8 @@ OpendesignDoc.md
 /graphify-out
 /portfolio-app/graphify-out
 /NewProject
+
+# local-only working files (never pushed)
+CLAUDE.md
+/quality/
+/.claude/
