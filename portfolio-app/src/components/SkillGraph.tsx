@@ -41,7 +41,7 @@ interface SimLink extends SimulationLinkDatum<SimNode> {
 //  DATA FLATTENING  (skills.json has 3‑level structure; we flatten to 2 levels)
 // ══════════════════════════════════════════════════════════════════════════════
 
-function flattenSkillsData(data: SkillsDataNested): Record<string, Record<string, number>> {
+export function flattenSkillsData(data: SkillsDataNested): Record<string, Record<string, number>> {
   const result: Record<string, Record<string, number>> = {};
   for (const [category, nodes] of Object.entries(data)) {
     const flattened: Record<string, number> = {};

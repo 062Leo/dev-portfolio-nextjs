@@ -8,8 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
-    "check": "npm run lint -- --max-warnings 0 && tsc --noEmit && prettier --check . && npm run build && npm audit --omit=dev --audit-level=high",
-    "knip": "knip"
+    "check": "npm run lint -- --max-warnings 0 && tsc --noEmit && npm test && prettier --check . && npm run build && npm audit --omit=dev --audit-level=high",
+    "knip": "knip",
+    "test": "vitest run",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -21,6 +23,7 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/d3-force": "^3.0.10",
     "@types/node": "20.19.25",
@@ -34,6 +37,7 @@
     "postcss": "^8.5.6",
     "prettier": "^3.9.9",
     "tailwindcss": "^4.1.17",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "^3.2.7"
   }
 }
