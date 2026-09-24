@@ -585,7 +585,9 @@ export function SkillGraph() {
   const cleanupRef = useRef<(() => void) | null>(null);
   const simRef = useRef<Simulation<SimNode, SimLink> | null>(null);
   const ropeTargetsRef = useRef<Map<number, RopeTarget>>(new Map());
-  const ropeColorMapRef = useRef<Map<number, string>>(new Map());
+  // One Map for the whole lifetime: pricetags fill it through the ref, WobblyRopes reads it.
+  const [ropeColorMap] = useState(() => new Map<number, string>());
+  const ropeColorMapRef = useRef(ropeColorMap);
 
   // filter: null = all nodes, Set<number> = only these ratings
   const filterRatingsRef = useRef<Set<number> | null>(null);
@@ -1420,7 +1422,7 @@ export function SkillGraph() {
       lastMoveY = py;
     }
 
-    function onPointerUp(_e: PointerEvent) {
+    function onPointerUp() {
       if (dragNode) {
         dragNode.fx = null;
         dragNode.fy = null;
@@ -1517,6 +1519,10 @@ export function SkillGraph() {
       svgEl.removeEventListener("dblclick", onDblClick);
       window.removeEventListener("pointerup", onPointerUp);
     };
+    // tooltipContent is deliberately not a dependency: adding it would rebuild the whole
+    // graph on every hover. Known limitation: onPointerUp sees the tooltipContent of the
+    // last rebuild, so its tooltip branches rarely run.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentData, rawNestedData]);
 
   const applyFilter = useCallback(() => {
@@ -1619,7 +1625,7 @@ export function SkillGraph() {
         }}
       >
         <svg ref={svgRef} className="h-full w-full" />
-        <WobblyRopes ropeTargetsRef={ropeTargetsRef} colors={ropeColorMapRef.current} segments={12} springStrength={0.06} stiffness={0.5} />
+        <WobblyRopes ropeTargetsRef={ropeTargetsRef} colors={ropeColorMap} segments={12} stiffness={0.5} />
 
         {/* ── Tooltip (sub‑entries of hovered / dragged node) ──────── */}
         <div

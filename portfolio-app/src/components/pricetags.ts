@@ -316,9 +316,8 @@ export function updatePricetags(
 
   // ---- apply final positions & geometry ----
   for (const tp of allPositions) {
-    const { pd, isLeft, isTop, tagLeft, tagRight, rx, ry, tw, name } = tp;
+    const { pd, isLeft, isTop, tagLeft, tagRight, rx, ry, name } = tp;
 
-    const catName2 = pd.text.textContent || "";
     const isFiltered = hiddenGroups?.has(pd.gi) ?? false;
 
     if (!isFiltered) {

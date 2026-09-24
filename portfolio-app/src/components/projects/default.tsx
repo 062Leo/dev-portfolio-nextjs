@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePortfolioData, useOtherProjects } from "@/data/index";
+import { useMemo, useState } from "react";
+import { usePortfolioData, useOtherProjects, type Project } from "@/data/index";
 import { ArrowLeft, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Eye, TrendingUp, DollarSign, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
@@ -25,7 +25,6 @@ const iconMap = {
 };
 
 export function DetailPage({ id }: { id: string }) {
-    const [isReady, setIsReady] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
     const [pendingUrl, setPendingUrl] = useState<string | null>(null);
     const [showCustomDialog, setShowCustomDialog] = useState(false);
@@ -35,25 +34,14 @@ export function DetailPage({ id }: { id: string }) {
     const { language } = useLanguage();
     const portfolioData = usePortfolioData();
     const otherProjects = useOtherProjects();
-    const [project, setProject] = useState<
-        (typeof portfolioData.projects)[number] | (typeof otherProjects.projects)[number] | null
-    >(null);
-
-    useEffect(() => {
-        const foundProject =
+    const project = useMemo<Project | null>(
+        () =>
             portfolioData.projects.find((p) => p.id === id) ||
             otherProjects.projects.find((p) => p.id === id) ||
-            null;
-
-        setProject(foundProject);
-
-        setIsReady(true);
-    }, [id, portfolioData, otherProjects]);
+            null,
+        [id, portfolioData, otherProjects]
+    );
     const colors = useThemeColors(true);
-
-    if (!isReady) {
-        return null;
-    }
 
     // Early return if project is not found
     if (!project) {
@@ -121,6 +109,7 @@ export function DetailPage({ id }: { id: string }) {
                         {/* Main Image */}
                         <div className="aspect-video w-full max-w-4xl rounded-xl overflow-hidden border-2" style={{ borderColor: colors.boomforceMainImageBorder, backgroundColor: colors.boomforceMainImageBackground }}>
                             {/* Use project.image if available, otherwise a placeholder or the first image from images array */}
+                            {/* eslint-disable-next-line @next/next/no-img-element -- converted to next/image in a later step */}
                             <img
                                 src={project.image || (project.images && project.images[0]?.url) || "/Bilder/dummy.png"}
                                 alt={project.title}
@@ -221,19 +210,19 @@ export function DetailPage({ id }: { id: string }) {
                                     {language === "de" ? "CODE ANSEHEN" : "VIEW CODE"}
                                 </button>
                             )}
-                            {(project as any).custom1Link && (project as any).custom1BTNText && (
+                            {project.custom1Link && project.custom1BTNText && (
                                 <button
                                     type="button"
                                     className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
                                     style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
                                     onClick={() => {
-                                        setPendingCustomUrl((project as any).custom1Link as string);
-                                        setPendingCustomLabel(("customLabel" in project && (project as any).customLabel) ? (project as any).customLabel : "");
+                                        setPendingCustomUrl(project.custom1Link as string);
+                                        setPendingCustomLabel(project.customLabel ? project.customLabel : "");
                                         setShowCustomDialog(true);
                                     }}
                                 >
                                     <ExternalLink className="mr-2 w-5 h-5" />
-                                    {(project as any).custom1BTNText}
+                                    {project.custom1BTNText}
                                 </button>
                             )}
                         </div>
@@ -271,6 +260,7 @@ export function DetailPage({ id }: { id: string }) {
                                                 }}
                                                 onClick={() => setSelectedImage(image)}
                                             >
+                                                {/* eslint-disable-next-line @next/next/no-img-element -- converted to next/image in a later step */}
                                                 <img
                                                     src={image.url}
                                                     alt={image.caption || project.title}
@@ -320,6 +310,7 @@ export function DetailPage({ id }: { id: string }) {
                             </button>
                             <div className="flex justify-center pb-4">
                                 <div className="w-full flex justify-center">
+                                    {/* eslint-disable-next-line @next/next/no-img-element -- converted to next/image in a later step */}
                                     <img
                                         src={selectedImage.url}
                                         alt={selectedImage.caption || "Screenshot"}

@@ -1,53 +1,4 @@
-export type ProjectImage = {
-  url: string;
-  caption?: string;
-};
-
-export type ProjectStat = {
-  icon:
-    | "Clock"
-    | "Star"
-    | "Code"
-    | "Zap"
-    | "Users"
-    | "Target"
-    | "Award"
-    | "Layers";
-  label: string;
-  value: string;
-};
-
-export type DemoControlsGroup = {
-  title: string;
-  items: string[];
-};
-
-export type Project = {
-  id: string;
-  title: string;
-  subtitle?: string;
-  description: string;
-  longDescription?: string;
-  image: string; // Kept for backward compatibility as the main image
-  images?: ProjectImage[]; // New field for multiple images with captions
-  custom1Link?: string;
-  custom1BTNText?: string;
-  tags: string[];
-  demoLink?: string;
-  demoImage?: string;
-  demoDownload?: string;
-  githubUrl?: string;
-  youtubeLink?: string;
-  demotext: string;
-  demoControls: string[] | DemoControlsGroup[];
-  misctext: string;
-  miscimage: string;
-  miscTitle: string;
-  features?: string[];
-  techStack?: string[];
-  detailComponent?: "BoomForce" | "Old";
-  stats?: ProjectStat[];
-};
+import type { Project, ProjectImage } from "./types";
 
 export const otherProjects = {
   projects: [
@@ -433,5 +384,5 @@ export const otherProjects = {
         { icon: "Clock", label: "Schedule", value: "Coming soon" },
       ],
     },
-  ],
+  ] satisfies Project[],
 };

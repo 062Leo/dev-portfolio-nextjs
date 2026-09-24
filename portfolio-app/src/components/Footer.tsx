@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
+import Link from "next/link";
 import { ArrowUp } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -52,14 +53,9 @@ const ItchIcon = ({ className }: { className?: string }) => (
 
 export function Footer() {
   const { language } = useLanguage();
-  const [mounted, setMounted] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
   const [pendingLabel, setPendingLabel] = useState<string>("");
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleExternalLink = (url: string, label: string) => {
     setPendingUrl(url);
@@ -91,15 +87,15 @@ export function Footer() {
                 {language === "de" ? "Navigation" : "Navigation"}
               </h4>
               <nav className="flex flex-col gap-2 text-sm">
-                <a href="/" className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors">
+                <Link href="/" className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors">
                   {language === "de" ? "Home" : "Home"}
-                </a>
-                <a href="/#about" className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors">
+                </Link>
+                <Link href="/#about" className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors">
                   {language === "de" ? "Über mich" : "About"}
-                </a>
-                <a href="/projects" className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors">
+                </Link>
+                <Link href="/projects" className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors">
                   {language === "de" ? "Projekte" : "Projects"}
-                </a>
+                </Link>
               </nav>
             </div>
 
@@ -159,7 +155,7 @@ export function Footer() {
         </div>
       </footer>
 
-      {mounted && showDialog && pendingUrl && createPortal(
+      {showDialog && pendingUrl && createPortal(
         <div
           role="dialog"
           aria-modal="true"

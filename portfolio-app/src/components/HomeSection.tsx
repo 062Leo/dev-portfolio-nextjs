@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowDown } from "lucide-react";
+import Link from "next/link";
 import { usePortfolioData } from "@/data/index";
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
@@ -88,7 +89,7 @@ export function HomeSection() {
               className="h-[2px] w-24 rounded-full"
               style={{ backgroundColor: colors.homeSectionAccentLine }}
             />
-            <a
+            <Link
               href="/projects"
               className="cosmic-button inline-flex items-center justify-center rounded-full px-15 py-5 text-l font-semibold uppercase tracking-wide"
               style={{
@@ -98,7 +99,7 @@ export function HomeSection() {
               }}
             >
               {language === "de" ? "Meine Projekte" : "View My Work"}
-            </a>
+            </Link>
           </div>
         </div>
 

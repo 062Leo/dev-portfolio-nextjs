@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ArrowRight, Download, ExternalLink } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { usePortfolioData, useOtherProjects } from "@/data/index";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";

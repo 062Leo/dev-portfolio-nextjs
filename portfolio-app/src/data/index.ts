@@ -1,12 +1,12 @@
 import { useLanguage } from "@/context/LanguageContext";
-import { portfolioData as portfolioDataDe, type Project, type ProjectImage, type ProjectStat, type DemoControlsGroup } from "./portfolio-data";
+import { portfolioData as portfolioDataDe } from "./portfolio-data";
 import { otherProjects as otherProjectsDe } from "./other_projects";
 import { portfolioData as portfolioDataEn } from "./portfolio-data-en";
 import { otherProjects as otherProjectsEn } from "./other_projects_en";
 import skillsDe from "./skills.json";
 import skillsEn from "./skills_en.json";
 
-export type { Project, ProjectImage, ProjectStat, DemoControlsGroup };
+export type { Project, ProjectImage, ProjectStat, DemoControlsGroup } from "./types";
 
 export function usePortfolioData() {
   const { language } = useLanguage();

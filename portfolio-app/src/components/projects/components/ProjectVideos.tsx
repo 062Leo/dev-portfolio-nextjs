@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { ProjectImage } from '@/data/portfolio-data';
+import type { ProjectImage } from '@/data/types';
 import { renderMarkdownText } from '@/lib/markdown';
 
 interface ProjectVideosProps {
@@ -16,8 +16,6 @@ interface ProjectVideosProps {
 const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors }) => {
   const hasBigVideo = !!videoBig && videoBig.trim() !== "";
   const hasVideos = !!videos && videos.length > 0;
-
-  if (!hasBigVideo && !hasVideos) return null;
 
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
@@ -49,8 +47,10 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors 
     };
   }, [videos]);
 
-  const isValidVideo = (video: any): video is { url: string; caption?: string } => {
-    return video && typeof video === 'object' && 'url' in video;
+  if (!hasBigVideo && !hasVideos) return null;
+
+  const isValidVideo = (video: unknown): video is ProjectImage => {
+    return !!video && typeof video === 'object' && 'url' in video;
   };
 
   return (

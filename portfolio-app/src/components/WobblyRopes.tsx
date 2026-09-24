@@ -35,7 +35,6 @@ interface WobblyRopesProps {
   damping?: number;
   stiffness?: number;
   segments?: number;
-  springStrength?: number;
   lineWidth?: number;
   defaultColor?: string;
 }
@@ -45,7 +44,6 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
   colors = new Map(),
   damping = 0.88,
   stiffness = 0.25,
-  springStrength = 0.015,
   segments = 10,
   lineWidth = 3,
   defaultColor = "rgba(106,176,112,0.45)",
@@ -223,7 +221,7 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [syncRopeStates, damping, stiffness, colors, defaultColor, lineWidth]);
+  }, [syncRopeStates, ropeTargetsRef, damping, stiffness, colors, defaultColor, lineWidth]);
 
   return (
     <canvas

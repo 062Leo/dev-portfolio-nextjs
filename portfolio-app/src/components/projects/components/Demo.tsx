@@ -1,23 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePortfolioData, type DemoControlsGroup } from "@/data/index";
-import { ArrowLeft,  Play,  Clock, Star, Code, Zap, Users, Target, Award, Layers } from "lucide-react";
+import { useMemo, useState } from "react";
+import { usePortfolioData, type DemoControlsGroup, type Project } from "@/data/index";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
 import { renderMarkdownText } from "@/lib/markdown";
-
-const iconMap = {
-  Clock,
-  Star,
-  Code,
-  Zap,
-  Users,
-  Target,
-  Award,
-  Layers
-};
 
 const isGroupedControls = (
     controls: string[] | DemoControlsGroup[]
@@ -32,23 +21,14 @@ const isGroupedControls = (
 };
 
 export function DetailPage({ id }: { id: string }) {
-    const [isReady, setIsReady] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
     const { language } = useLanguage();
     const portfolioData = usePortfolioData();
-    const [project, setProject] = useState<(typeof portfolioData.projects)[number] | null>(null);
-
-    useEffect(() => {
-        const foundProject = portfolioData.projects.find((p) => p.id === id) || null;
-        setProject(foundProject);
-
-        setIsReady(true);
-    }, [id, portfolioData]);
+    const project = useMemo<Project | null>(
+        () => portfolioData.projects.find((p) => p.id === id) || null,
+        [id, portfolioData]
+    );
     const colors = useThemeColors(true);
-
-    if (!isReady) {
-        return null;
-    }
 
     // Early return if project is not found
     if (!project) {
@@ -62,8 +42,6 @@ export function DetailPage({ id }: { id: string }) {
         );
     }
 
-    // Dynamic stats from project data
-    const showStats = project.stats && project.stats.length > 0;
     const hasDemoControls = project.demoControls && project.demoControls.length > 0;
 
     let groupedControls: DemoControlsGroup[] | null = null;
@@ -141,6 +119,7 @@ export function DetailPage({ id }: { id: string }) {
                                 }}
                             >
                                 <div className="w-full h-full">
+                                    {/* eslint-disable-next-line @next/next/no-img-element -- converted to next/image in a later step */}
                                     <img
                                         src={project.demoImage}
                                         alt={project.title}
@@ -309,6 +288,7 @@ export function DetailPage({ id }: { id: string }) {
                                     backgroundColor: colors.demoFrameBackgroundColor,
                                 }}
                             >
+                                {/* eslint-disable-next-line @next/next/no-img-element -- converted to next/image in a later step */}
                                 <img
                                     src={project.miscimage}
                                     alt="Additional illustration"

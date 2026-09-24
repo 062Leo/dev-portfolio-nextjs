@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useActionState } from "react";
 import { authenticate } from "./actions";
@@ -14,15 +14,10 @@ export default function LoginPage() {
     initialState
   );
 
-  const [mounted, setMounted] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
   const [pendingLabel, setPendingLabel] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleExternalLink = (url: string, label: string) => {
     setPendingUrl(url);
@@ -135,7 +130,7 @@ export default function LoginPage() {
         </div>
       </main>
 
-      {mounted && showDialog && pendingUrl && createPortal(
+      {showDialog && pendingUrl && createPortal(
         <div
           role="dialog"
           aria-modal="true"
