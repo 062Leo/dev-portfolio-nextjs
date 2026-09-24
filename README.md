@@ -63,3 +63,9 @@ http://localhost:3000/projects?key=dein-passwort
 
 Der Proxy erkennt den `key`-Parameter, setzt den Auth-Cookie und leitet auf die saubere URL (ohne `key`) weiter.
 
+## Security-Header prüfen
+
+Die Security-Header (u. a. Content-Security-Policy) werden in `next.config.ts` gesetzt.
+Nach jedem Deploy die Header mit `curl -sSI https://<deine-domain>/login` prüfen.
+Außerdem in der Browser-Konsole der Seiten nach CSP-Fehlern schauen.
+

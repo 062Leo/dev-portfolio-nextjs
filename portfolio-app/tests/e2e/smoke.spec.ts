@@ -49,6 +49,21 @@ for (const path of PAGES) {
   });
 }
 
+// The headers come from next.config.ts and are the same on every path, so one page is
+// enough; CSP violations on the pages above surface as console errors.
+test.describe("security headers", () => {
+  test("are sent with the login page", async ({ request }) => {
+    const response = await request.get("/login");
+    expect(response.status()).toBe(200);
+    const headers = response.headers();
+    expect(headers["content-security-policy"]).toContain("default-src 'self'");
+    expect(headers["strict-transport-security"]).toBeTruthy();
+    expect(headers["x-content-type-options"]).toBe("nosniff");
+    expect(headers["referrer-policy"]).toBe("no-referrer");
+    expect(headers["permissions-policy"]).toBeTruthy();
+  });
+});
+
 // Images and videos under public/ are behind the password like every page (issue #76).
 const MEDIA = ["/Bilder/Arcanoid/arcanoid.png", "/Videos/Big/Arcanoid.mp4"];
 
