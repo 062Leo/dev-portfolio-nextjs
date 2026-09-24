@@ -25,13 +25,6 @@ export type ThemeColorSet = {
   homeSectionButtonGradientEnd: string;
   homeSectionButtonText: string;
   homeSectionAccentLine: string;
-  // Old Component Colors (Slider)
-  oldSliderCounterBg: string;
-  oldSliderCounterText: string;
-  oldSliderButtonBg: string;
-  oldSliderButtonText: string;
-  oldSliderDotActive: string;
-  oldSliderDotInactive: string;
   // BoomForce Component Colors
   boomforceBackLinkText: string;
   boomforceBackLinkHover: string;
@@ -77,10 +70,6 @@ export type ThemeColorSet = {
   demoControlsKeysTextColor: string;
   demoFrameBorderColor: string;
   demoFrameBackgroundColor: string;
-  demoButtonGradientStart: string;
-  demoButtonGradientEnd: string;
-  demoButtonTextColor: string;
-  demoButtonShadowColor: string;
   // ProjectsSection Visual Tokens
   projectsSectionTitleColor: string;
   projectsSectionAccentText: string;
@@ -92,9 +81,6 @@ export type ThemeColorSet = {
   projectsSectionTagBackground: string;
   projectsSectionTagText: string;
   projectsSectionLinkColor: string;
-  projectsSectionLinkHover: string;
-  projectsSectionIconColor: string;
-  projectsSectionDivider: string;
   projectsSection_GH_Start: string;
   projectsSection_GH_End: string;
   projectsSection_GH_Text: string;
@@ -109,19 +95,6 @@ export type ThemeColorSet = {
   navbarMenuText: string;
   navbarBackground: string;
 
-  // ContactSection Colors
-  contactSectionTitleColor: string;
-  contactSectionAccentColor: string;
-  contactSectionIconBackground: string;
-  contactSectionIconColor: string;
-  contactSectionCardBackground: string;
-  contactSectionCardBorder: string;
-  contactSectionCardShadow: string;
-  contactSectionSubmitBtnGradientStart: string;
-  contactSectionSubmitBtnGradientEnd: string;
-  contactSectionSubmitBtnText: string;
-  contactSectionSubmitBtnGlow: string;
-
   // About Section Colors
   aboutSectionTitleColor: string;
   aboutSectionAccentColor: string;
@@ -131,22 +104,6 @@ export type ThemeColorSet = {
   aboutSectionIconBackground: string;
   aboutSectionIconColor: string;
   aboutSectionDescriptionText: string;
-  aboutMe_GetInTouchButton_G_Start: string;
-  aboutMe_GetInTouchButton_G_End: string;
-  aboutMe_GetInTouchButton_Text: string;
-  aboutMe_GetInTouchButton_Glow: string;
-
-  // Skills Section Colors
-  skillsSectionTitleColor: string;
-  skillsSectionButtonActiveBackground: string;
-  skillsSectionButtonActiveText: string;
-  skillsSectionButtonInactiveText: string;
-  skillsSectionCardBackground: string;
-  skillsSectionCardBorder: string;
-  skillsSectionCardShadow: string;
-  skillsSectionProgressBarBg: string;
-  skillsSectionProgressBarFill: string;
-  skillsSectionLevelText: string;
 
   // LanguageToggle Colors
   languageToggleBgColor: string;
@@ -195,13 +152,6 @@ const darkColors: ThemeColorSet = {
   homeSectionBracketText: "rgba(213, 220, 232, 1)",
   homeSectionHoverText: "rgba(74, 222, 128, 1)",
   homeSectionSeparator: "rgba(34, 211, 238, 1)",
-  // Old Component Colors (Slider)
-  oldSliderCounterBg: "rgba(11, 13, 23, 1)",
-  oldSliderCounterText: "rgba(255, 255, 255, 1)",
-  oldSliderButtonBg: "rgba(11, 13, 23, 1)",
-  oldSliderButtonText: "rgba(255, 255, 255, 1)",
-  oldSliderDotActive: "rgba(255, 255, 255, 1)",
-  oldSliderDotInactive: "rgba(255, 255, 255, 0.5)",
   // BoomForce Component Colors
   boomforceBackLinkText: "rgba(167, 139, 250, 1)",
   boomforceBackLinkHover: "rgba(167, 139, 250, 1)",
@@ -247,10 +197,6 @@ const darkColors: ThemeColorSet = {
   demoControlsKeysTextColor: "rgba(213, 220, 232, 1)", // same as boomforceProjectDescriptionText
   demoFrameBorderColor: "rgba(167, 139, 250, 1)", // same as boomforceMainImageBorder
   demoFrameBackgroundColor: "rgba(11, 13, 23, 1)", // same as boomforceMainImageBackground
-  demoButtonGradientStart: "rgba(105, 30, 155, 1)", // same as boomforceDemoBtnGradientStart
-  demoButtonGradientEnd: "rgba(167, 139, 250, .7)", // same as boomforceDemoBtnGradientEnd
-  demoButtonTextColor: "rgba(213, 220, 232, 1)", // same as boomforceDemoBtnTextColor
-  demoButtonShadowColor: "rgba(167, 139, 250, 0.5)", // same as boomforceDemoBtnShadow
   // HomeSection Visual Tokens
   homeSectionBackgroundGradient:
     "radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.35), transparent 45%), radial-gradient(circle at 80% 0%, rgba(167, 139, 250, 0.4), transparent 50%)",
@@ -273,9 +219,6 @@ const darkColors: ThemeColorSet = {
   projectsSectionTagBackground: "rgba(167, 139, 250, 0.18)",
   projectsSectionTagText: "rgba(167, 139, 250, 1)",
   projectsSectionLinkColor: "rgba(239, 68, 68, 1)",
-  projectsSectionLinkHover: "rgba(239, 68, 68, 0.8)",
-  projectsSectionIconColor: "rgba(78, 167, 197, 1)",
-  projectsSectionDivider: "rgba(167, 139, 250, 0.3)",
   projectsSection_GH_Start: "rgba(87, 8, 139, 1)",
   projectsSection_GH_End: "rgba(39, 5, 141, 0.7)",
   projectsSection_GH_Text: "rgba(213, 220, 232, 1)",
@@ -289,18 +232,6 @@ const darkColors: ThemeColorSet = {
   navbarMenuText: "rgba(213, 220, 232, 1)",
   navbarBackground: "rgba(11, 13, 23, 0.95)",
 
-  contactSectionTitleColor: "rgba(239, 68, 68, 1)",
-  contactSectionAccentColor: "rgba(248, 113, 113, 1)",
-  contactSectionIconBackground: "rgba(139, 92, 246, 0.1)",
-  contactSectionIconColor: "rgba(239, 68, 68, 1)",
-  contactSectionCardBackground: "rgba(11, 13, 23, 0.45)",
-  contactSectionCardBorder: "rgba(167, 139, 250, 0.6)",
-  contactSectionCardShadow: "0 25px 60px rgba(167, 139, 250, 0.35)",
-  contactSectionSubmitBtnGradientStart: "rgba(105, 30, 155, 1)",
-  contactSectionSubmitBtnGradientEnd: "rgba(167, 139, 250, 0.7)",
-  contactSectionSubmitBtnText: "rgba(213, 220, 232, 1)",
-  contactSectionSubmitBtnGlow: "0 0 20px rgba(167, 139, 250, 0.5)",
-
   aboutSectionTitleColor: "rgba(239, 68, 68, 0.9)",
   aboutSectionAccentColor: "rgba(248, 113, 113, 1)",
   aboutSectionCardBackground: "rgba(11, 13, 23, 0.95)",
@@ -309,21 +240,6 @@ const darkColors: ThemeColorSet = {
   aboutSectionIconBackground: "rgba(139, 92, 246, 0.1)",
   aboutSectionIconColor: "rgba(239, 68, 68, 1)",
   aboutSectionDescriptionText: "rgba(213, 220, 232, 0.9)",
-  aboutMe_GetInTouchButton_G_Start: "rgba(105, 30, 155, 1)",
-  aboutMe_GetInTouchButton_G_End: "rgba(167, 139, 250, 0.7)",
-  aboutMe_GetInTouchButton_Text: "rgba(213, 220, 232, 1)",
-  aboutMe_GetInTouchButton_Glow: "0 0 20px rgba(167, 139, 250, 0.5)",
-
-  skillsSectionTitleColor: "rgba(239, 68, 68, 1)",
-  skillsSectionButtonActiveBackground: "rgba(239, 68, 68, 1)",
-  skillsSectionButtonActiveText: "rgba(255, 255, 255, 1)",
-  skillsSectionButtonInactiveText: "rgba(213, 220, 232, 0.8)",
-  skillsSectionCardBackground: "rgba(11, 13, 23, 0.95)",
-  skillsSectionCardBorder: "rgba(167, 139, 250, 0.6)",
-  skillsSectionCardShadow: "0 25px 60px rgba(167, 139, 250, 0.35)",
-  skillsSectionProgressBarBg: "rgba(167, 139, 250, 0.33)",
-  skillsSectionProgressBarFill: "rgba(248, 113, 113, 1)",
-  skillsSectionLevelText: "rgba(213, 220, 232, 0.85)",
 
   // LanguageToggle Colors
   languageToggleBgColor: "rgba(255, 255, 255, 1)",
@@ -334,7 +250,7 @@ const darkColors: ThemeColorSet = {
 };
 
 // Light mode is aliased to dark mode for now (will be implemented later)
-export const themeColors: Record<"light" | "dark", ThemeColorSet> = {
+const themeColors: Record<"light" | "dark", ThemeColorSet> = {
   light: darkColors,
   dark: darkColors,
 };

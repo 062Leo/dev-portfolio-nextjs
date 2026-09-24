@@ -6,7 +6,7 @@ import { otherProjects as otherProjectsEn } from "./other_projects_en";
 import skillsDe from "./skills.json";
 import skillsEn from "./skills_en.json";
 
-export type { Project, ProjectImage, ProjectStat, DemoControlsGroup } from "./types";
+export type { Project, DemoControlsGroup } from "./types";
 
 export function usePortfolioData() {
   const { language } = useLanguage();

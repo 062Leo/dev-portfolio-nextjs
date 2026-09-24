@@ -25,7 +25,6 @@ export const portfolioData = {
         "As part of my bachelor's thesis I trained an ML agent with the Unity ML-Agents Toolkit in Unity that masters various three-dimensional parkour levels with dynamic obstacles.\n\nThe focus of the thesis is on how training strategies, curriculum design and domain randomization must be structured so that the agent not only solves individual training scenarios but learns robust and generalizable strategies. The final model achieves high success rates in the training levels and at the same time shows transferable behaviour in a separate generalization level.\n\nTechnically, the project combines extensive raycast and vector observations, a hybrid action space (continuous movement + discrete actions) and a PPO algorithm with an LSTM network. A custom Python automation script controls long-term training runs, dynamically adjusts hyperparameters and enables a detailed evaluation of the results with TensorBoard.",
       image: "/Bilder/BachelorArbeit/BachelorArbeit.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["Reinforcement Learning", "Unity 3D", "ML-Agents", "PPO", "LSTM"],
       features: [
@@ -93,7 +92,6 @@ export const portfolioData = {
         "**Problem:** In professional **Unity** production workflows, important scene tweaks are often made during **Play Mode**, but Unity discards them when Play Mode ends. This repeatedly forces manual rework, slows iteration, and increases the risk of missing or inconsistent changes.\n\n**Solution:** Play Mode Changes Saver was built as a production-focused **Editor tool** that automatically snapshots scenes, tracks changes across **transforms**, all Unity components, custom components and scripts attached to GameObjects, materials, and names, and provides guided side-by-side review so only validated changes are applied back to Edit Mode. It includes inspector integration, multi-scene handling, undo/redo support, and robust object matching via **hybrid GUID+path identification** that remains stable across renames.\n\n**Result:** This is not just a prototype. It is a **production-ready product** published on the **Unity Asset Store**, demonstrating end-to-end delivery from problem analysis to a shipped solution that improves day-to-day developer and level-design workflows.\n\nMore information about the tool is available on the Unity Asset Store page.\n\nAccess the asset on the Unity Asset Store.",
       image: "/Bilder/RuntimeSaver/TitleImage.jpg",
       images: [],
-      detailComponent: "",
       videos: [],
       tags: [
         "Unity",
@@ -172,7 +170,6 @@ export const portfolioData = {
         "Engineering: strict layer separation (Domain / Infrastructure / API), Domain-Driven Design, plugin architecture, SignalR-based real-time updates, fire-and-forget background tasks, full test pyramid (Vitest, pytest, xUnit) and reproducible Docker Compose setup with health checks for all services.",
       image: "/Bilder/ACMS/cases_view.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "Agentic AI",
@@ -271,7 +268,6 @@ export const portfolioData = {
         "The architecture is strictly layered (screens → store → domain → infrastructure), follows SOLID principles, and is fully typed in TypeScript strict mode. The app is currently not published in an app store; a later release is possible. Anyone can build it from source or download a build from the GitHub releases.",
       image: "/Bilder/FoodCheck/AppIcon.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "React Native",
@@ -366,7 +362,6 @@ export const portfolioData = {
         "Technically, SongVoyage is built with **Vue 3** (Composition API), **Pinia** for state management, and **Dexie.js** as an IndexedDB wrapper for local data storage. The **Dual-Player** with two YouTube IFrame instances enables gapless playback without noticeable delay.\n\n",
       image: "/Bilder/SongVoyage/Bild.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["Vue 3", "TypeScript", "SPA", "Zero-Backend", "IndexedDB", "MusicBrainz", "YouTube"],
       features: [
@@ -434,7 +429,6 @@ export const portfolioData = {
         "**Hide'n Hunt** was created as a project for the 'Labor Games' course in my studies. It is a prototype of an asymmetric 4 vs 1 online multiplayer survival horror game in which up to four survivors compete against one killer.\n\nThe special feature of the game is the **prop mechanic**: survivors can transform into almost any object in the environment to hide or deceive the killer. The central game objective is to work together to **repair five generators** in order to open the **escape gate** and escape the map while the killer hunts the players, knocks them down and places them on **torture chairs**.\n\nTechnically, the project focuses on **online multiplayer** and **networking** with Unity's Netcode for GameObjects. Correct synchronization of player movement, prop transformations, interactions and switching between first- and third-person perspectives was particularly challenging and required many iterations and debugging sessions.\n\nMore information can be found in the **README on GitHub**.",
       image: "/Bilder/HideAndHunt/menu.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "Unity 3D",
@@ -517,7 +511,6 @@ export const portfolioData = {
         "**BoomForce** was created as a project for the Game Engines course in my studies. I developed the prototype of a physics-based 2D side-scrolling shooter that focuses on **destructible environments** and **complex chain reactions**.\n\nThe game demonstrates advanced gameplay mechanics: a **sophisticated explosion system** calculates damage based on distance and object type. A **robust state management system** manages multiple simultaneous chain reactions without performance issues.\n\nPlayers interact with a dynamic world of **destructible blocks**, **falling rocks** and **different barrel types** - each with its own explosion radius and fire effects. The project demonstrates a deep understanding of **physics systems**, **event handling** and **optimization techniques**.\n\nMore information and technical details can be found in the **README on GitHub**.",
       image: "/Bilder/BoomForce/BoomForce.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [
         {
           url: "/Videos/BoomForce/KettenReaktionen.mp4",
@@ -582,7 +575,6 @@ export const portfolioData = {
         "This entry is a placeholder. In the future, additional projects will be presented here.",
       image: "/Bilder/dummy.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["Coming soon", "Portfolio", "More projects"],
       features: ["Placeholder for future projects", "In preparation"],

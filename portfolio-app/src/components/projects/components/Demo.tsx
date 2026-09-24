@@ -99,13 +99,6 @@ export function DetailPage({ id }: { id: string }) {
           </div>
 
           <div className="mt-4">
-            {/* border_width: 5
-                        bg_color: #1c055b
-                        fg_color: #ffffff
-                        link_color: #e86e6e
-                        border_color: #ec5261
-                        iframe_width: 560
-                        iframe_height: 175 */}
             {project.demoImage && (
               <button
                 type="button"

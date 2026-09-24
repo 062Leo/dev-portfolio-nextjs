@@ -29,7 +29,6 @@ export const otherProjects = {
           caption: "Learning-Plattform mit Quiz zu historischen Ereignissen",
         },
       ] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["Crypto Dashboard", "TradingView", "Lernplattform", "Fake-Wallet", "API-Integration"],
       features: [
@@ -81,7 +80,6 @@ export const otherProjects = {
         "Eine interaktive Desktop-Anwendung für Conways Game of Life. Sie bietet einen freies Zeichen Modus und Prefab-Platzierung, unterstützt Theme-Wechsel, variable Pinselgrößen sowie flexible Canvasgrößen- und Geschwindigkeitseinstellungen, umgesetzt mit C#, .NET und WPF.",
       image: "/Bilder/GameOfLife/GameOfLife.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
       features: [
@@ -117,7 +115,6 @@ export const otherProjects = {
         "Dieser Prototyp fokussiert sich auf das schnelle, vertikale Movement wie in DOOM. Der Spieler verfügt über zwei Dashes mit Cooldown-Anzeige im UI, Trampoline mit unterschiedlicher Sprunghöhe und ein durchdachtes Wall-Climbing-System. An Wänden kann nur in bestimmten Blickwinkeln geklettert werden: vertikal bis ca. 90 Grad von der Wand wegschauen, horizontal bis ca. 70 Grad. Dadurch ist der Spieler immer absprungbereit, ähnlich wie im Original-DOOM. Zusätzlich existieren mehrere Spawnpoints und der Spieler stirbt, wenn er aus der Map fällt.",
       image: "/Bilder/Doom/Doom.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "Unity",
@@ -176,7 +173,6 @@ export const otherProjects = {
         "Arcanoid 3D ist eine moderne 3D-Variante des klassischen Brick-Breaker-Gameplays. Es gibt verschiedene Brick-Typen, die unterschiedlich oft getroffen werden müssen (blaue Bricks 1x, grüne 2x, gelbe 3x). Nach jeweils drei zerstörten Bricks spawnen Powerups: ein grünes Powerup erzeugt eine Barriere unter dem Paddle für 10 Sekunden, sodass der Ball nicht aus dem Spielfeld fallen kann; ein gelbes Powerup vergrößert das Paddle für 10 Sekunden; ein blaues Powerup feuert zwei Schüsse ab, die jeweils wie ein Treffer des Balls zählen. Zusätzlich gibt es einen Game-Over-Screen mit Restart-Möglichkeit, wenn alle Leben verbraucht sind, sowie einen Won-Game-Screen, wenn alle Bricks zerstört wurden. Der Score wird angezeigt (jeder zerstörte Brick +10 Punkte, bei einem verlorenen Ball wird ein Leben abgezogen und 50 Punkte werden abgezogen). Auf der oberen Mauer werden die aktuellen Leben sowie die Restdauer der aktiven Powerups dargestellt, inklusive animierter Lebensanzeige.",
       image: "/Bilder/Arcanoid/arcanoid.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["Unity 3D", "Arcanoid", "Powerups", "Score System", "Prototype"],
       features: [
@@ -230,7 +226,6 @@ export const otherProjects = {
         "Ziel des Projekts war es, ein autonomes Fahrzeug zu entwickeln, das einem farbigen Zielobjekt ohne manuellen Eingriff folgen kann. Kern des Systems ist die Pixy2-Kamera, die Objekte anhand von Farbsignaturen erkennt. Ein Elegoo Smart Robot Car V3 übernimmt die Bewegung, während ein Arduino Uno die Sensordaten auswertet und die Motoren steuert. Im Code werden verschiedene Fahrfunktionen wie forward, left, right und stop bereitgestellt. Anhand der vom Kamerabild abgeleiteten Objektposition entscheidet das Fahrzeug, ob es nach links oder rechts lenken oder anhalten soll.\n\nDie Entfernung zum Zielobjekt wird ausschließlich über die Größe des erkannten Objekts im Kamerabild bestimmt: Je größer das Objekt erscheint, desto näher ist es. So kann das Fahrzeug entscheiden, ob es weiterfahren oder anhalten soll. Der entstandene Prototyp zeigt anschaulich, wie Farberkennung und Kameradaten genutzt werden können, um ein autonomes, farbfolgenden Fahrverhalten zu realisieren und bildet eine gute Basis für weitere Experimente.",
       image: "/Bilder/SmartCar/smartCar.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "Arduino",
@@ -290,7 +285,6 @@ export const otherProjects = {
         "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentieren.",
       image: "/Bilder/dummy.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["Bald verfügbar", "Portfolio", "Mehr Projekte"],
       features: ["Platzhalter für zukünftige Projekte", "In Vorbereitung"],
@@ -319,7 +313,6 @@ export const otherProjects = {
     //   longDescription: "",
     //   image: "",
     //   images: [] as ProjectImage[],
-    //   detailComponent: "",
     //   videos: [],
     //   tags: ["", "", "", "", ""],
     //   features: ["", "", "", ""],
@@ -345,7 +338,6 @@ export const otherProjects = {
     //     "Ein 2D Online Multiplayer Kartenspiel für Mobile (Android), entwickelt als Privatprojekt. Es nutzt Photon PUN 2 für den Multiplayer-Part und bietet eine optimierte Mobile UI/UX.",
     //   image: "/Bilder/dummy.png", // Placeholder
     //   images: [],
-    //   detailComponent: "",
     //   videos: [],
     //   tags: ["Unity 2D", "Photon PUN 2", "Android", "Mobile"],
     //   features: [

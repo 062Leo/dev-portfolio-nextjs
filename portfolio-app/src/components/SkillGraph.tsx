@@ -287,7 +287,7 @@ const HULL_STROKE_OPACITY = 0.35; // 0 … 1
 //  HELPER FUNCTIONS
 // ══════════════════════════════════════════════════════════════════════════════
 
-export function ratingColor(rating: number): string {
+function ratingColor(rating: number): string {
   const idx = Math.round(rating);
   return RATING_COLORS[idx] || RATING_COLORS[1];
 }

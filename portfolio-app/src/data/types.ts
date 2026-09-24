@@ -3,7 +3,7 @@ export type ProjectImage = {
   caption?: string;
 };
 
-export type ProjectStat = {
+type ProjectStat = {
   icon:
     | "Clock"
     | "Star"
@@ -52,6 +52,5 @@ export type Project = {
   miscTitle: string;
   features?: string[];
   techStack?: string[];
-  detailComponent?: "" | "BoomForce" | "Old";
   stats?: ProjectStat[];
 };

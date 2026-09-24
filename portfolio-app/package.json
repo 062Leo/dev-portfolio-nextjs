@@ -9,7 +9,7 @@
     "lint": "eslint",
     "format": "prettier --write .",
     "check": "npm run lint -- --max-warnings 0 && tsc --noEmit && prettier --check . && npm run build && npm audit --omit=dev --audit-level=high",
-    "tailwind:init": "node ./node_modules/tailwindcss/lib/cli.js init -p"
+    "knip": "knip"
   },
   "dependencies": {
     "@radix-ui/react-toast": "^1.2.14",
@@ -28,11 +28,11 @@
     "@types/node": "20.19.25",
     "@types/react": "19.3.0",
     "@types/react-dom": "^19.3.0",
-    "autoprefixer": "^10.4.22",
     "babel-plugin-react-compiler": "1.0.0",
     "baseline-browser-mapping": "^2.11.26",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
+    "knip": "^6.38.0",
     "postcss": "^8.5.6",
     "prettier": "^3.9.9",
     "tailwindcss": "^4.1.17",

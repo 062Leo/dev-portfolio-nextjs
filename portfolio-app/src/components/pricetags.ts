@@ -5,11 +5,11 @@ import type { RopeTarget } from "./WobblyRopes";
 // ══════════════════════════════════════════════════════════════════════════════
 
 export const PRICETAG_ENABLED = true;
-export const PRICETAG_SCALE = 0.55;
+const PRICETAG_SCALE = 0.55;
 
 const S = PRICETAG_SCALE;
 export const PT_H = 38 * S;
-export const PT_T = 19 * S;
+const PT_T = 19 * S;
 const R = 4 * S;
 const PAD = 3 * S;
 const FONT_SZ = 22 * S;
