@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback, useMemo, useState } from "react";
 import { forceSimulation, forceLink, forceManyBody, forceCollide, forceX, forceY } from "d3-force";
 import type { SimulationNodeDatum, SimulationLinkDatum, Simulation } from "d3-force";
 import { useSkillsData } from "@/data/index";
-import { useLanguage } from "@/context/LanguageContext";
+import { useT } from "@/i18n";
 import { WobblyRopes } from "./WobblyRopes";
 import type { RopeTarget } from "./WobblyRopes";
 import {
@@ -554,7 +554,7 @@ function createChainAngleForce(links: SimLink[], minAngleDeg: number, strength: 
 // ══════════════════════════════════════════════════════════════════════════════
 
 export function SkillGraph() {
-  const { language } = useLanguage();
+  const t = useT();
   const skillsDataRaw = useSkillsData() as SkillsDataNested;
 
   const currentData = useMemo<Record<string, Record<string, number>>>(
@@ -1862,7 +1862,7 @@ export function SkillGraph() {
         {/* Rating row */}
         <div className="flex flex-col items-center gap-1.5">
           <span className="text-xs" style={{ color: "rgba(213,220,232,0.6)" }}>
-            {language === "de" ? "Bewertung:" : "Rating:"}
+            {t.skills.rating}
           </span>
           <div className="flex flex-wrap items-center justify-center gap-2">
             {[1, 2, 3, 4, 5].map((r) => {
@@ -1904,7 +1904,7 @@ export function SkillGraph() {
               cursor: "pointer",
             }}
           >
-            {language === "de" ? "Filter anwenden" : "Apply Filter"}
+            {t.skills.applyFilter}
           </button>
           {filterActive && (
             <button
@@ -1916,7 +1916,7 @@ export function SkillGraph() {
                 border: "1px solid rgba(99,102,241,0.3)",
               }}
             >
-              {language === "de" ? "Zurücksetzen" : "Reset"}
+              {t.skills.reset}
             </button>
           )}
         </div>

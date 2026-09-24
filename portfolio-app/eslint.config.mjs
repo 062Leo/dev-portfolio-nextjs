@@ -31,13 +31,11 @@ const eslintConfig = defineConfig([
       complexity: "off",
     },
   },
-  // Inline language ternaries drive the complexity; centralised i18n removes them (#70).
+  // Project detail page: one component renders every optional section (stats, screenshots,
+  // demo, download, code and custom links) plus three inline dialogs; complexity 30. The
+  // detail page rework splits it (#85).
   {
-    files: [
-      "src/components/Footer.tsx",
-      "src/components/projects/default.tsx",
-      "src/components/projects/components/Demo.tsx",
-    ],
+    files: ["src/components/projects/default.tsx"],
     rules: {
       complexity: "off",
     },

@@ -5,7 +5,7 @@ import { usePortfolioData, type DemoControlsGroup, type Project } from "@/data/i
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
-import { useLanguage } from "@/context/LanguageContext";
+import { useT } from "@/i18n";
 import { renderMarkdownText } from "@/lib/markdown";
 
 const isGroupedControls = (
@@ -22,7 +22,7 @@ const isGroupedControls = (
 
 export function DetailPage({ id }: { id: string }) {
   const [showDialog, setShowDialog] = useState(false);
-  const { language } = useLanguage();
+  const t = useT();
   const portfolioData = usePortfolioData();
   const project = useMemo<Project | null>(
     () => portfolioData.projects.find((p) => p.id === id) || null,
@@ -34,9 +34,9 @@ export function DetailPage({ id }: { id: string }) {
   if (!project) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
-        <h1 className="text-4xl font-bold">Project not found</h1>
+        <h1 className="text-4xl font-bold">{t.projectDetail.notFound}</h1>
         <Link href="/" className="mt-4 hover:underline" style={{ color: colors.demoBackLinkText }}>
-          Back to Home
+          {t.projectDetail.backHome}
         </Link>
       </div>
     );
@@ -77,7 +77,7 @@ export function DetailPage({ id }: { id: string }) {
             onMouseLeave={(e) => (e.currentTarget.style.color = colors.demoBackLinkText)}
           >
             <ArrowLeft size={20} />
-            {language === "en" ? "Back to Project" : "Zurück zum Projekt"}
+            {t.demo.back}
           </Link>
         </div>
 
@@ -131,7 +131,7 @@ export function DetailPage({ id }: { id: string }) {
                   className="mb-4 text-xl font-semibold font-press-start"
                   style={{ color: colors.demoControlsTitleColor }}
                 >
-                  {language === "en" ? "CONTROLS" : "STEUERUNG"}
+                  {t.demo.controls}
                 </h3>
                 {groupedControls ? (
                   <div className="flex flex-col md:flex-row gap-8">
@@ -157,7 +157,7 @@ export function DetailPage({ id }: { id: string }) {
                                 className="py-1 pr-4 font-semibold text-right font-press-start"
                                 style={{ color: colors.demoControlsHeaderKeysColor }}
                               >
-                                {language === "en" ? "Keys" : "Tasten"}
+                                {t.demo.keys}
                               </th>
                               <th
                                 className="py-1 pl-4 font-semibold text-left font-press-start"
@@ -166,7 +166,7 @@ export function DetailPage({ id }: { id: string }) {
                                   color: colors.demoControlsHeaderActionColor,
                                 }}
                               >
-                                {language === "en" ? "Action" : "Aktion"}
+                                {t.demo.action}
                               </th>
                             </tr>
                           </thead>
@@ -218,7 +218,7 @@ export function DetailPage({ id }: { id: string }) {
                               className="py-1 pr-4 font-semibold text-right font-press-start"
                               style={{ color: colors.demoControlsHeaderKeysColor }}
                             >
-                              {language === "en" ? "Keys" : "Tasten"}
+                              {t.demo.keys}
                             </th>
                             <th
                               className="py-1 pl-4 font-semibold text-left font-press-start"
@@ -227,7 +227,7 @@ export function DetailPage({ id }: { id: string }) {
                                 color: colors.demoControlsHeaderActionColor,
                               }}
                             >
-                              {language === "en" ? "Action" : "Aktion"}
+                              {t.demo.action}
                             </th>
                           </tr>
                         </thead>
@@ -289,7 +289,7 @@ export function DetailPage({ id }: { id: string }) {
                 {/* eslint-disable-next-line @next/next/no-img-element -- converted to next/image in a later step */}
                 <img
                   src={project.miscimage}
-                  alt="Additional illustration"
+                  alt={t.demo.illustrationAlt}
                   className="w-full h-auto"
                 />
               </div>
@@ -312,23 +312,11 @@ export function DetailPage({ id }: { id: string }) {
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
           >
             <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
-              <h2 className="mb-6 text-4xl font-semibold">
-                {language === "en" ? "External link" : "Externer Link"}
-              </h2>
-              <p className="mb-4 text-2xl">
-                {language === "en"
-                  ? "You are about to leave this website and will be redirected to an external platform (itch.io)."
-                  : "Sie verlassen diese Website und werden auf eine externe Plattform (itch.io) weitergeleitet."}
-              </p>
-              <p className="mb-10 text-2xl">
-                {language === "en"
-                  ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
-                  : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
-              </p>
+              <h2 className="mb-6 text-4xl font-semibold">{t.dialog.title}</h2>
+              <p className="mb-4 text-2xl">{t.dialog.leaving("itch.io")}</p>
+              <p className="mb-10 text-2xl">{t.dialog.responsibility}</p>
               <p className="mb-10 text-sm break-all opacity-80">
-                {language === "en"
-                  ? `(redirecting to: ${project.demoLink})`
-                  : `(Weiterleitung zu: ${project.demoLink})`}
+                {t.dialog.redirectingTo(project.demoLink)}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                 <button
@@ -336,7 +324,7 @@ export function DetailPage({ id }: { id: string }) {
                   className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-background hover:bg-muted hover:shadow-lg hover:-translate-y-[2px] hover:border-foreground/60 transition-all duration-150"
                   onClick={() => setShowDialog(false)}
                 >
-                  {language === "en" ? "Cancel" : "Abbrechen"}
+                  {t.dialog.cancel}
                 </button>
                 <a
                   href={project.demoLink as string}
@@ -347,7 +335,7 @@ export function DetailPage({ id }: { id: string }) {
                     setShowDialog(false);
                   }}
                 >
-                  {language === "en" ? "Continue to itch.io" : "Weiter zu itch.io"}
+                  {t.demo.continueTo("itch.io")}
                 </a>
               </div>
             </div>

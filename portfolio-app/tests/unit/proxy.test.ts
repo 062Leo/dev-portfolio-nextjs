@@ -1,26 +1,54 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest, type NextResponse } from "next/server";
-import { getRedirectUrl, unstable_doesMiddlewareMatch } from "next/experimental/testing/server";
+import {
+  getRedirectUrl,
+  getRewrittenUrl,
+  isRewrite,
+  unstable_doesMiddlewareMatch,
+} from "next/experimental/testing/server";
 import { config, proxy } from "@/proxy";
 
-// These tests describe the behaviour of the password gate (pass / redirect / cookie set),
-// not its cookie format, so they stay valid when the cookie scheme changes.
+// These tests describe the behaviour of the password gate (pass / redirect / cookie set)
+// and of the language rewrite, not the cookie format, so they stay valid when the cookie
+// scheme changes.
 
 const PASSWORD = "unit-test-password";
 const SECRET = "unit-test-secret";
 const ORIGIN = "http://localhost:3100";
 
-function request(path: string, cookie?: string): NextRequest {
-  const headers = cookie ? { cookie: `site-auth=${cookie}` } : undefined;
-  return new NextRequest(new URL(path, ORIGIN), { headers });
+type RequestOptions = {
+  cookie?: string;
+  lang?: string;
+  acceptLanguage?: string;
+  method?: string;
+};
+
+function request(path: string, options: RequestOptions = {}): NextRequest {
+  const cookies: string[] = [];
+  if (options.cookie) cookies.push(`site-auth=${options.cookie}`);
+  if (options.lang) cookies.push(`lang=${options.lang}`);
+  const headers: Record<string, string> = {};
+  if (cookies.length > 0) headers.cookie = cookies.join("; ");
+  if (options.acceptLanguage) headers["accept-language"] = options.acceptLanguage;
+  return new NextRequest(new URL(path, ORIGIN), { headers, method: options.method });
 }
 
+// The request reaches the app: either passed on unchanged or rewritten to a language.
 function passes(response: NextResponse): boolean {
-  return response.headers.get("x-middleware-next") === "1" && getRedirectUrl(response) === null;
+  const passedOn = response.headers.get("x-middleware-next") === "1";
+  return (passedOn || isRewrite(response)) && getRedirectUrl(response) === null;
 }
 
 function redirectsToLogin(response: NextResponse): boolean {
   return response.status === 307 && getRedirectUrl(response) === `${ORIGIN}/login`;
+}
+
+// Path (plus query) the response was rewritten to, or null when it was not rewritten.
+function rewrittenPath(response: NextResponse): string | null {
+  const url = getRewrittenUrl(response);
+  if (url === null) return null;
+  const parsed = new URL(url);
+  return `${parsed.pathname}${parsed.search}`;
 }
 
 // Logs in with ?key= and returns the cookie value the proxy set.
@@ -51,6 +79,10 @@ describe("proxy without SITE_PASSWORD", () => {
     expect(passes(await proxy(request("/projects/ml-agent-bachelor")))).toBe(true);
     expect(passes(await proxy(request("/Bilder/Arcanoid/arcanoid.png")))).toBe(true);
   });
+
+  it("still rewrites pages to the language", async () => {
+    expect(rewrittenPath(await proxy(request("/", { lang: "en" })))).toBe("/en");
+  });
 });
 
 describe("proxy with SITE_PASSWORD and AUTH_SECRET", () => {
@@ -67,7 +99,16 @@ describe("proxy with SITE_PASSWORD and AUTH_SECRET", () => {
   });
 
   it("redirects a request with an unknown cookie to /login", async () => {
-    expect(redirectsToLogin(await proxy(request("/", "not-a-valid-cookie")))).toBe(true);
+    expect(redirectsToLogin(await proxy(request("/", { cookie: "not-a-valid-cookie" })))).toBe(
+      true,
+    );
+  });
+
+  it("lets /login through without a cookie, also for the server action POST", async () => {
+    const page = await proxy(request("/login"));
+    expect(passes(page)).toBe(true);
+    expect(page.cookies.get("site-auth")).toBeUndefined();
+    expect(passes(await proxy(request("/login", { method: "POST" })))).toBe(true);
   });
 
   it("redirects a wrong ?key= to /login without setting a cookie", async () => {
@@ -106,26 +147,37 @@ describe("proxy with SITE_PASSWORD and AUTH_SECRET", () => {
 
   it("accepts the cookie it set on a later request", async () => {
     const cookie = await loginCookie();
-    expect(passes(await proxy(request("/projects", cookie)))).toBe(true);
-    expect(passes(await proxy(request("/Videos/Big/Arcanoid.mp4", cookie)))).toBe(true);
+    expect(passes(await proxy(request("/projects", { cookie })))).toBe(true);
+    expect(passes(await proxy(request("/Videos/Big/Arcanoid.mp4", { cookie })))).toBe(true);
+  });
+
+  it("removes a stray ?key= from the URL of a logged-in visitor", async () => {
+    const cookie = await loginCookie();
+    const response = await proxy(request(`/projects?key=${PASSWORD}&lang=de`, { cookie }));
+    expect(response.status).toBe(303);
+    const location = new URL(getRedirectUrl(response) as string);
+    expect(location.pathname).toBe("/projects");
+    expect(location.searchParams.has("key")).toBe(false);
+    expect(location.searchParams.get("lang")).toBe("de");
+    expect(response.cookies.get("site-auth")).toBeUndefined();
   });
 
   it("does not accept a cookie set for a different password", async () => {
     const cookie = await loginCookie();
     vi.stubEnv("SITE_PASSWORD", "another-password");
-    expect(redirectsToLogin(await proxy(request("/", cookie)))).toBe(true);
+    expect(redirectsToLogin(await proxy(request("/", { cookie })))).toBe(true);
   });
 
   it("does not accept a cookie after AUTH_SECRET changed", async () => {
     const cookie = await loginCookie();
     vi.stubEnv("AUTH_SECRET", "rotated-secret");
-    expect(redirectsToLogin(await proxy(request("/", cookie)))).toBe(true);
+    expect(redirectsToLogin(await proxy(request("/", { cookie })))).toBe(true);
   });
 
   it("does not accept a cookie after AUTH_VERSION changed", async () => {
     const cookie = await loginCookie();
     vi.stubEnv("AUTH_VERSION", "2");
-    expect(redirectsToLogin(await proxy(request("/", cookie)))).toBe(true);
+    expect(redirectsToLogin(await proxy(request("/", { cookie })))).toBe(true);
   });
 });
 
@@ -138,23 +190,124 @@ describe("proxy with SITE_PASSWORD but without AUTH_SECRET (fallback)", () => {
   it("still protects and accepts its own cookie", async () => {
     expect(redirectsToLogin(await proxy(request("/")))).toBe(true);
     const cookie = await loginCookie();
-    expect(passes(await proxy(request("/projects", cookie)))).toBe(true);
+    expect(passes(await proxy(request("/projects", { cookie })))).toBe(true);
   });
 
   it("rejects a cookie minted under a secret", async () => {
     vi.stubEnv("AUTH_SECRET", SECRET);
     const cookie = await loginCookie();
     vi.stubEnv("AUTH_SECRET", undefined);
-    expect(redirectsToLogin(await proxy(request("/", cookie)))).toBe(true);
+    expect(redirectsToLogin(await proxy(request("/", { cookie })))).toBe(true);
+  });
+});
+
+describe("language rewrite", () => {
+  let cookie: string;
+
+  beforeEach(async () => {
+    vi.stubEnv("SITE_PASSWORD", PASSWORD);
+    vi.stubEnv("AUTH_SECRET", SECRET);
+    cookie = await loginCookie();
+  });
+
+  it("rewrites every page path to the language of the lang cookie", async () => {
+    expect(rewrittenPath(await proxy(request("/", { cookie, lang: "de" })))).toBe("/de");
+    expect(rewrittenPath(await proxy(request("/", { cookie, lang: "en" })))).toBe("/en");
+    expect(rewrittenPath(await proxy(request("/projects", { cookie, lang: "en" })))).toBe(
+      "/en/projects",
+    );
+    expect(rewrittenPath(await proxy(request("/projects/x", { cookie, lang: "de" })))).toBe(
+      "/de/projects/x",
+    );
+    expect(rewrittenPath(await proxy(request("/projects/x/demo", { cookie, lang: "en" })))).toBe(
+      "/en/projects/x/demo",
+    );
+    expect(rewrittenPath(await proxy(request("/login", { lang: "en" })))).toBe("/en/login");
+  });
+
+  it("keeps the query string", async () => {
+    expect(rewrittenPath(await proxy(request("/projects?a=1", { cookie, lang: "en" })))).toBe(
+      "/en/projects?a=1",
+    );
+  });
+
+  it("does not set the lang cookie again when it is present", async () => {
+    const response = await proxy(request("/", { cookie, lang: "en" }));
+    expect(response.cookies.get("lang")).toBeUndefined();
+  });
+
+  it("prefers the cookie over Accept-Language", async () => {
+    const response = await proxy(
+      request("/", { cookie, lang: "en", acceptLanguage: "de-DE,de;q=0.9" }),
+    );
+    expect(rewrittenPath(response)).toBe("/en");
+  });
+
+  it("falls back to Accept-Language and sets the cookie", async () => {
+    const german = await proxy(request("/", { cookie, acceptLanguage: "de-DE,de;q=0.9" }));
+    expect(rewrittenPath(german)).toBe("/de");
+    expect(german.cookies.get("lang")?.value).toBe("de");
+
+    const english = await proxy(request("/", { cookie, acceptLanguage: "en-US,en;q=0.9" }));
+    expect(rewrittenPath(english)).toBe("/en");
+    expect(english.cookies.get("lang")?.value).toBe("en");
+  });
+
+  it("defaults to English without Accept-Language and sets the cookie", async () => {
+    const response = await proxy(request("/projects", { cookie }));
+    expect(rewrittenPath(response)).toBe("/en/projects");
+    expect(response.cookies.get("lang")?.value).toBe("en");
+  });
+
+  it("ignores an unknown cookie value", async () => {
+    const response = await proxy(
+      request("/", { cookie, lang: "fr", acceptLanguage: "de-DE,de;q=0.9" }),
+    );
+    expect(rewrittenPath(response)).toBe("/de");
+    expect(response.cookies.get("lang")?.value).toBe("de");
+  });
+
+  it("sets the lang cookie for one year, readable by the browser, on the whole site", async () => {
+    const response = await proxy(request("/", { cookie, acceptLanguage: "de" }));
+    const lang = response.cookies.get("lang");
+    expect(lang?.httpOnly).toBe(false);
+    expect(lang?.sameSite).toBe("lax");
+    expect(lang?.path).toBe("/");
+    expect(lang?.maxAge).toBe(60 * 60 * 24 * 365);
+    expect(lang?.secure).toBe(false);
+  });
+
+  it("does not rewrite media or the image optimizer", async () => {
+    for (const path of [
+      "/Bilder/Arcanoid/arcanoid.png",
+      "/Videos/Big/Arcanoid.mp4",
+      "/_next/image?url=%2FBilder%2FArcanoid%2Farcanoid.png&w=640&q=75",
+    ]) {
+      const response = await proxy(request(path, { cookie, lang: "en" }));
+      expect(passes(response), path).toBe(true);
+      expect(isRewrite(response), path).toBe(false);
+      expect(response.cookies.get("lang"), path).toBeUndefined();
+    }
+  });
+
+  it("does not rewrite a path that only starts like a page path", async () => {
+    for (const path of ["/projectsx", "/loginx", "/login/x"]) {
+      expect(isRewrite(await proxy(request(path, { cookie, lang: "en" }))), path).toBe(false);
+    }
+  });
+
+  it("checks the password before the language", async () => {
+    expect(redirectsToLogin(await proxy(request("/projects", { lang: "en" })))).toBe(true);
   });
 });
 
 describe("proxy matcher", () => {
   const matches = (url: string) => unstable_doesMiddlewareMatch({ config, url });
 
-  it("runs on pages", () => {
+  it("runs on pages, including /login", () => {
     expect(matches("/")).toBe(true);
     expect(matches("/projects/acms")).toBe(true);
+    expect(matches("/login")).toBe(true);
   });
 
   it("runs on media under public/ and on the image optimizer", () => {
@@ -163,8 +316,7 @@ describe("proxy matcher", () => {
     expect(matches("/_next/image?url=%2FBilder%2FArcanoid%2Farcanoid.png&w=640&q=75")).toBe(true);
   });
 
-  it("does not run on /login, framework assets, the favicon, icons and fonts", () => {
-    expect(matches("/login")).toBe(false);
+  it("does not run on framework assets, the favicon, icons and fonts", () => {
     expect(matches("/_next/static/chunk.js")).toBe(false);
     expect(matches("/favicon.ico")).toBe(false);
     expect(matches("/Icons/de_flag.png")).toBe(false);

@@ -63,6 +63,10 @@ http://localhost:3000/projects?key=dein-passwort
 
 Der Proxy erkennt den `key`-Parameter, setzt den Auth-Cookie und leitet auf die saubere URL (ohne `key`) weiter.
 
+## Sprache
+
+Die Sprache (`de`/`en`) steht im Cookie `lang`, einem rein funktionalen Cookie ohne personenbezogene Daten. Beim ersten Besuch wird sie aus der Browsersprache abgeleitet; der Server liefert die Seiten direkt in dieser Sprache aus, die URL bleibt gleich. Umschalten über die Flagge in der Navigationsleiste (auf Mobile im Menü).
+
 ## Security-Header prüfen
 
 Die Security-Header (u. a. Content-Security-Policy) werden in `next.config.ts` gesetzt.

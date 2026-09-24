@@ -2,13 +2,13 @@
 
 import { usePortfolioData, useOtherProjects } from "@/data/index";
 import { useThemeColors } from "@/components/colors";
-import { useLanguage } from "@/context/LanguageContext";
+import { useT } from "@/i18n";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export function HomePreviewSection() {
-  const { language } = useLanguage();
+  const t = useT();
   const colors = useThemeColors(true);
   const mainProjects = usePortfolioData().projects.filter((p) => p.id !== "coming-soon");
   const otherProjectsList = useOtherProjects().projects.filter(
@@ -25,24 +25,16 @@ export function HomePreviewSection() {
           className="mb-4 text-center text-3xl font-bold md:text-4xl"
           style={{ color: colors.homePreviewSectionTitleColor }}
         >
-          {language === "de" ? (
-            <>
-              Ausgewählte{" "}
-              <span style={{ color: colors.homePreviewSectionAccentColor }}>Projekte</span>
-            </>
-          ) : (
-            <>
-              Featured <span style={{ color: colors.homePreviewSectionAccentColor }}>Projects</span>
-            </>
-          )}
+          {t.projectsPreview.titleStart}{" "}
+          <span style={{ color: colors.homePreviewSectionAccentColor }}>
+            {t.projectsPreview.titleAccent}
+          </span>
         </h2>
         <p
           className="mx-auto mb-12 max-w-3xl text-center"
           style={{ color: colors.projectsSectionSubtitleColor }}
         >
-          {language === "de"
-            ? `3 von ${totalCount} Projekten — von AI über Mobile bis Game Development.`
-            : `3 of ${totalCount} projects — from AI to mobile to game development.`}
+          {t.projectsPreview.subtitle(totalCount)}
         </p>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -116,9 +108,7 @@ export function HomePreviewSection() {
               boxShadow: colors.projectsSection_GH_Glow,
             }}
           >
-            {language === "de"
-              ? `Alle ${totalCount} Projekte ansehen`
-              : `View All ${totalCount} Projects`}
+            {t.projectsPreview.viewAll(totalCount)}
             <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
         </div>

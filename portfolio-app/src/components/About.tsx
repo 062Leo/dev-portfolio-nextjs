@@ -4,12 +4,13 @@ import { type ReactNode } from "react";
 import { Bot, Briefcase, ChartNoAxesCombined, Code, Workflow } from "lucide-react";
 import { usePortfolioData } from "@/data/index";
 import { useThemeColors, type ThemeColorSet } from "@/components/colors";
-import { useLanguage } from "@/context/LanguageContext";
+import { useT } from "@/i18n";
 
 export function About() {
-  const { language } = useLanguage();
+  const t = useT();
   const colors = useThemeColors(true);
   const currentPortfolioData = usePortfolioData();
+  const cards = t.about.cards;
 
   return (
     <section id="about" className="relative px-4 py-24">
@@ -18,15 +19,8 @@ export function About() {
           className="mb-12 text-center text-3xl font-bold md:text-4xl"
           style={{ color: colors.aboutSectionTitleColor }}
         >
-          {language === "de" ? (
-            <>
-              Über <span style={{ color: colors.aboutSectionAccentColor }}>mich</span>
-            </>
-          ) : (
-            <>
-              About <span style={{ color: colors.aboutSectionAccentColor }}>Me</span>
-            </>
-          )}
+          {t.about.titleStart}{" "}
+          <span style={{ color: colors.aboutSectionAccentColor }}>{t.about.titleAccent}</span>
         </h2>
 
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
@@ -38,11 +32,7 @@ export function About() {
               boxShadow: colors.aboutSectionCardShadow,
             }}
           >
-            <h3 className="text-2xl font-semibold">
-              {language === "de"
-                ? "Softwareentwickler mit Fokus auf Anwendungen, Tools & AI"
-                : "Software Developer focused on applications, tools & AI"}
-            </h3>
+            <h3 className="text-2xl font-semibold">{t.about.headline}</h3>
 
             {currentPortfolioData.about.description.map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
@@ -52,56 +42,32 @@ export function About() {
           <div className="grid grid-cols-1 gap-6">
             <InfoCard
               icon={<Code className="h-6 w-6" />}
-              title={language === "de" ? "Software Development" : "Software Development"}
-              description={
-                language === "de"
-                  ? "Entwicklung moderner Anwendungen von Web-Frontends über Desktop bis zu Backend-Lösungen mit Fokus auf sauberer Architektur, wartbarem Code und praxisnaher Umsetzbarkeit."
-                  : "Development of modern applications from web frontends to desktop and backend solutions with a focus on clean architecture, maintainable code and practical delivery."
-              }
+              title={cards.development.title}
+              description={cards.development.description}
               colors={colors}
             />
             <InfoCard
               icon={<Workflow className="h-6 w-6" />}
-              title={language === "de" ? "Interactive Systems" : "Interactive Systems"}
-              description={
-                language === "de"
-                  ? "Konzeption und Umsetzung interaktiver Systeme mit Unity und C# von Spielen und Simulationen bis zu Anwendungen, in denen Echtzeit-Interaktion, Physik oder komplexe Abläufe gefragt sind."
-                  : "Concept and implementation of interactive systems with Unity and C# from games and simulations to applications where real-time interaction, physics or complex workflows matter."
-              }
+              title={cards.interactive.title}
+              description={cards.interactive.description}
               colors={colors}
             />
             <InfoCard
               icon={<Bot className="h-6 w-6" />}
-              title={language === "de" ? "AI & Automation" : "AI & Automation"}
-              description={
-                language === "de"
-                  ? "Großes Interesse an Künstlicher Intelligenz (KI), insbesondere ihrem produktiven Einsatz im Arbeitsalltag und dem sinnvollen Einbau in Projekte und Apps, kombiniert mit Automatisierung via Python, TypeScript oder Browser-Workflows."
-                  : "Strong interest in AI, its productive use in everyday work and its integration into projects and apps, combined with automation via Python, TypeScript or browser workflows."
-              }
+              title={cards.ai.title}
+              description={cards.ai.description}
               colors={colors}
             />
             <InfoCard
               icon={<ChartNoAxesCombined className="h-6 w-6" />}
-              title={
-                language === "de"
-                  ? "Collaboration & Communication"
-                  : "Collaboration & Communication"
-              }
-              description={
-                language === "de"
-                  ? "Zusammenarbeit in agilen Projekten mit klarer Kommunikation, strukturierter Abstimmung und einem verlässlichen Vorgehen von der Planung bis zur Umsetzung."
-                  : "Collaboration in agile projects with clear communication, structured alignment and a reliable approach from planning to delivery."
-              }
+              title={cards.collaboration.title}
+              description={cards.collaboration.description}
               colors={colors}
             />
             <InfoCard
               icon={<Briefcase className="h-6 w-6" />}
-              title={language === "de" ? "Ownership & Mindset" : "Ownership & Mindset"}
-              description={
-                language === "de"
-                  ? "Eigeninitiative, selbstständiges Arbeiten, aktives Mitdenken und die Bereitschaft, Entscheidungen zu treffen und sich durch Projekte und Recherche kontinuierlich weiterzuentwickeln."
-                  : "Initiative, independent work, active thinking and the willingness to make decisions and keep developing through projects and research."
-              }
+              title={cards.ownership.title}
+              description={cards.ownership.description}
               colors={colors}
             />
           </div>

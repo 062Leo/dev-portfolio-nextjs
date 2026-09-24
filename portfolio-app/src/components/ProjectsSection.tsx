@@ -6,12 +6,12 @@ import { ArrowRight } from "lucide-react";
 import { usePortfolioData, useOtherProjects } from "@/data/index";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
-import { useLanguage } from "@/context/LanguageContext";
+import { useT } from "@/i18n";
 
 export function ProjectsShowcase() {
   const [showDialog, setShowDialog] = useState(false);
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
-  const { language } = useLanguage();
+  const t = useT();
 
   const colors = useThemeColors(true);
 
@@ -27,23 +27,14 @@ export function ProjectsShowcase() {
           className="mb-4 text-center text-3xl font-bold md:text-4xl"
           style={{ color: colors.projectsSectionTitleColor }}
         >
-          {language === "de" ? (
-            <>
-              Ausgewählte <span style={{ color: colors.projectsSectionAccentText }}>Projekte</span>
-            </>
-          ) : (
-            <>
-              Featured <span style={{ color: colors.projectsSectionAccentText }}>Projects</span>
-            </>
-          )}
+          {t.projects.titleStart}{" "}
+          <span style={{ color: colors.projectsSectionAccentText }}>{t.projects.titleAccent}</span>
         </h2>
         <p
           className="mx-auto mb-12 max-w-3xl text-center"
           style={{ color: colors.projectsSectionSubtitleColor }}
         >
-          {language === "de"
-            ? "Hier sind einige meiner aktuellen Projekte, die Design, Performance und sauberen Code verbinden."
-            : "Here are some of my recent projects that combine design, performance, and clean code."}
+          {t.projects.intro}
         </p>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
@@ -126,7 +117,7 @@ export function ProjectsShowcase() {
                     className="inline-flex items-center gap-1 text-sm font-semibold transition-colors"
                     style={{ color: colors.projectsSectionLinkColor }}
                   >
-                    {language === "de" ? "Mehr Details anzeigen" : "View more Details"}
+                    {t.projects.moreDetails}
                     <ArrowRight
                       className="h-4 w-4"
                       style={{ color: colors.projectsSectionLinkColor }}
@@ -143,15 +134,13 @@ export function ProjectsShowcase() {
           className="mt-16 mb-4 text-center text-2xl font-semibold md:text-3xl pt-4"
           style={{ color: colors.projectsSectionTitleColor }}
         >
-          {language === "de" ? "Weitere Projekte" : "More Projects"}
+          {t.projects.moreTitle}
         </h3>
         <p
           className="mx-auto mb-12 max-w-3xl text-center"
           style={{ color: colors.projectsSectionSubtitleColor }}
         >
-          {language === "de"
-            ? "Zusätzliche Projekte und Experimente, die mein Portfolio ergänzen."
-            : "Additional projects and experiments that complement my portfolio."}
+          {t.projects.moreIntro}
         </p>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
@@ -234,7 +223,7 @@ export function ProjectsShowcase() {
                     className="inline-flex items-center gap-1 text-sm font-semibold transition-colors"
                     style={{ color: colors.projectsSectionLinkColor }}
                   >
-                    {language === "de" ? "Mehr Details anzeigen" : "View more Details"}
+                    {t.projects.moreDetails}
                     <ArrowRight
                       className="h-4 w-4"
                       style={{ color: colors.projectsSectionLinkColor }}
@@ -260,7 +249,7 @@ export function ProjectsShowcase() {
               setShowDialog(true);
             }}
           >
-            {language === "de" ? "Mein GitHub-Profil ansehen" : "Check My Personal GitHub"}
+            {t.projects.githubCta}
             <ArrowRight size={16} />
           </button>
         </div>
@@ -273,19 +262,9 @@ export function ProjectsShowcase() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
         >
           <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
-            <h2 className="mb-6 text-4xl font-semibold">
-              {language === "en" ? "External link" : "Externer Link"}
-            </h2>
-            <p className="mb-4 text-2xl">
-              {language === "en"
-                ? "You are about to leave this website and will be redirected to an external platform (GitHub)."
-                : "Sie verlassen diese Website und werden auf eine externe Plattform (GitHub) weitergeleitet."}
-            </p>
-            <p className="mb-10 text-2xl">
-              {language === "en"
-                ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
-                : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
-            </p>
+            <h2 className="mb-6 text-4xl font-semibold">{t.dialog.title}</h2>
+            <p className="mb-4 text-2xl">{t.dialog.leaving("GitHub")}</p>
+            <p className="mb-10 text-2xl">{t.dialog.responsibility}</p>
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
               <button
                 type="button"
@@ -295,7 +274,7 @@ export function ProjectsShowcase() {
                   setPendingUrl(null);
                 }}
               >
-                {language === "en" ? "Cancel" : "Abbrechen"}
+                {t.dialog.cancel}
               </button>
               <button
                 type="button"
@@ -309,7 +288,7 @@ export function ProjectsShowcase() {
                   }
                 }}
               >
-                {language === "en" ? "Continue" : "Fortfahren"}
+                {t.dialog.continue}
               </button>
             </div>
           </div>

@@ -10,9 +10,14 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: [["list"], ["html", { open: "never" }]],
+  // One next start process serves every worker's browser, videos included. With the
+  // default worker count (half the cores) a single round trip took up to six seconds and
+  // navigation assertions timed out; four workers keep the server responsive.
+  workers: process.env.CI ? 2 : 4,
+  expect: { timeout: 10_000 },
   use: {
     baseURL: BASE_URL,
-    // German browser: the site detects the language from navigator.language.
+    // German browser: without a lang cookie the site takes the language from Accept-Language.
     locale: "de-DE",
     trace: "retain-on-failure",
   },
@@ -30,8 +35,6 @@ export default defineConfig({
         storageState: AUTH_STATE,
       },
       dependencies: ["setup"],
-      // The language toggle is only rendered from the md breakpoint up.
-      testIgnore: /language\.spec\.ts/,
     },
     {
       name: "desktop",

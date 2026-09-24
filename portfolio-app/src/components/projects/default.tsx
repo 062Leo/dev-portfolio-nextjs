@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
-import { useLanguage } from "@/context/LanguageContext";
+import { useT } from "@/i18n";
 import { renderMarkdownText } from "@/lib/markdown";
 import ProjectVideos from "./components/ProjectVideos";
 
@@ -50,7 +50,7 @@ export function DetailPage({ id }: { id: string }) {
   const [selectedImage, setSelectedImage] = useState<{ url: string; caption?: string } | null>(
     null,
   );
-  const { language } = useLanguage();
+  const t = useT();
   const portfolioData = usePortfolioData();
   const otherProjects = useOtherProjects();
   const project = useMemo<Project | null>(
@@ -66,13 +66,13 @@ export function DetailPage({ id }: { id: string }) {
   if (!project) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
-        <h1 className="text-4xl font-bold">Project not found</h1>
+        <h1 className="text-4xl font-bold">{t.projectDetail.notFound}</h1>
         <Link
           href="/"
           className="mt-4 hover:underline"
           style={{ color: colors.boomforceBackLinkText }}
         >
-          Back to Home
+          {t.projectDetail.backHome}
         </Link>
       </div>
     );
@@ -103,7 +103,7 @@ export function DetailPage({ id }: { id: string }) {
             onMouseLeave={(e) => (e.currentTarget.style.color = colors.boomforceBackLinkText)}
           >
             <ArrowLeft size={20} />
-            {language === "de" ? "Zurück zur Projektübersicht" : "Back to Projects"}
+            {t.projectDetail.back}
           </Link>
         </div>
 
@@ -183,7 +183,7 @@ export function DetailPage({ id }: { id: string }) {
                   className="mb-4 text-xl font-semibold font-press-start"
                   style={{ color: colors.boomforceFeatureTitleColor }}
                 >
-                  KEY FEATURES
+                  {t.projectDetail.keyFeatures}
                 </h3>
                 <ul className="space-y-2" style={{ color: colors.boomforceFeatureListText }}>
                   {project.features?.map((feature, index) => (
@@ -205,7 +205,7 @@ export function DetailPage({ id }: { id: string }) {
                   className="mb-4 text-xl font-semibold font-press-start"
                   style={{ color: colors.boomforceTechStackTitleColor }}
                 >
-                  TECH STACK
+                  {t.projectDetail.techStack}
                 </h3>
                 <div className="flex flex-wrap gap-3">
                   {project.techStack?.map((tech) => (
@@ -228,7 +228,7 @@ export function DetailPage({ id }: { id: string }) {
                       className="mt-6 mb-4 text-xl font-semibold font-press-start"
                       style={{ color: colors.boomforceStatsTitleColor }}
                     >
-                      STATS
+                      {t.projectDetail.stats}
                     </h3>
                     <div className="space-y-2" style={{ color: colors.boomforceStatsTextColor }}>
                       {project.stats?.map((stat, index) => {
@@ -265,7 +265,7 @@ export function DetailPage({ id }: { id: string }) {
                   }}
                 >
                   <Play className="mr-2 w-5 h-5" />
-                  {language === "de" ? "DEMO SPIELEN" : "PLAY DEMO"}
+                  {t.projectDetail.playDemo}
                 </Link>
               )}
               {project.demoDownload && (
@@ -283,7 +283,7 @@ export function DetailPage({ id }: { id: string }) {
                   }}
                 >
                   <Download className="mr-2 w-5 h-5" />
-                  {language === "de" ? "DEMO HERUNTERLADEN" : "DOWNLOAD DEMO"}
+                  {t.projectDetail.downloadDemo}
                 </button>
               )}
               {project.githubUrl && (
@@ -301,7 +301,7 @@ export function DetailPage({ id }: { id: string }) {
                   }}
                 >
                   <ExternalLink className="w-5 h-5" />
-                  {language === "de" ? "CODE ANSEHEN" : "VIEW CODE"}
+                  {t.projectDetail.viewCode}
                 </button>
               )}
               {project.custom1Link && project.custom1BTNText && (
@@ -343,7 +343,7 @@ export function DetailPage({ id }: { id: string }) {
                   className="mt-12 mb-6 text-2xl font-semibold font-press-start text-center"
                   style={{ color: colors.boomforceScreenshotsTitleColor }}
                 >
-                  SCREENSHOTS
+                  {t.projectDetail.screenshots}
                 </h3>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   {project.images!.map((image, index) => (
@@ -363,7 +363,9 @@ export function DetailPage({ id }: { id: string }) {
                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                         <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                          <span className="text-lg font-semibold text-white">Click me</span>
+                          <span className="text-lg font-semibold text-white">
+                            {t.projectDetail.clickMe}
+                          </span>
                         </div>
                       </div>
                       {image.caption && (
@@ -405,7 +407,7 @@ export function DetailPage({ id }: { id: string }) {
                   {/* eslint-disable-next-line @next/next/no-img-element -- converted to next/image in a later step */}
                   <img
                     src={selectedImage.url}
-                    alt={selectedImage.caption || "Screenshot"}
+                    alt={selectedImage.caption || t.projectDetail.screenshotAlt}
                     className="min-h-[50vh] min-w-[50vw] max-h-[75vh] max-w-[95vw] h-auto w-auto object-contain rounded-xl"
                   />
                 </div>
@@ -428,23 +430,11 @@ export function DetailPage({ id }: { id: string }) {
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
           >
             <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
-              <h2 className="mb-6 text-4xl font-semibold">
-                {language === "en" ? "External link" : "Externer Link"}
-              </h2>
-              <p className="mb-4 text-2xl">
-                {language === "en"
-                  ? "You are about to leave this website and will be redirected to an external platform (GitHub)."
-                  : "Sie verlassen diese Website und werden auf eine externe Plattform (GitHub) weitergeleitet."}
-              </p>
-              <p className="mb-10 text-2xl">
-                {language === "en"
-                  ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
-                  : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
-              </p>
+              <h2 className="mb-6 text-4xl font-semibold">{t.dialog.title}</h2>
+              <p className="mb-4 text-2xl">{t.dialog.leaving("GitHub")}</p>
+              <p className="mb-10 text-2xl">{t.dialog.responsibility}</p>
               <p className="mb-10 text-sm break-all opacity-80">
-                {language === "en"
-                  ? `(redirecting to: ${pendingUrl})`
-                  : `(Weiterleitung zu: ${pendingUrl})`}
+                {t.dialog.redirectingTo(pendingUrl)}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                 <button
@@ -455,7 +445,7 @@ export function DetailPage({ id }: { id: string }) {
                     setPendingUrl(null);
                   }}
                 >
-                  {language === "en" ? "Cancel" : "Abbrechen"}
+                  {t.dialog.cancel}
                 </button>
                 <button
                   type="button"
@@ -469,7 +459,7 @@ export function DetailPage({ id }: { id: string }) {
                     }
                   }}
                 >
-                  {language === "en" ? "Continue" : "Fortfahren"}
+                  {t.dialog.continue}
                 </button>
               </div>
             </div>
@@ -482,23 +472,13 @@ export function DetailPage({ id }: { id: string }) {
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
           >
             <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
-              <h2 className="mb-6 text-4xl font-semibold">
-                {language === "en" ? "External link" : "Externer Link"}
-              </h2>
+              <h2 className="mb-6 text-4xl font-semibold">{t.dialog.title}</h2>
               <p className="mb-4 text-2xl">
-                {language === "en"
-                  ? `You are about to leave this website and will be redirected to an external platform (${pendingCustomLabel || "External Website"}).`
-                  : `Sie verlassen diese Website und werden auf eine externe Plattform (${pendingCustomLabel || "Externe Website"}) weitergeleitet.`}
+                {t.dialog.leaving(pendingCustomLabel || t.dialog.defaultLabel)}
               </p>
-              <p className="mb-10 text-2xl">
-                {language === "en"
-                  ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
-                  : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
-              </p>
+              <p className="mb-10 text-2xl">{t.dialog.responsibility}</p>
               <p className="mb-10 text-sm break-all opacity-80">
-                {language === "en"
-                  ? `(redirecting to: ${pendingCustomUrl})`
-                  : `(Weiterleitung zu: ${pendingCustomUrl})`}
+                {t.dialog.redirectingTo(pendingCustomUrl)}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                 <button
@@ -510,7 +490,7 @@ export function DetailPage({ id }: { id: string }) {
                     setPendingCustomLabel("");
                   }}
                 >
-                  {language === "en" ? "Cancel" : "Abbrechen"}
+                  {t.dialog.cancel}
                 </button>
                 <button
                   type="button"
@@ -525,7 +505,7 @@ export function DetailPage({ id }: { id: string }) {
                     }
                   }}
                 >
-                  {language === "en" ? "Continue" : "Fortfahren"}
+                  {t.dialog.continue}
                 </button>
               </div>
             </div>

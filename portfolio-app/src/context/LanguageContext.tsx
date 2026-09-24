@@ -1,47 +1,36 @@
 "use client";
 
-import { createContext, useContext, useState, useSyncExternalStore, type ReactNode } from "react";
-
-export type SupportedLanguage = "de" | "en";
+import { createContext, useContext, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { LANG_COOKIE_MAX_AGE_SECONDS, LANG_COOKIE_NAME, type Lang } from "@/i18n/lang";
 
 interface LanguageContextValue {
-  language: SupportedLanguage;
-  setLanguage: (language: SupportedLanguage) => void;
+  language: Lang;
+  setLanguage: (language: Lang) => void;
 }
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
 interface LanguageProviderProps {
+  lang: Lang;
   children: ReactNode;
 }
 
-// The browser language is read like an external store: the server snapshot and the
-// hydration render use German, and React re-renders with the browser language
-// right after hydration. No subscription: a later change of navigator.language is
-// not followed, as before.
-const subscribeToNavigatorLanguage = () => () => {};
+// The language is decided on the server: the proxy rewrites every page to /<lang>/... from
+// the lang cookie (or the Accept-Language header), and the [lang] layout passes it down
+// here. Switching writes the cookie and refreshes the route, so the proxy rewrites to the
+// other language while the URL stays the same.
+export function LanguageProvider({ lang, children }: LanguageProviderProps) {
+  const router = useRouter();
 
-function getNavigatorLanguage(): SupportedLanguage {
-  const navigatorLanguage = navigator.language || "de";
-  return navigatorLanguage.toLowerCase().startsWith("de") ? "de" : "en";
-}
-
-function getServerLanguage(): SupportedLanguage {
-  return "de";
-}
-
-export function LanguageProvider({ children }: LanguageProviderProps) {
-  const detectedLanguage = useSyncExternalStore(
-    subscribeToNavigatorLanguage,
-    getNavigatorLanguage,
-    getServerLanguage,
-  );
-  // A language chosen by the user wins over the detected one.
-  const [chosenLanguage, setLanguage] = useState<SupportedLanguage | null>(null);
-  const language = chosenLanguage ?? detectedLanguage;
+  const setLanguage = (next: Lang) => {
+    const secure = window.location.protocol === "https:" ? "; secure" : "";
+    document.cookie = `${LANG_COOKIE_NAME}=${next}; path=/; max-age=${LANG_COOKIE_MAX_AGE_SECONDS}; samesite=lax${secure}`;
+    router.refresh();
+  };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage }}>
+    <LanguageContext.Provider value={{ language: lang, setLanguage }}>
       {children}
     </LanguageContext.Provider>
   );

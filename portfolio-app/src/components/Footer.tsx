@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { ArrowUp } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
+import { useT } from "@/i18n";
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg
@@ -52,7 +52,7 @@ const ItchIcon = ({ className }: { className?: string }) => (
 );
 
 export function Footer() {
-  const { language } = useLanguage();
+  const t = useT();
   const [showDialog, setShowDialog] = useState(false);
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
   const [pendingLabel, setPendingLabel] = useState<string>("");
@@ -74,36 +74,32 @@ export function Footer() {
                 <span className="text-foreground/90">leo</span>
                 <span className="text-[rgba(248,113,113,1)]">.dev</span>
               </span>
-              <p className="mt-3 text-sm text-foreground/60">
-                {language === "de"
-                  ? "Softwareentwickler mit Fokus auf AI, Automatisierung und interaktive Anwendungen."
-                  : "Software developer focused on AI, automation and interactive applications."}
-              </p>
+              <p className="mt-3 text-sm text-foreground/60">{t.footer.tagline}</p>
             </div>
 
             {/* Navigation */}
             <div>
               <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-foreground/50">
-                {language === "de" ? "Navigation" : "Navigation"}
+                {t.footer.navigation}
               </h4>
               <nav className="flex flex-col gap-2 text-sm">
                 <Link
                   href="/"
                   className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors"
                 >
-                  {language === "de" ? "Home" : "Home"}
+                  {t.nav.home}
                 </Link>
                 <Link
                   href="/#about"
                   className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors"
                 >
-                  {language === "de" ? "Über mich" : "About"}
+                  {t.nav.about}
                 </Link>
                 <Link
                   href="/projects"
                   className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors"
                 >
-                  {language === "de" ? "Projekte" : "Projects"}
+                  {t.nav.projects}
                 </Link>
               </nav>
             </div>
@@ -111,7 +107,7 @@ export function Footer() {
             {/* Links & Legal */}
             <div>
               <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-foreground/50">
-                {language === "de" ? "Links" : "Links"}
+                {t.footer.links}
               </h4>
               <div className="flex gap-4 mb-4">
                 <button
@@ -144,18 +140,13 @@ export function Footer() {
                   <ItchIcon />
                 </button>
               </div>
-              <p className="text-xs text-foreground/40 leading-relaxed">
-                {language === "de"
-                  ? "Private Portfolio-Website. Externe Links öffnen externe Plattformen. Diese Website speichert keine personenbezogenen Daten."
-                  : "Private portfolio website. External links open external platforms. This website does not store any personal data."}
-              </p>
+              <p className="text-xs text-foreground/40 leading-relaxed">{t.footer.notice}</p>
             </div>
           </div>
 
           <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-[rgba(167,139,250,0.1)] pt-6 md:flex-row">
             <p className="text-xs text-foreground/50">
-              © {new Date().getFullYear()} Leo.{" "}
-              {language === "de" ? "Alle Rechte vorbehalten." : "All rights reserved."}
+              © {new Date().getFullYear()} Leo. {t.footer.rights}
             </p>
             <button
               type="button"
@@ -163,7 +154,7 @@ export function Footer() {
               className="flex items-center gap-1.5 rounded-full border border-[rgba(167,139,250,0.3)] px-3 py-1.5 text-xs text-foreground/50 hover:text-foreground/90 hover:border-[rgba(167,139,250,0.6)] transition-all duration-300"
             >
               <ArrowUp className="h-3 w-3" />
-              {language === "de" ? "Nach oben" : "Back to top"}
+              {t.footer.backToTop}
             </button>
           </div>
         </div>
@@ -178,23 +169,13 @@ export function Footer() {
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
           >
             <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
-              <h2 className="mb-6 text-4xl font-semibold">
-                {language === "en" ? "External link" : "Externer Link"}
-              </h2>
+              <h2 className="mb-6 text-4xl font-semibold">{t.dialog.title}</h2>
               <p className="mb-4 text-2xl">
-                {language === "en"
-                  ? `You are about to leave this website and will be redirected to an external platform (${pendingLabel || "External Website"}).`
-                  : `Sie verlassen diese Website und werden auf eine externe Plattform (${pendingLabel || "Externe Website"}) weitergeleitet.`}
+                {t.dialog.leaving(pendingLabel || t.dialog.defaultLabel)}
               </p>
-              <p className="mb-10 text-2xl">
-                {language === "en"
-                  ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
-                  : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
-              </p>
+              <p className="mb-10 text-2xl">{t.dialog.responsibility}</p>
               <p className="mb-10 text-sm break-all opacity-80">
-                {language === "en"
-                  ? `(redirecting to: ${pendingUrl})`
-                  : `(Weiterleitung zu: ${pendingUrl})`}
+                {t.dialog.redirectingTo(pendingUrl)}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                 <button
@@ -206,7 +187,7 @@ export function Footer() {
                     setPendingLabel("");
                   }}
                 >
-                  {language === "en" ? "Cancel" : "Abbrechen"}
+                  {t.dialog.cancel}
                 </button>
                 <button
                   type="button"
@@ -221,7 +202,7 @@ export function Footer() {
                     }
                   }}
                 >
-                  {language === "en" ? "Continue" : "Fortfahren"}
+                  {t.dialog.continue}
                 </button>
               </div>
             </div>

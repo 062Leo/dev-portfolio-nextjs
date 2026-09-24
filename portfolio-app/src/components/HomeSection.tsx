@@ -4,12 +4,12 @@ import { ArrowDown } from "lucide-react";
 import Link from "next/link";
 import { usePortfolioData } from "@/data/index";
 import { useThemeColors } from "@/components/colors";
-import { useLanguage } from "@/context/LanguageContext";
+import { useT } from "@/i18n";
 
 const hoverText = " onClick={reload}";
 
 export function HomeSection() {
-  const { language } = useLanguage();
+  const t = useT();
   const colors = useThemeColors(true);
 
   const handleScrollClick = () => {
@@ -49,7 +49,7 @@ export function HomeSection() {
               textShadow: colors.homeSectionTitleGlow,
             }}
           >
-            <span>{language === "de" ? "Hallo, ich bin " : "Hi, I'm "}</span>
+            <span>{t.hero.greeting}</span>
             <span className="inline-flex items-baseline">
               <span style={{ color: colors.homeSectionBracketText }}>&lt;</span>
               <span className="relative inline-flex items-baseline">
@@ -101,7 +101,7 @@ export function HomeSection() {
                 boxShadow: colors.homeSectionBorderGlow,
               }}
             >
-              {language === "de" ? "Meine Projekte" : "View My Work"}
+              {t.hero.cta}
             </Link>
           </div>
         </div>
@@ -112,9 +112,7 @@ export function HomeSection() {
         className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center animate-bounce"
         style={{ color: colors.homeSectionTitleColor }}
       >
-        <span className="mb-1 select-none text-sm">
-          {language === "de" ? "Scrollen" : "Scroll"}
-        </span>
+        <span className="mb-1 select-none text-sm">{t.hero.scroll}</span>
         <ArrowDown className="h-5 w-5" />
       </button>
     </section>

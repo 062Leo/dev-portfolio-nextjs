@@ -8,12 +8,16 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useThemeColors, applyThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
+import { useT, type Lang } from "@/i18n";
+
+const OTHER_LANGUAGE: Record<Lang, Lang> = { de: "en", en: "de" };
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // theme is always dark
   const { language, setLanguage } = useLanguage();
+  const t = useT();
   const colors = useThemeColors(true);
 
   useEffect(() => {
@@ -47,23 +51,38 @@ export function Navbar() {
   }, []);
 
   const toggleLanguage = () => {
-    setLanguage(language === "de" ? "en" : "de");
+    setLanguage(OTHER_LANGUAGE[language]);
   };
 
-  const navItems =
-    language === "de"
-      ? [
-          { name: "Home", href: "/" },
-          { name: "Über mich", href: "/#about" },
-          { name: "Skills", href: "/#skills" },
-          { name: "Projekte", href: "/projects" },
-        ]
-      : [
-          { name: "Home", href: "/" },
-          { name: "About", href: "/#about" },
-          { name: "Skills", href: "/#skills" },
-          { name: "Projects", href: "/projects" },
-        ];
+  const flag = (
+    <div className="relative">
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300"
+        style={{
+          width: "1.8rem",
+          height: "1.8rem",
+          backgroundColor: colors.languageToggleBgColor,
+        }}
+      />
+      <div className="relative h-6 w-6 overflow-hidden rounded-full z-10">
+        <Image
+          src={`/Icons/${language}_flag.png`}
+          alt={t.nav.currentLanguage}
+          sizes="(max-width: 768px) 24px, 24px"
+          fill
+          className="transition-opacity duration-300 object-cover"
+          priority
+        />
+      </div>
+    </div>
+  );
+
+  const navItems = [
+    { name: t.nav.home, href: "/" },
+    { name: t.nav.about, href: "/#about" },
+    { name: t.nav.skills, href: "/#skills" },
+    { name: t.nav.projects, href: "/projects" },
+  ];
 
   return (
     <nav
@@ -114,35 +133,16 @@ export function Navbar() {
           <button
             onClick={toggleLanguage}
             className="z-50 focus:outline-none"
-            aria-label="Toggle language"
+            aria-label={t.nav.toggleLanguage}
           >
-            <div className="relative">
-              <div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300"
-                style={{
-                  width: "1.8rem",
-                  height: "1.8rem",
-                  backgroundColor: colors.languageToggleBgColor,
-                }}
-              />
-              <div className="relative h-6 w-6 overflow-hidden rounded-full z-10">
-                <Image
-                  src={language === "de" ? "/Icons/de_flag.png" : "/Icons/en_flag.png"}
-                  alt={language === "de" ? "Deutsch" : "English"}
-                  sizes="(max-width: 768px) 24px, 24px"
-                  fill
-                  className="transition-opacity duration-300 object-cover"
-                  priority
-                />
-              </div>
-            </div>
+            {flag}
           </button>
         </div>
 
         <button
           onClick={() => setIsMenuOpen((prev) => !prev)}
           className="z-50 p-2 md:hidden"
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-label={isMenuOpen ? t.nav.closeMenu : t.nav.openMenu}
           style={{ color: colors.navbarTitleColor }}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -169,6 +169,17 @@ export function Navbar() {
                 {item.name}
               </Link>
             ))}
+            {/* Language toggle: a full-width row, at least 44 px high. */}
+            <button
+              type="button"
+              onClick={toggleLanguage}
+              className="flex min-h-11 w-full items-center justify-center gap-3 transition-colors duration-300"
+              style={{ color: colors.navbarMenuText }}
+              aria-label={t.nav.toggleLanguage}
+            >
+              {flag}
+              <span>{t.nav.currentLanguage}</span>
+            </button>
           </div>
         </div>
       </div>

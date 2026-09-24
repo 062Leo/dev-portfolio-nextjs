@@ -1,18 +1,90 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
-// Runs in the desktop project only: the toggle is not rendered below the md breakpoint.
-test("the navbar language toggle switches between German and English", async ({ page }) => {
+// The e2e browser is German (locale in playwright.config.ts) and the setup project stores
+// the session without a lang cookie, so every test starts in German.
+
+const TOGGLE = /Sprache wechseln|Toggle language/;
+
+// On mobile the navbar links and the toggle sit in the hamburger menu, which has to be
+// opened first (and stays open while the language switches).
+async function openMenu(page: Page, isMobile: boolean) {
+  if (!isMobile) return;
+  const openButton = page.getByRole("button", { name: /Menü öffnen|Open menu/ });
+  if ((await openButton.count()) > 0) await openButton.click();
+}
+
+async function languageToggle(page: Page, isMobile: boolean) {
+  await openMenu(page, isMobile);
+  const toggle = page.getByRole("button", { name: TOGGLE });
+  await expect(toggle).toBeVisible();
+  return toggle;
+}
+
+// Links in the navbar; the footer is a navigation landmark too. Role queries skip the
+// variant that is display:none at the current breakpoint, so exactly one link matches.
+function navLink(page: Page, name: string) {
+  return page
+    .getByRole("navigation")
+    .filter({ has: page.getByRole("button", { name: TOGGLE }) })
+    .getByRole("link", { name, exact: true });
+}
+
+test("the language toggle switches between German and English", async ({ page, isMobile }) => {
   await page.goto("/");
-  // The footer is a navigation landmark too; take the one that holds the toggle.
-  const toggle = page.getByRole("button", { name: "Toggle language" });
-  const nav = page.getByRole("navigation").filter({ has: toggle });
+  await expect(page.locator("html")).toHaveAttribute("lang", "de");
+  await expect(navLink(page, "Über mich")).toHaveCount(1);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Hallo, ich bin");
 
-  await expect(nav.getByRole("link", { name: "Über mich", exact: true })).toBeVisible();
+  await (await languageToggle(page, isMobile)).click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(navLink(page, "About")).toHaveCount(1);
+  await expect(navLink(page, "Über mich")).toHaveCount(0);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Hi, I'm");
 
-  await toggle.click();
-  await expect(nav.getByRole("link", { name: "About", exact: true })).toBeVisible();
-  await expect(nav.getByRole("link", { name: "Über mich", exact: true })).toHaveCount(0);
+  await (await languageToggle(page, isMobile)).click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "de");
+  await expect(navLink(page, "Über mich")).toHaveCount(1);
+});
 
-  await toggle.click();
-  await expect(nav.getByRole("link", { name: "Über mich", exact: true })).toBeVisible();
+test("the choice survives a reload and a navigation", async ({ page, isMobile }) => {
+  await page.goto("/");
+  await (await languageToggle(page, isMobile)).click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Hi, I'm");
+
+  // Client-side navigation must not fall back to a cached German page.
+  await openMenu(page, isMobile);
+  await navLink(page, "Projects").click();
+  await expect(page).toHaveURL((url) => url.pathname === "/projects");
+  await expect(page.getByRole("heading", { level: 2 }).first()).toContainText("Featured");
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+});
+
+test.describe("English browser", () => {
+  test.use({ locale: "en-US" });
+
+  test("gets English on the first paint, without a cookie and without clicking", async ({
+    page,
+    context,
+  }) => {
+    await context.clearCookies({ name: "lang" });
+
+    // The HTML the server sends already carries the language: no flash on first load.
+    const response = await page.request.get("/", {
+      headers: { "accept-language": "en-US,en;q=0.9" },
+    });
+    expect(response.status()).toBe(200);
+    const html = await response.text();
+    expect(html).toContain('<html lang="en"');
+    expect(html).toContain("About");
+    expect(html).not.toContain("Über mich");
+
+    await page.goto("/");
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(navLink(page, "About")).toHaveCount(1);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Hi, I'm");
+  });
 });
