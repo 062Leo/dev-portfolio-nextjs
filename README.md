@@ -30,6 +30,8 @@ npm run dev
 
 http://localhost:3000
 
+Vor jedem Push `npm run check` ausführen (Lint, Typen, Format, Build, Audit); es muss ohne Fehler durchlaufen.
+
 ## Passwortschutz
 
 Die Website ist per Middleware (`proxy.ts`) passwortgeschützt. Besucher ohne gültigen Cookie werden auf `/login` umgeleitet.

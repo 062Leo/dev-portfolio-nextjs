@@ -10,11 +10,9 @@ import Link from "next/link";
 export function HomePreviewSection() {
   const { language } = useLanguage();
   const colors = useThemeColors(true);
-  const mainProjects = usePortfolioData().projects.filter(
-    (p) => p.id !== "coming-soon"
-  );
+  const mainProjects = usePortfolioData().projects.filter((p) => p.id !== "coming-soon");
   const otherProjectsList = useOtherProjects().projects.filter(
-    (p) => p.id && p.id.trim() !== "" && p.id !== "coming-soon"
+    (p) => p.id && p.id.trim() !== "" && p.id !== "coming-soon",
   );
   const allProjects = [...mainProjects, ...otherProjectsList];
   const totalCount = allProjects.length;
@@ -29,7 +27,8 @@ export function HomePreviewSection() {
         >
           {language === "de" ? (
             <>
-              Ausgewählte <span style={{ color: colors.homePreviewSectionAccentColor }}>Projekte</span>
+              Ausgewählte{" "}
+              <span style={{ color: colors.homePreviewSectionAccentColor }}>Projekte</span>
             </>
           ) : (
             <>
@@ -37,7 +36,10 @@ export function HomePreviewSection() {
             </>
           )}
         </h2>
-        <p className="mx-auto mb-12 max-w-3xl text-center" style={{ color: colors.projectsSectionSubtitleColor }}>
+        <p
+          className="mx-auto mb-12 max-w-3xl text-center"
+          style={{ color: colors.projectsSectionSubtitleColor }}
+        >
           {language === "de"
             ? `3 von ${totalCount} Projekten — von AI über Mobile bis Game Development.`
             : `3 of ${totalCount} projects — from AI to mobile to game development.`}
@@ -74,7 +76,10 @@ export function HomePreviewSection() {
                 >
                   {project.title}
                 </h3>
-                <p className="mt-2 line-clamp-2 text-sm" style={{ color: colors.projectsSectionSubtitleColor }}>
+                <p
+                  className="mt-2 line-clamp-2 text-sm"
+                  style={{ color: colors.projectsSectionSubtitleColor }}
+                >
                   {project.description}
                 </p>
 

@@ -74,7 +74,7 @@
       "Security": 4,
       "Kryptografie": 2
     },
-   "Technische Dokumentation": 4
+    "Technische Dokumentation": 4
   },
   "Methodik": {
     "Allgemeine Entwicklung": {
@@ -85,7 +85,6 @@
     "Frontend Development": 3,
     "Full Stack Development": 3,
     "App-Entwicklung": 4
-    
   },
   "Tools & VCS": {
     "Git & Repositories": {

@@ -31,13 +31,7 @@ export const otherProjects = {
       ] as ProjectImage[],
       detailComponent: "",
       videos: [],
-      tags: [
-        "Crypto Dashboard",
-        "TradingView",
-        "Lernplattform",
-        "Fake-Wallet",
-        "API-Integration",
-      ],
+      tags: ["Crypto Dashboard", "TradingView", "Lernplattform", "Fake-Wallet", "API-Integration"],
       features: [
         "Zentrale Übersicht über Krypto-Bestände und Kurse verschiedener Börsen",
         "Integration mehrerer Anbieter (z. B. Binance, KuCoin, Bitget, Coinbase) über API-Keys",
@@ -101,8 +95,7 @@ export const otherProjects = {
       demoImage: "",
       demoDownload:
         "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
-      githubUrl:
-        "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
+      githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
       videoBig: "/Videos/Big/GameOfLife.mp4",
       custom1Link: "",
       custom1BTNText: "",
@@ -148,8 +141,7 @@ export const otherProjects = {
       demoDownload: "",
       githubUrl: "",
       videoBig: "/Videos/Big/Doom_Showcase.mp4",
-      demotext:
-        "Kurzer Showcase des High-Mobility-Movements (Dashes, Trampoline, Wall-Climbing).",
+      demotext: "Kurzer Showcase des High-Mobility-Movements (Dashes, Trampoline, Wall-Climbing).",
       demoControls: [],
       misctext: "",
       miscimage: "",
@@ -203,8 +195,7 @@ export const otherProjects = {
       demoDownload: "",
       githubUrl: "",
       videoBig: "/Videos/Big/Arcanoid.mp4",
-      demotext:
-        "Gameplay-Showcase von Arcanoid 3D mit Bricks, Powerups, Score- und Lebenssystem.",
+      demotext: "Gameplay-Showcase von Arcanoid 3D mit Bricks, Powerups, Score- und Lebenssystem.",
       demoControls: [],
       misctext: "",
       miscimage: "",
@@ -294,8 +285,7 @@ export const otherProjects = {
       id: "coming-soon",
       title: "Bald verfügbar",
       subtitle: "",
-      description:
-        "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
+      description: "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
       longDescription:
         "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentieren.",
       image: "/Bilder/dummy.png",

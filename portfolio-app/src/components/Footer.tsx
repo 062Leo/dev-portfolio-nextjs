@@ -87,13 +87,22 @@ export function Footer() {
                 {language === "de" ? "Navigation" : "Navigation"}
               </h4>
               <nav className="flex flex-col gap-2 text-sm">
-                <Link href="/" className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors">
+                <Link
+                  href="/"
+                  className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors"
+                >
                   {language === "de" ? "Home" : "Home"}
                 </Link>
-                <Link href="/#about" className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors">
+                <Link
+                  href="/#about"
+                  className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors"
+                >
                   {language === "de" ? "Über mich" : "About"}
                 </Link>
-                <Link href="/projects" className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors">
+                <Link
+                  href="/projects"
+                  className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors"
+                >
                   {language === "de" ? "Projekte" : "Projects"}
                 </Link>
               </nav>
@@ -115,7 +124,12 @@ export function Footer() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleExternalLink("https://assetstore.unity.com/publishers/133842", "Unity Asset Store")}
+                  onClick={() =>
+                    handleExternalLink(
+                      "https://assetstore.unity.com/publishers/133842",
+                      "Unity Asset Store",
+                    )
+                  }
                   className="text-foreground/60 hover:text-[rgba(248,113,113,1)] transition-colors cursor-pointer"
                   aria-label="Unity Asset Store"
                 >
@@ -155,62 +169,65 @@ export function Footer() {
         </div>
       </footer>
 
-      {showDialog && pendingUrl && createPortal(
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-        >
-          <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
-            <h2 className="mb-6 text-4xl font-semibold">
-              {language === "en" ? "External link" : "Externer Link"}
-            </h2>
-            <p className="mb-4 text-2xl">
-              {language === "en"
-                ? `You are about to leave this website and will be redirected to an external platform (${pendingLabel || "External Website"}).`
-                : `Sie verlassen diese Website und werden auf eine externe Plattform (${pendingLabel || "Externe Website"}) weitergeleitet.`}
-            </p>
-            <p className="mb-10 text-2xl">
-              {language === "en"
-                ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
-                : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
-            </p>
-            <p className="mb-10 text-sm break-all opacity-80">
-              {language === "en"
-                ? `(redirecting to: ${pendingUrl})`
-                : `(Weiterleitung zu: ${pendingUrl})`}
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-background hover:bg-muted hover:shadow-lg hover:-translate-y-[2px] hover:border-foreground/60 transition-all duration-150"
-                onClick={() => {
-                  setShowDialog(false);
-                  setPendingUrl(null);
-                  setPendingLabel("");
-                }}
-              >
-                {language === "en" ? "Cancel" : "Abbrechen"}
-              </button>
-              <button
-                type="button"
-                className="rounded-md px-4 py-2 text-xl font-semibold bg-foreground text-background hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-foreground/70 transition-all duration-150"
-                onClick={() => {
-                  const url = pendingUrl;
-                  setShowDialog(false);
-                  setPendingUrl(null);
-                  setPendingLabel("");
-                  if (url) {
-                    window.open(url, "_blank", "noopener,noreferrer");
-                  }
-                }}
-              >
-                {language === "en" ? "Continue" : "Fortfahren"}
-              </button>
+      {showDialog &&
+        pendingUrl &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+          >
+            <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
+              <h2 className="mb-6 text-4xl font-semibold">
+                {language === "en" ? "External link" : "Externer Link"}
+              </h2>
+              <p className="mb-4 text-2xl">
+                {language === "en"
+                  ? `You are about to leave this website and will be redirected to an external platform (${pendingLabel || "External Website"}).`
+                  : `Sie verlassen diese Website und werden auf eine externe Plattform (${pendingLabel || "Externe Website"}) weitergeleitet.`}
+              </p>
+              <p className="mb-10 text-2xl">
+                {language === "en"
+                  ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
+                  : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
+              </p>
+              <p className="mb-10 text-sm break-all opacity-80">
+                {language === "en"
+                  ? `(redirecting to: ${pendingUrl})`
+                  : `(Weiterleitung zu: ${pendingUrl})`}
+              </p>
+              <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-background hover:bg-muted hover:shadow-lg hover:-translate-y-[2px] hover:border-foreground/60 transition-all duration-150"
+                  onClick={() => {
+                    setShowDialog(false);
+                    setPendingUrl(null);
+                    setPendingLabel("");
+                  }}
+                >
+                  {language === "en" ? "Cancel" : "Abbrechen"}
+                </button>
+                <button
+                  type="button"
+                  className="rounded-md px-4 py-2 text-xl font-semibold bg-foreground text-background hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-foreground/70 transition-all duration-150"
+                  onClick={() => {
+                    const url = pendingUrl;
+                    setShowDialog(false);
+                    setPendingUrl(null);
+                    setPendingLabel("");
+                    if (url) {
+                      window.open(url, "_blank", "noopener,noreferrer");
+                    }
+                  }}
+                >
+                  {language === "en" ? "Continue" : "Fortfahren"}
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      , document.body)}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

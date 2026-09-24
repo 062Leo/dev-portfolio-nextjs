@@ -101,8 +101,7 @@ export const otherProjects = {
       demoImage: "",
       demoDownload:
         "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
-      githubUrl:
-        "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
+      githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
       videoBig: "/Videos/Big/GameOfLife.mp4",
       custom1Link: "",
       custom1BTNText: "",
@@ -203,8 +202,7 @@ export const otherProjects = {
       demoDownload: "",
       githubUrl: "",
       videoBig: "/Videos/Big/Arcanoid.mp4",
-      demotext:
-        "Gameplay showcase of Arcanoid 3D with bricks, power-ups, scoring and life system.",
+      demotext: "Gameplay showcase of Arcanoid 3D with bricks, power-ups, scoring and life system.",
       demoControls: [],
       misctext: "",
       miscimage: "",
@@ -295,8 +293,7 @@ export const otherProjects = {
       id: "",
       title: "2D Online Multiplayer Mobile Card Game",
       subtitle: "",
-      description:
-        "Private project built with Unity, C# and Photon PUN 2 for Android.",
+      description: "Private project built with Unity, C# and Photon PUN 2 for Android.",
       longDescription:
         "A 2D online multiplayer card game for mobile (Android), developed as a private project. It uses Photon PUN 2 for the multiplayer part and provides an optimized mobile UI/UX.",
       image: "/Bilder/dummy.png", // Placeholder
@@ -304,12 +301,7 @@ export const otherProjects = {
       detailComponent: "",
       videos: [],
       tags: ["Unity 2D", "Photon PUN 2", "Android", "Mobile"],
-      features: [
-        "Online multiplayer",
-        "Android build",
-        "Mobile UI/UX",
-        "Complex card logic",
-      ],
+      features: ["Online multiplayer", "Android build", "Mobile UI/UX", "Complex card logic"],
       techStack: ["Unity", "C#", "Photon PUN 2"],
       demoLink: "",
       demoImage: "",
@@ -358,8 +350,7 @@ export const otherProjects = {
       id: "coming-soon",
       title: "Coming soon",
       subtitle: "",
-      description:
-        "This project is still secret - more information coming soon.",
+      description: "This project is still secret - more information coming soon.",
       longDescription:
         "This entry is a placeholder. In the future, additional projects will be presented here.",
       image: "/Bilder/dummy.png",

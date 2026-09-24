@@ -13,7 +13,7 @@ export default function ProjectsPage() {
         <ProjectsShowcase />
       </main>
 
-     <div className="relative">
+      <div className="relative">
         <Footer />
       </div>
     </div>

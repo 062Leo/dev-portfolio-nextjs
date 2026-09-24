@@ -38,14 +38,7 @@ export const portfolioData = {
         "Python-Automatisierungsskript zur Steuerung langer Trainingsläufe und dynamischer Hyperparameter",
         "Auswertung der Trainingsläufe mit TensorBoard (Rewards, Losses, Erfolgsquoten)",
       ],
-      techStack: [
-        "Unity",
-        "ML-Agents Toolkit",
-        "C#",
-        "Python",
-        "PPO",
-        "TensorBoard",
-      ],
+      techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
       demoLink: "",
       demoImage: "",
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
@@ -379,15 +372,7 @@ export const portfolioData = {
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
-      tags: [
-        "Vue 3",
-        "TypeScript",
-        "SPA",
-        "Zero-Backend",
-        "IndexedDB",
-        "MusicBrainz",
-        "YouTube",
-      ],
+      tags: ["Vue 3", "TypeScript", "SPA", "Zero-Backend", "IndexedDB", "MusicBrainz", "YouTube"],
       features: [
         "Zufällige Musikentdeckung per MusicBrainz API, echte Zufallsauswahl über 126 Jahre Musikgeschichte",
         "YouTube-Videoplayback mit Gapless Dual-Player (zwei IFrame-Instanzen)",
@@ -563,13 +548,7 @@ export const portfolioData = {
             "Komplexe Kettenreaktion:\n Mehrere Fässer triggern sich gegenseitig und beeinflussen die Umliegenden Blöcke:\n\n Blöcke in Farb-Kategorien:\n Sofortige Zerstörung; Brennt und stirbt; Brennt und bleibt am leben;\n (je nach Anzahl und Radius der Fässer die den Block triggern) ",
         },
       ],
-      tags: [
-        "Unity 2D",
-        "Physics Engine",
-        "Destructible Environment",
-        "State Management",
-        "C#",
-      ],
+      tags: ["Unity 2D", "Physics Engine", "Destructible Environment", "State Management", "C#"],
       features: [
         "Tilemap-basiertes Grid-System mit zerstörbaren Blöcken",
         "Physikbasiertes Explosionssystem mit Radiusberechnung",
@@ -606,8 +585,7 @@ export const portfolioData = {
       id: "coming-soon",
       title: "Bald verfügbar",
       subtitle: "",
-      description:
-        "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
+      description: "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
       longDescription:
         "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentiert.",
       image: "/Bilder/dummy.png",

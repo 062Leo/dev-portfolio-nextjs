@@ -1,14 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback, useMemo, useState } from "react";
-import {
-  forceSimulation,
-  forceLink,
-  forceManyBody,
-  forceCollide,
-  forceX,
-  forceY,
-} from "d3-force";
+import { forceSimulation, forceLink, forceManyBody, forceCollide, forceX, forceY } from "d3-force";
 import type { SimulationNodeDatum, SimulationLinkDatum, Simulation } from "d3-force";
 import { useSkillsData } from "@/data/index";
 import { useLanguage } from "@/context/LanguageContext";
@@ -72,41 +65,41 @@ function flattenSkillsData(data: SkillsDataNested): Record<string, Record<string
 // ══════════════════════════════════════════════════════════════════════════════
 
 const CATEGORIES: { key: CatKey; color: string }[] = [
-  { key: "Programmierung",           color: "hsla(280, 80%, 55%, 0.25)" }, // Purple
-  { key: "Web & UI",                 color: "hsla(210, 80%, 55%, 0.25)" }, // Blue
-  { key: "Backend & .NET ",          color: "hsla(190, 80%, 50%, 0.25)" }, // Cyan
-  { key: "Daten & DB",               color: "hsla(160, 80%, 45%, 0.25)" }, // Teal
-  { key: "SWE & Qualität",           color: "hsla(130, 70%, 45%, 0.25)" }, // Green
-  { key: "Methodik",                 color: "hsla(80, 75%, 45%, 0.25)" },  // Lime
-  { key: "Tools & VCS",              color: "hsla(340, 80%, 55%, 0.25)" }, // Pink
-  { key: "DevOps & Cloud",           color: "hsla(20, 85%, 55%, 0.25)" },  // Orange
-  { key: "KI / ML",                  color: "hsla(45, 85%, 50%, 0.25)" },  // Gold
-  { key: "KI-Tools & IDE's",         color: "hsla(0, 80%, 55%, 0.25)" },   // Red
-  { key: "Game Dev",                 color: "hsla(310, 70%, 50%, 0.25)" }, // Magenta
-  { key: "Cross-Platform",           color: "hsla(175, 75%, 40%, 0.25)" }, // Deep teal
-  { key: "Hardware & IoT",           color: "hsla(250, 75%, 60%, 0.25)" }, // Indigo
-  { key: "PM & Agile",               color: "hsla(100, 60%, 40%, 0.25)" }, // Forest
+  { key: "Programmierung", color: "hsla(280, 80%, 55%, 0.25)" }, // Purple
+  { key: "Web & UI", color: "hsla(210, 80%, 55%, 0.25)" }, // Blue
+  { key: "Backend & .NET ", color: "hsla(190, 80%, 50%, 0.25)" }, // Cyan
+  { key: "Daten & DB", color: "hsla(160, 80%, 45%, 0.25)" }, // Teal
+  { key: "SWE & Qualität", color: "hsla(130, 70%, 45%, 0.25)" }, // Green
+  { key: "Methodik", color: "hsla(80, 75%, 45%, 0.25)" }, // Lime
+  { key: "Tools & VCS", color: "hsla(340, 80%, 55%, 0.25)" }, // Pink
+  { key: "DevOps & Cloud", color: "hsla(20, 85%, 55%, 0.25)" }, // Orange
+  { key: "KI / ML", color: "hsla(45, 85%, 50%, 0.25)" }, // Gold
+  { key: "KI-Tools & IDE's", color: "hsla(0, 80%, 55%, 0.25)" }, // Red
+  { key: "Game Dev", color: "hsla(310, 70%, 50%, 0.25)" }, // Magenta
+  { key: "Cross-Platform", color: "hsla(175, 75%, 40%, 0.25)" }, // Deep teal
+  { key: "Hardware & IoT", color: "hsla(250, 75%, 60%, 0.25)" }, // Indigo
+  { key: "PM & Agile", color: "hsla(100, 60%, 40%, 0.25)" }, // Forest
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  RATING SCALE
 // ══════════════════════════════════════════════════════════════════════════════
 
-const RATING_MIN = 1;  // lowest possible rating
-const RATING_MAX = 5;  // highest possible rating
+const RATING_MIN = 1; // lowest possible rating
+const RATING_MAX = 5; // highest possible rating
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  NODE SIZING & STYLING
 // ══════════════════════════════════════════════════════════════════════════════
 
-const RADIUS_MIN = 5;                             // smallest circle radius (px) for rating 1
-const RADIUS_MAX = 15;                            // largest circle radius (px) for rating 5
+const RADIUS_MIN = 5; // smallest circle radius (px) for rating 1
+const RADIUS_MAX = 15; // largest circle radius (px) for rating 5
 const NODE_STROKE_COLOR = "rgba(255,255,255,0.2)"; // normal circle stroke
-const NODE_STROKE_WIDTH = 1;                       // normal stroke width (px)
-const NODE_HOVER_SCALE = 1.5;                      // radius multiplier on pointer enter
+const NODE_STROKE_WIDTH = 1; // normal stroke width (px)
+const NODE_HOVER_SCALE = 1.5; // radius multiplier on pointer enter
 const NODE_HOVER_STROKE_COLOR = "rgba(255,255,255,0.8)"; // stroke color on hover
-const NODE_HOVER_STROKE_WIDTH = 2.5;               // stroke width on hover (px)
-const NODE_DRAG_HIT_PADDING = 4;                   // extra px around node for drag hit-test
+const NODE_HOVER_STROKE_WIDTH = 2.5; // stroke width on hover (px)
+const NODE_DRAG_HIT_PADDING = 4; // extra px around node for drag hit-test
 const NODE_TRANSITION = "r 0.25s ease, stroke-width 0.25s ease, stroke 0.25s ease"; // CSS transition on hover
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -114,52 +107,52 @@ const NODE_TRANSITION = "r 0.25s ease, stroke-width 0.25s ease, stroke 0.25s eas
 // ══════════════════════════════════════════════════════════════════════════════
 
 const LINK_STROKE_COLOR = "rgba(192, 184, 213, 0.57)"; // connection line color
-const LINK_STROKE_WIDTH = 1;                        // connection line stroke width (px)
+const LINK_STROKE_WIDTH = 1; // connection line stroke width (px)
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  GRAPH TOPOLOGY (intra-group connections)
 // ══════════════════════════════════════════════════════════════════════════════
 
-const GROUP_EXTRA_LINK_START_OFFSET = 1;  // skip N neighbours before additional links start
+const GROUP_EXTRA_LINK_START_OFFSET = 1; // skip N neighbours before additional links start
 const GROUP_EXTRA_LINK_MAX_LOOKAHEAD = 4; // how many nodes ahead are eligible as extra targets
-const GROUP_EXTRA_LINK_MAX = 6;           // absolute max extra connections per node (1‑4)
-const MAX_DEGREE_HIGH = 5;                // max total degree for the high-count node
-const MAX_DEGREE_NORMAL = 5;              // max total degree for all other nodes
-const CHAIN_MIN_ANGLE_DEG = 27;           // minimum angle (degrees) between consecutive chain links
-const CHAIN_ANGLE_FORCE = 30;             // strength of the angle-enforcing force
+const GROUP_EXTRA_LINK_MAX = 6; // absolute max extra connections per node (1‑4)
+const MAX_DEGREE_HIGH = 5; // max total degree for the high-count node
+const MAX_DEGREE_NORMAL = 5; // max total degree for all other nodes
+const CHAIN_MIN_ANGLE_DEG = 27; // minimum angle (degrees) between consecutive chain links
+const CHAIN_ANGLE_FORCE = 30; // strength of the angle-enforcing force
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  FORCE SIMULATION — dynamic scaling based on visible node count
 // ══════════════════════════════════════════════════════════════════════════════
 
-const LINK_DISTANCE = 50;           // target length of link edges
+const LINK_DISTANCE = 50; // target length of link edges
 
 // —— anchor points for force interpolation (nodeCount → force values) ——
 const MAX_NODES = 60;
 const MIN_NODES = 6;
 
 // values at max nodes (all ratings — known perfect)
-const CHARGE_AT_MAX   = -105;
+const CHARGE_AT_MAX = -105;
 const CENTER_Y_AT_MAX = 0.06;
 
 // values at 6 nodes (rating 1 only — ADJUST THESE UNTIL LAYOUT LOOKS GOOD)
-const CHARGE_AT_MIN   = -250;
+const CHARGE_AT_MIN = -250;
 const CENTER_Y_AT_MIN = 0.045;
 
-const ALPHA_DECAY = 0.01;          // cooling rate per tick (higher = faster settle)
-const ALPHA_MIN = 0.000000001;          // simulation stops when alpha drops below this
-const COLLIDE_PADDING = 10;        // extra px between node edges for forceCollide
-const REHEAT_ALPHA = 0.2;         // alpha / alphaTarget when re-energizing (drag, resize, etc.)
+const ALPHA_DECAY = 0.01; // cooling rate per tick (higher = faster settle)
+const ALPHA_MIN = 0.000000001; // simulation stops when alpha drops below this
+const COLLIDE_PADDING = 10; // extra px between node edges for forceCollide
+const REHEAT_ALPHA = 0.2; // alpha / alphaTarget when re-energizing (drag, resize, etc.)
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  RATING COLORS — one constant per rating, set manually as rgba
 // ══════════════════════════════════════════════════════════════════════════════
 
-const RATING_1_COLOR = "rgba(255, 0, 0, 0.51)";    // red
-const RATING_2_COLOR = "rgba(255, 102, 0, 0.54)";    // orange
-const RATING_3_COLOR = "rgba(242, 255, 0, 0.61)";    // yellow
-const RATING_4_COLOR = "rgba(77, 199, 28, 0.79)";    // yellow-green
-const RATING_5_COLOR = "rgb(33, 211, 24)";      // bright green
+const RATING_1_COLOR = "rgba(255, 0, 0, 0.51)"; // red
+const RATING_2_COLOR = "rgba(255, 102, 0, 0.54)"; // orange
+const RATING_3_COLOR = "rgba(242, 255, 0, 0.61)"; // yellow
+const RATING_4_COLOR = "rgba(77, 199, 28, 0.79)"; // yellow-green
+const RATING_5_COLOR = "rgb(33, 211, 24)"; // bright green
 
 const RATING_COLORS = [
   "",
@@ -174,23 +167,23 @@ const RATING_COLORS = [
 //  BOUNDARY (keeps nodes inside container)
 // ══════════════════════════════════════════════════════════════════════════════
 
-const BOUNDARY_MARGIN = 20;       // px margin from container edges
+const BOUNDARY_MARGIN = 20; // px margin from container edges
 const BOUNDARY_PUSH_FACTOR = 0.3; // push strength when a node crosses the boundary
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  MOUSE REPULSION  (left‑click + drag on empty canvas pushes nodes away)
 // ══════════════════════════════════════════════════════════════════════════════
 
-const MOUSE_FORCE_RADIUS = 160;               // px range of the repulsion field
-const MOUSE_FORCE_STRENGTH = 20;              // max push strength at the cursor centre
+const MOUSE_FORCE_RADIUS = 160; // px range of the repulsion field
+const MOUSE_FORCE_STRENGTH = 20; // max push strength at the cursor centre
 const MOUSE_RIPPLE_COLOR = "rgba(167, 139, 250, 0.69)"; // glow colour for the ripple rings
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  GLOW FILTER (per category)
 // ══════════════════════════════════════════════════════════════════════════════
 
-const GLOW_BLUR_STDDEV = 3;    // gaussian blur standard deviation
-const GLOW_FLOOD_ALPHA = 0.8;  // alpha of the flood colour (replaces category alpha)
+const GLOW_BLUR_STDDEV = 3; // gaussian blur standard deviation
+const GLOW_FLOOD_ALPHA = 0.8; // alpha of the flood colour (replaces category alpha)
 const GLOW_FLOOD_OPACITY = 0.5; // flood-opacity filter attribute
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -198,36 +191,36 @@ const GLOW_FLOOD_OPACITY = 0.5; // flood-opacity filter attribute
 // ══════════════════════════════════════════════════════════════════════════════
 
 // ——  Positionierung ————————————————————————————————————————————————————————————
-const LABEL_GAP_NODE = 4;             // px abstand zwischen knotenrand und label-start
-const LABEL_GAP_OTHER_LABEL = 2;      // min px abstand zwischen zwei label-bounding-boxen
-const LABEL_CONNECTOR_LENGTH = 8;     // länge der verbindungslinie vom knotenrand zum label (px)
-const LABEL_TRY_DIRECTIONS = 8;       // wie viele richtungen probiert werden: 4 = N/S/W/O, 8 = +diagonalen
+const LABEL_GAP_NODE = 4; // px abstand zwischen knotenrand und label-start
+const LABEL_GAP_OTHER_LABEL = 2; // min px abstand zwischen zwei label-bounding-boxen
+const LABEL_CONNECTOR_LENGTH = 8; // länge der verbindungslinie vom knotenrand zum label (px)
+const LABEL_TRY_DIRECTIONS = 8; // wie viele richtungen probiert werden: 4 = N/S/W/O, 8 = +diagonalen
 
 // ——  Text‑Grösse (skaliert linear mit Rating 1…5) ———————————————————————————
-const LABEL_FONT_SIZE_MIN = 9;        // px für Rating 1
-const LABEL_FONT_SIZE_MAX = 14;       // px für Rating 5
+const LABEL_FONT_SIZE_MIN = 9; // px für Rating 1
+const LABEL_FONT_SIZE_MAX = 14; // px für Rating 5
 const LABEL_FONT_FAMILY = "monospace";
 
 // ——  Farben ———————————————————————————————————————————————————————————————————
-const LABEL_COLOR_HOVER = "rgba(255,255,255,1)";      // text-farbe wenn knoten gehovert
+const LABEL_COLOR_HOVER = "rgba(255,255,255,1)"; // text-farbe wenn knoten gehovert
 
 // ——  Verbindungslinie Label → Knoten —————————————————————————————————————————
-const LABEL_LINE_COLOR = "rgba(192, 184, 213, 0.74)";    // farbe der mini-linie
-const LABEL_LINE_WIDTH = 1;                         // strichstärke (px)
+const LABEL_LINE_COLOR = "rgba(192, 184, 213, 0.74)"; // farbe der mini-linie
+const LABEL_LINE_WIDTH = 1; // strichstärke (px)
 const LABEL_LINE_COLOR_HOVER = "rgb(255, 255, 255)"; // linien-farbe bei hover
-const LABEL_LINE_WIDTH_HOVER = 1.5;                   // strichstärke bei hover
+const LABEL_LINE_WIDTH_HOVER = 1.5; // strichstärke bei hover
 
 // ——  Richtungs‑Priorität (höher = wird zuerst probiert) ——————————————————————
 //      0=unten  1=oben  2=rechts  3=links  4=u.rechts  5=o.rechts  6=u.links  7=o.links
 const LABEL_DIR_PRIORITY: Record<number, number> = {
-  0: 8,   // unten          (bevorzugt)
-  1: 7,   // oben
-  2: 6,   // rechts
-  3: 5,   // links
-  4: 4,   // unten-rechts
-  5: 3,   // oben-rechts
-  6: 2,   // unten-links
-  7: 1,   // oben-links
+  0: 8, // unten          (bevorzugt)
+  1: 7, // oben
+  2: 6, // rechts
+  3: 5, // links
+  4: 4, // unten-rechts
+  5: 3, // oben-rechts
+  6: 2, // unten-links
+  7: 1, // oben-links
 };
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -238,57 +231,57 @@ const CONTAINER_HEIGHT = "clamp(400px, 90vh, 540px)";
 const CONTAINER_BORDER_COLOR = "rgba(167,139,250,0.25)";
 const CONTAINER_BG_COLOR = "rgb(11, 13, 23)";
 
-const HULL_ENABLED = true;              // Master‑Schalter  true | false
-const HULL_MIN_NODES = 1;               // Gruppe braucht ≥ N Knoten, sonst keine Hülle
+const HULL_ENABLED = true; // Master‑Schalter  true | false
+const HULL_MIN_NODES = 1; // Gruppe braucht ≥ N Knoten, sonst keine Hülle
 
 // ——  Umfang‑Sampling pro Knoten  ————————————————————————————————————————————
-const HULL_CIRCLE_SAMPLES = 20;         // Abtastpunkte auf dem Knotenumfang (mehr = feiner)
-const HULL_ARC_SPAN = Math.PI;          // Welcher Bogen des Knotens wird abgetastet?
-                                        //   Math.PI       = äussere 180°  (Standard)
-                                        //   Math.PI * 0.6 = äussere ~108° (lockerer, weniger Umschlingung)
-                                        //   Math.PI * 1.3 = äussere ~234° (enger, mehr Umschlingung)
-const HULL_OFFSET_FACTOR = 2 / 3;       // Zusatzabstand = radius + radius * Faktor
-                                        //   0     = direkt auf Knotenrand
-                                        //   1/3   = 33 % extra (empfohlen)
-                                        //   0.5   = 50 % extra
+const HULL_CIRCLE_SAMPLES = 20; // Abtastpunkte auf dem Knotenumfang (mehr = feiner)
+const HULL_ARC_SPAN = Math.PI; // Welcher Bogen des Knotens wird abgetastet?
+//   Math.PI       = äussere 180°  (Standard)
+//   Math.PI * 0.6 = äussere ~108° (lockerer, weniger Umschlingung)
+//   Math.PI * 1.3 = äussere ~234° (enger, mehr Umschlingung)
+const HULL_OFFSET_FACTOR = 2 / 3; // Zusatzabstand = radius + radius * Faktor
+//   0     = direkt auf Knotenrand
+//   1/3   = 33 % extra (empfohlen)
+//   0.5   = 50 % extra
 
 // ——  Radiale Hüllkurve (Envelope)  ——————————————————————————————————————————
-const HULL_RADIAL_BUCKETS = 90;         // Winkel‑Eimer (360° / BUCKETS = ° pro Eimer)
-                                        //   72 = 5°‑Schritte
-                                        //   90 = 4°‑Schritte  (empfohlen)
-                                        //  120 = 3°‑Schritte  (feiner)
+const HULL_RADIAL_BUCKETS = 90; // Winkel‑Eimer (360° / BUCKETS = ° pro Eimer)
+//   72 = 5°‑Schritte
+//   90 = 4°‑Schritte  (empfohlen)
+//  120 = 3°‑Schritte  (feiner)
 
 // ——  Innere Knoten ausblenden  ———————————————————————————————————————————————
 //      Verhindert, dass die Hülle zu weit innen liegende Punkte mitnimmt
 //      (z.B. Knoten die tief im Gruppen-Inneren sitzen).
-const HULL_INNER_FILTER = true;         // true  = innere Punkte werden entfernt
-const HULL_INNER_THRESHOLD = 0.50;      // 0…1   Abstand zum Zentroid relativ zum
-                                        //        Durchschnitt aller Hüllen-Punkte.
-                                        //   Punkte mit Abstand < Schwellwert × Ø
-                                        //   werden ausgeblendet.
-                                        //   0.70  = empfohlen  (alles unter 70 % fliegt raus)
-                                        //   1.0   = alles bleibt (kein Filter)
-                                        //   0.0   = alles weg 😄
+const HULL_INNER_FILTER = true; // true  = innere Punkte werden entfernt
+const HULL_INNER_THRESHOLD = 0.5; // 0…1   Abstand zum Zentroid relativ zum
+//        Durchschnitt aller Hüllen-Punkte.
+//   Punkte mit Abstand < Schwellwert × Ø
+//   werden ausgeblendet.
+//   0.70  = empfohlen  (alles unter 70 % fliegt raus)
+//   1.0   = alles bleibt (kein Filter)
+//   0.0   = alles weg 😄
 
 // ——  Vakuum‑Effekt (eingesaugte Stellen zwischen entfernten Knoten)  —————————
-const HULL_VACUUM_THRESHOLD = 5.2;      // Lücken‑Schwelle  (Vielfaches des Eimer‑Bogens)
-                                        //   je kleiner → mehr / häufigere Vakuum‑Punkte
-const HULL_VACUUM_STRENGTH = 0.15;      // Einsaug‑Stärke  (Bruchteil der Lückenweite)
-                                        //   0     = kein Vakuum (hull überspannt Lücken gerade)
-                                        //   0.15  = dezent
-                                        //   0.3   = stark
-const HULL_VACUUM_MAX_PX = 30;          // Maximaler Einsaug‑Abstand in px (Deckel)
+const HULL_VACUUM_THRESHOLD = 5.2; // Lücken‑Schwelle  (Vielfaches des Eimer‑Bogens)
+//   je kleiner → mehr / häufigere Vakuum‑Punkte
+const HULL_VACUUM_STRENGTH = 0.15; // Einsaug‑Stärke  (Bruchteil der Lückenweite)
+//   0     = kein Vakuum (hull überspannt Lücken gerade)
+//   0.15  = dezent
+//   0.3   = stark
+const HULL_VACUUM_MAX_PX = 30; // Maximaler Einsaug‑Abstand in px (Deckel)
 
 // ——  Kurven‑Glättung  ————————————————————————————————————————————————————————
-const HULL_CURVE_TENSION = 0.1;        // Catmull‑Rom Spannung  0 … 1
-                                        //   0     = maximal weich / rund
-                                        //   0.35  = weich mit leichter Spannung
-                                        //   1     = straff / eckiger
+const HULL_CURVE_TENSION = 0.1; // Catmull‑Rom Spannung  0 … 1
+//   0     = maximal weich / rund
+//   0.35  = weich mit leichter Spannung
+//   1     = straff / eckiger
 
 // ——  Darstellung  ————————————————————————————————————————————————————————————
-const HULL_STROKE_WIDTH = 2;          // px
-const HULL_FILL_OPACITY = 0.07;          // 0 … 1
-const HULL_STROKE_OPACITY = 0.35;       // 0 … 1
+const HULL_STROKE_WIDTH = 2; // px
+const HULL_FILL_OPACITY = 0.07; // 0 … 1
+const HULL_STROKE_OPACITY = 0.35; // 0 … 1
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  HELPER FUNCTIONS
@@ -299,7 +292,9 @@ export function ratingColor(rating: number): string {
   return RATING_COLORS[idx] || RATING_COLORS[1];
 }
 
-function getSkillCategories(src: Record<string, Record<string, number>>): Map<string, Record<string, number>> {
+function getSkillCategories(
+  src: Record<string, Record<string, number>>,
+): Map<string, Record<string, number>> {
   const map = new Map<string, Record<string, number>>();
   for (const [cat, skills] of Object.entries(src)) {
     map.set(cat, skills);
@@ -354,17 +349,19 @@ function catmullRomClosedPath(points: [number, number][], tension: number): stri
 //  VACUUM‑PACK HULL COMPUTATION  (purely visual — no physics impact)
 // ══════════════════════════════════════════════════════════════════════════════
 
-function computeGroupHull(
-  groupNodes: SimNode[],
-  cx: number,
-  cy: number,
-): [number, number][] {
+function computeGroupHull(groupNodes: SimNode[], cx: number, cy: number): [number, number][] {
   const n = groupNodes.length;
   if (n < HULL_MIN_NODES) return [];
 
   // Each raw sample remembers which node it came from, so we can later
   // avoid inserting vacuum midpoints between points of the SAME node.
-  interface RawPt { x: number; y: number; distC: number; bucket: number; nodeIdx: number }
+  interface RawPt {
+    x: number;
+    y: number;
+    distC: number;
+    bucket: number;
+    nodeIdx: number;
+  }
   const raw: RawPt[] = [];
 
   for (let ni = 0; ni < groupNodes.length; ni++) {
@@ -394,7 +391,11 @@ function computeGroupHull(
   }
 
   // ── 2.  radial envelope — keep outermost point per bucket, track node ─
-  interface EnvPt { x: number; y: number; nodeIdx: number }
+  interface EnvPt {
+    x: number;
+    y: number;
+    nodeIdx: number;
+  }
   const envelope: (EnvPt | null)[] = new Array(HULL_RADIAL_BUCKETS).fill(null);
 
   for (const pt of raw) {
@@ -490,7 +491,7 @@ function computeGroupHull(
 
 function createChainAngleForce(links: SimLink[], minAngleDeg: number, strength: number) {
   let nodes: SimNode[];
-  const minCos = Math.cos(minAngleDeg * Math.PI / 180);
+  const minCos = Math.cos((minAngleDeg * Math.PI) / 180);
 
   function force(alpha: number) {
     for (const node of nodes) {
@@ -505,12 +506,17 @@ function createChainAngleForce(links: SimLink[], minAngleDeg: number, strength: 
       if (chainNeighbors.length !== 2) continue;
 
       const [a, c] = chainNeighbors;
-      const bx = node.x ?? 0, by = node.y ?? 0;
-      const ax = a.x ?? 0, ay = a.y ?? 0;
-      const cx = c.x ?? 0, cy = c.y ?? 0;
+      const bx = node.x ?? 0,
+        by = node.y ?? 0;
+      const ax = a.x ?? 0,
+        ay = a.y ?? 0;
+      const cx = c.x ?? 0,
+        cy = c.y ?? 0;
 
-      const ux = ax - bx, uy = ay - by;
-      const vx = cx - bx, vy = cy - by;
+      const ux = ax - bx,
+        uy = ay - by;
+      const vx = cx - bx,
+        vy = cy - by;
       const uLen = Math.sqrt(ux * ux + uy * uy);
       const vLen = Math.sqrt(vx * vx + vy * vy);
       if (uLen < 0.5 || vLen < 0.5) continue;
@@ -518,7 +524,8 @@ function createChainAngleForce(links: SimLink[], minAngleDeg: number, strength: 
       const cosAngle = (ux * vx + uy * vy) / (uLen * vLen);
       if (Math.abs(cosAngle) <= minCos) continue;
 
-      const acx = cx - ax, acy = cy - ay;
+      const acx = cx - ax,
+        acy = cy - ay;
       const acLen = Math.sqrt(acx * acx + acy * acy);
       if (acLen < 0.5) continue;
 
@@ -552,13 +559,10 @@ export function SkillGraph() {
 
   const currentData = useMemo<Record<string, Record<string, number>>>(
     () => flattenSkillsData(skillsDataRaw),
-    [skillsDataRaw]
+    [skillsDataRaw],
   );
 
-  const rawNestedData = useMemo<SkillsDataNested>(
-    () => skillsDataRaw,
-    [skillsDataRaw]
-  );
+  const rawNestedData = useMemo<SkillsDataNested>(() => skillsDataRaw, [skillsDataRaw]);
 
   // ── tooltip state ──────────────────────────────────────────────────────
   interface TooltipContent {
@@ -593,13 +597,22 @@ export function SkillGraph() {
   const filterRatingsRef = useRef<Set<number> | null>(null);
 
   // filter state: index 1..5 → true = selected
-  const [filterToggles, setFilterToggles] = useState<boolean[]>([false, true, true, true, true, true]);
+  const [filterToggles, setFilterToggles] = useState<boolean[]>([
+    false,
+    true,
+    true,
+    true,
+    true,
+    true,
+  ]);
   const [filterActive, setFilterActive] = useState(false);
 
   // pricetag toggle: hidden group indices
   const hiddenGroupsRef = useRef<Set<number>>(new Set());
   const nodePositionsRef = useRef<Map<number, { x: number; y: number }[]>>(new Map());
-  const pricetagPositionsRef = useRef<Map<number, { x: number; y: number; isLeft: boolean; isTop: boolean }>>(new Map());
+  const pricetagPositionsRef = useRef<
+    Map<number, { x: number; y: number; isLeft: boolean; isTop: boolean }>
+  >(new Map());
 
   const buildSimulation = useCallback(() => {
     const container = containerRef.current;
@@ -665,29 +678,59 @@ export function SkillGraph() {
       for (let i = 0; i < groupNodes.length; i++) {
         if (degree[i] !== 2) continue; // must be middle node (chain degree 2)
         let reachable = false;
-        for (let j = i + GROUP_EXTRA_LINK_START_OFFSET; j < Math.min(i + GROUP_EXTRA_LINK_START_OFFSET + GROUP_EXTRA_LINK_MAX_LOOKAHEAD, groupNodes.length); j++) {
-          if (degree[j] < MAX_DEGREE_NORMAL) { reachable = true; break; }
+        for (
+          let j = i + GROUP_EXTRA_LINK_START_OFFSET;
+          j <
+          Math.min(
+            i + GROUP_EXTRA_LINK_START_OFFSET + GROUP_EXTRA_LINK_MAX_LOOKAHEAD,
+            groupNodes.length,
+          );
+          j++
+        ) {
+          if (degree[j] < MAX_DEGREE_NORMAL) {
+            reachable = true;
+            break;
+          }
         }
         if (!reachable) {
-          for (let j = i - GROUP_EXTRA_LINK_START_OFFSET; j >= Math.max(i - GROUP_EXTRA_LINK_START_OFFSET - GROUP_EXTRA_LINK_MAX_LOOKAHEAD + 1, 0); j--) {
-            if (degree[j] < MAX_DEGREE_NORMAL) { reachable = true; break; }
+          for (
+            let j = i - GROUP_EXTRA_LINK_START_OFFSET;
+            j >=
+            Math.max(i - GROUP_EXTRA_LINK_START_OFFSET - GROUP_EXTRA_LINK_MAX_LOOKAHEAD + 1, 0);
+            j--
+          ) {
+            if (degree[j] < MAX_DEGREE_NORMAL) {
+              reachable = true;
+              break;
+            }
           }
         }
         if (reachable) eligible.push(i);
       }
 
-      const highIdx = eligible.length > 0
-        ? eligible[Math.floor(Math.random() * eligible.length)]
-        : -1;
+      const highIdx =
+        eligible.length > 0 ? eligible[Math.floor(Math.random() * eligible.length)] : -1;
 
       if (highIdx >= 0) {
         const i = highIdx;
         // bidirectional pool
         const pool: number[] = [];
-        for (let j = i + GROUP_EXTRA_LINK_START_OFFSET; j < Math.min(i + GROUP_EXTRA_LINK_START_OFFSET + GROUP_EXTRA_LINK_MAX_LOOKAHEAD, groupNodes.length); j++) {
+        for (
+          let j = i + GROUP_EXTRA_LINK_START_OFFSET;
+          j <
+          Math.min(
+            i + GROUP_EXTRA_LINK_START_OFFSET + GROUP_EXTRA_LINK_MAX_LOOKAHEAD,
+            groupNodes.length,
+          );
+          j++
+        ) {
           pool.push(j);
         }
-        for (let j = i - GROUP_EXTRA_LINK_START_OFFSET; j >= Math.max(i - GROUP_EXTRA_LINK_START_OFFSET - GROUP_EXTRA_LINK_MAX_LOOKAHEAD + 1, 0); j--) {
+        for (
+          let j = i - GROUP_EXTRA_LINK_START_OFFSET;
+          j >= Math.max(i - GROUP_EXTRA_LINK_START_OFFSET - GROUP_EXTRA_LINK_MAX_LOOKAHEAD + 1, 0);
+          j--
+        ) {
           pool.push(j);
         }
         // shuffle
@@ -720,10 +763,13 @@ export function SkillGraph() {
         "link",
         forceLink<SimNode, SimLink>(links)
           .id((d) => d.id)
-          .distance(LINK_DISTANCE)
+          .distance(LINK_DISTANCE),
       )
       .force("charge", forceManyBody().strength(dynCharge))
-      .force("collide", forceCollide<SimNode>().radius(d => radiusScale(d.rating) + COLLIDE_PADDING))
+      .force(
+        "collide",
+        forceCollide<SimNode>().radius((d) => radiusScale(d.rating) + COLLIDE_PADDING),
+      )
       .force("x", forceX<SimNode>(width / 2).strength(dynCenterX))
       .force("y", forceY<SimNode>(height / 2).strength(dynCenterY))
       .force("chainAngle", createChainAngleForce(links, CHAIN_MIN_ANGLE_DEG, CHAIN_ANGLE_FORCE))
@@ -839,8 +885,8 @@ export function SkillGraph() {
 
     // node + label + connector elements (one label + line per node, always)
     const nodeEls: SVGCircleElement[] = [];
-    const labelEls: SVGTextElement[] = [];      // same length as nodes
-    const labelLineEls: SVGLineElement[] = [];  // same length as nodes, connecting line
+    const labelEls: SVGTextElement[] = []; // same length as nodes
+    const labelLineEls: SVGLineElement[] = []; // same length as nodes, connecting line
 
     nodes.forEach((n, ni) => {
       const r = radiusScale(n.rating);
@@ -969,10 +1015,20 @@ export function SkillGraph() {
 
     // ── pricetags (one per category group) ────────────────────────────
     const pricetagData: PricetagData[] = PRICETAG_ENABLED
-      ? createPricetags(pricetagLayer, categories, allGroupIndices, ropeTargetsRef, ropeColorMapRef, CATEGORIES, hiddenGroupsRef.current, (categoryName) => {
-          const gi = categories.indexOf(categoryName);
-          if (gi >= 0) toggleGroup(gi);
-        }, pricetagPositionsRef)
+      ? createPricetags(
+          pricetagLayer,
+          categories,
+          allGroupIndices,
+          ropeTargetsRef,
+          ropeColorMapRef,
+          CATEGORIES,
+          hiddenGroupsRef.current,
+          (categoryName) => {
+            const gi = categories.indexOf(categoryName);
+            if (gi >= 0) toggleGroup(gi);
+          },
+          pricetagPositionsRef,
+        )
       : [];
 
     function toggleGroup(gi: number) {
@@ -994,10 +1050,23 @@ export function SkillGraph() {
         }
       } else {
         hidden.add(gi);
-        nodePositionsRef.current.set(gi, groupNodes.map(n => ({ x: n.x ?? 0, y: n.y ?? 0 })));
-        groupNodes.forEach(n => { n.fx = -9999; n.fy = -9999; n.x = -9999; n.y = -9999; });
+        nodePositionsRef.current.set(
+          gi,
+          groupNodes.map((n) => ({ x: n.x ?? 0, y: n.y ?? 0 })),
+        );
+        groupNodes.forEach((n) => {
+          n.fx = -9999;
+          n.fy = -9999;
+          n.x = -9999;
+          n.y = -9999;
+        });
         const rt = ropeTargetsRef.current.get(gi);
-        if (rt) { rt.start.x = 0; rt.start.y = 0; rt.end.x = 0; rt.end.y = 0; }
+        if (rt) {
+          rt.start.x = 0;
+          rt.start.y = 0;
+          rt.end.x = 0;
+          rt.end.y = 0;
+        }
       }
       simulation.alphaTarget(REHEAT_ALPHA).restart();
     }
@@ -1006,8 +1075,16 @@ export function SkillGraph() {
     for (const gi of hiddenGroupsRef.current) {
       const groupNodes = nodes.filter((n) => n.groupIndex === gi);
       if (groupNodes.length > 0) {
-        nodePositionsRef.current.set(gi, groupNodes.map(n => ({ x: n.x ?? 0, y: n.y ?? 0 })));
-        groupNodes.forEach(n => { n.fx = -9999; n.fy = -9999; n.x = -9999; n.y = -9999; });
+        nodePositionsRef.current.set(
+          gi,
+          groupNodes.map((n) => ({ x: n.x ?? 0, y: n.y ?? 0 })),
+        );
+        groupNodes.forEach((n) => {
+          n.fx = -9999;
+          n.fy = -9999;
+          n.x = -9999;
+          n.y = -9999;
+        });
       }
     }
 
@@ -1015,10 +1092,14 @@ export function SkillGraph() {
     function clampNode(n: SimNode, r: number) {
       // soft boundary — push nodes back inside the margin
       const margin = BOUNDARY_MARGIN;
-      if (n.x != null && n.x < margin + r) n.vx = (n.vx ?? 0) + (margin + r - n.x) * BOUNDARY_PUSH_FACTOR;
-      if (n.x != null && n.x > width - margin - r) n.vx = (n.vx ?? 0) - (n.x - (width - margin - r)) * BOUNDARY_PUSH_FACTOR;
-      if (n.y != null && n.y < margin + r) n.vy = (n.vy ?? 0) + (margin + r - n.y) * BOUNDARY_PUSH_FACTOR;
-      if (n.y != null && n.y > height - margin - r) n.vy = (n.vy ?? 0) - (n.y - (height - margin - r)) * BOUNDARY_PUSH_FACTOR;
+      if (n.x !== undefined && n.x < margin + r)
+        n.vx = (n.vx ?? 0) + (margin + r - n.x) * BOUNDARY_PUSH_FACTOR;
+      if (n.x !== undefined && n.x > width - margin - r)
+        n.vx = (n.vx ?? 0) - (n.x - (width - margin - r)) * BOUNDARY_PUSH_FACTOR;
+      if (n.y !== undefined && n.y < margin + r)
+        n.vy = (n.vy ?? 0) + (margin + r - n.y) * BOUNDARY_PUSH_FACTOR;
+      if (n.y !== undefined && n.y > height - margin - r)
+        n.vy = (n.vy ?? 0) - (n.y - (height - margin - r)) * BOUNDARY_PUSH_FACTOR;
     }
 
     // ── tooltip positioning (flips left when near right edge) ─────────
@@ -1086,7 +1167,10 @@ export function SkillGraph() {
         for (const gi of groupIndices) {
           const path = hullPaths[gi];
           if (!path) continue;
-          if (hiddenGroupsRef.current.has(gi)) { path.setAttribute("d", ""); continue; }
+          if (hiddenGroupsRef.current.has(gi)) {
+            path.setAttribute("d", "");
+            continue;
+          }
 
           const groupNodes = nodes.filter((n) => n.groupIndex === gi);
           if (groupNodes.length < HULL_MIN_NODES) {
@@ -1094,8 +1178,12 @@ export function SkillGraph() {
             continue;
           }
 
-          let cx = 0, cy = 0;
-          for (const n of groupNodes) { cx += n.x ?? 0; cy += n.y ?? 0; }
+          let cx = 0,
+            cy = 0;
+          for (const n of groupNodes) {
+            cx += n.x ?? 0;
+            cy += n.y ?? 0;
+          }
           cx /= groupNodes.length;
           cy /= groupNodes.length;
 
@@ -1107,9 +1195,7 @@ export function SkillGraph() {
 
           path.setAttribute("d", catmullRomClosedPath(hullPts, HULL_CURVE_TENSION));
 
-          const anchorY = cy < height / 2
-            ? 10 + PT_H / 2
-            : height - 10 - PT_H / 2;
+          const anchorY = cy < height / 2 ? 10 + PT_H / 2 : height - 10 - PT_H / 2;
           let bestDist = Infinity;
           let bestPt: { x: number; y: number } = { x: cx, y: cy };
           for (const [hx, hy] of hullPts) {
@@ -1142,26 +1228,58 @@ export function SkillGraph() {
       }
 
       // ── smart label placement ───────────────────────────────────────
-      const dirAngles = [Math.PI / 2, -Math.PI / 2, 0, Math.PI, Math.PI / 4, -Math.PI / 4, 3 * Math.PI / 4, -3 * Math.PI / 4];
-      const dirTA     = ["middle", "middle", "start", "end", "start", "start", "end", "end"] as const;
-      const dirBL     = ["hanging", "text-bottom", "middle", "middle", "hanging", "text-bottom", "hanging", "text-bottom"] as const;
-      const dirOX     = [0, 0, 4, -4, 4, 4, -4, -4];
-      const dirOY     = [4, -4, 0, 0, 4, -4, 4, -4];
-      const numDirs   = LABEL_TRY_DIRECTIONS >= 8 ? 8 : 4;
+      const dirAngles = [
+        Math.PI / 2,
+        -Math.PI / 2,
+        0,
+        Math.PI,
+        Math.PI / 4,
+        -Math.PI / 4,
+        (3 * Math.PI) / 4,
+        (-3 * Math.PI) / 4,
+      ];
+      const dirTA = ["middle", "middle", "start", "end", "start", "start", "end", "end"] as const;
+      const dirBL = [
+        "hanging",
+        "text-bottom",
+        "middle",
+        "middle",
+        "hanging",
+        "text-bottom",
+        "hanging",
+        "text-bottom",
+      ] as const;
+      const dirOX = [0, 0, 4, -4, 4, 4, -4, -4];
+      const dirOY = [4, -4, 0, 0, 4, -4, 4, -4];
+      const numDirs = LABEL_TRY_DIRECTIONS >= 8 ? 8 : 4;
 
       // priority-sorted direction indices
-      const dirByPriority = Array.from({ length: numDirs }, (_, i) => i)
-        .sort((a, b) => (LABEL_DIR_PRIORITY[b] ?? 0) - (LABEL_DIR_PRIORITY[a] ?? 0));
+      const dirByPriority = Array.from({ length: numDirs }, (_, i) => i).sort(
+        (a, b) => (LABEL_DIR_PRIORITY[b] ?? 0) - (LABEL_DIR_PRIORITY[a] ?? 0),
+      );
 
       // build sorted node index list: high rating first (more important labels get best spots)
       const nodeOrder = nodes.map((_, i) => i).sort((a, b) => nodes[b].rating - nodes[a].rating);
 
       // helpers for overlap detection
-      function boxesOverlap(a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }) {
+      function boxesOverlap(
+        a: { x: number; y: number; w: number; h: number },
+        b: { x: number; y: number; w: number; h: number },
+      ) {
         const g = LABEL_GAP_OTHER_LABEL;
-        return a.x < b.x + b.w + g && a.x + a.w + g > b.x && a.y < b.y + b.h + g && a.y + a.h + g > b.y;
+        return (
+          a.x < b.x + b.w + g && a.x + a.w + g > b.x && a.y < b.y + b.h + g && a.y + a.h + g > b.y
+        );
       }
-      function rectOverlapsCircle(rx: number, ry: number, rw: number, rh: number, cx: number, cy: number, cr: number) {
+      function rectOverlapsCircle(
+        rx: number,
+        ry: number,
+        rw: number,
+        rh: number,
+        cx: number,
+        cy: number,
+        cr: number,
+      ) {
         const crp = cr + LABEL_GAP_NODE;
         const closestX = Math.max(rx, Math.min(cx, rx + rw));
         const closestY = Math.max(ry, Math.min(cy, ry + rh));
@@ -1172,10 +1290,20 @@ export function SkillGraph() {
       function estimateTextSize(text: string, fontSize: number) {
         return { w: text.length * fontSize * 0.6, h: fontSize * 1.2 };
       }
-      function textBBox(ax: number, ay: number, ta: string, bl: string, ox: number, oy: number, tw: number, th: number) {
+      function textBBox(
+        ax: number,
+        ay: number,
+        ta: string,
+        bl: string,
+        ox: number,
+        oy: number,
+        tw: number,
+        th: number,
+      ) {
         const tx = ax + ox;
         const ty = ay + oy;
-        let x = tx, y = ty;
+        let x = tx,
+          y = ty;
         if (ta === "middle") x -= tw / 2;
         else if (ta === "end") x -= tw;
         if (bl === "middle") y -= th / 2;
@@ -1185,7 +1313,15 @@ export function SkillGraph() {
       }
 
       // result per node: { ax, ay, dir, ta, bl, ox, oy }
-      const placements: { ax: number; ay: number; dir: number; ta: string; bl: string; ox: number; oy: number }[] = new Array(nodes.length);
+      const placements: {
+        ax: number;
+        ay: number;
+        dir: number;
+        ta: string;
+        bl: string;
+        ox: number;
+        oy: number;
+      }[] = new Array(nodes.length);
       const placedBoxes: { x: number; y: number; w: number; h: number }[] = [];
 
       for (const ni of nodeOrder) {
@@ -1212,7 +1348,17 @@ export function SkillGraph() {
           let overlapsNode = false;
           for (let j = 0; j < nodes.length; j++) {
             if (j === ni) continue;
-            if (rectOverlapsCircle(box.x, box.y, box.w, box.h, nodes[j].x ?? 0, nodes[j].y ?? 0, radiusScale(nodes[j].rating))) {
+            if (
+              rectOverlapsCircle(
+                box.x,
+                box.y,
+                box.w,
+                box.h,
+                nodes[j].x ?? 0,
+                nodes[j].y ?? 0,
+                radiusScale(nodes[j].rating),
+              )
+            ) {
               overlapsNode = true;
               break;
             }
@@ -1222,7 +1368,10 @@ export function SkillGraph() {
           // check overlap with already placed labels
           let overlapsLabel = false;
           for (const pb of placedBoxes) {
-            if (boxesOverlap(box, pb)) { overlapsLabel = true; break; }
+            if (boxesOverlap(box, pb)) {
+              overlapsLabel = true;
+              break;
+            }
           }
           if (overlapsLabel) continue;
 
@@ -1277,7 +1426,17 @@ export function SkillGraph() {
       }
 
       // ── update pricetag positions ─────────────────────────────────
-      updatePricetags(pricetagData, nodes, width, height, HULL_MIN_NODES, ropeTargetsRef, ropeStartMap, hiddenGroupsRef.current, pricetagPositionsRef);
+      updatePricetags(
+        pricetagData,
+        nodes,
+        width,
+        height,
+        HULL_MIN_NODES,
+        ropeTargetsRef,
+        ropeStartMap,
+        hiddenGroupsRef.current,
+        pricetagPositionsRef,
+      );
 
       // ── visibility for hidden groups ───────────────────────────────
       for (let i = 0; i < nodes.length; i++) {
@@ -1476,7 +1635,7 @@ export function SkillGraph() {
       const py = (e.clientY - rect.top) * scaleY;
 
       const hit = findNode(px, py);
-      if (hit && (hit.fx != null || hit.fy != null)) {
+      if (hit && (typeof hit.fx === "number" || typeof hit.fy === "number")) {
         hit.fx = null;
         hit.fy = null;
         simulation.alphaTarget(REHEAT_ALPHA).restart();
@@ -1625,7 +1784,12 @@ export function SkillGraph() {
         }}
       >
         <svg ref={svgRef} className="h-full w-full" />
-        <WobblyRopes ropeTargetsRef={ropeTargetsRef} colors={ropeColorMap} segments={12} stiffness={0.5} />
+        <WobblyRopes
+          ropeTargetsRef={ropeTargetsRef}
+          colors={ropeColorMap}
+          segments={12}
+          stiffness={0.5}
+        />
 
         {/* ── Tooltip (sub‑entries of hovered / dragged node) ──────── */}
         <div
@@ -1649,19 +1813,41 @@ export function SkillGraph() {
           {tooltipContent && (
             <>
               {tooltipContent.direct ? (
-                <div style={{ display: "flex", justifyContent: "space-between", gap: "16px", color: "rgba(255,255,255,0.95)" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: "16px",
+                    color: "rgba(255,255,255,0.95)",
+                  }}
+                >
                   <span style={{ fontWeight: "bold" }}>{tooltipContent.name}</span>
-                  <span style={{ color: ratingColor(tooltipContent.entries[0][1]), fontWeight: "bold" }}>{tooltipContent.entries[0][1]}</span>
+                  <span
+                    style={{ color: ratingColor(tooltipContent.entries[0][1]), fontWeight: "bold" }}
+                  >
+                    {tooltipContent.entries[0][1]}
+                  </span>
                 </div>
               ) : (
                 <>
-                  <div style={{ fontWeight: "bold", marginBottom: "4px", color: "rgba(255,255,255,0.95)" }}>
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                      marginBottom: "4px",
+                      color: "rgba(255,255,255,0.95)",
+                    }}
+                  >
                     {tooltipContent.name}
                   </div>
                   {tooltipContent.entries.map(([entryName, entryRating]) => (
-                    <div key={entryName} style={{ display: "flex", justifyContent: "space-between", gap: "16px" }}>
+                    <div
+                      key={entryName}
+                      style={{ display: "flex", justifyContent: "space-between", gap: "16px" }}
+                    >
                       <span>{entryName}</span>
-                      <span style={{ color: ratingColor(entryRating), fontWeight: "bold" }}>{entryRating}</span>
+                      <span style={{ color: ratingColor(entryRating), fontWeight: "bold" }}>
+                        {entryRating}
+                      </span>
                     </div>
                   ))}
                 </>
@@ -1679,30 +1865,30 @@ export function SkillGraph() {
             {language === "de" ? "Bewertung:" : "Rating:"}
           </span>
           <div className="flex flex-wrap items-center justify-center gap-2">
-          {[1, 2, 3, 4, 5].map((r) => {
-            const color = ratingColor(r);
-            return (
-              <button
-                key={r}
-                onClick={() => {
-                  setFilterToggles(prev => {
-                    const next = [...prev];
-                    next[r] = !next[r];
-                    return next;
-                  });
-                }}
-                className="rounded px-3 py-1 font-mono text-sm font-bold transition-all duration-150"
-                style={{
-                  backgroundColor: filterToggles[r] ? color : "rgba(30,30,40,0.6)",
-                  color: filterToggles[r] ? "#111" : "rgba(150,150,160,0.5)",
-                  border: `1px solid ${filterToggles[r] ? color : "rgba(60,60,70,0.4)"}`,
-                  opacity: filterToggles[r] ? 1 : 0.55,
-                }}
-              >
-                {r}
-              </button>
-            );
-          })}
+            {[1, 2, 3, 4, 5].map((r) => {
+              const color = ratingColor(r);
+              return (
+                <button
+                  key={r}
+                  onClick={() => {
+                    setFilterToggles((prev) => {
+                      const next = [...prev];
+                      next[r] = !next[r];
+                      return next;
+                    });
+                  }}
+                  className="rounded px-3 py-1 font-mono text-sm font-bold transition-all duration-150"
+                  style={{
+                    backgroundColor: filterToggles[r] ? color : "rgba(30,30,40,0.6)",
+                    color: filterToggles[r] ? "#111" : "rgba(150,150,160,0.5)",
+                    border: `1px solid ${filterToggles[r] ? color : "rgba(60,60,70,0.4)"}`,
+                    opacity: filterToggles[r] ? 1 : 0.55,
+                  }}
+                >
+                  {r}
+                </button>
+              );
+            })}
           </div>
         </div>
 

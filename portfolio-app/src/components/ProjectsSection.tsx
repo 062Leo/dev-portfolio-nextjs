@@ -16,7 +16,9 @@ export function ProjectsShowcase() {
   const colors = useThemeColors(true);
 
   const projects = usePortfolioData().projects;
-  const moreProjects = useOtherProjects().projects.filter((project) => project.id && project.id.trim() !== "");
+  const moreProjects = useOtherProjects().projects.filter(
+    (project) => project.id && project.id.trim() !== "",
+  );
 
   return (
     <section className="relative px-4 py-24">
@@ -35,7 +37,10 @@ export function ProjectsShowcase() {
             </>
           )}
         </h2>
-        <p className="mx-auto mb-12 max-w-3xl text-center" style={{ color: colors.projectsSectionSubtitleColor }}>
+        <p
+          className="mx-auto mb-12 max-w-3xl text-center"
+          style={{ color: colors.projectsSectionSubtitleColor }}
+        >
           {language === "de"
             ? "Hier sind einige meiner aktuellen Projekte, die Design, Performance und sauberen Code verbinden."
             : "Here are some of my recent projects that combine design, performance, and clean code."}
@@ -67,7 +72,6 @@ export function ProjectsShowcase() {
               </div>
 
               <div className="p-6">
-
                 <Link href={`/projects/${project.id}`}>
                   <div className="mb-1 flex items-baseline gap-2 flex-wrap">
                     <h3
@@ -115,7 +119,7 @@ export function ProjectsShowcase() {
                     );
                   })}
                 </div>
-                
+
                 <div className="mb-4">
                   <Link
                     href={`/projects/${project.id}`}
@@ -123,7 +127,10 @@ export function ProjectsShowcase() {
                     style={{ color: colors.projectsSectionLinkColor }}
                   >
                     {language === "de" ? "Mehr Details anzeigen" : "View more Details"}
-                    <ArrowRight className="h-4 w-4" style={{ color: colors.projectsSectionLinkColor }} />
+                    <ArrowRight
+                      className="h-4 w-4"
+                      style={{ color: colors.projectsSectionLinkColor }}
+                    />
                   </Link>
                 </div>
 
@@ -277,15 +284,16 @@ export function ProjectsShowcase() {
                     style={{ color: colors.projectsSectionLinkColor }}
                   >
                     {language === "de" ? "Mehr Details anzeigen" : "View more Details"}
-                    <ArrowRight className="h-4 w-4" style={{ color: colors.projectsSectionLinkColor }} />
+                    <ArrowRight
+                      className="h-4 w-4"
+                      style={{ color: colors.projectsSectionLinkColor }}
+                    />
                   </Link>
                 </div>
               </div>
             </div>
           ))}
         </div>
-
-
 
         <div className=" mt-12 flex flex-col justify-center gap-4 pt-4 sm:flex-row">
           <button
@@ -300,14 +308,13 @@ export function ProjectsShowcase() {
               setPendingUrl("https://github.com/062Leo");
               setShowDialog(true);
             }}
-            >
+          >
             {language === "de" ? "Mein GitHub-Profil ansehen" : "Check My Personal GitHub"}
             <ArrowRight size={16} />
           </button>
         </div>
 
-
-            {/* hier hin */}
+        {/* hier hin */}
       </div>
 
       {showDialog && pendingUrl && (
@@ -359,7 +366,6 @@ export function ProjectsShowcase() {
           </div>
         </div>
       )}
-
     </section>
   );
 }

@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "format": "prettier --write .",
+    "check": "npm run lint -- --max-warnings 0 && tsc --noEmit && prettier --check . && npm run build && npm audit --omit=dev --audit-level=high",
     "tailwind:init": "node ./node_modules/tailwindcss/lib/cli.js init -p"
   },
   "dependencies": {
@@ -32,6 +34,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
     "postcss": "^8.5.6",
+    "prettier": "^3.9.9",
     "tailwindcss": "^4.1.17",
     "typescript": "5.9.3"
   }

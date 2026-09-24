@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import type { ProjectImage } from '@/data/types';
-import { renderMarkdownText } from '@/lib/markdown';
+import React, { useEffect, useRef } from "react";
+import type { ProjectImage } from "@/data/types";
+import { renderMarkdownText } from "@/lib/markdown";
 
 interface ProjectVideosProps {
   videoBig?: string;
@@ -33,7 +33,7 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors 
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
 
     videoRefs.current.forEach((video) => {
@@ -50,7 +50,7 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors 
   if (!hasBigVideo && !hasVideos) return null;
 
   const isValidVideo = (video: unknown): video is ProjectImage => {
-    return !!video && typeof video === 'object' && 'url' in video;
+    return !!video && typeof video === "object" && "url" in video;
   };
 
   return (
@@ -66,7 +66,10 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors 
           <div className="flex justify-center">
             <div
               className="aspect-video w-full max-w-4xl rounded-xl overflow-hidden border-2"
-              style={{ borderColor: colors.boomforceScreenshotsBorder, backgroundColor: colors.boomforceScreenshotsBackground }}
+              style={{
+                borderColor: colors.boomforceScreenshotsBorder,
+                backgroundColor: colors.boomforceScreenshotsBackground,
+              }}
             >
               <video
                 src={videoBig}
@@ -93,15 +96,15 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors 
             {videos!.filter(isValidVideo).map((video, index) => (
               <div
                 key={index}
-                className={`relative flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-4 md:gap-8 p-4 rounded-lg group`}
-                style={{ backgroundColor: 'rgba(72, 51, 95, 0.25)' }}
+                className={`relative flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-4 md:gap-8 p-4 rounded-lg group`}
+                style={{ backgroundColor: "rgba(72, 51, 95, 0.25)" }}
               >
                 {/* Connecting line */}
                 <div
                   className="hidden md:block absolute top-1/2 left-1/2 w-12 h-0.5 -translate-x-1/2 -translate-y-1/2 z-0"
                   style={{ backgroundColor: colors.boomforceScreenshotsBorder }}
                 ></div>
-            
+
                 {/* Video container - 4:3 aspect ratio */}
                 <div className="w-full md:w-1/2 p-2 relative z-10">
                   <div
@@ -109,7 +112,7 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors 
                     style={{
                       border: `1px solid ${colors.boomforceScreenshotsBorder}`,
                       backgroundColor: colors.boomforceScreenshotsBackground,
-                      aspectRatio: '4/3',
+                      aspectRatio: "4/3",
                     }}
                   >
                     <video
@@ -126,7 +129,7 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors 
                     />
                   </div>
                 </div>
-            
+
                 {/* Text container */}
                 <div className="w-full md:w-1/2 p-2 flex items-center relative z-10">
                   {video.caption && (
@@ -136,12 +139,14 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors 
                         backgroundColor: colors.boomforceScreenshotsBackground,
                         border: `1px solid ${colors.boomforceScreenshotsBorder}`,
                         boxShadow:
-                          '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
                       }}
                     >
                       <div className="w-full text-sm md:text-base">
-                        {renderMarkdownText(video.caption, colors.boomforceProjectDescriptionText) ||
-                          video.caption}
+                        {renderMarkdownText(
+                          video.caption,
+                          colors.boomforceProjectDescriptionText,
+                        ) || video.caption}
                       </div>
                     </div>
                   )}

@@ -50,8 +50,6 @@ export function Navbar() {
     setLanguage(language === "de" ? "en" : "de");
   };
 
-  
-
   const navItems =
     language === "de"
       ? [
@@ -78,10 +76,10 @@ export function Navbar() {
       <div className="container grid grid-cols-[1fr_auto_1fr] items-center">
         <Link href="/" className="flex items-center text-xl font-bold group">
           <span className="relative z-10 flex items-baseline">
-              <span
-                className="text-glow transition-colors duration-300"
-                style={{ color: colors.navbarTitleColor, textShadow: colors.navbarTitleGlow }}
-              >
+            <span
+              className="text-glow transition-colors duration-300"
+              style={{ color: colors.navbarTitleColor, textShadow: colors.navbarTitleGlow }}
+            >
               leo
             </span>
             <span
@@ -91,7 +89,7 @@ export function Navbar() {
                 textShadow: colors.navbarTitleGlow,
               }}
             >
-              {'.dev'}
+              {".dev"}
             </span>
           </span>
         </Link>
@@ -119,18 +117,18 @@ export function Navbar() {
             aria-label="Toggle language"
           >
             <div className="relative">
-              <div 
+              <div
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300"
                 style={{
-                  width: '1.8rem',
-                  height: '1.8rem',
-                  backgroundColor: colors.languageToggleBgColor
+                  width: "1.8rem",
+                  height: "1.8rem",
+                  backgroundColor: colors.languageToggleBgColor,
                 }}
               />
               <div className="relative h-6 w-6 overflow-hidden rounded-full z-10">
                 <Image
-                  src={language === 'de' ? "/Icons/de_flag.png" : "/Icons/en_flag.png"}
-                  alt={language === 'de' ? "Deutsch" : "English"}
+                  src={language === "de" ? "/Icons/de_flag.png" : "/Icons/en_flag.png"}
+                  alt={language === "de" ? "Deutsch" : "English"}
                   sizes="(max-width: 768px) 24px, 24px"
                   fill
                   className="transition-opacity duration-300 object-cover"
@@ -139,10 +137,7 @@ export function Navbar() {
               </div>
             </div>
           </button>
-         
         </div>
-
-       
 
         <button
           onClick={() => setIsMenuOpen((prev) => !prev)}

@@ -5,8 +5,9 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import KeyCleaner from "@/components/KeyCleaner";
 
 export const metadata: Metadata = {
-   title: "leo.dev — Portfolio",
-  description: "leo.dev — Softwareentwickler Portfolio mit Fokus auf AI, Automatisierung und interaktive Anwendungen",
+  title: "leo.dev — Portfolio",
+  description:
+    "leo.dev — Softwareentwickler Portfolio mit Fokus auf AI, Automatisierung und interaktive Anwendungen",
   referrer: "no-referrer",
 };
 

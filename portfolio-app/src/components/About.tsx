@@ -1,13 +1,7 @@
 "use client";
 
 import { type ReactNode } from "react";
-import {
-  Bot,
-  Briefcase,
-  ChartNoAxesCombined,
-  Code,
-  Workflow,
-} from "lucide-react";
+import { Bot, Briefcase, ChartNoAxesCombined, Code, Workflow } from "lucide-react";
 import { usePortfolioData } from "@/data/index";
 import { useThemeColors, type ThemeColorSet } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
@@ -26,15 +20,11 @@ export function About() {
         >
           {language === "de" ? (
             <>
-              Über{" "}
-              <span style={{ color: colors.aboutSectionAccentColor }}>
-                mich
-              </span>
+              Über <span style={{ color: colors.aboutSectionAccentColor }}>mich</span>
             </>
           ) : (
             <>
-              About{" "}
-              <span style={{ color: colors.aboutSectionAccentColor }}>Me</span>
+              About <span style={{ color: colors.aboutSectionAccentColor }}>Me</span>
             </>
           )}
         </h2>
@@ -62,11 +52,7 @@ export function About() {
           <div className="grid grid-cols-1 gap-6">
             <InfoCard
               icon={<Code className="h-6 w-6" />}
-              title={
-                language === "de"
-                  ? "Software Development"
-                  : "Software Development"
-              }
+              title={language === "de" ? "Software Development" : "Software Development"}
               description={
                 language === "de"
                   ? "Entwicklung moderner Anwendungen von Web-Frontends über Desktop bis zu Backend-Lösungen mit Fokus auf sauberer Architektur, wartbarem Code und praxisnaher Umsetzbarkeit."
@@ -76,11 +62,7 @@ export function About() {
             />
             <InfoCard
               icon={<Workflow className="h-6 w-6" />}
-              title={
-                language === "de"
-                  ? "Interactive Systems"
-                  : "Interactive Systems"
-              }
+              title={language === "de" ? "Interactive Systems" : "Interactive Systems"}
               description={
                 language === "de"
                   ? "Konzeption und Umsetzung interaktiver Systeme mit Unity und C# von Spielen und Simulationen bis zu Anwendungen, in denen Echtzeit-Interaktion, Physik oder komplexe Abläufe gefragt sind."
@@ -114,11 +96,7 @@ export function About() {
             />
             <InfoCard
               icon={<Briefcase className="h-6 w-6" />}
-              title={
-                language === "de"
-                  ? "Ownership & Mindset"
-                  : "Ownership & Mindset"
-              }
+              title={language === "de" ? "Ownership & Mindset" : "Ownership & Mindset"}
               description={
                 language === "de"
                   ? "Eigeninitiative, selbstständiges Arbeiten, aktives Mitdenken und die Bereitschaft, Entscheidungen zu treffen und sich durch Projekte und Recherche kontinuierlich weiterzuentwickeln."
@@ -161,15 +139,10 @@ function InfoCard({ icon, title, description, colors }: InfoCardProps) {
           {icon}
         </div>
         <div>
-          <h4
-            className="text-lg font-semibold"
-            style={{ color: colors.aboutSectionTitleColor }}
-          >
+          <h4 className="text-lg font-semibold" style={{ color: colors.aboutSectionTitleColor }}>
             {title}
           </h4>
-          <p style={{ color: colors.aboutSectionDescriptionText }}>
-            {description}
-          </p>
+          <p style={{ color: colors.aboutSectionDescriptionText }}>{description}</p>
         </div>
       </div>
     </div>

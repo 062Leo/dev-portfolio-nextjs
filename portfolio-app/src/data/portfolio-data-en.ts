@@ -38,14 +38,7 @@ export const portfolioData = {
         "Python automation script for controlling long training runs and dynamic hyperparameters",
         "Evaluation of training runs with TensorBoard (rewards, losses, success rates)",
       ],
-      techStack: [
-        "Unity",
-        "ML-Agents Toolkit",
-        "C#",
-        "Python",
-        "PPO",
-        "TensorBoard",
-      ],
+      techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
       demoLink: "",
       demoImage: "",
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
@@ -375,15 +368,7 @@ export const portfolioData = {
       images: [] as ProjectImage[],
       detailComponent: "",
       videos: [],
-      tags: [
-        "Vue 3",
-        "TypeScript",
-        "SPA",
-        "Zero-Backend",
-        "IndexedDB",
-        "MusicBrainz",
-        "YouTube",
-      ],
+      tags: ["Vue 3", "TypeScript", "SPA", "Zero-Backend", "IndexedDB", "MusicBrainz", "YouTube"],
       features: [
         "Random music discovery via MusicBrainz API — truly random selection across 126 years of music history",
         "YouTube video playback with gapless dual-player (two IFrame instances)",
@@ -555,13 +540,7 @@ export const portfolioData = {
             "Complex chain reaction:\n Multiple barrels trigger each other and affect the surrounding blocks:\n\n Blocks in color categories:\n Instant destruction; burns and dies; burns and survives;\n (depending on the number and radius of the barrels that trigger the block) ",
         },
       ],
-      tags: [
-        "Unity 2D",
-        "Physics Engine",
-        "Destructible Environment",
-        "State Management",
-        "C#",
-      ],
+      tags: ["Unity 2D", "Physics Engine", "Destructible Environment", "State Management", "C#"],
       features: [
         "Tilemap-based grid system with destructible blocks",
         "Physics-based explosion system with radius calculation",
@@ -598,8 +577,7 @@ export const portfolioData = {
       id: "coming-soon",
       title: "Coming soon",
       subtitle: "",
-      description:
-        "This project is still secret - more information coming soon.",
+      description: "This project is still secret - more information coming soon.",
       longDescription:
         "This entry is a placeholder. In the future, additional projects will be presented here.",
       image: "/Bilder/dummy.png",

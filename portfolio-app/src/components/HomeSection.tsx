@@ -64,7 +64,10 @@ export function HomeSection() {
                       <span
                         key={`hover-char-${index}`}
                         className="opacity-0 translate-x-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0"
-                        style={{ color: colors.homeSectionHoverText, transitionDelay: `${index * 30}ms` }}
+                        style={{
+                          color: colors.homeSectionHoverText,
+                          transitionDelay: `${index * 30}ms`,
+                        }}
                       >
                         {char === " " ? "\u00A0" : char}
                       </span>
@@ -72,7 +75,7 @@ export function HomeSection() {
                   </span>
                 </button>
               </span>
-              <span style={{ color: colors.homeSectionSeparator }}>{' /'}</span>
+              <span style={{ color: colors.homeSectionSeparator }}>{" /"}</span>
               <span style={{ color: colors.homeSectionBracketText }}>&gt;</span>
             </span>
           </h1>
@@ -102,7 +105,6 @@ export function HomeSection() {
             </Link>
           </div>
         </div>
-
       </div>
       <button
         type="button"
@@ -110,7 +112,9 @@ export function HomeSection() {
         className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center animate-bounce"
         style={{ color: colors.homeSectionTitleColor }}
       >
-        <span className="mb-1 select-none text-sm">{language === "de" ? "Scrollen" : "Scroll"}</span>
+        <span className="mb-1 select-none text-sm">
+          {language === "de" ? "Scrollen" : "Scroll"}
+        </span>
         <ArrowDown className="h-5 w-5" />
       </button>
     </section>

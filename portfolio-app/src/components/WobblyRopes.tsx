@@ -59,16 +59,24 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
       const target = targets.get(gi);
       if (!target) {
         states.delete(gi);
-      } else if (target.start.x === 0 && target.start.y === 0 && target.end.x === 0 && target.end.y === 0) {
+      } else if (
+        target.start.x === 0 &&
+        target.start.y === 0 &&
+        target.end.x === 0 &&
+        target.end.y === 0
+      ) {
         states.delete(gi);
       }
     }
 
     for (const [gi, target] of targets.entries()) {
-      if (target.start.x === 0 && target.start.y === 0 && target.end.x === 0 && target.end.y === 0) continue;
+      if (target.start.x === 0 && target.start.y === 0 && target.end.x === 0 && target.end.y === 0)
+        continue;
       if (states.has(gi)) continue;
 
-      const dist = Math.sqrt((target.end.x - target.start.x) ** 2 + (target.end.y - target.start.y) ** 2);
+      const dist = Math.sqrt(
+        (target.end.x - target.start.x) ** 2 + (target.end.y - target.start.y) ** 2,
+      );
       if (dist < 1) continue;
 
       const segLen = dist / segments;
@@ -130,8 +138,7 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
 
         // dynamically adjust rest length to match current hull→tag distance
         const currentDist = Math.sqrt(
-          (target.end.x - target.start.x) ** 2 +
-          (target.end.y - target.start.y) ** 2
+          (target.end.x - target.start.x) ** 2 + (target.end.y - target.start.y) ** 2,
         );
         if (currentDist > 0.1) {
           const segLen = currentDist / lastIdx;
@@ -165,8 +172,14 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
             const offX = dx * percent;
             const offY = dy * percent;
 
-            if (!isP1Pinned) { link.p1.x -= offX; link.p1.y -= offY; }
-            if (!isP2Pinned) { link.p2.x += offX; link.p2.y += offY; }
+            if (!isP1Pinned) {
+              link.p1.x -= offX;
+              link.p1.y -= offY;
+            }
+            if (!isP2Pinned) {
+              link.p2.x += offX;
+              link.p2.y += offY;
+            }
           }
         }
 

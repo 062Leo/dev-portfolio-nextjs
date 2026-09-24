@@ -34,7 +34,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   const detectedLanguage = useSyncExternalStore(
     subscribeToNavigatorLanguage,
     getNavigatorLanguage,
-    getServerLanguage
+    getServerLanguage,
   );
   // A language chosen by the user wins over the detected one.
   const [chosenLanguage, setLanguage] = useState<SupportedLanguage | null>(null);

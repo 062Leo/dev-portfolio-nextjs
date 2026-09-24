@@ -130,8 +130,7 @@ export function NetworkBackground() {
         targetX: point.originX - 50 + Math.random() * 100,
         targetY: point.originY - 50 + Math.random() * 100,
         startTime: now,
-        duration:
-          MIN_SHIFT_DURATION + Math.random() * (MAX_SHIFT_DURATION - MIN_SHIFT_DURATION),
+        duration: MIN_SHIFT_DURATION + Math.random() * (MAX_SHIFT_DURATION - MIN_SHIFT_DURATION),
       };
     };
 
@@ -238,7 +237,10 @@ export function NetworkBackground() {
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-0" style={{ background: getColor(true).networkBackground }}>
+    <div
+      className="pointer-events-none fixed inset-0 z-0"
+      style={{ background: getColor(true).networkBackground }}
+    >
       <canvas ref={canvasRef} className="h-full w-full" />
     </div>
   );

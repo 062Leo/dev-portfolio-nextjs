@@ -67,7 +67,9 @@ export function createPricetags(
   CATEGORIES: CatEntry[],
   hiddenGroups?: Set<number>,
   onToggle?: (categoryName: string) => void,
-  pricetagPositionsRef?: React.MutableRefObject<Map<number, { x: number; y: number; isLeft: boolean; isTop: boolean }>>,
+  pricetagPositionsRef?: React.MutableRefObject<
+    Map<number, { x: number; y: number; isLeft: boolean; isTop: boolean }>
+  >,
 ): PricetagData[] {
   const pricetagData: PricetagData[] = [];
 
@@ -179,7 +181,9 @@ export function updatePricetags(
   ropeTargetsRef: React.MutableRefObject<Map<number, RopeTarget>>,
   ropeStartMap?: Map<number, { x: number; y: number }>,
   hiddenGroups?: Set<number>,
-  pricetagPositionsRef?: React.MutableRefObject<Map<number, { x: number; y: number; isLeft: boolean; isTop: boolean }>>,
+  pricetagPositionsRef?: React.MutableRefObject<
+    Map<number, { x: number; y: number; isLeft: boolean; isTop: boolean }>
+  >,
 ) {
   if (!PRICETAG_ENABLED || pricetagData.length === 0) return;
 
@@ -215,7 +219,12 @@ export function updatePricetags(
     if (isFilteredOut) {
       pd.line.style.display = "none";
       const rt = ropeTargetsRef.current.get(pd.gi);
-      if (rt) { rt.start.x = 0; rt.start.y = 0; rt.end.x = 0; rt.end.y = 0; }
+      if (rt) {
+        rt.start.x = 0;
+        rt.start.y = 0;
+        rt.end.x = 0;
+        rt.end.y = 0;
+      }
 
       const stored = pricetagPositionsRef?.current.get(pd.gi);
       if (stored) {
@@ -224,7 +233,18 @@ export function updatePricetags(
         const tw = catName.length * FONT_SZ * 0.6 + PAD * 2;
         const tagLeft = stored.isLeft ? PT_T + tw : 0;
         const tagRight = stored.isLeft ? 0 : PT_T + tw;
-        allPositions.push({ pd, isTop: stored.isTop, isLeft: stored.isLeft, tagLeft, tagRight, rx: stored.x, ry: stored.y, cx: stored.x, tw, name: catName });
+        allPositions.push({
+          pd,
+          isTop: stored.isTop,
+          isLeft: stored.isLeft,
+          tagLeft,
+          tagRight,
+          rx: stored.x,
+          ry: stored.y,
+          cx: stored.x,
+          tw,
+          name: catName,
+        });
       } else {
         pd.g.style.display = "none";
       }
@@ -235,15 +255,24 @@ export function updatePricetags(
       pd.line.style.display = "none";
       pd.g.style.display = "none";
       const rt = ropeTargetsRef.current.get(pd.gi);
-      if (rt) { rt.start.x = 0; rt.start.y = 0; rt.end.x = 0; rt.end.y = 0; }
+      if (rt) {
+        rt.start.x = 0;
+        rt.start.y = 0;
+        rt.end.x = 0;
+        rt.end.y = 0;
+      }
       continue;
     }
     pd.line.style.display = "none";
     pd.g.style.display = "";
     pd.g.style.opacity = "1";
 
-    let cx = 0, cy = 0;
-    for (const n of gn) { cx += n.x ?? 0; cy += n.y ?? 0; }
+    let cx = 0,
+      cy = 0;
+    for (const n of gn) {
+      cx += n.x ?? 0;
+      cy += n.y ?? 0;
+    }
     cx /= gn.length;
     cy /= gn.length;
 
@@ -287,7 +316,7 @@ export function updatePricetags(
 
   // ---- tag-tag layout: maintain group L→R order, distribute along edge ----
   for (const side of [true, false]) {
-    const sideTags = allPositions.filter(t => t.isTop === side);
+    const sideTags = allPositions.filter((t) => t.isTop === side);
     sideTags.sort((a, b) => a.cx - b.cx);
 
     for (let iter = 0; iter < 8; iter++) {
