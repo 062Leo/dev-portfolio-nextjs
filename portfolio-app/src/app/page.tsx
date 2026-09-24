@@ -5,7 +5,6 @@ import { HomePreviewSection } from "@/components/HomePreviewSection";
 import { Navbar } from "@/components/Navbar";
 import { NetworkBackground } from "@/components/NetworkBackground";
 import { SkillGraph } from "@/components/SkillGraph";
-import { Toaster } from "@/components/ui/toaster";
 
 export default function Home() {
   return (
@@ -20,9 +19,6 @@ export default function Home() {
       </main>
       <div className="relative">
         <Footer />
-      </div>
-      <div className="relative">
-        <Toaster />
       </div>
     </div>
   );
