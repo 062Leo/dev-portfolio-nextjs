@@ -7,6 +7,7 @@ import {
   unstable_doesMiddlewareMatch,
 } from "next/experimental/testing/server";
 import { config, proxy } from "@/proxy";
+import { MAX_FAILURES, WINDOW_MS } from "@/lib/rate-limit";
 
 // These tests describe the behaviour of the password gate (pass / redirect / cookie set)
 // and of the language rewrite, not the cookie format, so they stay valid when the cookie
@@ -21,6 +22,7 @@ type RequestOptions = {
   lang?: string;
   acceptLanguage?: string;
   method?: string;
+  ip?: string;
 };
 
 function request(path: string, options: RequestOptions = {}): NextRequest {
@@ -30,6 +32,7 @@ function request(path: string, options: RequestOptions = {}): NextRequest {
   const headers: Record<string, string> = {};
   if (cookies.length > 0) headers.cookie = cookies.join("; ");
   if (options.acceptLanguage) headers["accept-language"] = options.acceptLanguage;
+  if (options.ip) headers["x-forwarded-for"] = options.ip;
   return new NextRequest(new URL(path, ORIGIN), { headers, method: options.method });
 }
 
@@ -122,10 +125,8 @@ describe("proxy with SITE_PASSWORD and AUTH_SECRET", () => {
     expect(response.cookies.get("site-auth")?.value).toBeTruthy();
   });
 
-  it("answers a wrong ?key= on /login with the delay and /login without the key", async () => {
-    const setTimeoutSpy = vi.spyOn(globalThis, "setTimeout");
+  it("answers a wrong ?key= on /login with /login without the key", async () => {
     const response = await proxy(request("/login?key=wrong-password"));
-    expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 500);
     expect(redirectsToLogin(response)).toBe(true);
     expect(response.cookies.get("site-auth")).toBeUndefined();
   });
@@ -158,12 +159,6 @@ describe("proxy with SITE_PASSWORD and AUTH_SECRET", () => {
     const response = await proxy(request("/?key=wrong-password"));
     expect(redirectsToLogin(response)).toBe(true);
     expect(response.cookies.get("site-auth")).toBeUndefined();
-  });
-
-  it("waits before answering a wrong ?key=", async () => {
-    const setTimeoutSpy = vi.spyOn(globalThis, "setTimeout");
-    await proxy(request("/?key=wrong-password"));
-    expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 500);
   });
 
   it("redirects the right ?key= to the same URL without the key and sets the cookie", async () => {
@@ -221,6 +216,81 @@ describe("proxy with SITE_PASSWORD and AUTH_SECRET", () => {
     const cookie = await loginCookie();
     vi.stubEnv("AUTH_VERSION", "2");
     expect(redirectsToLogin(await proxy(request("/", { cookie })))).toBe(true);
+  });
+});
+
+describe("rate limit for ?key=", () => {
+  // Every test has its own client address: the limiter keeps its state in module scope.
+  let clients = 0;
+  let ip: string;
+
+  beforeEach(() => {
+    vi.stubEnv("SITE_PASSWORD", PASSWORD);
+    vi.stubEnv("AUTH_SECRET", SECRET);
+    clients += 1;
+    ip = `203.0.113.${clients}`;
+    vi.useFakeTimers({ toFake: ["Date"] });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  async function wrongKeys(times: number): Promise<void> {
+    for (let i = 0; i < times; i++) {
+      expect(redirectsToLogin(await proxy(request("/?key=wrong-password", { ip })))).toBe(true);
+    }
+  }
+
+  it("answers the attempt after MAX_FAILURES wrong keys with 429 instead of a redirect", async () => {
+    await wrongKeys(MAX_FAILURES);
+    const response = await proxy(request("/?key=wrong-password", { ip }));
+    expect(response.status).toBe(429);
+    expect(getRedirectUrl(response)).toBeNull();
+    expect(response.headers.get("retry-after")).toBe(String(WINDOW_MS / 1000));
+    expect(response.headers.get("content-type")).toContain("text/plain");
+    expect(await response.text()).toBe("Too many attempts");
+    expect(response.cookies.get("site-auth")).toBeUndefined();
+  });
+
+  it("rejects the right key too while the client is blocked", async () => {
+    await wrongKeys(MAX_FAILURES);
+    const response = await proxy(request(`/?key=${PASSWORD}`, { ip }));
+    expect(response.status).toBe(429);
+    expect(response.cookies.get("site-auth")).toBeUndefined();
+  });
+
+  it("blocks ?key= on /login as well", async () => {
+    await wrongKeys(MAX_FAILURES);
+    expect((await proxy(request("/login?key=wrong-password", { ip }))).status).toBe(429);
+  });
+
+  it("does not touch requests without a key or with a valid cookie", async () => {
+    await wrongKeys(MAX_FAILURES);
+    expect(redirectsToLogin(await proxy(request("/", { ip })))).toBe(true);
+    expect(passes(await proxy(request("/login", { ip })))).toBe(true);
+    const cookie = await loginCookie();
+    expect(passes(await proxy(request("/projects", { ip, cookie })))).toBe(true);
+  });
+
+  it("lets the client try again once the window has passed", async () => {
+    await wrongKeys(MAX_FAILURES);
+    expect((await proxy(request(`/?key=${PASSWORD}`, { ip }))).status).toBe(429);
+    vi.setSystemTime(Date.now() + WINDOW_MS);
+    expect((await proxy(request(`/?key=${PASSWORD}`, { ip }))).status).toBe(303);
+  });
+
+  it("forgets the failures after a successful login", async () => {
+    await wrongKeys(MAX_FAILURES - 1);
+    expect((await proxy(request(`/?key=${PASSWORD}`, { ip }))).status).toBe(303);
+    await wrongKeys(MAX_FAILURES - 1);
+    expect((await proxy(request(`/?key=${PASSWORD}`, { ip }))).status).toBe(303);
+  });
+
+  it("counts clients separately, the shared fallback key included", async () => {
+    await wrongKeys(MAX_FAILURES);
+    expect((await proxy(request(`/?key=${PASSWORD}`, { ip: "198.51.100.9" }))).status).toBe(303);
+    expect((await proxy(request(`/?key=${PASSWORD}`))).status).toBe(303);
   });
 });
 

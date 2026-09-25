@@ -60,6 +60,8 @@ AUTH_VERSION=1
 
 Der Cookie gilt 7 Tage.
 
+Nach 10 falschen Passwörtern innerhalb von 15 Minuten (Formular und `key`-Parameter zusammen) weist die Website denselben Client für den Rest der 15 Minuten ab, auch mit dem richtigen Passwort; der Proxy antwortet dann mit `429` und `Retry-After`, das Formular zeigt einen Hinweis. Die Sperre liegt im Speicher der laufenden Instanz (`src/lib/rate-limit.ts`) und gilt auf Vercel je Instanz, sie bremst also Ratenversuche, garantiert aber keine harte Obergrenze.
+
 ### Login per URL-Parameter
 
 Das Passwort kann statt im Formular auch als Parameter `key` übergeben werden:

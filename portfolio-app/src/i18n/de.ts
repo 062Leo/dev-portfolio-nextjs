@@ -132,6 +132,7 @@ export const de = {
     submit: "Anmelden",
     verifying: "Wird geprüft...",
     invalidPassword: "Falsches Passwort",
+    tooManyAttempts: "Zu viele Versuche. Bitte in einer Viertelstunde noch einmal versuchen.",
     help: "Das Passwort steht neben dem Link zur Website an der Stelle, von der der Link stammt. Alternativ kann es über den Link unten oder über bereits bekannte Kontaktdaten beim Betreiber der Website angefragt werden.",
     requestAccess: "Zugang anfragen",
   },

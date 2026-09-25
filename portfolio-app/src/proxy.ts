@@ -6,8 +6,8 @@ import {
   isValidAuthCookie,
   readAuthEnv,
   verifyPassword,
-  wrongPasswordDelay,
 } from "@/lib/auth";
+import { clientKey, isBlocked, registerFailure, reset, retryAfterSeconds } from "@/lib/rate-limit";
 import {
   LANG_COOKIE_NAME,
   type Lang,
@@ -63,17 +63,33 @@ async function passwordGate(request: NextRequest, afterLogin: URL): Promise<Next
   }
 
   if (key !== null) {
+    // A blocked client is answered with 429 whatever the key says: letting a right key
+    // through would make the block useless against online guessing.
+    const client = clientKey(request.headers);
+    if (isBlocked(client)) return tooManyAttempts(client);
+
     if (await verifyPassword(key)) {
+      reset(client);
       // Redirect without the key, so the password neither stays in the address bar nor
       // lands in the browser history.
       const response = NextResponse.redirect(afterLogin, 303);
       response.cookies.set(AUTH_COOKIE_NAME, await createAuthToken(), authCookieOptions());
       return response;
     }
-    await wrongPasswordDelay();
+    registerFailure(client);
   }
 
   return NextResponse.redirect(new URL(LOGIN_PATH, request.url));
+}
+
+function tooManyAttempts(client: string): NextResponse {
+  return new NextResponse("Too many attempts", {
+    status: 429,
+    headers: {
+      "content-type": "text/plain; charset=utf-8",
+      "retry-after": String(retryAfterSeconds(client)),
+    },
+  });
 }
 
 function cleanUrl(request: NextRequest): URL {

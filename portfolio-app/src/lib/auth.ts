@@ -5,7 +5,6 @@
 export const AUTH_COOKIE_NAME = "site-auth";
 
 const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days
-const WRONG_PASSWORD_DELAY_MS = 500;
 
 const encoder = new TextEncoder();
 
@@ -96,12 +95,6 @@ export async function verifyPassword(input: string): Promise<boolean> {
 export async function isValidAuthCookie(value: string | undefined): Promise<boolean> {
   if (!value) return false;
   return timingSafeEqualStrings(value, await createAuthToken());
-}
-
-// Fixed delay after a failed password check; makes brute-forcing slow without leaking
-// anything about how the check failed.
-export function wrongPasswordDelay(): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, WRONG_PASSWORD_DELAY_MS));
 }
 
 export function authCookieOptions() {

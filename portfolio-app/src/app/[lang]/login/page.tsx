@@ -60,6 +60,9 @@ export default function LoginPage() {
             {state.status === "invalid-password" && (
               <p className="text-center text-sm text-accent-2-light">{t.login.invalidPassword}</p>
             )}
+            {state.status === "too-many-attempts" && (
+              <p className="text-center text-sm text-accent-2-light">{t.login.tooManyAttempts}</p>
+            )}
 
             <button
               type="submit"

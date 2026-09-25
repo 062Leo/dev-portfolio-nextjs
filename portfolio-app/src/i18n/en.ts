@@ -132,6 +132,7 @@ export const en: Dictionary = {
     submit: "Login",
     verifying: "Verifying...",
     invalidPassword: "Invalid password",
+    tooManyAttempts: "Too many attempts. Please try again in a quarter of an hour.",
     help: "Find the password next to the website link at the source where you obtained the link, or request it from the website owner via the link below or any contact details you already have.",
     requestAccess: "Request access",
   },
