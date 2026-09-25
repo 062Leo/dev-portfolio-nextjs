@@ -6,7 +6,6 @@ const MIN_TARGET = 44;
 
 for (const path of PAGES) {
   test(`${path} has no visible link or button smaller than ${MIN_TARGET} px`, async ({ page }) => {
-    test.fixme(true, "issue #66: several links and buttons are below 44 px on mobile");
     await page.goto(path);
     const offenders = await page.evaluate((min) => {
       const found: string[] = [];

@@ -43,7 +43,7 @@ export function HomeSection() {
                 <button
                   type="button"
                   onClick={reload}
-                  className="relative inline-flex items-baseline cursor-pointer select-none bg-transparent border-0 p-0 text-current group"
+                  className="relative inline-flex items-baseline cursor-pointer select-none bg-transparent border-0 px-0 py-0.5 -my-0.5 text-current group"
                 >
                   <span>{currentPortfolioData.personal.firstName}</span>
                   <span className="inline-flex overflow-hidden max-w-0 transition-[max-width] duration-300 ease-out group-hover:max-w-[30rem]">

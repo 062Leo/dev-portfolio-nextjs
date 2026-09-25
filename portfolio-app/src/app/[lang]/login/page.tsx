@@ -58,7 +58,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted transition-colors"
+                className="absolute -right-0.5 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center text-text-muted transition-colors"
                 aria-label={showPassword ? t.login.hidePassword : t.login.showPassword}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -72,7 +72,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={busy}
-              className="w-full flex items-center justify-center gap-2 rounded-full bg-accent/65 px-6 py-2 font-medium text-text transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-[0.97]"
+              className="w-full flex items-center justify-center gap-2 rounded-full bg-accent/65 px-6 py-2 max-md:min-h-11 font-medium text-text transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-[0.97]"
             >
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
               {busy ? t.login.verifying : t.login.submit}
@@ -85,7 +85,7 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => handleExternalLink("https://tally.so/r/KYx5ak", "Tally.so")}
-            className="mt-2 flex items-center justify-center gap-1.5 text-m text-accent transition-colors hover:underline mx-auto"
+            className="-mt-0.5 -mb-2.5 flex items-center justify-center gap-1.5 py-2.5 text-m text-accent transition-colors hover:underline mx-auto"
           >
             <Mail className="h-3.5 w-3.5" />
             {t.login.requestAccess}

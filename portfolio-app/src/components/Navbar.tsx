@@ -76,7 +76,7 @@ export function Navbar() {
       )}
     >
       <div className="container grid grid-cols-[1fr_auto_1fr] items-center">
-        <Link href="/" className="flex items-center text-xl font-bold group">
+        <Link href="/" className="-my-2 flex items-center py-2 text-xl font-bold group">
           <span className="relative z-10 flex items-baseline">
             <span className="text-text text-shadow-glow transition-colors duration-300">leo</span>
             <span className="text-accent-2-light text-shadow-glow transition-all duration-300">
@@ -101,7 +101,7 @@ export function Navbar() {
           {/* Language Toggle Button */}
           <button
             onClick={toggleLanguage}
-            className="z-50 focus:outline-none"
+            className="z-50 -m-2.5 p-2.5 focus:outline-none"
             aria-label={t.nav.toggleLanguage}
           >
             {flag(t.nav.currentLanguage)}
@@ -110,7 +110,7 @@ export function Navbar() {
 
         <button
           onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="z-50 p-2 text-text md:hidden"
+          className="z-50 -m-0.5 p-2.5 text-text md:hidden"
           aria-label={isMenuOpen ? t.nav.closeMenu : t.nav.openMenu}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -122,13 +122,13 @@ export function Navbar() {
             isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
           )}
         >
-          <div className="flex flex-col space-y-8 text-xl">
+          <div className="flex flex-col space-y-2 text-xl">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="text-text transition-colors duration-300 hover:text-accent-2-light"
+                className="block py-3 text-text transition-colors duration-300 hover:text-accent-2-light"
               >
                 {item.name}
               </Link>

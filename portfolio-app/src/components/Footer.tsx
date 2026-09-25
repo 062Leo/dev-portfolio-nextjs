@@ -82,19 +82,22 @@ export function Footer() {
               <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
                 {t.footer.navigation}
               </h4>
-              <nav className="flex flex-col gap-2 text-sm">
-                <Link href="/" className="text-text/70 hover:text-accent-2-light transition-colors">
+              <nav className="flex flex-col gap-2 text-sm max-md:gap-0">
+                <Link
+                  href="/"
+                  className="flex items-center text-text/70 hover:text-accent-2-light transition-colors max-md:min-h-11"
+                >
                   {t.nav.home}
                 </Link>
                 <Link
                   href="/#about"
-                  className="text-text/70 hover:text-accent-2-light transition-colors"
+                  className="flex items-center text-text/70 hover:text-accent-2-light transition-colors max-md:min-h-11"
                 >
                   {t.nav.about}
                 </Link>
                 <Link
                   href="/projects"
-                  className="text-text/70 hover:text-accent-2-light transition-colors"
+                  className="flex items-center text-text/70 hover:text-accent-2-light transition-colors max-md:min-h-11"
                 >
                   {t.nav.projects}
                 </Link>
@@ -106,11 +109,11 @@ export function Footer() {
               <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
                 {t.footer.links}
               </h4>
-              <div className="flex gap-4 mb-4">
+              <div className="flex gap-6 mb-4">
                 <button
                   type="button"
                   onClick={() => handleExternalLink("https://github.com/062Leo", "GitHub")}
-                  className="text-text-muted hover:text-accent-2-light transition-colors cursor-pointer"
+                  className="-m-3 p-3 text-text-muted hover:text-accent-2-light transition-colors cursor-pointer"
                   aria-label="GitHub"
                 >
                   <GithubIcon />
@@ -123,7 +126,7 @@ export function Footer() {
                       "Unity Asset Store",
                     )
                   }
-                  className="text-text-muted hover:text-accent-2-light transition-colors cursor-pointer"
+                  className="-m-3 p-3 text-text-muted hover:text-accent-2-light transition-colors cursor-pointer"
                   aria-label="Unity Asset Store"
                 >
                   <UnityIcon />
@@ -131,7 +134,7 @@ export function Footer() {
                 <button
                   type="button"
                   onClick={() => handleExternalLink("https://062leo.itch.io/", "itch.io")}
-                  className="text-text-muted hover:text-accent-2-light transition-colors cursor-pointer"
+                  className="-m-3 p-3 text-text-muted hover:text-accent-2-light transition-colors cursor-pointer"
                   aria-label="Itch.io"
                 >
                   <ItchIcon />
@@ -148,7 +151,7 @@ export function Footer() {
             <button
               type="button"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="flex items-center gap-1.5 rounded-full border border-accent/30 px-3 py-1.5 text-xs text-text-muted hover:text-text/90 hover:border-accent/60 transition-all duration-300"
+              className="flex items-center gap-1.5 rounded-full border border-accent/30 px-3 py-1.5 text-xs text-text-muted hover:text-text/90 hover:border-accent/60 transition-all duration-300 max-md:min-h-11"
             >
               <ArrowUp className="h-3 w-3" />
               {t.footer.backToTop}

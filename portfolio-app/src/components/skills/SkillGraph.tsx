@@ -316,7 +316,7 @@ export function SkillGraph() {
                   });
                 }}
                 className={cn(
-                  "rounded border px-3 py-1 font-mono text-sm font-bold transition-all duration-150",
+                  "rounded border px-3 py-1 font-mono text-sm font-bold transition-all duration-150 max-md:min-h-11 max-md:min-w-11",
                   filterToggles[r]
                     ? `${RATING_FILL_CLASS[r]} text-bg`
                     : "border-border bg-surface-2 text-text-muted opacity-55",
@@ -332,14 +332,14 @@ export function SkillGraph() {
         <div className="flex flex-wrap items-center justify-center gap-3 mt-3">
           <button
             onClick={applyFilter}
-            className="cursor-pointer rounded border border-accent/70 bg-accent/60 px-4 py-1 font-mono text-xs font-semibold text-white transition-all duration-150"
+            className="cursor-pointer rounded border border-accent/70 bg-accent/60 px-4 py-1 font-mono text-xs font-semibold text-white transition-all duration-150 max-md:min-h-11"
           >
             {t.skills.applyFilter}
           </button>
           {filterActive && (
             <button
               onClick={resetFilter}
-              className="rounded border border-accent/30 bg-surface-2 px-3 py-1 font-mono text-xs text-text-muted transition-all duration-150"
+              className="rounded border border-accent/30 bg-surface-2 px-3 py-1 font-mono text-xs text-text-muted transition-all duration-150 max-md:min-h-11"
             >
               {t.skills.reset}
             </button>

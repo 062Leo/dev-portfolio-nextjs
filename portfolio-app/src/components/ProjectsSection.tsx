@@ -45,7 +45,7 @@ export function ProjectsShowcase() {
               </div>
 
               <div className="p-6">
-                <Link href={`/projects/${project.id}`}>
+                <Link href={`/projects/${project.id}`} className="-my-2 block py-2">
                   <div className="mb-1 flex items-baseline gap-2 flex-wrap">
                     <h3 className="text-xl font-semibold text-accent-2 transition-colors">
                       {project.title}
@@ -77,7 +77,7 @@ export function ProjectsShowcase() {
                 <div className="mb-4">
                   <Link
                     href={`/projects/${project.id}`}
-                    className="inline-flex items-center gap-1 text-sm font-semibold text-accent-2 transition-colors"
+                    className="-my-3 inline-flex items-center gap-1 py-3 text-sm font-semibold text-accent-2 transition-colors"
                   >
                     {t.projects.moreDetails}
                     <ArrowRight className="h-4 w-4" />
@@ -113,7 +113,7 @@ export function ProjectsShowcase() {
               </div>
 
               <div className="p-6">
-                <Link href={`/projects/${project.id}`}>
+                <Link href={`/projects/${project.id}`} className="-my-2 block py-2">
                   <div className="mb-1 flex items-baseline gap-2 flex-wrap">
                     <h3 className="text-xl font-semibold text-accent-2 transition-colors">
                       {project.title}
@@ -145,7 +145,7 @@ export function ProjectsShowcase() {
                 <div className="mb-4">
                   <Link
                     href={`/projects/${project.id}`}
-                    className="inline-flex items-center gap-1 text-sm font-semibold text-accent-2 transition-colors"
+                    className="-my-3 inline-flex items-center gap-1 py-3 text-sm font-semibold text-accent-2 transition-colors"
                   >
                     {t.projects.moreDetails}
                     <ArrowRight className="h-4 w-4" />

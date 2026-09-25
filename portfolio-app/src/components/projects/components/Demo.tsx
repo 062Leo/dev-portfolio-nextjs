@@ -43,7 +43,7 @@ export function DetailPage({ id }: { id: string }) {
       <div className="mb-8">
         <Link
           href={`/projects/${id}`}
-          className="mb-8 inline-flex items-center gap-2 text-accent transition-colors"
+          className="-mt-2.5 mb-5.5 inline-flex items-center gap-2 py-2.5 text-accent transition-colors"
         >
           <ArrowLeft size={20} />
           {t.demo.back}
