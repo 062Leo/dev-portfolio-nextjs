@@ -101,9 +101,9 @@ function rewriteToLanguage(request: NextRequest): NextResponse {
 
 // Everything is protected, including /_next/image (the image optimizer would otherwise
 // serve every file under public/ without the password) and every file under public/.
-// Exclusions: framework chunks, the favicon, the UI icons and the fonts that globals.css
-// loads on the login page. /login is matched (it needs the language rewrite) but skips
-// the password check above.
+// Exclusions: framework chunks, the favicon, robots.txt, the UI icons (including the Open
+// Graph image) and the fonts that globals.css loads on the login page. /login is matched
+// (it needs the language rewrite) but skips the password check above.
 export const config = {
-  matcher: ["/((?!_next/static|_next/data|favicon\\.ico|Icons/|fonts/).*)"],
+  matcher: ["/((?!_next/static|_next/data|favicon\\.ico|robots\\.txt|Icons/|fonts/).*)"],
 };

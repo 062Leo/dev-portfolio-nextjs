@@ -67,6 +67,11 @@ Der Proxy erkennt den `key`-Parameter, setzt den Auth-Cookie und leitet auf die 
 
 Die Sprache (`de`/`en`) steht im Cookie `lang`, einem rein funktionalen Cookie ohne personenbezogene Daten. Beim ersten Besuch wird sie aus der Browsersprache abgeleitet; der Server liefert die Seiten direkt in dieser Sprache aus, die URL bleibt gleich. Umschalten über die Flagge in der Navigationsleiste (auf Mobile im Menü).
 
+## Metadaten
+
+Die Website ist `noindex`: jede Seite sendet `<meta name="robots" content="noindex, nofollow">`, zusätzlich sperrt `public/robots.txt` alle Crawler.
+Das Open-Graph-Bild ist `public/Icons/og-image.png`; es liegt bewusst außerhalb des Passwortschutzes, damit Link-Vorschauen es laden können.
+
 ## Security-Header prüfen
 
 Die Security-Header (u. a. Content-Security-Policy) werden in `next.config.ts` gesetzt.

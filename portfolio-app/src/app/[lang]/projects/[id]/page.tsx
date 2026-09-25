@@ -1,8 +1,9 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { NetworkBackground } from "@/components/NetworkBackground";
-import { hasProject, projectIds } from "@/data/index";
+import { findProject, hasProject, projectIds } from "@/data/index";
 import { isLang } from "@/i18n";
 import { DetailPage as DefaultDetailPage } from "@/components/projects/default";
 
@@ -13,6 +14,21 @@ import { DetailPage as DefaultDetailPage } from "@/components/projects/default";
 export function generateStaticParams({ params }: { params: { lang: string } }) {
   if (!isLang(params.lang)) return [];
   return projectIds(params.lang).map((id) => ({ id }));
+}
+
+// An unknown id gets no title of its own; the page itself then renders not-found.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string; id: string }>;
+}): Promise<Metadata> {
+  const { lang, id } = await params;
+  const project = isLang(lang) ? findProject(lang, id) : undefined;
+  if (!project) return {};
+  return {
+    title: project.title,
+    description: project.description || project.subtitle || undefined,
+  };
 }
 
 export default async function ProjectsPage({

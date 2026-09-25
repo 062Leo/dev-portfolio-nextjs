@@ -8,6 +8,8 @@ export const en: Dictionary = {
     title: "leo.dev — Portfolio",
     description:
       "leo.dev — Software developer portfolio focused on AI, automation and interactive applications",
+    projectsTitle: "Projects",
+    loginTitle: "Login",
   },
   nav: {
     home: "Home",

@@ -6,6 +6,8 @@ export const de = {
     title: "leo.dev — Portfolio",
     description:
       "leo.dev — Softwareentwickler Portfolio mit Fokus auf AI, Automatisierung und interaktive Anwendungen",
+    projectsTitle: "Projekte",
+    loginTitle: "Anmeldung",
   },
   nav: {
     home: "Home",

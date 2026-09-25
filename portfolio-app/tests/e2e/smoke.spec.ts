@@ -11,6 +11,14 @@ for (const path of PAGES) {
       expect(errors, errors.join("\n")).toEqual([]);
     });
 
+    test("tells search engines not to index it", async ({ page }) => {
+      await page.goto(path);
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+        "content",
+        /^noindex, nofollow/,
+      );
+    });
+
     test("has no horizontal overflow", async ({ page }) => {
       await page.goto(path);
       const { scrollWidth, clientWidth } = await page.evaluate(() => ({
@@ -48,6 +56,20 @@ for (const path of PAGES) {
     });
   });
 }
+
+// The layout sets a title template: a page with its own title gets the brand appended,
+// the home page keeps the default title.
+test.describe("page titles", () => {
+  test("differ between the home page and a project page", async ({ page }) => {
+    await page.goto("/");
+    const homeTitle = await page.title();
+    await page.goto(DETAIL_PAGE);
+    const detailTitle = await page.title();
+    expect(homeTitle).not.toContain(" · leo.dev");
+    expect(detailTitle).toMatch(/.+ · leo\.dev$/);
+    expect(detailTitle).not.toBe(homeTitle);
+  });
+});
 
 // The headers come from next.config.ts and are the same on every path, so one page is
 // enough; CSP violations on the pages above surface as console errors.

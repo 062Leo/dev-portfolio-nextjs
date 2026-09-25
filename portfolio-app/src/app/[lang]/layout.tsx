@@ -15,14 +15,46 @@ export function generateStaticParams() {
   return LANGS.map((lang) => ({ lang }));
 }
 
+const BRAND = "leo.dev";
+
+// Absolute base for the Open Graph image URL. NEXT_PUBLIC_SITE_URL overrides the deployed
+// domain from the README, e.g. for a preview deployment.
+const SITE_URL = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://leos-portfolio.de");
+
+const OG_IMAGE = "/Icons/og-image.png";
+
+// Crawlers and link-preview bots only ever reach /login (every other page redirects there
+// without the password), so the robots and Open Graph tags are set here for every page.
 export async function generateMetadata({ params }: { params: LayoutParams }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   const t = getDictionary(lang);
   return {
-    title: t.meta.title,
+    metadataBase: SITE_URL,
+    title: { default: t.meta.title, template: `%s · ${BRAND}` },
     description: t.meta.description,
     referrer: "no-referrer",
+    robots: {
+      index: false,
+      follow: false,
+      nocache: true,
+      googleBot: { index: false, follow: false },
+    },
+    // No hreflang alternates: both languages are served under the same URL.
+    openGraph: {
+      type: "website",
+      siteName: BRAND,
+      title: t.meta.title,
+      description: t.meta.description,
+      locale: lang === "de" ? "de_DE" : "en_US",
+      images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: BRAND }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t.meta.title,
+      description: t.meta.description,
+      images: [OG_IMAGE],
+    },
   };
 }
 

@@ -39,14 +39,20 @@ export function demoProjectIds(lang: Lang): string[] {
     .map((project) => project.id);
 }
 
+// The project with the given id in the given language, or undefined; for server code
+// such as generateMetadata.
+export function findProject(lang: Lang, id: string): Project | undefined {
+  return [...portfolioByLang[lang].projects, ...otherByLang[lang].projects].find(
+    (candidate) => candidate.id === id,
+  );
+}
+
 // The project with the given id in the current language. The [lang] pages call
 // notFound() for an id that is not in this language's data (same lists as here), so a
 // component rendered after that guard can rely on the project being present.
 export function useProject(id: string): Project {
   const { language } = useLanguage();
-  const project = [...portfolioByLang[language].projects, ...otherByLang[language].projects].find(
-    (candidate) => candidate.id === id,
-  );
+  const project = findProject(language, id);
   if (!project) throw new Error(`Project "${id}" is not in the ${language} data`);
   return project;
 }
