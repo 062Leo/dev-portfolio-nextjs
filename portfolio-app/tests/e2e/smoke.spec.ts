@@ -70,8 +70,9 @@ for (const path of PAGES) {
       const clipped = await clippedText(page);
       expect(clipped, `elements outside the viewport:\n${clipped.join("\n")}`).toEqual([]);
 
-      // The project title is the widest text on a narrow phone (issue #62).
-      if (testInfo.project.name !== "mobile" || path !== DETAIL_PAGE) return;
+      // The project title (issue #62) and the About headline are the widest texts on a
+      // narrow phone.
+      if (testInfo.project.name !== "mobile" || ![DETAIL_PAGE, "/"].includes(path)) return;
       await page.setViewportSize(NARROW_VIEWPORT);
       const clippedNarrow = await clippedText(page);
       expect(

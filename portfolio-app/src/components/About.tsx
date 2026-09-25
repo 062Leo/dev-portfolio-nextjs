@@ -19,7 +19,9 @@ export function About() {
 
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
           <div className="space-y-6 rounded-xl bg-bg/95 p-6 text-center shadow-card backdrop-blur md:text-left">
-            <h3 className="text-2xl font-semibold">{t.about.headline}</h3>
+            <h3 className="text-xl font-semibold hyphens-auto [overflow-wrap:anywhere] sm:text-2xl">
+              {t.about.headline}
+            </h3>
 
             {currentPortfolioData.about.description.map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
