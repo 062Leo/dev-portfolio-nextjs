@@ -2,9 +2,12 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { PAGES } from "./pages";
 
-// Accessibility checks (issue #69): an axe audit of every page against WCAG 2.1 A and AA.
+// Accessibility checks (issue #69): an axe audit of every page against WCAG 2.1 A and AA
+// plus the axe best practices (landmarks, heading order and the like). Besides the pages
+// of the smoke tests it covers a demo page and the 404 page of an unknown project.
 
-const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21aa"];
+const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21aa", "best-practice"];
+const AXE_PAGES = [...PAGES, "/projects/prop-hunt/demo", "/projects/does-not-exist"];
 const BLOCKING = new Set(["serious", "critical"]);
 
 // The fade-in animations start at opacity 0; axe measures contrast on what is painted,
@@ -21,13 +24,13 @@ async function animationsDone(page: Page) {
 }
 
 test.describe("axe audit", () => {
-  for (const path of PAGES) {
-    test(`${path} has no serious or critical WCAG 2.1 AA violation`, async ({ page }, testInfo) => {
+  for (const path of AXE_PAGES) {
+    test(`${path} has no serious or critical axe violation`, async ({ page }, testInfo) => {
       await page.goto(path);
       await page.waitForLoadState("load");
       await animationsDone(page);
 
-      const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+      const { violations } = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
       const describe = (list: typeof violations) =>
         list
           .map((v) => `${v.impact} ${v.id} (${v.nodes.length}): ${v.nodes[0]?.target.join(" ")}`)

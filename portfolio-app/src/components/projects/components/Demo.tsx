@@ -41,7 +41,7 @@ export function DetailPage({ id }: { id: string }) {
   }
 
   return (
-    <main className="relative z-10 container mx-auto max-w-5xl px-4 py-24">
+    <div className="relative z-10 container mx-auto max-w-5xl px-4 py-24">
       <div className="mb-8">
         <Link
           href={`/projects/${id}`}
@@ -196,6 +196,6 @@ export function DetailPage({ id }: { id: string }) {
       </div>
 
       <ExternalLinkDialog {...dialogProps} />
-    </main>
+    </div>
   );
 }

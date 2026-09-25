@@ -39,16 +39,13 @@ export default async function ProjectsPage({
   const { lang, id } = await params;
   if (!isLang(lang) || !hasProject(lang, id)) notFound();
 
-  // Aktuell wird immer die DefaultDetailPage verwendet
-  const DetailComponent = DefaultDetailPage;
-
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-bg text-text">
       <NetworkBackground />
       <Navbar />
 
       <main className="relative z-10">
-        <DetailComponent id={id} />
+        <DefaultDetailPage id={id} />
       </main>
 
       <div className="relative">

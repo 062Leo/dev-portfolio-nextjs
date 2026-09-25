@@ -23,7 +23,7 @@ export function DetailPage({ id }: { id: string }) {
   const mainImage = project.image || project.images?.[0]?.url || "/Bilder/dummy.png";
 
   return (
-    <main className="relative z-10 container mx-auto max-w-5xl px-4 py-24">
+    <div className="relative z-10 container mx-auto max-w-5xl px-4 py-24">
       <div className="space-y-10 md:space-y-16">
         <ProjectHeader project={project} />
 
@@ -49,6 +49,6 @@ export function DetailPage({ id }: { id: string }) {
         <ProjectGallery images={project.images} title={project.title} />
       </div>
       <ExternalLinkDialog {...dialogProps} />
-    </main>
+    </div>
   );
 }
