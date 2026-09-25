@@ -138,7 +138,7 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
                   {video.caption && (
                     <div className="w-full p-6 rounded-lg h-full flex items-center border border-accent bg-bg shadow-md transition-all duration-300 group-hover:shadow-lg">
                       <div className="w-full text-sm md:text-base">
-                        {renderMarkdownText(video.caption, "text-text") || video.caption}
+                        {renderMarkdownText(video.caption, "text-text")}
                       </div>
                     </div>
                   )}

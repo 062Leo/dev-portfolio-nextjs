@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { renderMarkdownText } from "@/lib/markdown";
+import { renderInlineMarkdown, renderMarkdownText } from "@/lib/markdown";
 
 const CLASS = "text-accent";
 
@@ -59,5 +59,16 @@ describe("renderMarkdownText", () => {
     const html = render("<script>alert(1)</script>");
     expect(html).not.toContain("<script>");
     expect(html).toContain("&lt;script&gt;");
+  });
+});
+
+describe("renderInlineMarkdown", () => {
+  const inline = (text: string) => renderToStaticMarkup(<>{renderInlineMarkdown(text)}</>);
+
+  it("renders bold text and line breaks without paragraphs", () => {
+    const html = inline("A **B**\nC");
+    expect(html).not.toContain("<p");
+    expect(html).toContain("<strong>B</strong>");
+    expect(html).toContain("<br/>");
   });
 });

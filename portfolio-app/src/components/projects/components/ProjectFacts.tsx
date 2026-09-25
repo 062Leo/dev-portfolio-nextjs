@@ -54,7 +54,7 @@ function Features({ features }: { features: string[] }) {
               className="mt-1.5 mr-2 h-4 w-4 shrink-0 text-success md:mt-2"
               aria-hidden="true"
             />
-            <div className="flex-1">{renderMarkdownText(feature, "text-text") || feature}</div>
+            <div className="flex-1">{renderMarkdownText(feature, "text-text")}</div>
           </li>
         ))}
       </ul>
