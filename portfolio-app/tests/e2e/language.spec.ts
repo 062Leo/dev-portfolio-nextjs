@@ -21,6 +21,14 @@ async function languageToggle(page: Page, isMobile: boolean) {
   return toggle;
 }
 
+// Clicks the toggle and, on mobile, waits until the menu has closed: the switch remounts
+// the [lang] tree a moment after the lang attribute changes, and reopening the menu
+// before that remount would be undone by it.
+async function switchLanguage(page: Page, isMobile: boolean) {
+  await (await languageToggle(page, isMobile)).click();
+  if (isMobile) await expect(page.locator("#mobile-menu")).toBeHidden();
+}
+
 // Links in the navbar; the footer is a navigation landmark too. Role queries skip the
 // variant that is display:none at the current breakpoint, and the closed mobile menu is
 // invisible, so exactly one link matches.
@@ -38,14 +46,14 @@ test("the language toggle switches between German and English", async ({ page, i
   await expect(navLink(page, "Über mich")).toHaveCount(1);
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Hallo, ich bin");
 
-  await (await languageToggle(page, isMobile)).click();
+  await switchLanguage(page, isMobile);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await openMenu(page, isMobile);
   await expect(navLink(page, "About")).toHaveCount(1);
   await expect(navLink(page, "Über mich")).toHaveCount(0);
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Hi, I'm");
 
-  await (await languageToggle(page, isMobile)).click();
+  await switchLanguage(page, isMobile);
   await expect(page.locator("html")).toHaveAttribute("lang", "de");
   await openMenu(page, isMobile);
   await expect(navLink(page, "Über mich")).toHaveCount(1);
@@ -53,7 +61,7 @@ test("the language toggle switches between German and English", async ({ page, i
 
 test("the choice survives a reload and a navigation", async ({ page, isMobile }) => {
   await page.goto("/");
-  await (await languageToggle(page, isMobile)).click();
+  await switchLanguage(page, isMobile);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
 
   await page.reload();
@@ -81,7 +89,7 @@ test("an unknown project shows the 404 page with navbar and footer in the visito
   await expect(page.getByRole("link", { name: "Zur Projektübersicht" })).toBeVisible();
   await expect(page.getByRole("contentinfo")).toBeVisible();
 
-  await (await languageToggle(page, isMobile)).click();
+  await switchLanguage(page, isMobile);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Page not found");
 });
