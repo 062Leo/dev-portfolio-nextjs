@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useCallback } from "react";
-import { reducedMotionQuery } from "@/lib/motion";
 import { readToken } from "@/lib/theme";
 import type { RopeTarget } from "./types";
 
@@ -26,10 +25,6 @@ interface RopeState {
 
 interface WobblyRopesProps {
   ropeTargetsRef: React.MutableRefObject<Map<number, RopeTarget>>;
-  // Under reduced motion the ropes have no animation loop: the graph calls this after it
-  // has moved its nodes, and the ropes are drawn once in their resting shape. Null while
-  // the ropes animate themselves.
-  redrawRef: React.MutableRefObject<(() => void) | null>;
   colors?: Map<number, string>;
   damping?: number;
   stiffness?: number;
@@ -42,12 +37,8 @@ function isIdle(target: RopeTarget): boolean {
   return target.start.x === 0 && target.start.y === 0 && target.end.x === 0 && target.end.y === 0;
 }
 
-// Physics steps that bring a moved rope to rest: the swing decays by `damping` per step.
-const SETTLE_STEPS = 60;
-
 export const WobblyRopes: React.FC<WobblyRopesProps> = ({
   ropeTargetsRef,
-  redrawRef,
   colors = new Map(),
   damping = 0.88,
   stiffness = 0.25,
@@ -99,13 +90,11 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width;
       canvas.height = rect.height;
-      // Resizing clears the canvas; without a loop the ropes have to be drawn again.
-      redrawRef.current?.();
     });
     ro.observe(canvas);
 
     return () => ro.disconnect();
-  }, [redrawRef]);
+  }, []);
 
   useEffect(() => {
     syncRopeStates();
@@ -229,36 +218,12 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
       animationFrameId = requestAnimationFrame(loop);
     };
 
-    // One still picture: the ropes are brought to rest at once and drawn.
-    const drawAtRest = () => {
-      syncRopeStates();
-      for (let i = 0; i < SETTLE_STEPS; i++) updatePhysics();
-      draw();
-    };
-
-    // Under reduced motion there is no loop; the graph asks for a picture through
-    // redrawRef whenever it has moved. The setting may change while the page is open.
-    const motion = reducedMotionQuery();
-    const start = () => {
-      cancelAnimationFrame(animationFrameId);
-      if (motion.matches) {
-        redrawRef.current = drawAtRest;
-        drawAtRest();
-      } else {
-        redrawRef.current = null;
-        loop();
-      }
-    };
-
-    start();
-    motion.addEventListener("change", start);
+    loop();
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      motion.removeEventListener("change", start);
-      redrawRef.current = null;
     };
-  }, [syncRopeStates, ropeTargetsRef, redrawRef, damping, stiffness, colors, lineWidth]);
+  }, [syncRopeStates, ropeTargetsRef, damping, stiffness, colors, lineWidth]);
 
   return (
     <canvas

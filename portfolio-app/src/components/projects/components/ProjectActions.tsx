@@ -16,7 +16,7 @@ type ProjectActionsProps = {
 };
 
 const CTA_CLASS =
-  "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-accent-deep to-accent/70 px-6 py-3 font-bold text-text shadow-glow transition-all motion-safe:hover:scale-105 md:w-auto";
+  "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-accent-deep to-accent/70 px-6 py-3 font-bold text-text shadow-glow transition-all hover:scale-105 md:w-auto";
 
 export function ProjectActions({ id, project, onExternalLink }: ProjectActionsProps) {
   const t = useT();

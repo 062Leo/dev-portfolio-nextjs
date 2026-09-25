@@ -89,22 +89,6 @@ export function recenterSimulation(
     .restart();
 }
 
-// Reduced motion: compute the resting layout at once instead of animating towards it.
-// The timer is stopped and the simulation ticked by hand until it has cooled down to
-// SETTLED_ALPHA (from alpha 1 about 690 ticks); `step` applies the per-tick forces that
-// live outside the d3 registry, which a manual tick() does not run.
-const SETTLED_ALPHA = 0.001;
-const MAX_SETTLE_TICKS = 1000;
-
-export function settleSimulation(simulation: Simulation<SimNode, SimLink>, step: () => void): void {
-  simulation.stop().alphaTarget(0);
-  if (simulation.alpha() < REHEAT_ALPHA) simulation.alpha(REHEAT_ALPHA);
-  for (let i = 0; i < MAX_SETTLE_TICKS && simulation.alpha() > SETTLED_ALPHA; i++) {
-    simulation.tick();
-    step();
-  }
-}
-
 // ══════════════════════════════════════════════════════════════════════════════
 //  CHAIN ANGLE FORCE  (prevents collinear chain links)
 // ══════════════════════════════════════════════════════════════════════════════

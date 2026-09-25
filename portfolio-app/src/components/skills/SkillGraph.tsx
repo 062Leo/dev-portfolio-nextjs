@@ -5,7 +5,6 @@ import type { Simulation } from "d3-force";
 import { useSkillsData } from "@/data/index";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useT } from "@/i18n";
-import { reducedMotionQuery } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { RATING_FILL_CLASS, flattenSkillsData, radiusScale } from "./data";
 import {
@@ -15,7 +14,6 @@ import {
   createSimulation,
   forceScaling,
   recenterSimulation,
-  settleSimulation,
 } from "./forces";
 import { buildGraph, parkHiddenGroups, toggleGroup } from "./graph";
 import type { GroupState } from "./graph";
@@ -102,8 +100,6 @@ function SkillGraphCanvas() {
   const cleanupRef = useRef<(() => void) | null>(null);
   const simRef = useRef<Simulation<SimNode, SimLink> | null>(null);
   const ropeTargetsRef = useRef<Map<number, RopeTarget>>(new Map());
-  // Set by WobblyRopes under reduced motion: draws the ropes once at rest.
-  const ropeRedrawRef = useRef<(() => void) | null>(null);
   // One Map for the whole lifetime: pricetags fill it through the ref, WobblyRopes reads it.
   const [ropeColorMap] = useState(() => new Map<number, string>());
   const ropeColorMapRef = useRef(ropeColorMap);
@@ -164,16 +160,6 @@ function SkillGraphCanvas() {
     // ── SVG elements ────────────────────────────────────────────────
     const layers = createSvgScaffold(svgEl, categories.length);
     const linkEls = createLinkElements(layers.link, links.length);
-    // Under reduced motion the layout is not animated: every change that heats the
-    // simulation up is followed by settleIfReduced(), which computes the resting layout at
-    // once and draws it (issue #69). A drag still moves the graph while the pointer is down.
-    const motion = reducedMotionQuery();
-    const settleIfReduced = () => {
-      if (!motion.matches) return;
-      settleSimulation(simulation, applyBoundaries);
-      render();
-    };
-
     const pointer = createPointerHandlers({
       svg: svgEl,
       nodes,
@@ -181,7 +167,6 @@ function SkillGraphCanvas() {
       size,
       tooltip,
       hasTooltipContent: () => tooltipContent !== null,
-      onRelease: settleIfReduced,
     });
     const nodeEls = nodes.map((n) => {
       const els = createNodeElements(layers, n);
@@ -213,22 +198,18 @@ function SkillGraphCanvas() {
             if (gi < 0) return;
             toggleGroup(gi, groups);
             simulation.alphaTarget(REHEAT_ALPHA).restart();
-            settleIfReduced();
           },
         })
       : [];
     parkHiddenGroups(groups);
 
     // ── tick ────────────────────────────────────────────────────────
-    function applyBoundaries() {
+    simulation.on("tick", () => {
       const hidden = hiddenGroupsRef.current;
       for (const n of nodes) {
         if (!hidden.has(n.groupIndex)) applyBoundary(n, radiusScale(n.rating), size);
       }
-    }
-
-    function render() {
-      const hidden = hiddenGroupsRef.current;
+      if (pointer.state.mouseIsDown) applyMouseRepulsion(nodes, pointer.state.mouse);
       updateRipple(layers, pointer.state);
 
       const ropeStartMap = updateHullPaths({
@@ -254,19 +235,9 @@ function SkillGraphCanvas() {
         positions: pricetagPositionsRef.current,
       });
       applyGroupVisibility({ nodes, links, nodeEls, linkEls, hullPaths, allGroupIndices, hidden });
-      // Without their own animation loop (reduced motion) the ropes follow the graph here.
-      ropeRedrawRef.current?.();
-    }
-
-    simulation.on("tick", () => {
-      applyBoundaries();
-      if (pointer.state.mouseIsDown) applyMouseRepulsion(nodes, pointer.state.mouse);
-      render();
     });
 
     pointer.attach();
-    settleIfReduced();
-    motion.addEventListener("change", settleIfReduced);
 
     // ── resize ──────────────────────────────────────────────────────
     const onResize = () => {
@@ -274,7 +245,6 @@ function SkillGraphCanvas() {
       size.height = container.clientHeight;
       svgEl.setAttribute("viewBox", `0 0 ${size.width} ${size.height}`);
       recenterSimulation(simulation, size, scaling);
-      settleIfReduced();
     };
     window.addEventListener("resize", onResize);
 
@@ -285,7 +255,6 @@ function SkillGraphCanvas() {
       tooltip.clearTimer();
       tooltip.dismiss();
       window.removeEventListener("resize", onResize);
-      motion.removeEventListener("change", settleIfReduced);
     };
     // tooltipContent is deliberately not a dependency: adding it would rebuild the whole
     // graph on every hover. Known limitation: onPointerUp sees the tooltipContent of the
@@ -344,7 +313,6 @@ function SkillGraphCanvas() {
         <svg ref={svgRef} className="h-full w-full" />
         <WobblyRopes
           ropeTargetsRef={ropeTargetsRef}
-          redrawRef={ropeRedrawRef}
           colors={ropeColorMap}
           segments={12}
           stiffness={0.5}

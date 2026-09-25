@@ -61,7 +61,7 @@ function CardImage({ project, variant }: Required<ProjectCardProps>) {
       width={600}
       height={400}
       sizes={SIZES[variant]}
-      className="h-full w-full object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
+      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
     />
   );
 }

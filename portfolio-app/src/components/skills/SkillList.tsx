@@ -64,7 +64,7 @@ function Category({ name, index, entries, open, onToggle }: CategoryProps) {
         <ChevronDown
           aria-hidden="true"
           className={cn(
-            "h-5 w-5 shrink-0 text-text-muted motion-safe:transition-transform",
+            "h-5 w-5 shrink-0 text-text-muted transition-transform",
             open && "rotate-180",
           )}
         />

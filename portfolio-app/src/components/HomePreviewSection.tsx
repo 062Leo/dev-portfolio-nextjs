@@ -36,7 +36,7 @@ export function HomePreviewSection() {
         <div className="mt-12 flex flex-col items-center gap-3">
           <Link
             href="/projects"
-            className="cosmic-button inline-flex items-center justify-center rounded-full bg-linear-135 from-accent-deep to-accent-deep/70 px-10 py-4 text-base font-bold uppercase tracking-wide text-text shadow-glow motion-safe:hover:scale-105 transition-transform"
+            className="cosmic-button inline-flex items-center justify-center rounded-full bg-linear-135 from-accent-deep to-accent-deep/70 px-10 py-4 text-base font-bold uppercase tracking-wide text-text shadow-glow hover:scale-105 transition-transform"
           >
             {t.projectsPreview.viewAll(totalCount)}
             <ArrowRight className="ml-2 h-5 w-5" />

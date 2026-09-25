@@ -188,23 +188,6 @@ a {
   summary:focus-visible {
     outline-style: solid;
   }
-
-  /*
-   * Reduced motion: animations and transitions jump to their end state. Delays are
-   * dropped too, so an element that fades in from opacity 0 is visible at once.
-   */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-delay: 0s !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      transition-delay: 0s !important;
-      scroll-behavior: auto !important;
-    }
-  }
 }
 
 @utility container {
@@ -255,12 +238,8 @@ a {
 @utility card-hover {
   @apply transition-all duration-300;
   &:hover {
+    transform: translateY(-4px) scale(1.01);
     box-shadow: 0 0 35px color-mix(in srgb, var(--color-accent) 30%, transparent);
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    &:hover {
-      transform: translateY(-4px) scale(1.01);
-    }
   }
 }
 
@@ -276,17 +255,12 @@ a {
   @apply bg-accent text-text;
 
   &:hover {
+    transform: scale(1.05);
     box-shadow: 0 0 25px var(--color-accent);
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    &:hover {
-      transform: scale(1.05);
-    }
-
-    &:active {
-      transform: scale(0.97);
-    }
+  &:active {
+    transform: scale(0.97);
   }
 }
 

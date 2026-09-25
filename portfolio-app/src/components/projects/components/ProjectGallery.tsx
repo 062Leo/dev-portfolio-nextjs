@@ -69,7 +69,7 @@ export function ProjectGallery({ images, title }: ProjectGalleryProps) {
                 alt={image.caption || title}
                 fill
                 sizes={THUMBNAIL_SIZES}
-                className="object-cover transition-transform duration-300 motion-safe:group-hover:scale-105"
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
               <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-bg/60 text-lg font-semibold text-text opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 {t.projectDetail.clickMe}
