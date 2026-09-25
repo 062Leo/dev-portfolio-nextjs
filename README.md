@@ -130,6 +130,8 @@ Vercel baut und deployt `main` automatisch bei jedem Push (Node 24.x). Umgebungs
 
 Nach dem Deploy die Header prüfen (siehe [Security-Header prüfen](#security-header-prüfen)).
 
+GitHub Actions (`.github/workflows/check.yml`) führt `npm run check`, `npx knip` und `npm run e2e` bei jedem Push auf `main` und `working*` sowie bei Pull Requests auf `main` aus. `check` als Pflicht-Check für `main` (Branch Protection) ist eine Repository-Einstellung, die der Inhaber des Repositorys setzt.
+
 ## Architektur
 
 Wie eine Anfrage verarbeitet wird und wo Texte, Daten und Design-Tokens liegen: [portfolio-app/docs/architecture.md](portfolio-app/docs/architecture.md).
