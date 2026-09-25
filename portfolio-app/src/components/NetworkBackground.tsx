@@ -38,6 +38,14 @@ const GRID_DIVISOR = 20;
 const MIN_SHIFT_DURATION = 1000;
 const MAX_SHIFT_DURATION = 2000;
 
+// Without a mouse (touch devices) the focus point wanders on its own: it eases from one
+// random waypoint to the next so the network keeps moving instead of only reacting to
+// taps. A tap pulls the point to the finger and the wandering continues from there.
+const NO_HOVER_QUERY = "(hover: none)";
+const MIN_WANDER_DURATION = 3000;
+const MAX_WANDER_DURATION = 6000;
+const WANDER_MARGIN = 0.15; // fraction of width/height kept free at the edges
+
 export function NetworkBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -57,6 +65,9 @@ export function NetworkBackground() {
     const target: Target = { x: 0, y: 0 };
     let animationFrameId = 0;
     let points: Point[] = [];
+    // Wandering is on while no mouse has been seen; the first real mouse move ends it.
+    let wandering = window.matchMedia(NO_HOVER_QUERY).matches;
+    let wander: ShiftState | null = null;
     // Canvas colours come from the tokens in globals.css; the per-point fade is drawn
     // with globalAlpha.
     const strokeColor = readToken("accent-2");
@@ -180,9 +191,35 @@ export function NetworkBackground() {
       context.fill();
     };
 
+    const startWander = (now: number) => {
+      wander = {
+        startX: target.x,
+        startY: target.y,
+        targetX: width * (WANDER_MARGIN + Math.random() * (1 - 2 * WANDER_MARGIN)),
+        targetY: height * (WANDER_MARGIN + Math.random() * (1 - 2 * WANDER_MARGIN)),
+        startTime: now,
+        duration: MIN_WANDER_DURATION + Math.random() * (MAX_WANDER_DURATION - MIN_WANDER_DURATION),
+      };
+    };
+
+    const updateWanderingTarget = (now: number) => {
+      if (!wandering) return;
+      if (!wander) {
+        startWander(now);
+        return;
+      }
+      const { startX, startY, targetX, targetY, startTime, duration } = wander;
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = easeInOutCirc(progress);
+      target.x = startX + (targetX - startX) * eased;
+      target.y = startY + (targetY - startY) * eased;
+      if (progress >= 1) startWander(now);
+    };
+
     const animate = (now: number) => {
       context.globalAlpha = 1;
       context.clearRect(0, 0, width, height);
+      updateWanderingTarget(now);
 
       points.forEach((point) => {
         updatePointPosition(point, now);
@@ -209,16 +246,28 @@ export function NetworkBackground() {
       animationFrameId = window.requestAnimationFrame(animate);
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
-      const { clientX, clientY } = event;
-      target.x = clientX;
-      target.y = clientY;
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType === "mouse") {
+        wandering = false;
+        wander = null;
+      }
+      target.x = event.clientX;
+      target.y = event.clientY;
+    };
+
+    // A tap pulls the focus point to the finger; the next wander segment starts there.
+    const handlePointerDown = (event: PointerEvent) => {
+      if (event.pointerType === "mouse") return;
+      target.x = event.clientX;
+      target.y = event.clientY;
+      wander = null;
     };
 
     const handleResize = () => {
       configureCanvasSize();
       target.x = width / 2;
       target.y = height / 2;
+      wander = null;
       initialisePoints();
     };
 
@@ -228,12 +277,14 @@ export function NetworkBackground() {
     target.y = height / 2;
     animationFrameId = window.requestAnimationFrame(animate);
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerdown", handlePointerDown);
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerdown", handlePointerDown);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
