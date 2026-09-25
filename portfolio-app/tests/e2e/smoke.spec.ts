@@ -1,10 +1,14 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { de } from "../../src/i18n/de";
+import { otherProjects } from "../../src/data/other_projects";
 import { PAGES, openAndCollectErrors } from "./pages";
 
 const DETAIL_PAGE = "/projects/ml-agent-bachelor";
 // A project with screenshots, for the gallery and its lightbox.
-const GALLERY_PAGE = "/projects/kryptodash";
+const GALLERY_ID = "kryptodash";
+const GALLERY_PAGE = `/projects/${GALLERY_ID}`;
+const GALLERY_SIZE = otherProjects.projects.find((project) => project.id === GALLERY_ID)!.images!
+  .length;
 // The longest project title across the German and English data files, and a demo page;
 // both set their title in Rubik Mono One (issue #62).
 const LONGEST_TITLE_PAGE = "/projects/acms";
@@ -159,7 +163,7 @@ test.describe("project detail page", () => {
     await page.goto(GALLERY_PAGE);
     const gallery = page.getByRole("region", { name: de.projectDetail.screenshots });
     const thumbnails = gallery.getByRole("button");
-    await expect(thumbnails).toHaveCount(4);
+    await expect(thumbnails).toHaveCount(GALLERY_SIZE);
     const lefts = await thumbnails.evaluateAll((elements) =>
       elements.map((element) => Math.round(element.getBoundingClientRect().left)),
     );
@@ -280,20 +284,25 @@ test.describe("project videos", () => {
       element.addEventListener("play", () => element.recorded!.push("play"));
       element.addEventListener("pause", () => element.recorded!.push("pause"));
     });
-    // A toggle of the page would follow the browser's within a task; half a second covers it.
-    const settled = async () => {
-      await video.evaluate(() => new Promise((resolve) => setTimeout(resolve, 500)));
-      return video.evaluate((element: RecordingVideo) => element.recorded);
+    const recorded = () => video.evaluate((element: RecordingVideo) => element.recorded);
+    // A toggle of the page would follow the browser's within a task, so the events are
+    // compared once a frame and a task have passed: no fixed wait.
+    const settled = async (expected: string[], message: string) => {
+      await expect.poll(recorded, { message }).toEqual(expected);
+      await video.evaluate(
+        () => new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 0))),
+      );
+      expect(await recorded(), message).toEqual(expected);
     };
 
     if (isMobile) {
       await video.tap();
-      expect(await settled(), "events after a tap").toEqual([]);
+      await settled([], "events after a tap");
     }
     await video.click();
-    expect(await settled(), "events after the first click").toEqual(["pause"]);
+    await settled(["pause"], "events after the first click");
     await video.click();
-    expect(await settled(), "events after the second click").toEqual(["pause", "play"]);
+    await settled(["pause", "play"], "events after the second click");
   });
 });
 
