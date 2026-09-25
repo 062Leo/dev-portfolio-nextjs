@@ -3,7 +3,7 @@
 import { usePortfolioData, useOtherProjects } from "@/data/index";
 import { useT } from "@/i18n";
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
+import { ProjectCard } from "@/components/ProjectCard";
 import Link from "next/link";
 
 export function HomePreviewSection() {
@@ -29,42 +29,7 @@ export function HomePreviewSection() {
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {displayed.map((project) => (
-            <Link
-              key={project.id}
-              href={`/projects/${project.id}`}
-              className="card-hover group overflow-hidden rounded-lg border border-accent/60 bg-bg/92 shadow-card"
-            >
-              <div className="h-44 overflow-hidden">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  width={600}
-                  height={400}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              </div>
-
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-accent-2 transition-colors">
-                  {project.title}
-                </h3>
-                <p className="mt-2 line-clamp-2 text-sm text-text/90">{project.description}</p>
-
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {project.tags.slice(0, 3).map((tag, index) => {
-                    if (!tag || tag.trim() === "") return null;
-                    return (
-                      <span
-                        key={`${project.id}-${index}`}
-                        className="rounded-full border border-accent/40 bg-accent/18 px-2 py-0.5 text-xs font-medium text-accent"
-                      >
-                        {tag}
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-            </Link>
+            <ProjectCard key={project.id} project={project} variant="compact" />
           ))}
         </div>
 
