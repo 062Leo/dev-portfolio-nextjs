@@ -15,22 +15,6 @@ const eslintConfig = defineConfig([
     },
   },
   // Structural violations left in place until the named follow-up issues restructure the code.
-  // Skills graph and its helpers: large simulation functions (#74).
-  {
-    files: ["src/components/SkillGraph.tsx", "src/components/pricetags.ts"],
-    rules: {
-      complexity: "off",
-      "max-depth": "off",
-      "max-params": "off",
-    },
-  },
-  // Rope animation of the skills graph (#74).
-  {
-    files: ["src/components/WobblyRopes.tsx"],
-    rules: {
-      complexity: "off",
-    },
-  },
   // Project detail page: one component renders every optional section (stats, screenshots,
   // demo, download, code and custom links) plus three inline dialogs; complexity 30. The
   // detail page rework splits it (#85).

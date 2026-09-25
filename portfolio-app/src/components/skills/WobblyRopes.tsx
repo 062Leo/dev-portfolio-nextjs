@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useCallback } from "react";
 import { readToken } from "@/lib/theme";
+import type { RopeTarget } from "./types";
 
 interface RopePoint {
   x: number;
@@ -22,14 +23,6 @@ interface RopeState {
   links: RopeLink[];
 }
 
-export interface RopeTarget {
-  start: { x: number; y: number };
-  end: { x: number; y: number };
-  outputX: number;
-  outputY: number;
-  outputAngle: number;
-}
-
 interface WobblyRopesProps {
   ropeTargetsRef: React.MutableRefObject<Map<number, RopeTarget>>;
   colors?: Map<number, string>;
@@ -37,6 +30,11 @@ interface WobblyRopesProps {
   stiffness?: number;
   segments?: number;
   lineWidth?: number;
+}
+
+// A target with both ends at the origin belongs to a group without a rope right now.
+function isIdle(target: RopeTarget): boolean {
+  return target.start.x === 0 && target.start.y === 0 && target.end.x === 0 && target.end.y === 0;
 }
 
 export const WobblyRopes: React.FC<WobblyRopesProps> = ({
@@ -56,21 +54,11 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
 
     for (const gi of states.keys()) {
       const target = targets.get(gi);
-      if (!target) {
-        states.delete(gi);
-      } else if (
-        target.start.x === 0 &&
-        target.start.y === 0 &&
-        target.end.x === 0 &&
-        target.end.y === 0
-      ) {
-        states.delete(gi);
-      }
+      if (!target || isIdle(target)) states.delete(gi);
     }
 
     for (const [gi, target] of targets.entries()) {
-      if (target.start.x === 0 && target.start.y === 0 && target.end.x === 0 && target.end.y === 0)
-        continue;
+      if (isIdle(target)) continue;
       if (states.has(gi)) continue;
 
       const dist = Math.sqrt(

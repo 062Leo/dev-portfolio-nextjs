@@ -31,7 +31,7 @@ const REQUIRED_TOKENS = [
 // Colour literals that may stay in source files, each with the reason.
 const ALLOWED_LITERALS: { file: string; line: RegExp; reason: string }[] = [
   {
-    file: "src/components/SkillGraph.tsx",
+    file: "src/components/skills/data.ts",
     line: /^\s*\{ key: ".+", color: "hsla\(/,
     reason: "the 14-hue category palette of the skills graph is graph data, not theme",
   },

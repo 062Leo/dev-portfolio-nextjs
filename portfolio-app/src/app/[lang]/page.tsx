@@ -4,7 +4,7 @@ import { HomeSection } from "@/components/HomeSection";
 import { HomePreviewSection } from "@/components/HomePreviewSection";
 import { Navbar } from "@/components/Navbar";
 import { NetworkBackground } from "@/components/NetworkBackground";
-import { SkillGraph } from "@/components/SkillGraph";
+import { SkillGraph } from "@/components/skills/SkillGraph";
 
 export default function Home() {
   return (
