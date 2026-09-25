@@ -97,10 +97,14 @@ export async function isValidAuthCookie(value: string | undefined): Promise<bool
   return timingSafeEqualStrings(value, await createAuthToken());
 }
 
+// Lax, not strict: a strict cookie is not sent on a cross-site top-level navigation, so a
+// logged-in visitor arriving from an external link would land on the login form again.
+// Lax still withholds the cookie from cross-site POSTs and subresources; the server action
+// keeps Next's Origin check and there are no state-changing GETs.
 export function authCookieOptions() {
   return {
     httpOnly: true,
-    sameSite: "strict" as const,
+    sameSite: "lax" as const,
     path: "/",
     maxAge: COOKIE_MAX_AGE_SECONDS,
     secure: process.env.NODE_ENV === "production",

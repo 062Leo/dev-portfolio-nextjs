@@ -58,7 +58,7 @@ AUTH_VERSION=1
 - `AUTH_SECRET`: zufälliger String (z. B. `openssl rand -hex 32`), mit dem der Auth-Cookie signiert wird. In Produktion Pflicht; fehlt er, dient das Passwort als Schlüssel, und der Cookie lässt sich dann aus dem Passwort allein ableiten.
 - `AUTH_VERSION`: optional, Standard `1`. Erhöhen, um alle Besucher auf einmal auszuloggen.
 
-Der Cookie gilt 7 Tage.
+Der Cookie gilt 7 Tage. Wer bereits angemeldet ist und `/login` aufruft, wird auf `/` weitergeleitet.
 
 Nach 10 falschen Passwörtern innerhalb von 15 Minuten (Formular und `key`-Parameter zusammen) weist die Website denselben Client für den Rest der 15 Minuten ab, auch mit dem richtigen Passwort; der Proxy antwortet dann mit `429` und `Retry-After`, das Formular zeigt einen Hinweis. Die Sperre liegt im Speicher der laufenden Instanz (`src/lib/rate-limit.ts`) und gilt auf Vercel je Instanz, sie bremst also Ratenversuche, garantiert aber keine harte Obergrenze.
 

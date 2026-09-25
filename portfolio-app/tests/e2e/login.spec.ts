@@ -28,6 +28,19 @@ test("logs in with the right password and lands on /", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Geschützte Website" })).toHaveCount(0);
 });
 
+test("sends a logged-in visitor from /login to /", async ({ page }) => {
+  await page.goto(`/?key=${E2E_PASSWORD}`);
+  await expect(page).toHaveURL(onPath("/"));
+
+  const response = await page.request.get("/login", { maxRedirects: 0 });
+  expect(response.status()).toBe(303);
+  expect(new URL(response.headers()["location"], response.url()).pathname).toBe("/");
+
+  await page.goto("/login");
+  await expect(page).toHaveURL(onPath("/"));
+  await expect(page.getByRole("heading", { name: "Geschützte Website" })).toHaveCount(0);
+});
+
 test("redirects a wrong key parameter to /login", async ({ page }) => {
   await page.goto("/?key=wrong-password");
   await expect(page).toHaveURL(onPath("/login"));

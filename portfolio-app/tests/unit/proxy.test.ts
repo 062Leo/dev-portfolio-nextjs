@@ -81,6 +81,7 @@ describe("proxy without SITE_PASSWORD", () => {
     expect(passes(await proxy(request("/")))).toBe(true);
     expect(passes(await proxy(request("/projects/ml-agent-bachelor")))).toBe(true);
     expect(passes(await proxy(request("/Bilder/Arcanoid/arcanoid.png")))).toBe(true);
+    expect(passes(await proxy(request("/login", { cookie: "anything" })))).toBe(true);
   });
 
   it("still rewrites pages to the language", async () => {
@@ -131,6 +132,16 @@ describe("proxy with SITE_PASSWORD and AUTH_SECRET", () => {
     expect(response.cookies.get("site-auth")).toBeUndefined();
   });
 
+  it("sends a logged-in visitor from /login to /", async () => {
+    const cookie = await loginCookie();
+    const response = await proxy(request("/login", { cookie }));
+    expect(response.status).toBe(303);
+    expect(getRedirectUrl(response)).toBe(`${ORIGIN}/`);
+    expect(response.cookies.get("site-auth")).toBeUndefined();
+    // An unknown cookie is not a session: the form is shown.
+    expect(passes(await proxy(request("/login", { cookie: "not-a-valid-cookie" })))).toBe(true);
+  });
+
   it("sends a logged-in visitor with ?key= on /login to /", async () => {
     const cookie = await loginCookie();
     const response = await proxy(request(`/login?key=${PASSWORD}`, { cookie }));
@@ -172,7 +183,7 @@ describe("proxy with SITE_PASSWORD and AUTH_SECRET", () => {
     const cookie = response.cookies.get("site-auth");
     expect(cookie?.value).toBeTruthy();
     expect(cookie?.httpOnly).toBe(true);
-    expect(cookie?.sameSite).toBe("strict");
+    expect(cookie?.sameSite).toBe("lax");
     expect(cookie?.path).toBe("/");
     expect(cookie?.maxAge).toBe(60 * 60 * 24 * 7);
   });

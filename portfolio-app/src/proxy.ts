@@ -37,12 +37,15 @@ export async function proxy(request: NextRequest) {
 
   // The login page (and the POST of its server action) must stay reachable without the
   // password; every other matched path is gated first. A ?key= on /login is still
-  // checked, and a right one lands on / instead of the login page.
+  // checked, and a right one lands on / instead of the login page. A visitor who is
+  // already logged in never sees the form: /login sends them to /.
   const onLoginPage = pathname === LOGIN_PATH;
   if (!onLoginPage || request.nextUrl.searchParams.has("key")) {
     const afterLogin = onLoginPage ? new URL("/", request.url) : cleanUrl(request);
     const gate = await passwordGate(request, afterLogin);
     if (gate) return gate;
+  } else if (await isLoggedIn(request)) {
+    return NextResponse.redirect(new URL("/", request.url), 303);
   }
 
   if (!PAGE_PATH.test(pathname)) return NextResponse.next();
@@ -90,6 +93,11 @@ function tooManyAttempts(client: string): NextResponse {
       "retry-after": String(retryAfterSeconds(client)),
     },
   });
+}
+
+async function isLoggedIn(request: NextRequest): Promise<boolean> {
+  if (!readAuthEnv()) return false;
+  return isValidAuthCookie(request.cookies.get(AUTH_COOKIE_NAME)?.value);
 }
 
 function cleanUrl(request: NextRequest): URL {
