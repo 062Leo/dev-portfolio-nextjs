@@ -234,6 +234,26 @@ test.describe("project videos", () => {
       }
     });
   }
+
+  // Without preloaded metadata Chromium ignores a click on the video surface; the component
+  // starts playback itself.
+  test("starts the main video with a click in its middle", async ({ page }) => {
+    await page.goto(DETAIL_PAGE);
+    const video = page.locator("main video").first();
+    await video.scrollIntoViewIfNeeded();
+    // A click before hydration does nothing; retry until playback has started.
+    await expect(async () => {
+      await video.click();
+      await expect
+        .poll(() => video.evaluate((element: HTMLVideoElement) => element.paused), {
+          timeout: 1_000,
+        })
+        .toBe(false);
+    }).toPass();
+    await page.waitForTimeout(2_000);
+    const currentTime = await video.evaluate((element: HTMLVideoElement) => element.currentTime);
+    expect(currentTime).toBeGreaterThan(0);
+  });
 });
 
 // The hero is as high as its card plus fixed spacing, not a full screen that grows and

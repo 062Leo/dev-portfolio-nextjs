@@ -3,6 +3,30 @@ import type { ProjectImage } from "@/data/types";
 import { renderMarkdownText } from "@/lib/markdown";
 import { posterFor } from "@/lib/video";
 
+// Height of the native control bar at the bottom of a video; clicks there belong to it.
+const CONTROL_BAR_HEIGHT = 72;
+
+// Playback state of each video when the pointer went down, before any control reacted.
+const pausedAtPointerDown = new WeakMap<HTMLVideoElement, boolean>();
+
+function rememberPausedState(event: React.PointerEvent<HTMLVideoElement>) {
+  pausedAtPointerDown.set(event.currentTarget, event.currentTarget.paused);
+}
+
+// With preload="none" Chromium ignores a click on the video surface until metadata has
+// loaded. The click toggles playback here instead, unless the browser or one of its own
+// controls has already done so; clicks on the control bar are left to the controls.
+function togglePlaybackOnSurfaceClick(event: React.MouseEvent<HTMLVideoElement>) {
+  const video = event.currentTarget;
+  if (event.clientY > video.getBoundingClientRect().bottom - CONTROL_BAR_HEIGHT) return;
+  const wasPaused = pausedAtPointerDown.get(video) ?? video.paused;
+  setTimeout(() => {
+    if (video.paused !== wasPaused) return;
+    if (wasPaused) video.play().catch(() => {});
+    else video.pause();
+  }, 0);
+}
+
 interface ProjectVideosProps {
   videoBig?: string;
   videos: ProjectImage[] | undefined;
@@ -78,6 +102,8 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
                 src={videoBig}
                 poster={posterFor(videoBig)}
                 preload="none"
+                onPointerDown={rememberPausedState}
+                onClick={togglePlaybackOnSurfaceClick}
                 controls
                 muted
                 playsInline
@@ -112,6 +138,8 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
                       src={video.url}
                       poster={posterFor(video.url)}
                       preload="none"
+                      onPointerDown={rememberPausedState}
+                      onClick={togglePlaybackOnSurfaceClick}
                       muted
                       loop
                       playsInline
