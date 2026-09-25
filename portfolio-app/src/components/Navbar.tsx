@@ -72,7 +72,7 @@ export function Navbar() {
     <nav
       className={cn(
         "fixed z-40 w-full transition-all duration-300",
-        isScrolled ? "py-3 bg-bg/80 backdrop-blur-md shadow-sm" : "py-5",
+        isScrolled || isMenuOpen ? "py-3 bg-bg/80 backdrop-blur-md shadow-sm" : "py-5",
       )}
     >
       <div className="container grid grid-cols-[1fr_auto_1fr] items-center">
@@ -108,46 +108,54 @@ export function Navbar() {
           </button>
         </div>
 
+        {/* The desktop columns are display:none below md, so the button is placed in the
+            third column explicitly; otherwise the grid would centre it. */}
         <button
           onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="z-50 -m-0.5 p-2.5 text-text md:hidden"
+          className="col-start-3 justify-self-end -m-0.5 p-2.5 text-text md:hidden"
           aria-label={isMenuOpen ? t.nav.closeMenu : t.nav.openMenu}
+          aria-expanded={isMenuOpen}
+          aria-controls="mobile-menu"
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
+      </div>
 
-        <div
-          className={cn(
-            "fixed inset-0 z-40 flex flex-col items-center justify-center bg-bg/95 backdrop-blur-md transition-all duration-300 md:hidden",
-            // invisible, not only transparent: the closed menu's links must not take
-            // keyboard focus. visibility is transitioned too, so the fade-out still shows.
-            isMenuOpen
-              ? "pointer-events-auto visible opacity-100"
-              : "pointer-events-none invisible opacity-0",
-          )}
-        >
-          <div className="flex flex-col space-y-2 text-xl">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={() => setIsMenuOpen(false)}
-                className="block py-3 text-text transition-colors duration-300 hover:text-accent-2-light"
-              >
-                {item.name}
-              </Link>
-            ))}
-            {/* Language toggle: a full-width row, at least 44 px high; its visible text
-                is its accessible name. */}
-            <button
-              type="button"
-              onClick={toggleLanguage}
-              className="flex min-h-11 w-full items-center justify-center gap-3 text-text transition-colors duration-300"
+      {/* Mobile menu: a panel directly below the bar (the bar itself stays visible). It is
+          absolute, not fixed: the bar's backdrop-filter would turn a fixed child's
+          containing block into the bar, clipping a full-screen overlay to the bar's height. */}
+      <div
+        id="mobile-menu"
+        className={cn(
+          "absolute inset-x-0 top-full border-b border-border bg-bg shadow-lg transition-all duration-200 md:hidden",
+          // invisible, not only transparent: the closed menu's links must not take
+          // keyboard focus. visibility is transitioned too, so the fade-out still shows.
+          isMenuOpen
+            ? "pointer-events-auto visible translate-y-0 opacity-100"
+            : "pointer-events-none invisible -translate-y-2 opacity-0",
+        )}
+      >
+        <div className="container flex flex-col py-2 text-lg">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              onClick={() => setIsMenuOpen(false)}
+              className="block py-3 text-text transition-colors duration-300 hover:text-accent-2-light"
             >
-              {flag("")}
-              <span>{t.nav.currentLanguage}</span>
-            </button>
-          </div>
+              {item.name}
+            </Link>
+          ))}
+          {/* Language toggle: a full-width row, at least 44 px high; its visible text
+              is its accessible name. */}
+          <button
+            type="button"
+            onClick={toggleLanguage}
+            className="flex min-h-11 w-full items-center gap-3 border-t border-border py-3 text-text transition-colors duration-300"
+          >
+            {flag("")}
+            <span>{t.nav.currentLanguage}</span>
+          </button>
         </div>
       </div>
     </nav>
