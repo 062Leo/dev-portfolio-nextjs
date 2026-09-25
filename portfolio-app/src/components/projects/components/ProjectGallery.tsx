@@ -50,12 +50,12 @@ export function ProjectGallery({ images, title }: ProjectGalleryProps) {
 
   return (
     <section aria-labelledby={headingId}>
-      <h3
+      <h2
         id={headingId}
         className="mb-6 text-center font-press-start text-lg font-semibold text-accent-2-light md:text-2xl"
       >
         {t.projectDetail.screenshots}
-      </h3>
+      </h2>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         {images.map((image, index) => (
           <figure key={index} className="flex flex-col gap-3">

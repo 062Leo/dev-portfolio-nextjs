@@ -70,10 +70,13 @@ export function Footer() {
 
             {/* Navigation */}
             <div>
-              <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
                 {t.footer.navigation}
-              </h4>
-              <nav className="flex flex-col gap-2 text-sm max-md:gap-0">
+              </h2>
+              <nav
+                aria-label={t.footer.navLabel}
+                className="flex flex-col gap-2 text-sm max-md:gap-0"
+              >
                 <Link
                   href="/"
                   className="flex items-center text-text/70 hover:text-accent-2-light transition-colors max-md:min-h-11"
@@ -97,9 +100,9 @@ export function Footer() {
 
             {/* Links & Legal */}
             <div>
-              <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
                 {t.footer.links}
-              </h4>
+              </h2>
               <div className="flex gap-6 mb-4">
                 <button
                   type="button"

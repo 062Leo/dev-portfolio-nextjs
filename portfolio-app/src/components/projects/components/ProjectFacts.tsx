@@ -46,7 +46,7 @@ function Features({ features }: { features: string[] }) {
   const t = useT();
   return (
     <div>
-      <h3 className={HEADING_CLASS}>{t.projectDetail.keyFeatures}</h3>
+      <h2 className={HEADING_CLASS}>{t.projectDetail.keyFeatures}</h2>
       <ul className="space-y-2 text-base leading-relaxed text-text md:text-lg">
         {features.map((feature, index) => (
           <li key={index} className="flex items-start">
@@ -66,7 +66,7 @@ function TechStack({ techStack }: { techStack: string[] }) {
   const t = useT();
   return (
     <div>
-      <h3 className={HEADING_CLASS}>{t.projectDetail.techStack}</h3>
+      <h2 className={HEADING_CLASS}>{t.projectDetail.techStack}</h2>
       <ul className="flex flex-wrap gap-3">
         {techStack.map((tech) => (
           <li
@@ -85,7 +85,7 @@ function Stats({ stats }: { stats: NonNullable<Project["stats"]> }) {
   const t = useT();
   return (
     <div>
-      <h3 className={HEADING_CLASS}>{t.projectDetail.stats}</h3>
+      <h2 className={HEADING_CLASS}>{t.projectDetail.stats}</h2>
       <ul className="space-y-2 text-base leading-relaxed text-text md:text-lg">
         {stats.map((stat, index) => {
           const Icon = iconMap[stat.icon];

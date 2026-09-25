@@ -15,6 +15,12 @@ const AXE_PAGES = [
   "/does-not-exist",
 ];
 const BLOCKING = new Set(["serious", "critical"]);
+// Best-practice rules that are fixed and must stay fixed, whatever impact axe gives them:
+// the decorative backdrop outside every landmark, two unnamed navigation landmarks and a
+// skipped heading level.
+const ENFORCED_RULES = new Set(["region", "landmark-unique", "heading-order"]);
+const isBlocking = (violation: { id: string; impact?: string | null }) =>
+  BLOCKING.has(violation.impact ?? "") || ENFORCED_RULES.has(violation.id);
 
 // The fade-in animations start at opacity 0; axe measures contrast on what is painted,
 // so it runs once every finite animation has ended.
@@ -31,7 +37,9 @@ async function animationsDone(page: Page) {
 
 test.describe("axe audit", () => {
   for (const path of AXE_PAGES) {
-    test(`${path} has no serious or critical axe violation`, async ({ page }, testInfo) => {
+    test(`${path} has no serious, critical or enforced axe violation`, async ({
+      page,
+    }, testInfo) => {
       await page.goto(path);
       await page.waitForLoadState("load");
       await animationsDone(page);
@@ -42,13 +50,13 @@ test.describe("axe audit", () => {
           .map((v) => `${v.impact} ${v.id} (${v.nodes.length}): ${v.nodes[0]?.target.join(" ")}`)
           .join("\n");
 
-      // Moderate and minor findings are reported, not failed.
-      const reported = violations.filter((v) => !BLOCKING.has(v.impact ?? ""));
+      // Other moderate and minor findings are reported, not failed.
+      const reported = violations.filter((v) => !isBlocking(v));
       if (reported.length > 0) {
         console.log(`[axe ${testInfo.project.name}] ${path}\n${describe(reported)}`);
       }
 
-      const blocking = violations.filter((v) => BLOCKING.has(v.impact ?? ""));
+      const blocking = violations.filter(isBlocking);
       expect(blocking, describe(blocking)).toEqual([]);
     });
   }

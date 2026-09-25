@@ -20,6 +20,7 @@ export const en: Dictionary = {
     currentLanguage: "English",
     openMenu: "Open menu",
     closeMenu: "Close menu",
+    label: "Main navigation",
   },
   hero: {
     greeting: "Hi, I'm ",
@@ -113,6 +114,7 @@ export const en: Dictionary = {
       "Private portfolio website. External links open external platforms. This website does not store any personal data.",
     rights: "All rights reserved.",
     backToTop: "Back to top",
+    navLabel: "Footer navigation",
   },
   dialog: {
     title: "External link",

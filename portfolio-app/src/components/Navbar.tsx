@@ -94,6 +94,7 @@ export function Navbar() {
 
   return (
     <nav
+      aria-label={t.nav.label}
       className={cn(
         "fixed z-40 w-full transition-all duration-300",
         isScrolled || isMenuOpen ? "py-3 bg-bg/80 backdrop-blur-md shadow-sm" : "py-5",

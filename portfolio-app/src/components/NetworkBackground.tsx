@@ -304,7 +304,8 @@ export function NetworkBackground() {
   }, []);
 
   return (
-    <div className="network-backdrop pointer-events-none fixed inset-0 z-0">
+    // Decoration only: hidden from assistive technology, so it needs no landmark.
+    <div className="network-backdrop pointer-events-none fixed inset-0 z-0" aria-hidden="true">
       <canvas ref={canvasRef} className="h-full w-full" />
     </div>
   );

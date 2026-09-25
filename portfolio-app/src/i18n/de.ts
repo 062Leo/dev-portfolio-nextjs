@@ -18,6 +18,7 @@ export const de = {
     currentLanguage: "Deutsch",
     openMenu: "Menü öffnen",
     closeMenu: "Menü schließen",
+    label: "Hauptnavigation",
   },
   hero: {
     greeting: "Hallo, ich bin ",
@@ -113,6 +114,7 @@ export const de = {
       "Private Portfolio-Website. Externe Links öffnen externe Plattformen. Diese Website speichert keine personenbezogenen Daten.",
     rights: "Alle Rechte vorbehalten.",
     backToTop: "Nach oben",
+    navLabel: "Fußzeilennavigation",
   },
   dialog: {
     title: "Externer Link",

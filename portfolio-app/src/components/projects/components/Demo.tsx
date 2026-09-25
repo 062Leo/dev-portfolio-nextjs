@@ -90,9 +90,9 @@ export function DetailPage({ id }: { id: string }) {
         <div className="text-base md:text-lg leading-relaxed space-y-4 text-text">
           {hasDemoControls && (
             <>
-              <h3 className="mb-4 text-xl font-semibold font-press-start text-accent-2-light">
+              <h2 className="mb-4 text-xl font-semibold font-press-start text-accent-2-light">
                 {t.demo.controls}
-              </h3>
+              </h2>
               {groupedControls ? (
                 <div className="flex flex-col md:flex-row gap-8">
                   {groupedControls.map((group: DemoControlsGroup, groupIndex: number) => (
@@ -100,9 +100,9 @@ export function DetailPage({ id }: { id: string }) {
                       key={groupIndex}
                       className="inline-block overflow-x-auto max-w-md md:flex-1"
                     >
-                      <h4 className="mb-2 text-base md:text-lg font-semibold font-press-start text-accent-2-light">
+                      <h3 className="mb-2 text-base md:text-lg font-semibold font-press-start text-accent-2-light">
                         {group.title}
-                      </h4>
+                      </h3>
                       <table className="text-sm md:text-base border-collapse">
                         <thead>
                           <tr className="border-b border-accent">
@@ -171,9 +171,9 @@ export function DetailPage({ id }: { id: string }) {
         </div>
 
         {project.miscTitle && (
-          <h3 className="mb-2 w-full max-w-3xl text-left text-xl font-semibold font-press-start text-accent-2-light">
+          <h2 className="mb-2 w-full max-w-3xl text-left text-xl font-semibold font-press-start text-accent-2-light">
             {project.miscTitle}
-          </h3>
+          </h2>
         )}
         {project.miscimage && (
           <div className="mt-8 flex flex-col items-center">

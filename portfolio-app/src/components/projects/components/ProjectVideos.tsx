@@ -78,9 +78,9 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
     <div className="pt-1 space-y-8">
       {hasBigVideo && (
         <div>
-          <h3 className="mb-6 text-2xl font-semibold font-press-start text-center text-accent-2-light">
+          <h2 className="mb-6 text-2xl font-semibold font-press-start text-center text-accent-2-light">
             VIDEO
-          </h3>
+          </h2>
           <div className="flex justify-center">
             <div className="aspect-video w-full max-w-4xl rounded-xl overflow-hidden border-2 border-accent bg-bg">
               <video
@@ -101,9 +101,9 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
 
       {hasVideos && (
         <>
-          <h3 className="mb-8 text-2xl font-semibold font-press-start text-center text-accent-2-light">
+          <h2 className="mb-8 text-2xl font-semibold font-press-start text-center text-accent-2-light">
             DETAILS
-          </h3>
+          </h2>
           <div className="space-y-8 md:space-y-10">
             {videos!.filter(isValidVideo).map((video, index) => (
               <div
