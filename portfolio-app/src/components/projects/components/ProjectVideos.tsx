@@ -77,7 +77,7 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
                 ref={bigVideoRef}
                 src={videoBig}
                 poster={posterFor(videoBig)}
-                preload="metadata"
+                preload="none"
                 controls
                 muted
                 playsInline
@@ -111,7 +111,7 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
                       }}
                       src={video.url}
                       poster={posterFor(video.url)}
-                      preload="metadata"
+                      preload="none"
                       muted
                       loop
                       playsInline

@@ -211,11 +211,10 @@ test.describe("project detail images", () => {
   });
 });
 
-// Videos load only their metadata on open; a poster frame stands in until they play
-// (issue #78).
+// Videos load nothing on open; a poster frame stands in until they play (issue #78).
 test.describe("project videos", () => {
   for (const path of [DETAIL_PAGE, VIDEO_PAGE]) {
-    test(`${path} loads video metadata only and shows a poster`, async ({ page, request }) => {
+    test(`${path} loads no video data on open and shows a poster`, async ({ page, request }) => {
       await page.goto(path);
       const videos = page.locator("main video");
       await expect(videos.first()).toBeAttached();
@@ -227,7 +226,7 @@ test.describe("project videos", () => {
         })),
       );
       for (const { src, preload, poster } of attributes) {
-        expect(preload, `${src}`).toBe("metadata");
+        expect(preload, `${src}`).toBe("none");
         expect(poster, `${src} has no poster`).toBeTruthy();
         const response = await request.get(poster!);
         expect(response.status(), poster!).toBe(200);
