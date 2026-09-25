@@ -12,7 +12,7 @@ flowchart LR
     proxy["Proxy<br/>src/proxy.ts"]
     pages["Statische Seiten<br/>/de und /en"]
     media["public/<br/>Bilder und Videos"]
-    assets["Frei: _next/static,<br/>Icons, Schriften"]
+    assets["Frei: _next/static,<br/>Flaggen, OG-Bild, Schriften"]
   end
   browser -->|"Anfrage mit Cookies"| proxy
   proxy -->|"Rewrite auf /de oder /en"| pages
@@ -24,7 +24,7 @@ flowchart LR
 
 ## Ablauf einer Anfrage
 
-1. **Proxy.** Jede Anfrage außer `_next/static`, `favicon.ico`, `robots.txt`, `Icons/` und `fonts/` läuft zuerst durch `src/proxy.ts` (Node.js-Runtime auf Vercel).
+1. **Proxy.** Jede Anfrage außer `_next/static`, `favicon.ico`, `robots.txt`, `fonts/` und den drei freien Icons (`Icons/de_flag.png`, `Icons/en_flag.png`, `Icons/og-image.png`) läuft zuerst durch `src/proxy.ts` (Node.js-Runtime auf Vercel).
 2. **Passwortschutz.** Der Proxy prüft den Cookie `site-auth`: ein HMAC-Token aus `SITE_PASSWORD`, `AUTH_SECRET` und `AUTH_VERSION` (`src/lib/auth.ts`). Ohne gültigen Cookie folgt ein Redirect auf `/login`; ein korrekter `?key=` setzt den Cookie und leitet auf die URL ohne `key` weiter. Ohne `SITE_PASSWORD` entfällt die Prüfung (lokale Entwicklung).
 3. **Sprache.** Für Seitenpfade (`/`, `/projects…`, `/login`) wählt der Proxy die Sprache aus dem Cookie `lang`, sonst aus `Accept-Language`, und schreibt intern auf `/de/…` oder `/en/…` um. Die sichtbare URL bleibt gleich; ein direkt aufgerufenes `/de/…` wird auf den Pfad ohne Präfix umgeleitet.
 4. **Seite.** Die Seiten unter `src/app/[lang]/` sind beim Build je Sprache vorgerendert (`generateStaticParams`) und werden statisch ausgeliefert.
@@ -52,4 +52,4 @@ Jede Antwort trägt die Security-Header aus `src/lib/security-headers.ts`, einge
 - **UI-Texte:** `src/i18n/de.ts` und `src/i18n/en.ts`; Sprachcodes und Cookie in `src/i18n/lang.ts`.
 - **Inhalte:** Projekte in `src/data/` (je Sprache Haupt- und weitere Projekte, gemeinsamer Typ in `types.ts`), Skills in `skills.json` und `skills_en.json`, Bildgrößen in `image-sizes.ts`.
 - **Design-Tokens:** Farben und Animationen im `@theme` von `src/app/globals.css`; Tailwind erzeugt daraus die Utility-Klassen. `src/lib/theme.ts` stellt die Tokens für SVG- und Canvas-Code bereit.
-- **Medien:** `public/Bilder/`, `public/Videos/` (hinter dem Passwort), `public/Icons/` und `public/fonts/` (frei).
+- **Medien:** `public/Bilder/`, `public/Videos/` und `public/Icons/` (hinter dem Passwort, bis auf die beiden Flaggen und das Open-Graph-Bild), `public/fonts/` (frei).

@@ -42,7 +42,7 @@ Vor dem ersten `npm run e2e` einmal den Browser installieren: `npx playwright in
 
 ## Passwortschutz
 
-Die ganze Website liegt hinter einem Passwort; der Proxy (`src/proxy.ts`) leitet Besucher ohne gültigen Cookie auf `/login` um. Bilder und Videos sind ebenfalls geschützt. Frei erreichbar sind nur `/login`, die Schriften, die Icons (inklusive Open-Graph-Bild), `favicon.ico` und `robots.txt`.
+Die ganze Website liegt hinter einem Passwort; der Proxy (`src/proxy.ts`) leitet Besucher ohne gültigen Cookie auf `/login` um. Bilder und Videos sind ebenfalls geschützt. Frei erreichbar sind nur `/login`, die Schriften, die beiden Flaggen und das Open-Graph-Bild unter `Icons/`, `favicon.ico` und `robots.txt`.
 
 ### Konfiguration
 

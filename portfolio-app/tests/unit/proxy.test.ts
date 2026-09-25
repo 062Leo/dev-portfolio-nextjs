@@ -440,12 +440,21 @@ describe("proxy matcher", () => {
     expect(matches("/_next/image?url=%2FBilder%2FArcanoid%2Farcanoid.png&w=640&q=75")).toBe(true);
   });
 
-  it("does not run on framework assets, the favicon, robots.txt, icons and fonts", () => {
+  it("does not run on framework assets, the favicon, robots.txt, fonts and the free icons", () => {
     expect(matches("/_next/static/chunk.js")).toBe(false);
     expect(matches("/favicon.ico")).toBe(false);
     expect(matches("/robots.txt")).toBe(false);
     expect(matches("/Icons/de_flag.png")).toBe(false);
+    expect(matches("/Icons/en_flag.png")).toBe(false);
     expect(matches("/Icons/og-image.png")).toBe(false);
     expect(matches("/fonts/Press_Start_2P/PressStart2P-Regular.ttf")).toBe(false);
+  });
+
+  it("runs on every other file under Icons/", () => {
+    expect(matches("/Icons/file.svg")).toBe(true);
+    expect(matches("/Icons/globe.svg")).toBe(true);
+    expect(matches("/Icons/og-image.png.bak")).toBe(true);
+    expect(matches("/Icons/sub/og-image.png")).toBe(true);
+    expect(matches("/Icons/")).toBe(true);
   });
 });

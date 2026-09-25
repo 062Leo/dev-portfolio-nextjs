@@ -311,8 +311,9 @@ test.describe("security headers", () => {
   });
 });
 
-// Images and videos under public/ are behind the password like every page (issue #76).
-const MEDIA = ["/Bilder/Arcanoid/arcanoid.png", "/Videos/Big/Arcanoid.mp4"];
+// Images and videos under public/ are behind the password like every page (issue #76),
+// as is every icon except the flags and the Open Graph image.
+const MEDIA = ["/Bilder/Arcanoid/arcanoid.png", "/Videos/Big/Arcanoid.mp4", "/Icons/file.svg"];
 
 test.describe("media", () => {
   test("is served with a session", async ({ request }) => {
