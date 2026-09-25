@@ -1,3 +1,7 @@
+// skills.json has a three-level structure: category → skill → rating, or category →
+// skill group → sub-skill → rating.
+export type SkillsDataNested = Record<string, Record<string, Record<string, number> | number>>;
+
 export type ProjectImage = {
   url: string;
   caption?: string;

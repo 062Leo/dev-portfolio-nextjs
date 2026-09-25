@@ -1,8 +1,7 @@
 import type { SimulationLinkDatum, SimulationNodeDatum } from "d3-force";
 
-// skills.json has a three-level structure: category → skill → rating, or category →
-// skill group → sub-skill → rating.
-export type SkillsDataNested = Record<string, Record<string, Record<string, number> | number>>;
+// The shape of skills.json; defined with the other data types.
+export type { SkillsDataNested } from "@/data/types";
 
 // The flattened two-level structure the graph is built from: category → skill → rating.
 export type SkillsFlat = Record<string, Record<string, number>>;

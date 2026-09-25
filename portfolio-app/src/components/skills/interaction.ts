@@ -23,6 +23,11 @@ import type { Point, SimLink, SimNode, Size } from "./types";
 // Pointer interaction with the graph: hover highlights, dragging a node (D3-style: fix
 // the node, the link forces pull its group along), the repulsion field while the left
 // button is held on empty canvas, and a double-click that releases a fixed node.
+//
+// A drag or a held button ends with pointerup, and also with pointercancel (a touch that
+// turns into a page pan: the graph has no touch-action: none, so panning over it keeps
+// working) and with lostpointercapture; all three release the node and cool the
+// simulation down.
 
 const DRAG_TOOLTIP_SPEED_THRESHOLD = 180; // px/s — hide tooltip when moving faster
 const SLOW_DEBOUNCE_MS = 1000; // ms of slow movement before tooltip reappears
@@ -40,7 +45,6 @@ export interface PointerOptions {
   simulation: Simulation<SimNode, SimLink>;
   size: Size; // the current viewBox size, updated on resize
   tooltip: TooltipController;
-  hasTooltipContent: () => boolean;
 }
 
 export interface PointerHandlers {
@@ -160,6 +164,13 @@ export function createPointerHandlers(opts: PointerOptions): PointerHandlers {
 
     state.dragNode = hit;
     dragStart = p;
+    lastMove = p;
+    lastMoveTime = 0;
+    // Moves and the release reach the graph even when the pointer leaves it. Captured by
+    // the element under the pointer (the node's circle, or the graph itself for a hit in
+    // the padding around it), so the node keeps its hover state while it is dragged.
+    const captureTarget = (e.target as Element | null) ?? svg;
+    captureTarget.setPointerCapture(e.pointerId);
     hit.fx = hit.x;
     hit.fy = hit.y;
     svg.style.cursor = "grabbing";
@@ -191,27 +202,28 @@ export function createPointerHandlers(opts: PointerOptions): PointerHandlers {
     lastMove = p;
   }
 
-  function onPointerUp() {
-    if (state.dragNode) {
-      state.dragNode.fx = null;
-      state.dragNode.fy = null;
-      state.dragNode = null;
-      simulation.alphaTarget(0);
-    }
+  // pointerup, pointercancel and lostpointercapture. Only the first of them acts: a
+  // release fires pointerup and then lostpointercapture.
+  function onPointerEnd() {
+    const dragged = state.dragNode;
+    if (!dragged && !state.mouseIsDown) return;
 
-    if (state.mouseIsDown) {
-      state.mouseIsDown = false;
-      simulation.alphaTarget(0);
+    if (dragged) {
+      dragged.fx = null;
+      dragged.fy = null;
+      state.dragNode = null;
     }
+    state.mouseIsDown = false;
+    simulation.alphaTarget(0);
 
     if (slowShowTimer !== null) {
       clearTimeout(slowShowTimer);
       slowShowTimer = null;
     }
 
-    // After pointerup the tooltip is always visible again (the speed-based logic only
-    // hides during active dragging); a click with minimal movement lets it linger.
-    if (opts.hasTooltipContent()) {
+    // After a drag the tooltip is always visible again (the speed-based logic only hides
+    // it while dragging); a click with minimal movement lets it linger.
+    if (dragged && tooltip.hasContent()) {
       tooltip.showElement();
       const moved = Math.hypot(lastMove.x - dragStart.x, lastMove.y - dragStart.y);
       if (moved < CLICK_MOVE_THRESHOLD) tooltip.linger();
@@ -236,14 +248,18 @@ export function createPointerHandlers(opts: PointerOptions): PointerHandlers {
       svg.addEventListener("pointerdown", onPointerDown);
       svg.addEventListener("pointermove", onPointerMove);
       svg.addEventListener("dblclick", onDblClick);
-      window.addEventListener("pointerup", onPointerUp);
+      svg.addEventListener("lostpointercapture", onPointerEnd);
+      window.addEventListener("pointerup", onPointerEnd);
+      window.addEventListener("pointercancel", onPointerEnd);
     },
     detach() {
       if (slowShowTimer !== null) clearTimeout(slowShowTimer);
       svg.removeEventListener("pointerdown", onPointerDown);
       svg.removeEventListener("pointermove", onPointerMove);
       svg.removeEventListener("dblclick", onDblClick);
-      window.removeEventListener("pointerup", onPointerUp);
+      svg.removeEventListener("lostpointercapture", onPointerEnd);
+      window.removeEventListener("pointerup", onPointerEnd);
+      window.removeEventListener("pointercancel", onPointerEnd);
     },
   };
 }

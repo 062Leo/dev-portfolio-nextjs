@@ -27,6 +27,7 @@ const SHARED = new Set([
   "meta.title",
   "nav.home",
   "nav.skills",
+  "skills.title",
   "about.cards.development.title",
   "about.cards.interactive.title",
   "about.cards.ai.title",

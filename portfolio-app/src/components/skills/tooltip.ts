@@ -26,6 +26,8 @@ export interface TooltipController {
   /** Start the linger timer that dismisses the tooltip. */
   linger(): void;
   isVisible(): boolean;
+  /** Whether the tooltip currently holds entries (its React content is not null). */
+  hasContent(): boolean;
   markVisible(): void;
   showElement(): void;
   hideElement(): void;
@@ -39,6 +41,15 @@ export function createTooltipController(
   data: SkillsDataNested,
   getWidth: () => number,
 ): TooltipController {
+  // Mirrors the React content state, which the pointer handlers cannot read: they are
+  // created once per graph build and would only see the state of that render.
+  let hasContent = false;
+
+  function setTooltipContent(content: TooltipContent | null) {
+    hasContent = content !== null;
+    setContent(content);
+  }
+
   function clearTimer() {
     if (refs.timer.current !== null) {
       clearTimeout(refs.timer.current);
@@ -49,7 +60,7 @@ export function createTooltipController(
   function dismiss() {
     refs.visible.current = false;
     refs.activeNode.current = null;
-    setContent(null);
+    setTooltipContent(null);
   }
 
   // Positioned right of the node; flips to the left when near the right edge.
@@ -69,13 +80,8 @@ export function createTooltipController(
     clearTimer();
     refs.activeNode.current = node;
     const content = tooltipContentFor(data, node.category, node.name);
-    if (content) {
-      setContent(content);
-      refs.visible.current = true;
-    } else {
-      refs.visible.current = false;
-      setContent(null);
-    }
+    setTooltipContent(content);
+    refs.visible.current = content !== null;
     if (refs.visible.current && refs.element.current) {
       refs.element.current.style.display = "block";
       updatePos(node.x ?? 0, node.y ?? 0);
@@ -113,6 +119,7 @@ export function createTooltipController(
     showFor,
     linger,
     isVisible: () => refs.visible.current,
+    hasContent: () => hasContent,
     markVisible: () => {
       refs.visible.current = true;
     },

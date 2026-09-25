@@ -33,12 +33,13 @@ async function startWithClick(video: Locator) {
 }
 
 // Headings and paragraphs that stick out of the viewport, or whose text is wider than
-// their own box.
+// their own box. Text for screen readers only (.sr-only) sits in a 1 px box on purpose.
 async function clippedText(page: Page) {
   return page.evaluate(() => {
     const width = document.documentElement.clientWidth;
     const found: string[] = [];
     for (const element of document.querySelectorAll<HTMLElement>("h1, h2, h3, p")) {
+      if (element.closest(".sr-only")) continue;
       const box = element.getBoundingClientRect();
       const inside = box.left >= 0 && box.right <= width;
       const fits = element.scrollWidth <= element.clientWidth;

@@ -14,6 +14,7 @@ export function SkillTooltip({ ref, content }: SkillTooltipProps) {
   return (
     <div
       ref={ref}
+      role="tooltip"
       className="absolute z-50 min-w-[140px] whitespace-nowrap rounded-lg border border-accent/30 bg-bg/95 px-3 py-2 font-mono text-[11px] leading-[1.6] text-text/90 shadow-[0_4px_20px] shadow-black/50 pointer-events-none"
       style={{ display: content ? "block" : "none" }}
     >

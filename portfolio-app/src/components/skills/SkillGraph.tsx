@@ -43,7 +43,6 @@ import type {
   RopeTarget,
   SimLink,
   SimNode,
-  SkillsDataNested,
   SkillsFlat,
   TooltipContent,
 } from "./types";
@@ -56,21 +55,28 @@ const GRAPH_QUERY = "(min-width: 768px)";
 
 // The section: heading plus the graph from md up and the list below. Neither is in the
 // server HTML, the viewport being unknown there; the placeholder keeps the graph's
-// height on desktop so the page does not jump when the graph mounts.
+// height on desktop so the page does not jump when the graph mounts. Next to the graph
+// the list is rendered for screen readers only: the graph is one image to them.
 export function SkillGraph() {
+  const t = useT();
   const showGraph = useMediaQuery(GRAPH_QUERY);
 
   return (
     <section id="skills" className="relative w-full py-16 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <h2 className="mb-6 text-center text-3xl font-bold text-accent-2 text-shadow-glow text-shadow-accent-2/35 md:text-4xl">
-          Skills &amp; Expertise
+          {t.skills.title}
         </h2>
       </div>
       {showGraph === undefined && (
         <div className="hidden md:block" style={{ height: CONTAINER_HEIGHT }} />
       )}
-      {showGraph === true && <SkillGraphCanvas />}
+      {showGraph === true && (
+        <>
+          <SkillGraphCanvas />
+          <SkillList screenReaderOnly />
+        </>
+      )}
       {showGraph === false && <SkillList />}
     </section>
   );
@@ -82,11 +88,9 @@ export function SkillGraph() {
 // simulation writes into, and the filter UI.
 function SkillGraphCanvas() {
   const t = useT();
-  const skillsDataRaw = useSkillsData() as SkillsDataNested;
+  const skillsData = useSkillsData();
 
-  const currentData = useMemo<SkillsFlat>(() => flattenSkillsData(skillsDataRaw), [skillsDataRaw]);
-
-  const rawNestedData = useMemo<SkillsDataNested>(() => skillsDataRaw, [skillsDataRaw]);
+  const currentData = useMemo<SkillsFlat>(() => flattenSkillsData(skillsData), [skillsData]);
 
   // ── tooltip state ──────────────────────────────────────────────────────
   const [tooltipContent, setTooltipContent] = useState<TooltipContent | null>(null);
@@ -144,7 +148,7 @@ function SkillGraphCanvas() {
         timer: tooltipTimeoutRef,
       },
       setTooltipContent,
-      rawNestedData,
+      skillsData,
       () => size.width,
     );
     tooltip.dismiss();
@@ -166,7 +170,6 @@ function SkillGraphCanvas() {
       simulation,
       size,
       tooltip,
-      hasTooltipContent: () => tooltipContent !== null,
     });
     const nodeEls = nodes.map((n) => {
       const els = createNodeElements(layers, n);
@@ -256,11 +259,7 @@ function SkillGraphCanvas() {
       tooltip.dismiss();
       window.removeEventListener("resize", onResize);
     };
-    // tooltipContent is deliberately not a dependency: adding it would rebuild the whole
-    // graph on every hover. Known limitation: onPointerUp sees the tooltipContent of the
-    // last rebuild, so its tooltip branches rarely run.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentData, rawNestedData]);
+  }, [currentData, skillsData]);
 
   const applyFilter = useCallback(() => {
     const selectedRatings = new Set<number>();
@@ -310,7 +309,7 @@ function SkillGraphCanvas() {
         className="relative mx-auto w-full max-w-7xl overflow-hidden rounded-xl border border-accent/25 bg-bg"
         style={{ height: CONTAINER_HEIGHT }}
       >
-        <svg ref={svgRef} className="h-full w-full" />
+        <svg ref={svgRef} role="img" aria-label={t.skills.graphLabel} className="h-full w-full" />
         <WobblyRopes
           ropeTargetsRef={ropeTargetsRef}
           colors={ropeColorMap}
@@ -330,6 +329,7 @@ function SkillGraphCanvas() {
             {[1, 2, 3, 4, 5].map((r) => (
               <button
                 key={r}
+                aria-pressed={filterToggles[r]}
                 onClick={() => {
                   setFilterToggles((prev) => {
                     const next = [...prev];

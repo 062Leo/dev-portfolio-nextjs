@@ -7,9 +7,9 @@ import type { Point, RopeTarget, SimLink, SimNode, Size, SkillsFlat } from "./ty
 
 const GROUP_EXTRA_LINK_START_OFFSET = 1; // skip N neighbours before additional links start
 const GROUP_EXTRA_LINK_MAX_LOOKAHEAD = 4; // how many nodes ahead are eligible as extra targets
-const GROUP_EXTRA_LINK_MAX = 6; // absolute max extra connections per node (1‑4)
-const MAX_DEGREE_HIGH = 5; // max total degree for the high-count node
-const MAX_DEGREE_NORMAL = 5; // max total degree for all other nodes
+// Max links of any node, chain links included. The node with extra links has two chain
+// links, so it gets at most three extra ones.
+const MAX_DEGREE = 5;
 const INITIAL_SPREAD = 200; // px — new nodes start scattered around the centre
 
 // Off-screen position of the nodes of a toggled-off group.
@@ -27,7 +27,8 @@ function groupNodesFor(
   allowedRatings: Set<number> | null,
   size: Size,
 ): SimNode[] {
-  const entries = Object.entries(skills).sort(() => Math.random() - 0.5);
+  const entries = Object.entries(skills);
+  shuffle(entries);
   const groupNodes: SimNode[] = [];
   for (const [name, rating] of entries) {
     if (allowedRatings && !allowedRatings.has(rating)) continue;
@@ -71,14 +72,16 @@ function eligibleMiddleNodes(degree: number[]): number[] {
   const eligible: number[] = [];
   for (let i = 0; i < degree.length; i++) {
     if (degree[i] !== 2) continue;
-    const reachable = extraLinkPool(i, degree.length).some((j) => degree[j] < MAX_DEGREE_NORMAL);
+    const reachable = extraLinkPool(i, degree.length).some((j) => degree[j] < MAX_DEGREE);
     if (reachable) eligible.push(i);
   }
   return eligible;
 }
 
-// Exactly one middle node of the group gets extra links (3‑4 total, guaranteed), added
-// one by one from its shuffled pool while the degree caps allow it.
+// Exactly one middle node of the group gets extra links, added one by one from its
+// shuffled pool until it reaches MAX_DEGREE; targets already at MAX_DEGREE are skipped.
+// At least one extra link is certain (the node is only chosen if a target is free), the
+// rest depends on the pool: one to three.
 function addExtraLinks(groupNodes: SimNode[], degree: number[], links: SimLink[]): void {
   const eligible = eligibleMiddleNodes(degree);
   if (eligible.length === 0) return;
@@ -87,14 +90,12 @@ function addExtraLinks(groupNodes: SimNode[], degree: number[], links: SimLink[]
   const pool = extraLinkPool(i, groupNodes.length);
   shuffle(pool);
 
-  let extraAdded = 0;
   for (const target of pool) {
-    if (degree[i] >= MAX_DEGREE_HIGH || extraAdded >= GROUP_EXTRA_LINK_MAX) break;
-    if (degree[target] >= MAX_DEGREE_NORMAL) continue;
+    if (degree[i] >= MAX_DEGREE) break;
+    if (degree[target] >= MAX_DEGREE) continue;
     links.push({ source: groupNodes[i].id, target: groupNodes[target].id });
     degree[i]++;
     degree[target]++;
-    extraAdded++;
   }
 }
 

@@ -59,6 +59,8 @@ export const en: Dictionary = {
     },
   },
   skills: {
+    title: "Skills & Expertise",
+    graphLabel: "Skill graph: my skills by category, rated from 1 to 5",
     rating: "Rating:",
     ratingOf: (rating: number) => `Rating ${rating} of 5`,
     applyFilter: "Apply Filter",

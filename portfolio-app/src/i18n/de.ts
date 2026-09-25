@@ -57,6 +57,8 @@ export const de = {
     },
   },
   skills: {
+    title: "Skills & Expertise",
+    graphLabel: "Skill-Graph: meine Fähigkeiten nach Kategorie, mit Bewertung von 1 bis 5",
     rating: "Bewertung:",
     ratingOf: (rating: number) => `Bewertung ${rating} von 5`,
     applyFilter: "Filter anwenden",

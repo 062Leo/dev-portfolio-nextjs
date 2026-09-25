@@ -1,6 +1,6 @@
 import { useLanguage } from "@/context/LanguageContext";
 import type { Lang } from "@/i18n/lang";
-import type { Project } from "./types";
+import type { Project, SkillsDataNested } from "./types";
 import { portfolioData as portfolioDataDe } from "./portfolio-data";
 import { otherProjects as otherProjectsDe } from "./other_projects";
 import { portfolioData as portfolioDataEn } from "./portfolio-data-en";
@@ -12,7 +12,8 @@ export type { Project, DemoControlsGroup } from "./types";
 
 const portfolioByLang = { de: portfolioDataDe, en: portfolioDataEn };
 const otherByLang = { de: otherProjectsDe, en: otherProjectsEn };
-const skillsByLang = { de: skillsDe, en: skillsEn };
+// Typed once here, so the skills components get the nested shape without a cast.
+const skillsByLang: Record<Lang, SkillsDataNested> = { de: skillsDe, en: skillsEn };
 
 // An empty id marks a placeholder entry that never gets a page.
 function withId(projects: Project[]): Project[] {
@@ -67,7 +68,7 @@ export function useOtherProjects() {
   return otherByLang[language];
 }
 
-export function useSkillsData() {
+export function useSkillsData(): SkillsDataNested {
   const { language } = useLanguage();
   return skillsByLang[language];
 }
