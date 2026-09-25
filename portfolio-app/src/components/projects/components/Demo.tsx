@@ -2,7 +2,9 @@
 
 import { ExternalLinkDialog, useExternalLink } from "@/components/ui/ExternalLinkDialog";
 import { useProject, type DemoControlsGroup } from "@/data/index";
+import { imageSize } from "@/data/image-sizes";
 import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useT } from "@/i18n";
 import { renderMarkdownText } from "@/lib/markdown";
@@ -73,8 +75,13 @@ export function DetailPage({ id }: { id: string }) {
               }}
             >
               <div className="w-full h-full">
-                {/* eslint-disable-next-line @next/next/no-img-element -- converted to next/image in a later step */}
-                <img src={project.demoImage} alt={project.title} className="w-full h-auto" />
+                <Image
+                  src={project.demoImage}
+                  alt={project.title}
+                  {...imageSize(project.demoImage)}
+                  sizes="(max-width: 1024px) 100vw, 992px"
+                  className="w-full h-auto"
+                />
               </div>
             </button>
           )}
@@ -171,8 +178,13 @@ export function DetailPage({ id }: { id: string }) {
         {project.miscimage && (
           <div className="mt-8 flex flex-col items-center">
             <div className="w-full max-w-3xl rounded-xl overflow-hidden border-2 border-accent bg-bg">
-              {/* eslint-disable-next-line @next/next/no-img-element -- converted to next/image in a later step */}
-              <img src={project.miscimage} alt={t.demo.illustrationAlt} className="w-full h-auto" />
+              <Image
+                src={project.miscimage}
+                alt={t.demo.illustrationAlt}
+                {...imageSize(project.miscimage)}
+                sizes="(max-width: 768px) 100vw, 768px"
+                className="w-full h-auto"
+              />
             </div>
             {project.misctext && (
               <div className="mt-4 w-full max-w-3xl  text-sm md:text-base leading-relaxed text-text">

@@ -168,6 +168,47 @@ test.describe("project detail page", () => {
   });
 });
 
+// Every image is a next/image (issue #79): either it fills a positioned box (fill) or it
+// carries its width and height, so its space is reserved before the file has loaded.
+test.describe("project detail images", () => {
+  for (const path of [DETAIL_PAGE, GALLERY_PAGE]) {
+    test(`${path} loads every image with reserved space`, async ({ page }) => {
+      await page.goto(path);
+      const images = page.locator("main img");
+      const count = await images.count();
+      expect(count).toBeGreaterThan(0);
+      for (let index = 0; index < count; index++) {
+        const image = images.nth(index);
+        // Lazy images only load near the viewport.
+        await image.scrollIntoViewIfNeeded();
+        await expect
+          .poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth))
+          .toBeGreaterThan(0);
+        const sizing = await image.evaluate((element: HTMLImageElement) => ({
+          src: element.getAttribute("src"),
+          fill: getComputedStyle(element).position === "absolute",
+          width: element.getAttribute("width"),
+          height: element.getAttribute("height"),
+        }));
+        expect(
+          sizing.fill || (!!sizing.width && !!sizing.height),
+          `${sizing.src} has neither fill nor width and height`,
+        ).toBe(true);
+      }
+    });
+  }
+
+  test("loads the gallery thumbnails lazily", async ({ page }) => {
+    await page.goto(GALLERY_PAGE);
+    const gallery = page.getByRole("region", { name: de.projectDetail.screenshots });
+    const loading = await gallery
+      .locator("img")
+      .evaluateAll((elements) => elements.map((element) => element.getAttribute("loading")));
+    expect(loading).toHaveLength(4);
+    expect(new Set(loading)).toEqual(new Set(["lazy"]));
+  });
+});
+
 // The hero is as high as its card plus fixed spacing, not a full screen that grows and
 // shrinks with the mobile browser bars (issue #68).
 test.describe("hero section", () => {
