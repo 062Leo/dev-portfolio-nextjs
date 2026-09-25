@@ -72,7 +72,7 @@ test("the choice survives a reload and a navigation", async ({ page, isMobile })
   await openMenu(page, isMobile);
   await navLink(page, "Projects").click();
   await expect(page).toHaveURL((url) => url.pathname === "/projects");
-  await expect(page.getByRole("heading", { level: 2 }).first()).toContainText("Featured");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Featured");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
 });
 

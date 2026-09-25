@@ -18,10 +18,10 @@ export function ProjectsShowcase() {
   return (
     <section className="relative px-4 py-24">
       <div className="container mx-auto max-w-6xl px-4">
-        <h2 className="mb-4 text-center text-3xl font-bold text-accent-2 md:text-4xl">
+        <h1 className="mb-4 text-center text-3xl font-bold text-accent-2 md:text-4xl">
           {t.projects.titleStart}{" "}
           <span className="text-accent-2-light">{t.projects.titleAccent}</span>
-        </h2>
+        </h1>
         <p className="mx-auto mb-12 max-w-3xl text-center text-text/90">{t.projects.intro}</p>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
@@ -31,9 +31,9 @@ export function ProjectsShowcase() {
         </div>
 
         {/* Weitere Projekte / More Projects */}
-        <h3 className="mt-16 mb-4 text-center text-2xl font-semibold text-accent-2 md:text-3xl pt-4">
+        <h2 className="mt-16 mb-4 text-center text-2xl font-semibold text-accent-2 md:text-3xl pt-4">
           {t.projects.moreTitle}
-        </h3>
+        </h2>
         <p className="mx-auto mb-12 max-w-3xl text-center text-text/90">{t.projects.moreIntro}</p>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">

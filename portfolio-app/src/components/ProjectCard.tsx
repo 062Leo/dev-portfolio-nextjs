@@ -96,9 +96,9 @@ export function ProjectCard({ project, variant = "full" }: ProjectCardProps) {
       <div className="flex flex-1 flex-col p-6">
         <Link href={href} className="-my-2 block py-2">
           <div className="mb-1 flex items-baseline gap-2 flex-wrap">
-            <h3 className="text-xl font-semibold text-accent-2 transition-colors">
+            <h2 className="text-xl font-semibold text-accent-2 transition-colors">
               {project.title}
-            </h3>
+            </h2>
             {project.subtitle && project.subtitle.trim() && (
               <span className="text-l font-semibold text-accent-2">{project.subtitle}</span>
             )}

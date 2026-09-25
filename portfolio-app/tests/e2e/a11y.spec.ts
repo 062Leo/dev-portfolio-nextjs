@@ -18,7 +18,12 @@ const BLOCKING = new Set(["serious", "critical"]);
 // Best-practice rules that are fixed and must stay fixed, whatever impact axe gives them:
 // the decorative backdrop outside every landmark, two unnamed navigation landmarks and a
 // skipped heading level.
-const ENFORCED_RULES = new Set(["region", "landmark-unique", "heading-order"]);
+const ENFORCED_RULES = new Set([
+  "region",
+  "landmark-unique",
+  "heading-order",
+  "page-has-heading-one",
+]);
 const isBlocking = (violation: { id: string; impact?: string | null }) =>
   BLOCKING.has(violation.impact ?? "") || ENFORCED_RULES.has(violation.id);
 
