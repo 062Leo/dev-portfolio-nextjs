@@ -75,11 +75,11 @@ export function DetailPage({ id }: { id: string }) {
         <div className="w-full max-w-4xl space-y-8">
           <div>
             <div className="mb-4 flex items-baseline gap-3 flex-wrap">
-              <h1 className="text-4xl font-bold font-rubik md:text-5xl uppercase text-accent-2 text-shadow-glow">
+              <h1 className="text-[clamp(1.4rem,7vw,3rem)] font-bold font-rubik uppercase [overflow-wrap:anywhere] text-accent-2 text-shadow-glow">
                 {renderMarkdownText(project.title) || project.title}
               </h1>
               {project.subtitle && project.subtitle.trim() && (
-                <h2 className="text-xl font-semibold font-rubik md:text-2xl uppercase text-accent-2 text-shadow-glow">
+                <h2 className="text-xl font-semibold font-rubik md:text-2xl uppercase [overflow-wrap:anywhere] text-accent-2 text-shadow-glow">
                   {project.subtitle}
                 </h2>
               )}

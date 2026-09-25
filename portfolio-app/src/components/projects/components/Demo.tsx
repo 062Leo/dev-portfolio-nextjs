@@ -52,7 +52,7 @@ export function DetailPage({ id }: { id: string }) {
 
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold font-rubik uppercase text-accent-2 text-shadow-glow">
+          <h1 className="text-[clamp(1.25rem,6vw,2.25rem)] font-bold font-rubik uppercase [overflow-wrap:anywhere] text-accent-2 text-shadow-glow">
             {project.title} - Demo
           </h1>
         </div>

@@ -1,7 +1,34 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { PAGES, openAndCollectErrors } from "./pages";
 
 const DETAIL_PAGE = "/projects/ml-agent-bachelor";
+// The longest project title across the German and English data files, and a demo page;
+// both set their title in Rubik Mono One (issue #62).
+const LONGEST_TITLE_PAGE = "/projects/acms";
+const DEMO_PAGE = "/projects/prop-hunt/demo";
+// The narrowest phone viewport in common use.
+const NARROW_VIEWPORT = { width: 320, height: 568 };
+
+// Headings and paragraphs that stick out of the viewport, or whose text is wider than
+// their own box.
+async function clippedText(page: Page) {
+  return page.evaluate(() => {
+    const width = document.documentElement.clientWidth;
+    const found: string[] = [];
+    for (const element of document.querySelectorAll<HTMLElement>("h1, h2, h3, p")) {
+      const box = element.getBoundingClientRect();
+      const inside = box.left >= 0 && box.right <= width;
+      const fits = element.scrollWidth <= element.clientWidth;
+      if (box.width === 0 || (inside && fits)) continue;
+      const text = element.textContent?.trim().replace(/\s+/g, " ").slice(0, 40);
+      found.push(
+        `${element.tagName.toLowerCase()} "${text}" ${Math.round(box.left)}..${Math.round(box.right)}` +
+          ` scrollWidth ${element.scrollWidth} clientWidth ${element.clientWidth}`,
+      );
+    }
+    return found;
+  });
+}
 
 for (const path of PAGES) {
   test.describe(path, () => {
@@ -34,28 +61,41 @@ for (const path of PAGES) {
     // The page wrappers use overflow-x: hidden, so text that is too wide gets clipped instead of
     // widening the document. This test catches that case.
     test("has no heading or paragraph wider than the viewport", async ({ page }, testInfo) => {
-      test.fixme(
-        testInfo.project.name === "mobile" && path === DETAIL_PAGE,
-        "issue #62: the project title h1 is wider than the 375 px viewport and gets clipped",
-      );
       await page.goto(path);
-      const clipped = await page.evaluate(() => {
-        const width = document.documentElement.clientWidth;
-        const found: string[] = [];
-        for (const element of document.querySelectorAll<HTMLElement>("h1, h2, h3, p")) {
-          const box = element.getBoundingClientRect();
-          if (box.width === 0 || (box.left >= 0 && box.right <= width)) continue;
-          const text = element.textContent?.trim().replace(/\s+/g, " ").slice(0, 40);
-          found.push(
-            `${element.tagName.toLowerCase()} "${text}" ${Math.round(box.left)}..${Math.round(box.right)}`,
-          );
-        }
-        return found;
-      });
+      const clipped = await clippedText(page);
       expect(clipped, `elements outside the viewport:\n${clipped.join("\n")}`).toEqual([]);
+
+      // The project title is the widest text on a narrow phone (issue #62).
+      if (testInfo.project.name !== "mobile" || path !== DETAIL_PAGE) return;
+      await page.setViewportSize(NARROW_VIEWPORT);
+      const clippedNarrow = await clippedText(page);
+      expect(
+        clippedNarrow,
+        `elements outside the 320 px viewport:\n${clippedNarrow.join("\n")}`,
+      ).toEqual([]);
     });
   });
 }
+
+// Project titles are set in a wide display font; the longest one and a demo title have to
+// wrap inside the viewport instead of being clipped (issue #62).
+test.describe("long project titles", () => {
+  for (const path of [LONGEST_TITLE_PAGE, DEMO_PAGE]) {
+    test(`${path} keeps its headings inside the viewport`, async ({ page }, testInfo) => {
+      await page.goto(path);
+      const clipped = await clippedText(page);
+      expect(clipped, `elements outside the viewport:\n${clipped.join("\n")}`).toEqual([]);
+
+      if (testInfo.project.name !== "mobile") return;
+      await page.setViewportSize(NARROW_VIEWPORT);
+      const clippedNarrow = await clippedText(page);
+      expect(
+        clippedNarrow,
+        `elements outside the 320 px viewport:\n${clippedNarrow.join("\n")}`,
+      ).toEqual([]);
+    });
+  }
+});
 
 // The layout sets a title template: a page with its own title gets the brand appended,
 // the home page keeps the default title.
