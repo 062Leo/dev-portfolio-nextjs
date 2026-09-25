@@ -18,6 +18,14 @@ const files: Record<string, Project[]> = {
   other_projects_en: otherProjectsEn.projects,
 };
 
+const filesByLanguage: Record<string, string[]> = {
+  de: ["portfolio-data", "other_projects"],
+  en: ["portfolio-data-en", "other_projects_en"],
+};
+
+// Ids that may appear in both files of a language: the placeholder card of each list.
+const SHARED_IDS = new Set(["coming-soon"]);
+
 const languagePairs: [string, string][] = [
   ["portfolio-data", "portfolio-data-en"],
   ["other_projects", "other_projects_en"],
@@ -39,7 +47,7 @@ function existsInPublic(urlPath: string): boolean {
   return true;
 }
 
-function mediaPaths(project: Project): string[] {
+function mediaFields(project: Project): (string | undefined)[] {
   return [
     project.image,
     ...(project.images ?? []).map((image) => image.url),
@@ -47,7 +55,13 @@ function mediaPaths(project: Project): string[] {
     project.videoBig,
     project.demoImage,
     project.miscimage,
-  ].filter((path): path is string => typeof path === "string" && path.startsWith("/"));
+  ];
+}
+
+function mediaPaths(project: Project): string[] {
+  return mediaFields(project).filter(
+    (path): path is string => typeof path === "string" && path.startsWith("/"),
+  );
 }
 
 function videoPaths(project: Project): string[] {
@@ -65,6 +79,16 @@ describe.each(Object.entries(files))("%s", (_name, projects) => {
     const ids = nonEmptyIds(projects);
     const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
     expect(duplicates).toEqual([]);
+  });
+
+  // An empty field means no media; anything else is a path from the site root.
+  it("gives every media path from the site root", () => {
+    const relative = projects.flatMap((project) =>
+      mediaFields(project)
+        .filter((path) => typeof path === "string" && path !== "" && !path.startsWith("/"))
+        .map((path) => `${project.id || "(empty id)"}: ${path}`),
+    );
+    expect(relative).toEqual([]);
   });
 
   it("references only media files that exist under public/", () => {
@@ -96,5 +120,13 @@ describe.each(languagePairs)("%s and %s", (de, en) => {
     const enIds = new Set(nonEmptyIds(files[en]));
     expect([...deIds].filter((id) => !enIds.has(id))).toEqual([]);
     expect([...enIds].filter((id) => !deIds.has(id))).toEqual([]);
+  });
+});
+
+describe.each(Object.entries(filesByLanguage))("all projects in %s", (_lang, names) => {
+  it("have unique non-empty ids apart from the placeholder", () => {
+    const ids = names.flatMap((name) => nonEmptyIds(files[name]));
+    const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index && !SHARED_IDS.has(id));
+    expect(duplicates).toEqual([]);
   });
 });
