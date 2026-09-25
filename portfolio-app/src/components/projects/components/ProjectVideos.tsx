@@ -3,28 +3,14 @@ import type { ProjectImage } from "@/data/types";
 import { renderMarkdownText } from "@/lib/markdown";
 import { posterFor } from "@/lib/video";
 
-// Height of the native control bar at the bottom of a video; clicks there belong to it.
-const CONTROL_BAR_HEIGHT = 72;
-
-// Playback state of each video when the pointer went down, before any control reacted.
-const pausedAtPointerDown = new WeakMap<HTMLVideoElement, boolean>();
-
-function rememberPausedState(event: React.PointerEvent<HTMLVideoElement>) {
-  pausedAtPointerDown.set(event.currentTarget, event.currentTarget.paused);
-}
-
-// With preload="none" Chromium ignores a click on the video surface until metadata has
-// loaded. The click toggles playback here instead, unless the browser or one of its own
-// controls has already done so; clicks on the control bar are left to the controls.
-function togglePlaybackOnSurfaceClick(event: React.MouseEvent<HTMLVideoElement>) {
+// With preload="none" Chromium ignores a click on the video surface as long as nothing of
+// the video has loaded; the first click starts playback here instead. Once data is there
+// the browser handles every click itself (a toggle on a desktop, showing the controls on
+// a touch screen), so the handler never pauses and never toggles a second time.
+function playIfNothingLoaded(event: React.MouseEvent<HTMLVideoElement>) {
   const video = event.currentTarget;
-  if (event.clientY > video.getBoundingClientRect().bottom - CONTROL_BAR_HEIGHT) return;
-  const wasPaused = pausedAtPointerDown.get(video) ?? video.paused;
-  setTimeout(() => {
-    if (video.paused !== wasPaused) return;
-    if (wasPaused) video.play().catch(() => {});
-    else video.pause();
-  }, 0);
+  if (video.readyState !== HTMLMediaElement.HAVE_NOTHING) return;
+  video.play().catch(() => {});
 }
 
 interface ProjectVideosProps {
@@ -102,8 +88,7 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
                 src={videoBig}
                 poster={posterFor(videoBig)}
                 preload="none"
-                onPointerDown={rememberPausedState}
-                onClick={togglePlaybackOnSurfaceClick}
+                onClick={playIfNothingLoaded}
                 controls
                 muted
                 playsInline
@@ -138,8 +123,7 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
                       src={video.url}
                       poster={posterFor(video.url)}
                       preload="none"
-                      onPointerDown={rememberPausedState}
-                      onClick={togglePlaybackOnSurfaceClick}
+                      onClick={playIfNothingLoaded}
                       muted
                       loop
                       playsInline

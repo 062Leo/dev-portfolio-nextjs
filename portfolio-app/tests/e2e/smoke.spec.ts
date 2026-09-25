@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import { de } from "../../src/i18n/de";
 import { PAGES, openAndCollectErrors } from "./pages";
 
@@ -13,6 +13,24 @@ const DEMO_PAGE = "/projects/prop-hunt/demo";
 const VIDEO_PAGE = "/projects/broforce-clone";
 // The narrowest phone viewport in common use.
 const NARROW_VIEWPORT = { width: 320, height: 568 };
+
+const HAVE_NOTHING = 0;
+
+type RecordingVideo = HTMLVideoElement & { recorded?: string[] };
+
+// Scrolls the video into view and clicks its middle until it plays; a click before
+// hydration does nothing.
+async function startWithClick(video: Locator) {
+  await video.scrollIntoViewIfNeeded();
+  await expect(async () => {
+    await video.click();
+    await expect
+      .poll(() => video.evaluate((element: HTMLVideoElement) => element.paused), {
+        timeout: 1_000,
+      })
+      .toBe(false);
+  }).toPass();
+}
 
 // Headings and paragraphs that stick out of the viewport, or whose text is wider than
 // their own box.
@@ -241,19 +259,40 @@ test.describe("project videos", () => {
   test("starts the main video with a click in its middle", async ({ page }) => {
     await page.goto(DETAIL_PAGE);
     const video = page.locator("main video").first();
-    await video.scrollIntoViewIfNeeded();
-    // A click before hydration does nothing; retry until playback has started.
-    await expect(async () => {
-      await video.click();
-      await expect
-        .poll(() => video.evaluate((element: HTMLVideoElement) => element.paused), {
-          timeout: 1_000,
-        })
-        .toBe(false);
-    }).toPass();
-    await page.waitForTimeout(2_000);
-    const currentTime = await video.evaluate((element: HTMLVideoElement) => element.currentTime);
-    expect(currentTime).toBeGreaterThan(0);
+    await startWithClick(video);
+    await expect
+      .poll(() => video.evaluate((element: HTMLVideoElement) => element.currentTime))
+      .toBeGreaterThan(0);
+  });
+
+  // Once data has loaded every click is the browser's own: a mouse click toggles playback
+  // exactly once, a tap on a touch screen only shows the controls. The page adds no toggle.
+  test("leaves clicks on a loaded video to the browser", async ({ page, isMobile }) => {
+    await page.goto(DETAIL_PAGE);
+    const video = page.locator("main video").first();
+    await startWithClick(video);
+    await expect
+      .poll(() => video.evaluate((element: HTMLVideoElement) => element.readyState))
+      .toBeGreaterThan(HAVE_NOTHING);
+    await video.evaluate((element: RecordingVideo) => {
+      element.recorded = [];
+      element.addEventListener("play", () => element.recorded!.push("play"));
+      element.addEventListener("pause", () => element.recorded!.push("pause"));
+    });
+    // A toggle of the page would follow the browser's within a task; half a second covers it.
+    const settled = async () => {
+      await video.evaluate(() => new Promise((resolve) => setTimeout(resolve, 500)));
+      return video.evaluate((element: RecordingVideo) => element.recorded);
+    };
+
+    if (isMobile) {
+      await video.tap();
+      expect(await settled(), "events after a tap").toEqual([]);
+    }
+    await video.click();
+    expect(await settled(), "events after the first click").toEqual(["pause"]);
+    await video.click();
+    expect(await settled(), "events after the second click").toEqual(["pause", "play"]);
   });
 });
 

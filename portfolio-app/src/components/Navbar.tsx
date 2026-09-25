@@ -1,21 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useT, type Lang } from "@/i18n";
 
 const OTHER_LANGUAGE: Record<Lang, Lang> = { de: "en", en: "de" };
 
+// From md up the navbar shows its links inline and the mobile menu does not exist.
+const DESKTOP_QUERY = "(min-width: 768px)";
+
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const [menuPathname, setMenuPathname] = useState(pathname);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const isDesktop = useMediaQuery(DESKTOP_QUERY);
   const { language, setLanguage } = useLanguage();
   const t = useT();
+
+  // The menu closes on a navigation and when the viewport grows past md with the menu
+  // open (a phone rotated to landscape), where its button and panel are hidden. Adjusted
+  // during render instead of in an effect, so no frame shows the stale state.
+  if (menuPathname !== pathname) {
+    setMenuPathname(pathname);
+    setIsMenuOpen(false);
+  }
+  if (isMenuOpen && isDesktop) setIsMenuOpen(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,15 +45,20 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // While the menu is open the page does not scroll and Escape closes the menu with focus
+  // back on its button. The cleanup restores the scrolling whichever way the menu closes.
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
+    if (!isMenuOpen) return;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setIsMenuOpen(false);
+      menuButtonRef.current?.focus();
+    };
+    document.addEventListener("keydown", closeOnEscape);
     return () => {
       document.body.style.overflow = "";
+      document.removeEventListener("keydown", closeOnEscape);
     };
   }, [isMenuOpen]);
 
@@ -44,8 +67,9 @@ export function Navbar() {
   };
 
   // alt: the flag names the language on the desktop button; in the mobile row the text
-  // next to it does, so the image is decorative there.
-  const flag = (alt: string) => (
+  // next to it does, so the image is decorative there. Only the desktop flag is preloaded;
+  // the mobile row shows the same file once the menu opens.
+  const flag = (alt: string, preload: boolean) => (
     <div className="relative">
       <div className="absolute top-1/2 left-1/2 size-[1.8rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white transition-all duration-300" />
       <div className="relative h-6 w-6 overflow-hidden rounded-full z-10">
@@ -55,7 +79,7 @@ export function Navbar() {
           sizes="(max-width: 768px) 24px, 24px"
           fill
           className="transition-opacity duration-300 object-cover"
-          priority
+          preload={preload}
         />
       </div>
     </div>
@@ -104,13 +128,14 @@ export function Navbar() {
             className="z-50 -m-2.5 p-2.5"
             aria-label={t.nav.toggleLanguage}
           >
-            {flag(t.nav.currentLanguage)}
+            {flag(t.nav.currentLanguage, true)}
           </button>
         </div>
 
         {/* The desktop columns are display:none below md, so the button is placed in the
             third column explicitly; otherwise the grid would centre it. */}
         <button
+          ref={menuButtonRef}
           onClick={() => setIsMenuOpen((prev) => !prev)}
           className="col-start-3 justify-self-end -m-0.5 p-2.5 text-text md:hidden"
           aria-label={isMenuOpen ? t.nav.closeMenu : t.nav.openMenu}
@@ -153,7 +178,7 @@ export function Navbar() {
             onClick={toggleLanguage}
             className="flex min-h-11 w-full items-center gap-3 border-t border-border py-3 text-text transition-colors duration-300"
           >
-            {flag("")}
+            {flag("", false)}
             <span>{t.nav.currentLanguage}</span>
           </button>
         </div>

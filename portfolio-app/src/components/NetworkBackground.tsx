@@ -46,6 +46,11 @@ const MIN_WANDER_DURATION = 3000;
 const MAX_WANDER_DURATION = 6000;
 const WANDER_MARGIN = 0.15; // fraction of width/height kept free at the edges
 
+// A mobile browser fires resize whenever its address bar shows or hides while scrolling.
+// Resizes are handled once they have settled, and only a new width rebuilds the network;
+// a height change keeps the points, the focus point and the wandering.
+const RESIZE_DEBOUNCE_MS = 200;
+
 export function NetworkBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -263,12 +268,20 @@ export function NetworkBackground() {
       wander = null;
     };
 
-    const handleResize = () => {
+    const applyResize = () => {
+      const previousWidth = width;
       configureCanvasSize();
+      if (width === previousWidth) return;
       target.x = width / 2;
       target.y = height / 2;
       wander = null;
       initialisePoints();
+    };
+
+    let resizeTimer: ReturnType<typeof setTimeout> | undefined;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyResize, RESIZE_DEBOUNCE_MS);
     };
 
     configureCanvasSize();
@@ -283,6 +296,7 @@ export function NetworkBackground() {
 
     return () => {
       window.cancelAnimationFrame(animationFrameId);
+      clearTimeout(resizeTimer);
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerdown", handlePointerDown);
       window.removeEventListener("resize", handleResize);

@@ -51,7 +51,9 @@ export default defineConfig({
     command: `npm run build && npm run start -- -p ${PORT}`,
     url: `${BASE_URL}/login`,
     timeout: 240_000,
-    reuseExistingServer: !process.env.CI,
+    // Always a fresh build of the current tree: a server still running on the port would
+    // otherwise be tested instead, possibly with an old build or without the test password.
+    reuseExistingServer: false,
     env: { SITE_PASSWORD: E2E_PASSWORD },
   },
 });
