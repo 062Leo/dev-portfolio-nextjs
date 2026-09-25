@@ -54,7 +54,9 @@ export function Navbar() {
     setLanguage(OTHER_LANGUAGE[language]);
   };
 
-  const flag = (
+  // alt: the flag names the language on the desktop button; in the mobile row the text
+  // next to it does, so the image is decorative there.
+  const flag = (alt: string) => (
     <div className="relative">
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300"
@@ -67,7 +69,7 @@ export function Navbar() {
       <div className="relative h-6 w-6 overflow-hidden rounded-full z-10">
         <Image
           src={`/Icons/${language}_flag.png`}
-          alt={t.nav.currentLanguage}
+          alt={alt}
           sizes="(max-width: 768px) 24px, 24px"
           fill
           className="transition-opacity duration-300 object-cover"
@@ -135,7 +137,7 @@ export function Navbar() {
             className="z-50 focus:outline-none"
             aria-label={t.nav.toggleLanguage}
           >
-            {flag}
+            {flag(t.nav.currentLanguage)}
           </button>
         </div>
 
@@ -169,15 +171,15 @@ export function Navbar() {
                 {item.name}
               </Link>
             ))}
-            {/* Language toggle: a full-width row, at least 44 px high. */}
+            {/* Language toggle: a full-width row, at least 44 px high; its visible text
+                is its accessible name. */}
             <button
               type="button"
               onClick={toggleLanguage}
               className="flex min-h-11 w-full items-center justify-center gap-3 transition-colors duration-300"
               style={{ color: colors.navbarMenuText }}
-              aria-label={t.nav.toggleLanguage}
             >
-              {flag}
+              {flag("")}
               <span>{t.nav.currentLanguage}</span>
             </button>
           </div>

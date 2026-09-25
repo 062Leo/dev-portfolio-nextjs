@@ -111,6 +111,49 @@ describe("proxy with SITE_PASSWORD and AUTH_SECRET", () => {
     expect(passes(await proxy(request("/login", { method: "POST" })))).toBe(true);
   });
 
+  it("gates /Login like any other path: the exclusion is case-sensitive", async () => {
+    expect(redirectsToLogin(await proxy(request("/Login")))).toBe(true);
+  });
+
+  it("logs in with the right ?key= on /login and lands on /", async () => {
+    const response = await proxy(request(`/login?key=${PASSWORD}`));
+    expect(response.status).toBe(303);
+    expect(getRedirectUrl(response)).toBe(`${ORIGIN}/`);
+    expect(response.cookies.get("site-auth")?.value).toBeTruthy();
+  });
+
+  it("answers a wrong ?key= on /login with the delay and /login without the key", async () => {
+    const setTimeoutSpy = vi.spyOn(globalThis, "setTimeout");
+    const response = await proxy(request("/login?key=wrong-password"));
+    expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 500);
+    expect(redirectsToLogin(response)).toBe(true);
+    expect(response.cookies.get("site-auth")).toBeUndefined();
+  });
+
+  it("sends a logged-in visitor with ?key= on /login to /", async () => {
+    const cookie = await loginCookie();
+    const response = await proxy(request(`/login?key=${PASSWORD}`, { cookie }));
+    expect(response.status).toBe(303);
+    expect(getRedirectUrl(response)).toBe(`${ORIGIN}/`);
+    expect(response.cookies.get("site-auth")).toBeUndefined();
+  });
+
+  it("redirects the internal language prefix away before the gate", async () => {
+    for (const [path, target] of [
+      ["/de", "/"],
+      ["/en", "/"],
+      ["/de/projects", "/projects"],
+      ["/en/projects/x?a=1", "/projects/x?a=1"],
+      ["/de/login", "/login"],
+    ]) {
+      const response = await proxy(request(path));
+      expect(response.status, path).toBe(308);
+      expect(getRedirectUrl(response), path).toBe(`${ORIGIN}${target}`);
+    }
+    // Only the prefix as a whole segment; other paths starting with the letters stay.
+    expect(redirectsToLogin(await proxy(request("/design")))).toBe(true);
+  });
+
   it("redirects a wrong ?key= to /login without setting a cookie", async () => {
     const response = await proxy(request("/?key=wrong-password"));
     expect(redirectsToLogin(response)).toBe(true);
@@ -288,6 +331,17 @@ describe("language rewrite", () => {
       expect(isRewrite(response), path).toBe(false);
       expect(response.cookies.get("lang"), path).toBeUndefined();
     }
+  });
+
+  it("redirects a direct /de or /en URL with a session instead of serving it", async () => {
+    const projects = await proxy(request("/de/projects", { cookie, lang: "en" }));
+    expect(projects.status).toBe(308);
+    expect(getRedirectUrl(projects)).toBe(`${ORIGIN}/projects`);
+    expect(isRewrite(projects)).toBe(false);
+
+    const home = await proxy(request("/en", { cookie }));
+    expect(home.status).toBe(308);
+    expect(getRedirectUrl(home)).toBe(`${ORIGIN}/`);
   });
 
   it("does not rewrite a path that only starts like a page path", async () => {

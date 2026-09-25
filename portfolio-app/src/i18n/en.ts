@@ -76,10 +76,12 @@ export const en: Dictionary = {
     moreIntro: "Additional projects and experiments that complement my portfolio.",
     githubCta: "Check My Personal GitHub",
   },
+  notFound: {
+    heading: "Page not found",
+    toProjects: "Back to projects",
+  },
   projectDetail: {
     back: "Back to Projects",
-    notFound: "Project not found",
-    backHome: "Back to Home",
     keyFeatures: "KEY FEATURES",
     techStack: "TECH STACK",
     stats: "STATS",

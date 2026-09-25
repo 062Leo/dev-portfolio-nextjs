@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { usePortfolioData, useOtherProjects, type Project } from "@/data/index";
+import { useState } from "react";
+import { useProject } from "@/data/index";
 import {
   ArrowLeft,
   Play,
@@ -51,32 +51,8 @@ export function DetailPage({ id }: { id: string }) {
     null,
   );
   const t = useT();
-  const portfolioData = usePortfolioData();
-  const otherProjects = useOtherProjects();
-  const project = useMemo<Project | null>(
-    () =>
-      portfolioData.projects.find((p) => p.id === id) ||
-      otherProjects.projects.find((p) => p.id === id) ||
-      null,
-    [id, portfolioData, otherProjects],
-  );
+  const project = useProject(id);
   const colors = useThemeColors(true);
-
-  // Early return if project is not found
-  if (!project) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
-        <h1 className="text-4xl font-bold">{t.projectDetail.notFound}</h1>
-        <Link
-          href="/"
-          className="mt-4 hover:underline"
-          style={{ color: colors.boomforceBackLinkText }}
-        >
-          {t.projectDetail.backHome}
-        </Link>
-      </div>
-    );
-  }
 
   // Dynamic stats from project data
   const showStats = project.stats && project.stats.length > 0;

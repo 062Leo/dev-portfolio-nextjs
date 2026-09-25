@@ -76,10 +76,12 @@ export const de = {
     moreIntro: "Zusätzliche Projekte und Experimente, die mein Portfolio ergänzen.",
     githubCta: "Mein GitHub-Profil ansehen",
   },
+  notFound: {
+    heading: "Seite nicht gefunden",
+    toProjects: "Zur Projektübersicht",
+  },
   projectDetail: {
     back: "Zurück zur Projektübersicht",
-    notFound: "Projekt nicht gefunden",
-    backHome: "Zurück zur Startseite",
     keyFeatures: "KEY FEATURES",
     techStack: "TECH STACK",
     stats: "STATS",

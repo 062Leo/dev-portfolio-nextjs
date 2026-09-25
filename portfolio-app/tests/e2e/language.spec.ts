@@ -3,7 +3,8 @@ import { expect, test, type Page } from "@playwright/test";
 // The e2e browser is German (locale in playwright.config.ts) and the setup project stores
 // the session without a lang cookie, so every test starts in German.
 
-const TOGGLE = /Sprache wechseln|Toggle language/;
+// Desktop button: aria-label. Mobile menu row: its visible text, the current language.
+const TOGGLE = /Sprache wechseln|Toggle language|^Deutsch$|^English$/;
 
 // On mobile the navbar links and the toggle sit in the hamburger menu, which has to be
 // opened first (and stays open while the language switches).
@@ -61,6 +62,24 @@ test("the choice survives a reload and a navigation", async ({ page, isMobile })
   await expect(page).toHaveURL((url) => url.pathname === "/projects");
   await expect(page.getByRole("heading", { level: 2 }).first()).toContainText("Featured");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
+});
+
+// A notFound() on a statically generated route is answered with a shell that the browser
+// renders from the flight data, so this can only be asserted in a browser, not with curl.
+test("an unknown project shows the 404 page with navbar and footer in the visitor's language", async ({
+  page,
+  isMobile,
+}) => {
+  const response = await page.goto("/projects/does-not-exist");
+  expect(response?.status()).toBe(404);
+  await expect(page.locator("html")).toHaveAttribute("lang", "de");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Seite nicht gefunden");
+  await expect(page.getByRole("link", { name: "Zur Projektübersicht" })).toBeVisible();
+  await expect(page.getByRole("contentinfo")).toBeVisible();
+
+  await (await languageToggle(page, isMobile)).click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Page not found");
 });
 
 test.describe("English browser", () => {

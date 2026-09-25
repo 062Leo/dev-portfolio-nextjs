@@ -8,9 +8,9 @@ type LayoutParams = Promise<{ lang: string }>;
 
 // The [lang] segment never appears in the address bar: the proxy rewrites every page path
 // to /<lang>/... from the lang cookie. Only the two known languages are prerendered; any
-// other value is a 404.
-export const dynamicParams = false;
-
+// other value ends in notFound() below. (dynamicParams = false is deliberately not set:
+// it would apply to the whole route chain and answer an unknown project id with the bare
+// framework 404 instead of the [lang] not-found page.)
 export function generateStaticParams() {
   return LANGS.map((lang) => ({ lang }));
 }

@@ -6,8 +6,7 @@ import { DetailPage as DemoDetailPage } from "@/components/projects/components/D
 import { demoProjectIds } from "@/data/index";
 import { isLang } from "@/i18n";
 
-export const dynamicParams = false;
-
+// See projects/[id]/page.tsx: unknown ids end in notFound() inside the [lang] layout.
 export function generateStaticParams({ params }: { params: { lang: string } }) {
   if (!isLang(params.lang)) return [];
   return demoProjectIds(params.lang).map((id) => ({ id }));

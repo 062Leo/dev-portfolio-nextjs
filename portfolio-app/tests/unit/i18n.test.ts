@@ -21,7 +21,46 @@ function leaves(tree: Tree, prefix = ""): Map<string, "string" | "function"> {
 
 const dictionaries = { de, en };
 
+// Leaves that are deliberately the same in both languages: proper names, the retro
+// headings of the project pages and terms the site uses untranslated.
+const SHARED = new Set([
+  "meta.title",
+  "nav.home",
+  "nav.skills",
+  "about.cards.development.title",
+  "about.cards.interactive.title",
+  "about.cards.ai.title",
+  "about.cards.collaboration.title",
+  "about.cards.ownership.title",
+  "footer.navigation",
+  "footer.links",
+  "projectDetail.keyFeatures",
+  "projectDetail.techStack",
+  "projectDetail.stats",
+  "projectDetail.screenshots",
+  "projectDetail.screenshotAlt",
+]);
+
+function leafValue(dictionary: Tree, path: string, kind: "string" | "function"): string {
+  const value = path.split(".").reduce<unknown>((node, key) => {
+    return (node as Record<string, unknown>)[key];
+  }, dictionary);
+  return kind === "string" ? (value as string) : (value as (argument: string) => string)("x");
+}
+
 describe("dictionaries", () => {
+  it("translate every leaf except the deliberately shared ones", () => {
+    const same: string[] = [];
+    const translatedAfterAll: string[] = [];
+    for (const [path, kind] of leaves(de)) {
+      const equal = leafValue(de, path, kind) === leafValue(en, path, kind);
+      if (equal && !SHARED.has(path)) same.push(path);
+      if (!equal && SHARED.has(path)) translatedAfterAll.push(path);
+    }
+    expect(same, "identical in de and en but not on the shared list").toEqual([]);
+    expect(translatedAfterAll, "on the shared list but translated").toEqual([]);
+  });
+
   it("have the same keys with the same kind of value", () => {
     const deLeaves = leaves(de);
     const enLeaves = leaves(en);
@@ -35,10 +74,7 @@ describe("dictionaries", () => {
     it("has no empty string and no function that yields one", () => {
       const empty: string[] = [];
       for (const [path, kind] of leaves(dictionary)) {
-        const value = path.split(".").reduce<unknown>((node, key) => {
-          return (node as Record<string, unknown>)[key];
-        }, dictionary);
-        const text = kind === "string" ? value : (value as (argument: string) => string)("x");
+        const text = leafValue(dictionary, path, kind);
         if (typeof text !== "string" || text.trim() === "") empty.push(path);
       }
       expect(empty).toEqual([]);

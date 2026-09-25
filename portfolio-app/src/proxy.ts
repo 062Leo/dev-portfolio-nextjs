@@ -21,15 +21,27 @@ import {
 // image optimizer) is passed on unchanged after the password check.
 const PAGE_PATH = /^\/(projects(\/.*)?|login)?$/;
 
+// The internal language prefix must never be used from outside: a visitor who reached
+// /de/... would keep that language whatever the cookie says.
+const LANG_PREFIX = /^\/(de|en)(?=\/|$)/;
+
 const LOGIN_PATH = "/login";
 
 export async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
+
+  if (LANG_PREFIX.test(pathname)) {
+    const stripped = pathname.replace(LANG_PREFIX, "") || "/";
+    return NextResponse.redirect(new URL(`${stripped}${search}`, request.url), 308);
+  }
 
   // The login page (and the POST of its server action) must stay reachable without the
-  // password; every other matched path is gated first.
-  if (pathname !== LOGIN_PATH) {
-    const gate = await passwordGate(request);
+  // password; every other matched path is gated first. A ?key= on /login is still
+  // checked, and a right one lands on / instead of the login page.
+  const onLoginPage = pathname === LOGIN_PATH;
+  if (!onLoginPage || request.nextUrl.searchParams.has("key")) {
+    const afterLogin = onLoginPage ? new URL("/", request.url) : cleanUrl(request);
+    const gate = await passwordGate(request, afterLogin);
     if (gate) return gate;
   }
 
@@ -38,8 +50,8 @@ export async function proxy(request: NextRequest) {
 }
 
 // Password gate. Returns the response that ends the request (redirect) or null when the
-// request may continue.
-async function passwordGate(request: NextRequest): Promise<NextResponse | null> {
+// request may continue. `afterLogin` is where a request that carried ?key= is sent.
+async function passwordGate(request: NextRequest, afterLogin: URL): Promise<NextResponse | null> {
   if (!readAuthEnv()) return null;
 
   const key = request.nextUrl.searchParams.get("key");
@@ -47,14 +59,14 @@ async function passwordGate(request: NextRequest): Promise<NextResponse | null> 
 
   if (await isValidAuthCookie(cookie)) {
     // Already logged in: a stray ?key= is only removed from the URL.
-    return key === null ? null : NextResponse.redirect(cleanUrl(request), 303);
+    return key === null ? null : NextResponse.redirect(afterLogin, 303);
   }
 
   if (key !== null) {
     if (await verifyPassword(key)) {
-      // Redirect to the same URL without the key, so the password neither stays in the
-      // address bar nor lands in the browser history.
-      const response = NextResponse.redirect(cleanUrl(request), 303);
+      // Redirect without the key, so the password neither stays in the address bar nor
+      // lands in the browser history.
+      const response = NextResponse.redirect(afterLogin, 303);
       response.cookies.set(AUTH_COOKIE_NAME, await createAuthToken(), authCookieOptions());
       return response;
     }

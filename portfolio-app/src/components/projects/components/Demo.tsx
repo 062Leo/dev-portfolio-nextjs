@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { usePortfolioData, type DemoControlsGroup, type Project } from "@/data/index";
+import { useState } from "react";
+import { useProject, type DemoControlsGroup } from "@/data/index";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useThemeColors } from "@/components/colors";
@@ -23,24 +23,8 @@ const isGroupedControls = (
 export function DetailPage({ id }: { id: string }) {
   const [showDialog, setShowDialog] = useState(false);
   const t = useT();
-  const portfolioData = usePortfolioData();
-  const project = useMemo<Project | null>(
-    () => portfolioData.projects.find((p) => p.id === id) || null,
-    [id, portfolioData],
-  );
+  const project = useProject(id);
   const colors = useThemeColors(true);
-
-  // Early return if project is not found
-  if (!project) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
-        <h1 className="text-4xl font-bold">{t.projectDetail.notFound}</h1>
-        <Link href="/" className="mt-4 hover:underline" style={{ color: colors.demoBackLinkText }}>
-          {t.projectDetail.backHome}
-        </Link>
-      </div>
-    );
-  }
 
   const hasDemoControls = project.demoControls && project.demoControls.length > 0;
 

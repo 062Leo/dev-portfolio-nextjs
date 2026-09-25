@@ -6,10 +6,10 @@ import { hasProject, projectIds } from "@/data/index";
 import { isLang } from "@/i18n";
 import { DetailPage as DefaultDetailPage } from "@/components/projects/default";
 
-// Only the ids of the current language get a page here; a project that exists in one
-// language only is a 404 in the other.
-export const dynamicParams = false;
-
+// Only the ids of the current language are prerendered; any other id (including a
+// project that exists in the other language only) ends in notFound() below, which
+// renders the [lang] not-found page inside the layout. (dynamicParams = false would
+// answer with the bare framework 404 instead.)
 export function generateStaticParams({ params }: { params: { lang: string } }) {
   if (!isLang(params.lang)) return [];
   return projectIds(params.lang).map((id) => ({ id }));
