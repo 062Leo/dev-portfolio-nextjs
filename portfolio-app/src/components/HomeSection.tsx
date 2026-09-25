@@ -26,10 +26,13 @@ export function HomeSection() {
   const currentPortfolioData = usePortfolioData();
 
   return (
-    <section
-      id="home"
-      className="hero-backdrop relative flex min-h-screen flex-col items-center justify-center px-4"
-    >
+    <section id="home" className="relative flex flex-col items-center justify-center px-4 pt-24">
+      {/* The backdrop stays one screen high, so its gradients fade out below the fold as
+          before, however short the section is. */}
+      <div
+        aria-hidden="true"
+        className="hero-backdrop pointer-events-none absolute inset-x-0 top-0 -z-10 h-svh"
+      />
       <div className="container z-10 mx-auto max-w-7xl text-center">
         <div className="mx-auto flex w-full flex-col gap-8 rounded-[40px] border border-accent bg-bg px-6 py-12 shadow-hero md:px-10">
           <h1 className="text-4xl font-bold tracking-tight text-accent-2 text-shadow-glow opacity-0 animate-fade-in md:text-6xl">
@@ -79,7 +82,7 @@ export function HomeSection() {
       <button
         type="button"
         onClick={handleScrollClick}
-        className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center text-accent-2 animate-bounce"
+        className="mt-6 flex flex-col items-center text-accent-2 animate-bounce"
       >
         <span className="mb-1 select-none text-sm">{t.hero.scroll}</span>
         <ArrowDown className="h-5 w-5" />

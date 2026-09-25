@@ -97,6 +97,31 @@ test.describe("long project titles", () => {
   }
 });
 
+// The hero is as high as its card plus fixed spacing, not a full screen that grows and
+// shrinks with the mobile browser bars (issue #68).
+test.describe("hero section", () => {
+  test("fits the viewport and keeps its card in the first screen", async ({ page }) => {
+    await page.goto("/");
+    const viewport = page.viewportSize();
+    // #home > container > card
+    const section = await page.locator("#home").boundingBox();
+    const card = await page.locator("#home > div > div").first().boundingBox();
+    expect(viewport).not.toBeNull();
+    expect(section).not.toBeNull();
+    expect(card).not.toBeNull();
+    const height = viewport!.height;
+
+    expect(section!.height).toBeLessThanOrEqual(height * 1.05);
+    expect(card!.y).toBeGreaterThanOrEqual(0);
+    expect(card!.y).toBeLessThan(height);
+    // Space above and below the card, the scroll hint included.
+    const empty = section!.height - card!.height;
+    expect(empty, `${Math.round(empty)} px empty around the card`).toBeLessThanOrEqual(
+      height * 0.25,
+    );
+  });
+});
+
 // The layout sets a title template: a page with its own title gets the brand appended,
 // the home page keeps the default title.
 test.describe("page titles", () => {
