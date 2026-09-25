@@ -7,6 +7,7 @@ import { portfolioData as portfolioDataDe } from "@/data/portfolio-data";
 import { portfolioData as portfolioDataEn } from "@/data/portfolio-data-en";
 import { otherProjects as otherProjectsDe } from "@/data/other_projects";
 import { otherProjects as otherProjectsEn } from "@/data/other_projects_en";
+import { posterFor } from "@/lib/video";
 
 const PUBLIC_DIR = fileURLToPath(new URL("../../public", import.meta.url));
 
@@ -49,6 +50,12 @@ function mediaPaths(project: Project): string[] {
   ].filter((path): path is string => typeof path === "string" && path.startsWith("/"));
 }
 
+function videoPaths(project: Project): string[] {
+  return [...(project.videos ?? []).map((video) => video.url), project.videoBig].filter(
+    (path): path is string => typeof path === "string" && path.startsWith("/"),
+  );
+}
+
 describe.each(Object.entries(files))("%s", (_name, projects) => {
   it("has at least one project", () => {
     expect(projects.length).toBeGreaterThan(0);
@@ -63,6 +70,19 @@ describe.each(Object.entries(files))("%s", (_name, projects) => {
   it("references only media files that exist under public/", () => {
     const missing = projects.flatMap((project) =>
       mediaPaths(project)
+        .filter((path) => !existsInPublic(path))
+        .map((path) => `${project.id || "(empty id)"}: ${path}`),
+    );
+    expect(missing).toEqual([]);
+  });
+
+  // The component derives the poster from the video path (issue #78).
+  it("has a poster next to every video", () => {
+    const videos = projects.flatMap(videoPaths);
+    expect(videos.filter((path) => !path.endsWith(".mp4"))).toEqual([]);
+    const missing = projects.flatMap((project) =>
+      videoPaths(project)
+        .map(posterFor)
         .filter((path) => !existsInPublic(path))
         .map((path) => `${project.id || "(empty id)"}: ${path}`),
     );

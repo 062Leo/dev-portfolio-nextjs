@@ -9,6 +9,8 @@ const GALLERY_PAGE = "/projects/kryptodash";
 // both set their title in Rubik Mono One (issue #62).
 const LONGEST_TITLE_PAGE = "/projects/acms";
 const DEMO_PAGE = "/projects/prop-hunt/demo";
+// A project with a main video and a list of detail videos.
+const VIDEO_PAGE = "/projects/broforce-clone";
 // The narrowest phone viewport in common use.
 const NARROW_VIEWPORT = { width: 320, height: 568 };
 
@@ -207,6 +209,32 @@ test.describe("project detail images", () => {
     expect(loading).toHaveLength(4);
     expect(new Set(loading)).toEqual(new Set(["lazy"]));
   });
+});
+
+// Videos load only their metadata on open; a poster frame stands in until they play
+// (issue #78).
+test.describe("project videos", () => {
+  for (const path of [DETAIL_PAGE, VIDEO_PAGE]) {
+    test(`${path} loads video metadata only and shows a poster`, async ({ page, request }) => {
+      await page.goto(path);
+      const videos = page.locator("main video");
+      await expect(videos.first()).toBeAttached();
+      const attributes = await videos.evaluateAll((elements) =>
+        elements.map((element) => ({
+          src: element.getAttribute("src"),
+          preload: element.getAttribute("preload"),
+          poster: element.getAttribute("poster"),
+        })),
+      );
+      for (const { src, preload, poster } of attributes) {
+        expect(preload, `${src}`).toBe("metadata");
+        expect(poster, `${src} has no poster`).toBeTruthy();
+        const response = await request.get(poster!);
+        expect(response.status(), poster!).toBe(200);
+        expect(response.headers()["content-type"], poster!).toBe("image/jpeg");
+      }
+    });
+  }
 });
 
 // The hero is as high as its card plus fixed spacing, not a full screen that grows and

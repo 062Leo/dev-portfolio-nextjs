@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import type { ProjectImage } from "@/data/types";
 import { renderMarkdownText } from "@/lib/markdown";
+import { posterFor } from "@/lib/video";
 
 interface ProjectVideosProps {
   videoBig?: string;
@@ -12,6 +13,22 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
   const hasVideos = !!videos && videos.length > 0;
 
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const bigVideoRef = useRef<HTMLVideoElement | null>(null);
+
+  // The main video only plays on request; once it has left the viewport it is paused.
+  useEffect(() => {
+    const video = bigVideoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) video.pause();
+    });
+    observer.observe(video);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [videoBig]);
 
   useEffect(() => {
     if (!videos || videos.length === 0) return;
@@ -57,8 +74,10 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
           <div className="flex justify-center">
             <div className="aspect-video w-full max-w-4xl rounded-xl overflow-hidden border-2 border-accent bg-bg">
               <video
+                ref={bigVideoRef}
                 src={videoBig}
-                preload="auto"
+                poster={posterFor(videoBig)}
+                preload="metadata"
                 controls
                 muted
                 playsInline
@@ -91,7 +110,8 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
                         videoRefs.current[index] = el;
                       }}
                       src={video.url}
-                      preload="auto"
+                      poster={posterFor(video.url)}
+                      preload="metadata"
                       muted
                       loop
                       playsInline
