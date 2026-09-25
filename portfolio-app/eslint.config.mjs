@@ -16,7 +16,7 @@ const eslintConfig = defineConfig([
   },
   // Structural violations left in place until the named follow-up issues restructure the code.
   // Project detail page: one component renders every optional section (stats, screenshots,
-  // demo, download, code and custom links) plus three inline dialogs; complexity 30. The
+  // demo, download, code and custom links) plus the screenshot lightbox; complexity 24. The
   // detail page rework splits it (#85).
   {
     files: ["src/components/projects/default.tsx"],

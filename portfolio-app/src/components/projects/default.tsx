@@ -24,6 +24,7 @@ import Link from "next/link";
 import { useT } from "@/i18n";
 import { renderMarkdownText } from "@/lib/markdown";
 import ProjectVideos from "./components/ProjectVideos";
+import { ExternalLinkDialog, useExternalLink } from "@/components/ui/ExternalLinkDialog";
 
 const iconMap = {
   Clock,
@@ -44,11 +45,7 @@ const CTA_BUTTON_CLASS =
   "flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 bg-linear-to-r from-accent-deep to-accent/70 text-text shadow-glow";
 
 export function DetailPage({ id }: { id: string }) {
-  const [showDialog, setShowDialog] = useState(false);
-  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
-  const [showCustomDialog, setShowCustomDialog] = useState(false);
-  const [pendingCustomUrl, setPendingCustomUrl] = useState<string | null>(null);
-  const [pendingCustomLabel, setPendingCustomLabel] = useState<string>("");
+  const { open: openExternalLink, dialogProps } = useExternalLink();
   const [selectedImage, setSelectedImage] = useState<{ url: string; caption?: string } | null>(
     null,
   );
@@ -179,10 +176,7 @@ export function DetailPage({ id }: { id: string }) {
               <button
                 type="button"
                 className={CTA_BUTTON_CLASS}
-                onClick={() => {
-                  setPendingUrl(project.demoDownload as string);
-                  setShowDialog(true);
-                }}
+                onClick={() => openExternalLink(project.demoDownload as string, "GitHub")}
               >
                 <Download className="mr-2 w-5 h-5" />
                 {t.projectDetail.downloadDemo}
@@ -192,10 +186,7 @@ export function DetailPage({ id }: { id: string }) {
               <button
                 type="button"
                 className="flex items-center gap-2 rounded-lg border border-accent px-6 py-3 text-accent transition-all transform hover:scale-105 shadow-glow"
-                onClick={() => {
-                  setPendingUrl(project.githubUrl as string);
-                  setShowDialog(true);
-                }}
+                onClick={() => openExternalLink(project.githubUrl as string, "GitHub")}
               >
                 <ExternalLink className="w-5 h-5" />
                 {t.projectDetail.viewCode}
@@ -205,11 +196,9 @@ export function DetailPage({ id }: { id: string }) {
               <button
                 type="button"
                 className={CTA_BUTTON_CLASS}
-                onClick={() => {
-                  setPendingCustomUrl(project.custom1Link as string);
-                  setPendingCustomLabel(project.customLabel ? project.customLabel : "");
-                  setShowCustomDialog(true);
-                }}
+                onClick={() =>
+                  openExternalLink(project.custom1Link as string, project.customLabel ?? "")
+                }
               >
                 <ExternalLink className="mr-2 w-5 h-5" />
                 {project.custom1BTNText}
@@ -289,94 +278,7 @@ export function DetailPage({ id }: { id: string }) {
           </div>
         </div>
       )}
-      {showDialog && pendingUrl && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-        >
-          <div className="w-full max-w-2xl rounded-3xl bg-bg/95 px-10 py-12 text-text shadow-2xl border border-border">
-            <h2 className="mb-6 text-4xl font-semibold">{t.dialog.title}</h2>
-            <p className="mb-4 text-2xl">{t.dialog.leaving("GitHub")}</p>
-            <p className="mb-10 text-2xl">{t.dialog.responsibility}</p>
-            <p className="mb-10 text-sm break-all opacity-80">
-              {t.dialog.redirectingTo(pendingUrl)}
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-bg hover:bg-surface-2 hover:shadow-lg hover:-translate-y-[2px] hover:border-text/60 transition-all duration-150"
-                onClick={() => {
-                  setShowDialog(false);
-                  setPendingUrl(null);
-                }}
-              >
-                {t.dialog.cancel}
-              </button>
-              <button
-                type="button"
-                className="rounded-md px-4 py-2 text-xl font-semibold bg-text text-bg hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-text/70 transition-all duration-150"
-                onClick={() => {
-                  const url = pendingUrl;
-                  setShowDialog(false);
-                  setPendingUrl(null);
-                  if (url) {
-                    window.open(url, "_blank", "noopener,noreferrer");
-                  }
-                }}
-              >
-                {t.dialog.continue}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {showCustomDialog && pendingCustomUrl && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-        >
-          <div className="w-full max-w-2xl rounded-3xl bg-bg/95 px-10 py-12 text-text shadow-2xl border border-border">
-            <h2 className="mb-6 text-4xl font-semibold">{t.dialog.title}</h2>
-            <p className="mb-4 text-2xl">
-              {t.dialog.leaving(pendingCustomLabel || t.dialog.defaultLabel)}
-            </p>
-            <p className="mb-10 text-2xl">{t.dialog.responsibility}</p>
-            <p className="mb-10 text-sm break-all opacity-80">
-              {t.dialog.redirectingTo(pendingCustomUrl)}
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-bg hover:bg-surface-2 hover:shadow-lg hover:-translate-y-[2px] hover:border-text/60 transition-all duration-150"
-                onClick={() => {
-                  setShowCustomDialog(false);
-                  setPendingCustomUrl(null);
-                  setPendingCustomLabel("");
-                }}
-              >
-                {t.dialog.cancel}
-              </button>
-              <button
-                type="button"
-                className="rounded-md px-4 py-2 text-xl font-semibold bg-text text-bg hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-text/70 transition-all duration-150"
-                onClick={() => {
-                  const url = pendingCustomUrl;
-                  setShowCustomDialog(false);
-                  setPendingCustomUrl(null);
-                  setPendingCustomLabel("");
-                  if (url) {
-                    window.open(url, "_blank", "noopener,noreferrer");
-                  }
-                }}
-              >
-                {t.dialog.continue}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ExternalLinkDialog {...dialogProps} />
     </main>
   );
 }

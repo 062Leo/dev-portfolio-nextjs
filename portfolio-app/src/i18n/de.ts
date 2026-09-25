@@ -100,7 +100,6 @@ export const de = {
     keys: "Tasten",
     action: "Aktion",
     illustrationAlt: "Zusätzliche Abbildung",
-    continueTo: (label: string) => `Weiter zu ${label}`,
   },
   footer: {
     tagline: "Softwareentwickler mit Fokus auf AI, Automatisierung und interaktive Anwendungen.",

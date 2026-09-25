@@ -100,7 +100,6 @@ export const en: Dictionary = {
     keys: "Keys",
     action: "Action",
     illustrationAlt: "Additional illustration",
-    continueTo: (label: string) => `Continue to ${label}`,
   },
   footer: {
     tagline: "Software developer focused on AI, automation and interactive applications.",

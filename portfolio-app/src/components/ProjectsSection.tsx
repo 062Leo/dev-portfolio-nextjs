@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { ExternalLinkDialog, useExternalLink } from "@/components/ui/ExternalLinkDialog";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { usePortfolioData, useOtherProjects } from "@/data/index";
@@ -8,8 +8,7 @@ import Link from "next/link";
 import { useT } from "@/i18n";
 
 export function ProjectsShowcase() {
-  const [showDialog, setShowDialog] = useState(false);
-  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
+  const { open: openExternalLink, dialogProps } = useExternalLink();
   const t = useT();
 
   const projects = usePortfolioData().projects;
@@ -160,10 +159,7 @@ export function ProjectsShowcase() {
           <button
             type="button"
             className="cosmic-button inline-flex items-center justify-center rounded-full bg-linear-135 from-accent-deep to-accent-deep/70 px-8 py-3 text-sm font-semibold uppercase tracking-wide text-text shadow-glow"
-            onClick={() => {
-              setPendingUrl("https://github.com/062Leo");
-              setShowDialog(true);
-            }}
+            onClick={() => openExternalLink("https://github.com/062Leo", "GitHub")}
           >
             {t.projects.githubCta}
             <ArrowRight size={16} />
@@ -171,45 +167,7 @@ export function ProjectsShowcase() {
         </div>
       </div>
 
-      {showDialog && pendingUrl && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-        >
-          <div className="w-full max-w-2xl rounded-3xl bg-bg/95 px-10 py-12 text-text shadow-2xl border border-border">
-            <h2 className="mb-6 text-4xl font-semibold">{t.dialog.title}</h2>
-            <p className="mb-4 text-2xl">{t.dialog.leaving("GitHub")}</p>
-            <p className="mb-10 text-2xl">{t.dialog.responsibility}</p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-bg hover:bg-surface-2 hover:shadow-lg hover:-translate-y-[2px] hover:border-text/60 transition-all duration-150"
-                onClick={() => {
-                  setShowDialog(false);
-                  setPendingUrl(null);
-                }}
-              >
-                {t.dialog.cancel}
-              </button>
-              <button
-                type="button"
-                className="rounded-md px-4 py-2 text-xl font-semibold bg-text text-bg hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-text/70 transition-all duration-150"
-                onClick={() => {
-                  const url = pendingUrl;
-                  setShowDialog(false);
-                  setPendingUrl(null);
-                  if (url) {
-                    window.open(url, "_blank", "noopener,noreferrer");
-                  }
-                }}
-              >
-                {t.dialog.continue}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ExternalLinkDialog {...dialogProps} />
     </section>
   );
 }

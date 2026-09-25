@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { ExternalLinkDialog, useExternalLink } from "@/components/ui/ExternalLinkDialog";
 import { useProject, type DemoControlsGroup } from "@/data/index";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -20,7 +20,7 @@ const isGroupedControls = (
 };
 
 export function DetailPage({ id }: { id: string }) {
-  const [showDialog, setShowDialog] = useState(false);
+  const { open: openExternalLink, dialogProps } = useExternalLink();
   const t = useT();
   const project = useProject(id);
 
@@ -68,7 +68,7 @@ export function DetailPage({ id }: { id: string }) {
               className="w-full rounded-xl overflow-hidden border-2 border-accent bg-bg cursor-pointer block"
               onClick={() => {
                 if (project.demoLink) {
-                  setShowDialog(true);
+                  openExternalLink(project.demoLink, "itch.io");
                 }
               }}
             >
@@ -183,42 +183,7 @@ export function DetailPage({ id }: { id: string }) {
         )}
       </div>
 
-      {showDialog && project.demoLink && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-        >
-          <div className="w-full max-w-2xl rounded-3xl bg-bg/95 px-10 py-12 text-text shadow-2xl border border-border">
-            <h2 className="mb-6 text-4xl font-semibold">{t.dialog.title}</h2>
-            <p className="mb-4 text-2xl">{t.dialog.leaving("itch.io")}</p>
-            <p className="mb-10 text-2xl">{t.dialog.responsibility}</p>
-            <p className="mb-10 text-sm break-all opacity-80">
-              {t.dialog.redirectingTo(project.demoLink)}
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-bg hover:bg-surface-2 hover:shadow-lg hover:-translate-y-[2px] hover:border-text/60 transition-all duration-150"
-                onClick={() => setShowDialog(false)}
-              >
-                {t.dialog.cancel}
-              </button>
-              <a
-                href={project.demoLink as string}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-md px-4 py-2 text-xl font-semibold bg-text text-bg hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-text/70 transition-all duration-150"
-                onClick={() => {
-                  setShowDialog(false);
-                }}
-              >
-                {t.demo.continueTo("itch.io")}
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
+      <ExternalLinkDialog {...dialogProps} />
     </main>
   );
 }
