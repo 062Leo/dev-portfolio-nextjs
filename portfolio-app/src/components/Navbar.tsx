@@ -101,7 +101,7 @@ export function Navbar() {
           {/* Language Toggle Button */}
           <button
             onClick={toggleLanguage}
-            className="z-50 -m-2.5 p-2.5 focus:outline-none"
+            className="z-50 -m-2.5 p-2.5"
             aria-label={t.nav.toggleLanguage}
           >
             {flag(t.nav.currentLanguage)}
@@ -119,7 +119,11 @@ export function Navbar() {
         <div
           className={cn(
             "fixed inset-0 z-40 flex flex-col items-center justify-center bg-bg/95 backdrop-blur-md transition-all duration-300 md:hidden",
-            isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+            // invisible, not only transparent: the closed menu's links must not take
+            // keyboard focus. visibility is transitioned too, so the fade-out still shows.
+            isMenuOpen
+              ? "pointer-events-auto visible opacity-100"
+              : "pointer-events-none invisible opacity-0",
           )}
         >
           <div className="flex flex-col space-y-2 text-xl">

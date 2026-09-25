@@ -45,7 +45,7 @@ export default function LoginPage() {
                 placeholder={t.login.passwordPlaceholder}
                 required
                 autoFocus
-                className="w-full rounded-md border border-accent/65 bg-transparent px-4 py-2.5 pr-10 text-text outline-none transition-colors focus:border-accent"
+                className="w-full rounded-md border border-accent/65 bg-transparent px-4 py-2.5 pr-10 text-text transition-colors focus:border-accent"
               />
               <button
                 type="button"
@@ -64,7 +64,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={busy}
-              className="w-full flex items-center justify-center gap-2 rounded-full bg-accent/65 px-6 py-2 max-md:min-h-11 font-medium text-text transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-[0.97]"
+              className="w-full flex items-center justify-center gap-2 rounded-full bg-accent/50 px-6 py-2 max-md:min-h-11 font-medium text-text transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed motion-safe:hover:scale-105 motion-safe:active:scale-[0.97]"
             >
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
               {busy ? t.login.verifying : t.login.submit}

@@ -74,7 +74,7 @@ export function ExternalLinkDialog({ link, isOpen, onClose }: ExternalLinkDialog
             <button
               type="button"
               onClick={close}
-              className="inline-flex min-h-11 items-center justify-center rounded-md border border-border px-4 py-2 text-base font-medium text-text transition-all duration-150 hover:-translate-y-[2px] hover:border-text/60 hover:bg-surface-2"
+              className="inline-flex min-h-11 items-center justify-center rounded-md border border-border px-4 py-2 text-base font-medium text-text transition-all duration-150 motion-safe:hover:-translate-y-[2px] hover:border-text/60 hover:bg-surface-2"
             >
               {t.dialog.cancel}
             </button>
@@ -83,7 +83,7 @@ export function ExternalLinkDialog({ link, isOpen, onClose }: ExternalLinkDialog
               target="_blank"
               rel="noopener noreferrer"
               onClick={close}
-              className="inline-flex min-h-11 items-center justify-center rounded-md bg-text px-4 py-2 text-base font-semibold text-bg transition-all duration-150 hover:-translate-y-[2px] hover:ring-2 hover:ring-text/70"
+              className="inline-flex min-h-11 items-center justify-center rounded-md bg-text px-4 py-2 text-base font-semibold text-bg transition-all duration-150 motion-safe:hover:-translate-y-[2px] hover:ring-2 hover:ring-text/70"
             >
               {t.dialog.continue}
             </a>

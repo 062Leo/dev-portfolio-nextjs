@@ -164,6 +164,49 @@ a {
   @apply transition-colors duration-300;
 }
 
+@layer base {
+  /*
+   * Keyboard focus: one visible ring for every interactive element. outline, not
+   * box-shadow, so it also shows on transparent backgrounds and in forced-colours mode;
+   * it follows the element's own border radius. Colour, width and offset are set in
+   * advance and only the style switches on focus, so the transition utilities on these
+   * elements have nothing to animate and the ring appears at once.
+   */
+  a,
+  button,
+  [role="button"],
+  input,
+  summary {
+    outline: 2px none var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  input:focus-visible,
+  summary:focus-visible {
+    outline-style: solid;
+  }
+
+  /*
+   * Reduced motion: animations and transitions jump to their end state. Delays are
+   * dropped too, so an element that fades in from opacity 0 is visible at once.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0s !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      transition-delay: 0s !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;
@@ -212,8 +255,12 @@ a {
 @utility card-hover {
   @apply transition-all duration-300;
   &:hover {
-    transform: translateY(-4px) scale(1.01);
     box-shadow: 0 0 35px color-mix(in srgb, var(--color-accent) 30%, transparent);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    &:hover {
+      transform: translateY(-4px) scale(1.01);
+    }
   }
 }
 
@@ -229,12 +276,17 @@ a {
   @apply bg-accent text-text;
 
   &:hover {
-    transform: scale(1.05);
     box-shadow: 0 0 25px var(--color-accent);
   }
 
-  &:active {
-    transform: scale(0.97);
+  @media (prefers-reduced-motion: no-preference) {
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
   }
 }
 

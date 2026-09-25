@@ -7,7 +7,7 @@ import { expect, test, type Page } from "@playwright/test";
 const TOGGLE = /Sprache wechseln|Toggle language|^Deutsch$|^English$/;
 
 // On mobile the navbar links and the toggle sit in the hamburger menu, which has to be
-// opened first (and stays open while the language switches).
+// opened first. Switching the language refreshes the route and closes it again.
 async function openMenu(page: Page, isMobile: boolean) {
   if (!isMobile) return;
   const openButton = page.getByRole("button", { name: /Menü öffnen|Open menu/ });
@@ -22,7 +22,8 @@ async function languageToggle(page: Page, isMobile: boolean) {
 }
 
 // Links in the navbar; the footer is a navigation landmark too. Role queries skip the
-// variant that is display:none at the current breakpoint, so exactly one link matches.
+// variant that is display:none at the current breakpoint, and the closed mobile menu is
+// invisible, so exactly one link matches.
 function navLink(page: Page, name: string) {
   return page
     .getByRole("navigation")
@@ -33,17 +34,20 @@ function navLink(page: Page, name: string) {
 test("the language toggle switches between German and English", async ({ page, isMobile }) => {
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("lang", "de");
+  await openMenu(page, isMobile);
   await expect(navLink(page, "Über mich")).toHaveCount(1);
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Hallo, ich bin");
 
   await (await languageToggle(page, isMobile)).click();
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await openMenu(page, isMobile);
   await expect(navLink(page, "About")).toHaveCount(1);
   await expect(navLink(page, "Über mich")).toHaveCount(0);
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Hi, I'm");
 
   await (await languageToggle(page, isMobile)).click();
   await expect(page.locator("html")).toHaveAttribute("lang", "de");
+  await openMenu(page, isMobile);
   await expect(navLink(page, "Über mich")).toHaveCount(1);
 });
 
@@ -88,6 +92,7 @@ test.describe("English browser", () => {
   test("gets English on the first paint, without a cookie and without clicking", async ({
     page,
     context,
+    isMobile,
   }) => {
     await context.clearCookies({ name: "lang" });
 
@@ -103,6 +108,7 @@ test.describe("English browser", () => {
 
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await openMenu(page, isMobile);
     await expect(navLink(page, "About")).toHaveCount(1);
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Hi, I'm");
   });

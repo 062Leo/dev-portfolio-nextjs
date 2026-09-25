@@ -41,6 +41,9 @@ export interface PointerOptions {
   size: Size; // the current viewBox size, updated on resize
   tooltip: TooltipController;
   hasTooltipContent: () => boolean;
+  // Called after a drag, a repulsion or a double-click release has let the simulation run
+  // again; under reduced motion the graph settles at once instead of drifting to rest.
+  onRelease: () => void;
 }
 
 export interface PointerHandlers {
@@ -192,6 +195,8 @@ export function createPointerHandlers(opts: PointerOptions): PointerHandlers {
   }
 
   function onPointerUp() {
+    const released = state.dragNode !== null || state.mouseIsDown;
+
     if (state.dragNode) {
       state.dragNode.fx = null;
       state.dragNode.fy = null;
@@ -203,6 +208,8 @@ export function createPointerHandlers(opts: PointerOptions): PointerHandlers {
       state.mouseIsDown = false;
       simulation.alphaTarget(0);
     }
+
+    if (released) opts.onRelease();
 
     if (slowShowTimer !== null) {
       clearTimeout(slowShowTimer);
@@ -227,6 +234,7 @@ export function createPointerHandlers(opts: PointerOptions): PointerHandlers {
       hit.fx = null;
       hit.fy = null;
       simulation.alphaTarget(REHEAT_ALPHA).restart();
+      opts.onRelease();
     }
   }
 

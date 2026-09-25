@@ -82,7 +82,7 @@ export function HomeSection() {
       <button
         type="button"
         onClick={handleScrollClick}
-        className="mt-6 flex flex-col items-center text-accent-2 animate-bounce"
+        className="mt-6 flex flex-col items-center text-accent-2 motion-safe:animate-bounce"
       >
         <span className="mb-1 select-none text-sm">{t.hero.scroll}</span>
         <ArrowDown className="h-5 w-5" />

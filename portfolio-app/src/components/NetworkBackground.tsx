@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { reducedMotionQuery } from "@/lib/motion";
 import { readToken } from "@/lib/theme";
 
 type ShiftState = {
@@ -180,7 +181,7 @@ export function NetworkBackground() {
       context.fill();
     };
 
-    const animate = (now: number) => {
+    const drawFrame = (now: number) => {
       context.globalAlpha = 1;
       context.clearRect(0, 0, width, height);
 
@@ -205,8 +206,20 @@ export function NetworkBackground() {
         drawLines(point);
         drawCircle(point);
       });
+    };
 
+    const animate = (now: number) => {
+      drawFrame(now);
       animationFrameId = window.requestAnimationFrame(animate);
+    };
+
+    // Under reduced motion the network is drawn once and stands still; the loop resumes
+    // when the setting is switched off while the page is open.
+    const motion = reducedMotionQuery();
+    const start = () => {
+      window.cancelAnimationFrame(animationFrameId);
+      if (motion.matches) drawFrame(performance.now());
+      else animationFrameId = window.requestAnimationFrame(animate);
     };
 
     const handleMouseMove = (event: MouseEvent) => {
@@ -220,21 +233,25 @@ export function NetworkBackground() {
       target.x = width / 2;
       target.y = height / 2;
       initialisePoints();
+      // Resizing clears the canvas; the still picture has to be drawn again.
+      if (motion.matches) drawFrame(performance.now());
     };
 
     configureCanvasSize();
     initialisePoints();
     target.x = width / 2;
     target.y = height / 2;
-    animationFrameId = window.requestAnimationFrame(animate);
+    start();
 
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("resize", handleResize);
+    motion.addEventListener("change", start);
 
     return () => {
       window.cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
+      motion.removeEventListener("change", start);
     };
   }, []);
 
