@@ -1,5 +1,5 @@
 // Language codes and the cookie that carries the visitor's choice. Kept free of React and
-// of the dictionaries so the proxy (edge runtime) can import it without pulling in either.
+// of the dictionaries so the proxy (Node.js runtime) can import it without pulling in either.
 
 export const LANGS = ["de", "en"] as const;
 

@@ -77,7 +77,7 @@ Die Sprache (`de`/`en`) steht im Cookie `lang`, einem rein funktionalen Cookie o
 
 ## Metadaten
 
-Die Website ist `noindex`: jede Seite sendet `<meta name="robots" content="noindex, nofollow">`, zusätzlich sperrt `public/robots.txt` alle Crawler. Das Open-Graph-Bild ist `public/Icons/og-image.png`; es liegt bewusst außerhalb des Passwortschutzes, damit Link-Vorschauen es laden können.
+Die Website ist `noindex`: jede Seite sendet `<meta name="robots" content="noindex, nofollow, nocache">`, zusätzlich sperrt `public/robots.txt` alle Crawler. Das Open-Graph-Bild ist `public/Icons/og-image.png`; es liegt bewusst außerhalb des Passwortschutzes, damit Link-Vorschauen es laden können.
 
 ## Security-Header prüfen
 
