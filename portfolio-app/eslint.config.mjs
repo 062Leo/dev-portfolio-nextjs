@@ -14,16 +14,6 @@ const eslintConfig = defineConfig([
       complexity: ["error", 15],
     },
   },
-  // Structural violations left in place until the named follow-up issues restructure the code.
-  // Project detail page: one component renders every optional section (stats, screenshots,
-  // demo, download, code and custom links) plus the screenshot lightbox; complexity 24. The
-  // detail page rework splits it (#85).
-  {
-    files: ["src/components/projects/default.tsx"],
-    rules: {
-      complexity: "off",
-    },
-  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

@@ -1,7 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
+import { de } from "../../src/i18n/de";
 import { PAGES, openAndCollectErrors } from "./pages";
 
 const DETAIL_PAGE = "/projects/ml-agent-bachelor";
+// A project with screenshots, for the gallery and its lightbox.
+const GALLERY_PAGE = "/projects/kryptodash";
 // The longest project title across the German and English data files, and a demo page;
 // both set their title in Rubik Mono One (issue #62).
 const LONGEST_TITLE_PAGE = "/projects/acms";
@@ -95,6 +98,74 @@ test.describe("long project titles", () => {
       ).toEqual([]);
     });
   }
+});
+
+// The detail page is composed for a phone first (issue #85): the action buttons stack at
+// full width, the screenshots stand in one column, and the lightbox is a native dialog.
+test.describe("project detail page", () => {
+  test("stacks its action buttons at full width and 44 px on a phone", async ({
+    page,
+  }, testInfo) => {
+    if (testInfo.project.name !== "mobile") return;
+    await page.goto(DETAIL_PAGE);
+    const buttons = page.getByRole("button", {
+      name: new RegExp(`${de.projectDetail.downloadDemo}|${de.projectDetail.viewCode}`),
+    });
+    await expect(buttons).toHaveCount(2);
+    const boxes = await buttons.evaluateAll((elements) =>
+      elements.map((element) => {
+        const box = element.getBoundingClientRect();
+        const container = element.parentElement!.getBoundingClientRect();
+        return {
+          label: element.textContent?.trim(),
+          height: box.height,
+          share: box.width / container.width,
+        };
+      }),
+    );
+    for (const { label, height, share } of boxes) {
+      expect(height, `${label}: ${Math.round(height)} px high`).toBeGreaterThanOrEqual(44);
+      expect(share, `${label}: ${Math.round(share * 100)} % of the row`).toBeGreaterThanOrEqual(
+        0.9,
+      );
+    }
+  });
+
+  test("shows the screenshots in one column on a phone and three on a desktop", async ({
+    page,
+  }, testInfo) => {
+    await page.goto(GALLERY_PAGE);
+    const gallery = page.getByRole("region", { name: de.projectDetail.screenshots });
+    const thumbnails = gallery.getByRole("button");
+    await expect(thumbnails).toHaveCount(4);
+    const lefts = await thumbnails.evaluateAll((elements) =>
+      elements.map((element) => Math.round(element.getBoundingClientRect().left)),
+    );
+    const columns = new Set(lefts).size;
+    expect(columns, `thumbnail lefts ${lefts.join(", ")}`).toBe(
+      testInfo.project.name === "mobile" ? 1 : 3,
+    );
+  });
+
+  test("opens a screenshot in a lightbox that Escape closes with focus back on the thumbnail", async ({
+    page,
+  }) => {
+    await page.goto(GALLERY_PAGE);
+    const gallery = page.getByRole("region", { name: de.projectDetail.screenshots });
+    const thumbnail = gallery.getByRole("button").first();
+    const caption = await thumbnail.locator("img").getAttribute("alt");
+    const lightbox = page.getByRole("dialog", { name: caption! });
+    // A click before hydration does nothing; retry until the lightbox shows up.
+    await expect(async () => {
+      await thumbnail.click();
+      await expect(lightbox).toBeVisible({ timeout: 1_000 });
+    }).toPass();
+    await expect(lightbox.getByRole("img")).toBeVisible();
+
+    await page.keyboard.press("Escape");
+    await expect(lightbox).toBeHidden();
+    await expect(thumbnail).toBeFocused();
+  });
 });
 
 // The hero is as high as its card plus fixed spacing, not a full screen that grows and

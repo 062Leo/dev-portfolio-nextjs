@@ -91,6 +91,7 @@ export const en: Dictionary = {
     screenshots: "SCREENSHOTS",
     clickMe: "Click me",
     screenshotAlt: "Screenshot",
+    closeScreenshot: "Close screenshot",
     playDemo: "PLAY DEMO",
     downloadDemo: "DOWNLOAD DEMO",
     viewCode: "VIEW CODE",

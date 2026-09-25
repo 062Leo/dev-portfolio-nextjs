@@ -91,6 +91,7 @@ export const de = {
     screenshots: "SCREENSHOTS",
     clickMe: "Anklicken",
     screenshotAlt: "Screenshot",
+    closeScreenshot: "Screenshot schließen",
     playDemo: "DEMO SPIELEN",
     downloadDemo: "DEMO HERUNTERLADEN",
     viewCode: "CODE ANSEHEN",
