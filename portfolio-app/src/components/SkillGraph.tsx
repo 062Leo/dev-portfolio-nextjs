@@ -5,6 +5,8 @@ import { forceSimulation, forceLink, forceManyBody, forceCollide, forceX, forceY
 import type { SimulationNodeDatum, SimulationLinkDatum, Simulation } from "d3-force";
 import { useSkillsData } from "@/data/index";
 import { useT } from "@/i18n";
+import { cn } from "@/lib/utils";
+import { alpha, token, tokenAlpha } from "@/lib/theme";
 import { WobblyRopes } from "./WobblyRopes";
 import type { RopeTarget } from "./WobblyRopes";
 import {
@@ -64,6 +66,8 @@ export function flattenSkillsData(data: SkillsDataNested): Record<string, Record
 //  CATEGORY DEFINITIONS
 // ══════════════════════════════════════════════════════════════════════════════
 
+// One hue per category: a categorical palette that belongs to the graph data, not to the
+// site theme in globals.css. The alpha at the end is rewritten per use (hull, glow, tag).
 const CATEGORIES: { key: CatKey; color: string }[] = [
   { key: "Programmierung", color: "hsla(280, 80%, 55%, 0.25)" }, // Purple
   { key: "Web & UI", color: "hsla(210, 80%, 55%, 0.25)" }, // Blue
@@ -81,6 +85,10 @@ const CATEGORIES: { key: CatKey; color: string }[] = [
   { key: "PM & Agile", color: "hsla(100, 60%, 40%, 0.25)" }, // Forest
 ];
 
+function categoryColor(groupIndex: number): string {
+  return CATEGORIES[groupIndex % CATEGORIES.length].color;
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
 //  RATING SCALE
 // ══════════════════════════════════════════════════════════════════════════════
@@ -94,10 +102,10 @@ const RATING_MAX = 5; // highest possible rating
 
 const RADIUS_MIN = 5; // smallest circle radius (px) for rating 1
 const RADIUS_MAX = 15; // largest circle radius (px) for rating 5
-const NODE_STROKE_COLOR = "rgba(255,255,255,0.2)"; // normal circle stroke
+const NODE_STROKE_COLOR = alpha("white", 20); // normal circle stroke
 const NODE_STROKE_WIDTH = 1; // normal stroke width (px)
 const NODE_HOVER_SCALE = 1.5; // radius multiplier on pointer enter
-const NODE_HOVER_STROKE_COLOR = "rgba(255,255,255,0.8)"; // stroke color on hover
+const NODE_HOVER_STROKE_COLOR = alpha("white", 80); // stroke color on hover
 const NODE_HOVER_STROKE_WIDTH = 2.5; // stroke width on hover (px)
 const NODE_DRAG_HIT_PADDING = 4; // extra px around node for drag hit-test
 const NODE_TRANSITION = "r 0.25s ease, stroke-width 0.25s ease, stroke 0.25s ease"; // CSS transition on hover
@@ -106,7 +114,7 @@ const NODE_TRANSITION = "r 0.25s ease, stroke-width 0.25s ease, stroke 0.25s eas
 //  LINK STYLES
 // ══════════════════════════════════════════════════════════════════════════════
 
-const LINK_STROKE_COLOR = "rgba(192, 184, 213, 0.57)"; // connection line color
+const LINK_STROKE_COLOR = tokenAlpha("text", 57); // connection line color
 const LINK_STROKE_WIDTH = 1; // connection line stroke width (px)
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -145,22 +153,27 @@ const COLLIDE_PADDING = 10; // extra px between node edges for forceCollide
 const REHEAT_ALPHA = 0.2; // alpha / alphaTarget when re-energizing (drag, resize, etc.)
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  RATING COLORS — one constant per rating, set manually as rgba
+//  RATING COLORS — the --color-rating-1 … 5 tokens from globals.css
 // ══════════════════════════════════════════════════════════════════════════════
 
-const RATING_1_COLOR = "rgba(255, 0, 0, 0.51)"; // red
-const RATING_2_COLOR = "rgba(255, 102, 0, 0.54)"; // orange
-const RATING_3_COLOR = "rgba(242, 255, 0, 0.61)"; // yellow
-const RATING_4_COLOR = "rgba(77, 199, 28, 0.79)"; // yellow-green
-const RATING_5_COLOR = "rgb(33, 211, 24)"; // bright green
-
-const RATING_COLORS = [
+// Index = rating. The SVG gets the CSS variable, the JSX the Tailwind classes; both
+// need the full names spelled out so Tailwind can find the classes.
+const RATING_COLORS = ["", ...[1, 2, 3, 4, 5].map((r) => token(`rating-${r}`))];
+const RATING_FILL_CLASS = [
   "",
-  RATING_1_COLOR,
-  RATING_2_COLOR,
-  RATING_3_COLOR,
-  RATING_4_COLOR,
-  RATING_5_COLOR,
+  "bg-rating-1 border-rating-1",
+  "bg-rating-2 border-rating-2",
+  "bg-rating-3 border-rating-3",
+  "bg-rating-4 border-rating-4",
+  "bg-rating-5 border-rating-5",
+];
+const RATING_TEXT_CLASS = [
+  "",
+  "text-rating-1",
+  "text-rating-2",
+  "text-rating-3",
+  "text-rating-4",
+  "text-rating-5",
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -176,7 +189,10 @@ const BOUNDARY_PUSH_FACTOR = 0.3; // push strength when a node crosses the bound
 
 const MOUSE_FORCE_RADIUS = 160; // px range of the repulsion field
 const MOUSE_FORCE_STRENGTH = 20; // max push strength at the cursor centre
-const MOUSE_RIPPLE_COLOR = "rgba(167, 139, 250, 0.69)"; // glow colour for the ripple rings
+const MOUSE_RIPPLE_COLOR = tokenAlpha("accent", 69); // glow colour at the ripple centre
+const MOUSE_RIPPLE_COLOR_MID = tokenAlpha("accent", 15); // glow colour at 60 % radius
+const MOUSE_RIPPLE_COLOR_EDGE = tokenAlpha("accent", 0); // glow colour at the edge
+const MOUSE_RIPPLE_RING_COLOR = tokenAlpha("accent", 45); // stroke of the expanding rings
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  GLOW FILTER (per category)
@@ -202,12 +218,12 @@ const LABEL_FONT_SIZE_MAX = 14; // px für Rating 5
 const LABEL_FONT_FAMILY = "monospace";
 
 // ——  Farben ———————————————————————————————————————————————————————————————————
-const LABEL_COLOR_HOVER = "rgba(255,255,255,1)"; // text-farbe wenn knoten gehovert
+const LABEL_COLOR_HOVER = "white"; // text-farbe wenn knoten gehovert
 
 // ——  Verbindungslinie Label → Knoten —————————————————————————————————————————
-const LABEL_LINE_COLOR = "rgba(192, 184, 213, 0.74)"; // farbe der mini-linie
+const LABEL_LINE_COLOR = tokenAlpha("text", 74); // farbe der mini-linie
 const LABEL_LINE_WIDTH = 1; // strichstärke (px)
-const LABEL_LINE_COLOR_HOVER = "rgb(255, 255, 255)"; // linien-farbe bei hover
+const LABEL_LINE_COLOR_HOVER = "white"; // linien-farbe bei hover
 const LABEL_LINE_WIDTH_HOVER = 1.5; // strichstärke bei hover
 
 // ——  Richtungs‑Priorität (höher = wird zuerst probiert) ——————————————————————
@@ -228,8 +244,6 @@ const LABEL_DIR_PRIORITY: Record<number, number> = {
 // ══════════════════════════════════════════════════════════════════════════════
 
 const CONTAINER_HEIGHT = "clamp(400px, 90vh, 540px)";
-const CONTAINER_BORDER_COLOR = "rgba(167,139,250,0.25)";
-const CONTAINER_BG_COLOR = "rgb(11, 13, 23)";
 
 const HULL_ENABLED = true; // Master‑Schalter  true | false
 const HULL_MIN_NODES = 1; // Gruppe braucht ≥ N Knoten, sonst keine Hülle
@@ -783,8 +797,7 @@ export function SkillGraph() {
     // glow filters per category
     const defs = document.createElementNS(ns, "defs");
     categories.forEach((_cat, i) => {
-      const base = CATEGORIES[i]?.color || "rgba(167,139,250,0.4)";
-      const glowColor = base.replace(/[\d.]+\)$/, `${GLOW_FLOOD_ALPHA})`);
+      const glowColor = categoryColor(i).replace(/[\d.]+\)$/, `${GLOW_FLOOD_ALPHA})`);
       const filter = document.createElementNS(ns, "filter");
       filter.setAttribute("id", `sg-glow-${i}`);
       filter.setAttribute("x", "-50%");
@@ -800,16 +813,17 @@ export function SkillGraph() {
       defs.appendChild(filter);
     });
     // ── mouse ripple radial gradient ─────────────────────────────────
-    const rippleBase = MOUSE_RIPPLE_COLOR.replace(/[\d.]+\)$/, "");
+    // Token colours are CSS values (var / color-mix), which SVG only resolves in
+    // styles, not in presentation attributes.
     const rippleGrad = document.createElementNS(ns, "radialGradient");
     rippleGrad.setAttribute("id", "sg-mouse-ripple-grad");
     rippleGrad.setAttribute("cx", "50%");
     rippleGrad.setAttribute("cy", "50%");
     rippleGrad.setAttribute("r", "50%");
     rippleGrad.innerHTML = [
-      `<stop offset="0%"   stop-color="${MOUSE_RIPPLE_COLOR}"/>`,
-      `<stop offset="60%"  stop-color="${rippleBase}0.15)"/>`,
-      `<stop offset="100%" stop-color="${rippleBase}0)"/>`,
+      `<stop offset="0%"   style="stop-color: ${MOUSE_RIPPLE_COLOR}"/>`,
+      `<stop offset="60%"  style="stop-color: ${MOUSE_RIPPLE_COLOR_MID}"/>`,
+      `<stop offset="100%" style="stop-color: ${MOUSE_RIPPLE_COLOR_EDGE}"/>`,
     ].join("");
     defs.appendChild(rippleGrad);
 
@@ -830,7 +844,7 @@ export function SkillGraph() {
       }
       .sg-ripple-ring {
         fill: none;
-        stroke: rgba(167,139,250,0.45);
+        stroke: ${MOUSE_RIPPLE_RING_COLOR};
         animation: sg-ripple-ring 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
       }
       .sg-ripple-ring:nth-child(1) { animation-delay: 0s; }
@@ -877,7 +891,7 @@ export function SkillGraph() {
     const linkEls: SVGLineElement[] = [];
     for (let i = 0; i < links.length; i++) {
       const line = document.createElementNS(ns, "line");
-      line.setAttribute("stroke", LINK_STROKE_COLOR);
+      line.style.stroke = LINK_STROKE_COLOR;
       line.setAttribute("stroke-width", String(LINK_STROKE_WIDTH));
       linkLayer.appendChild(line);
       linkEls.push(line);
@@ -893,8 +907,8 @@ export function SkillGraph() {
       const fs = labelFontSize(n.rating);
       const circle = document.createElementNS(ns, "circle");
       circle.setAttribute("r", String(r));
-      circle.setAttribute("fill", ratingColor(n.rating));
-      circle.setAttribute("stroke", NODE_STROKE_COLOR);
+      circle.style.fill = ratingColor(n.rating);
+      circle.style.stroke = NODE_STROKE_COLOR;
       circle.setAttribute("stroke-width", String(NODE_STROKE_WIDTH));
       circle.setAttribute("filter", `url(#sg-glow-${n.groupIndex})`);
       circle.style.cursor = "grab";
@@ -902,7 +916,7 @@ export function SkillGraph() {
 
       // ── connecting line (node edge → label) ───────────────────────────
       const line = document.createElementNS(ns, "line");
-      line.setAttribute("stroke", LABEL_LINE_COLOR);
+      line.style.stroke = LABEL_LINE_COLOR;
       line.setAttribute("stroke-width", String(LABEL_LINE_WIDTH));
       line.setAttribute("pointer-events", "none");
       labelLayer.appendChild(line);
@@ -913,7 +927,7 @@ export function SkillGraph() {
       text.textContent = n.name;
       text.setAttribute("text-anchor", "middle");
       text.setAttribute("dominant-baseline", "middle");
-      text.setAttribute("fill", ratingColor(n.rating));
+      text.style.fill = ratingColor(n.rating);
       text.setAttribute("font-size", String(fs));
       text.setAttribute("font-family", LABEL_FONT_FAMILY);
       text.setAttribute("pointer-events", "none");
@@ -924,13 +938,13 @@ export function SkillGraph() {
       // ── hover: highlight node + its label + its connector line ─────────
       circle.addEventListener("pointerenter", () => {
         circle.setAttribute("r", String(r * NODE_HOVER_SCALE));
-        circle.setAttribute("stroke", NODE_HOVER_STROKE_COLOR);
+        circle.style.stroke = NODE_HOVER_STROKE_COLOR;
         circle.setAttribute("stroke-width", String(NODE_HOVER_STROKE_WIDTH));
         circle.style.cursor = "grab";
-        text.setAttribute("fill", LABEL_COLOR_HOVER);
+        text.style.fill = LABEL_COLOR_HOVER;
         text.setAttribute("font-weight", "bold");
         text.setAttribute("font-size", String(fs * 1.2));
-        labelLineEls[ni].setAttribute("stroke", LABEL_LINE_COLOR_HOVER);
+        labelLineEls[ni].style.stroke = LABEL_LINE_COLOR_HOVER;
         labelLineEls[ni].setAttribute("stroke-width", String(LABEL_LINE_WIDTH_HOVER));
 
         // ── cancel lingering timer, then show tooltip ──────────────────
@@ -961,13 +975,13 @@ export function SkillGraph() {
       });
       circle.addEventListener("pointerleave", () => {
         circle.setAttribute("r", String(r));
-        circle.setAttribute("stroke", NODE_STROKE_COLOR);
+        circle.style.stroke = NODE_STROKE_COLOR;
         circle.setAttribute("stroke-width", String(NODE_STROKE_WIDTH));
         circle.style.cursor = "default";
-        text.setAttribute("fill", ratingColor(n.rating));
+        text.style.fill = ratingColor(n.rating);
         text.removeAttribute("font-weight");
         text.setAttribute("font-size", String(fs));
-        labelLineEls[ni].setAttribute("stroke", LABEL_LINE_COLOR);
+        labelLineEls[ni].style.stroke = LABEL_LINE_COLOR;
         labelLineEls[ni].setAttribute("stroke-width", String(LABEL_LINE_WIDTH));
 
         // ── tooltip: 4‑second linger on leave ──────────────────────────
@@ -998,7 +1012,7 @@ export function SkillGraph() {
         const groupNodes = nodes.filter((n) => n.groupIndex === gi);
         if (groupNodes.length < HULL_MIN_NODES) continue;
 
-        const baseColor = CATEGORIES[gi]?.color || "rgba(167,139,250,0.25)";
+        const baseColor = categoryColor(gi);
         const fillColor = baseColor.replace(/[\d.]+\)$/, `${HULL_FILL_OPACITY})`);
         const strokeColor = baseColor.replace(/[\d.]+\)$/, `${HULL_STROKE_OPACITY})`);
 
@@ -1767,21 +1781,14 @@ export function SkillGraph() {
   return (
     <section ref={sectionRef} id="skills" className="relative w-full py-16 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
-        <h2
-          className="mb-6 text-center text-3xl font-bold md:text-4xl"
-          style={{ color: "rgba(239,68,68,1)", textShadow: "0 0 20px rgba(239,68,68,0.35)" }}
-        >
+        <h2 className="mb-6 text-center text-3xl font-bold text-accent-2 text-shadow-glow text-shadow-accent-2/35 md:text-4xl">
           Skills &amp; Expertise
         </h2>
       </div>
       <div
         ref={containerRef}
-        className="relative mx-auto w-full max-w-7xl overflow-hidden rounded-xl border"
-        style={{
-          height: CONTAINER_HEIGHT,
-          borderColor: CONTAINER_BORDER_COLOR,
-          backgroundColor: CONTAINER_BG_COLOR,
-        }}
+        className="relative mx-auto w-full max-w-7xl overflow-hidden rounded-xl border border-accent/25 bg-bg"
+        style={{ height: CONTAINER_HEIGHT }}
       >
         <svg ref={svgRef} className="h-full w-full" />
         <WobblyRopes
@@ -1794,58 +1801,27 @@ export function SkillGraph() {
         {/* ── Tooltip (sub‑entries of hovered / dragged node) ──────── */}
         <div
           ref={tooltipRef}
-          className="absolute z-50 pointer-events-none"
-          style={{
-            display: tooltipContent ? "block" : "none",
-            color: "rgba(213,220,232,0.9)",
-            backgroundColor: "rgba(11,13,23,0.95)",
-            border: "1px solid rgba(167,139,250,0.3)",
-            borderRadius: "8px",
-            padding: "8px 12px",
-            fontFamily: "monospace",
-            fontSize: "11px",
-            lineHeight: "1.6",
-            minWidth: "140px",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
-            whiteSpace: "nowrap",
-          }}
+          className="absolute z-50 min-w-[140px] whitespace-nowrap rounded-lg border border-accent/30 bg-bg/95 px-3 py-2 font-mono text-[11px] leading-[1.6] text-text/90 shadow-[0_4px_20px] shadow-black/50 pointer-events-none"
+          style={{ display: tooltipContent ? "block" : "none" }}
         >
           {tooltipContent && (
             <>
               {tooltipContent.direct ? (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: "16px",
-                    color: "rgba(255,255,255,0.95)",
-                  }}
-                >
-                  <span style={{ fontWeight: "bold" }}>{tooltipContent.name}</span>
+                <div className="flex justify-between gap-4 text-white/95">
+                  <span className="font-bold">{tooltipContent.name}</span>
                   <span
-                    style={{ color: ratingColor(tooltipContent.entries[0][1]), fontWeight: "bold" }}
+                    className={cn("font-bold", RATING_TEXT_CLASS[tooltipContent.entries[0][1]])}
                   >
                     {tooltipContent.entries[0][1]}
                   </span>
                 </div>
               ) : (
                 <>
-                  <div
-                    style={{
-                      fontWeight: "bold",
-                      marginBottom: "4px",
-                      color: "rgba(255,255,255,0.95)",
-                    }}
-                  >
-                    {tooltipContent.name}
-                  </div>
+                  <div className="mb-1 font-bold text-white/95">{tooltipContent.name}</div>
                   {tooltipContent.entries.map(([entryName, entryRating]) => (
-                    <div
-                      key={entryName}
-                      style={{ display: "flex", justifyContent: "space-between", gap: "16px" }}
-                    >
+                    <div key={entryName} className="flex justify-between gap-4">
                       <span>{entryName}</span>
-                      <span style={{ color: ratingColor(entryRating), fontWeight: "bold" }}>
+                      <span className={cn("font-bold", RATING_TEXT_CLASS[entryRating])}>
                         {entryRating}
                       </span>
                     </div>
@@ -1861,34 +1837,28 @@ export function SkillGraph() {
       <div className="container mx-auto max-w-7xl px-4 mt-6">
         {/* Rating row */}
         <div className="flex flex-col items-center gap-1.5">
-          <span className="text-xs" style={{ color: "rgba(213,220,232,0.6)" }}>
-            {t.skills.rating}
-          </span>
+          <span className="text-xs text-text-muted">{t.skills.rating}</span>
           <div className="flex flex-wrap items-center justify-center gap-2">
-            {[1, 2, 3, 4, 5].map((r) => {
-              const color = ratingColor(r);
-              return (
-                <button
-                  key={r}
-                  onClick={() => {
-                    setFilterToggles((prev) => {
-                      const next = [...prev];
-                      next[r] = !next[r];
-                      return next;
-                    });
-                  }}
-                  className="rounded px-3 py-1 font-mono text-sm font-bold transition-all duration-150"
-                  style={{
-                    backgroundColor: filterToggles[r] ? color : "rgba(30,30,40,0.6)",
-                    color: filterToggles[r] ? "#111" : "rgba(150,150,160,0.5)",
-                    border: `1px solid ${filterToggles[r] ? color : "rgba(60,60,70,0.4)"}`,
-                    opacity: filterToggles[r] ? 1 : 0.55,
-                  }}
-                >
-                  {r}
-                </button>
-              );
-            })}
+            {[1, 2, 3, 4, 5].map((r) => (
+              <button
+                key={r}
+                onClick={() => {
+                  setFilterToggles((prev) => {
+                    const next = [...prev];
+                    next[r] = !next[r];
+                    return next;
+                  });
+                }}
+                className={cn(
+                  "rounded border px-3 py-1 font-mono text-sm font-bold transition-all duration-150",
+                  filterToggles[r]
+                    ? `${RATING_FILL_CLASS[r]} text-bg`
+                    : "border-border bg-surface-2 text-text-muted opacity-55",
+                )}
+              >
+                {r}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -1896,25 +1866,14 @@ export function SkillGraph() {
         <div className="flex flex-wrap items-center justify-center gap-3 mt-3">
           <button
             onClick={applyFilter}
-            className="rounded px-4 py-1 font-mono text-xs font-semibold transition-all duration-150"
-            style={{
-              backgroundColor: "rgba(99,102,241,0.6)",
-              color: "#fff",
-              border: "1px solid rgba(99,102,241,0.7)",
-              cursor: "pointer",
-            }}
+            className="cursor-pointer rounded border border-accent/70 bg-accent/60 px-4 py-1 font-mono text-xs font-semibold text-white transition-all duration-150"
           >
             {t.skills.applyFilter}
           </button>
           {filterActive && (
             <button
               onClick={resetFilter}
-              className="rounded px-3 py-1 font-mono text-xs transition-all duration-150"
-              style={{
-                backgroundColor: "rgba(30,30,40,0.6)",
-                color: "rgba(213,220,232,0.6)",
-                border: "1px solid rgba(99,102,241,0.3)",
-              }}
+              className="rounded border border-accent/30 bg-surface-2 px-3 py-1 font-mono text-xs text-text-muted transition-all duration-150"
             >
               {t.skills.reset}
             </button>

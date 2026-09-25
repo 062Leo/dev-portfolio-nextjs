@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useCallback } from "react";
+import { readToken } from "@/lib/theme";
 
 interface RopePoint {
   x: number;
@@ -36,7 +37,6 @@ interface WobblyRopesProps {
   stiffness?: number;
   segments?: number;
   lineWidth?: number;
-  defaultColor?: string;
 }
 
 export const WobblyRopes: React.FC<WobblyRopesProps> = ({
@@ -46,7 +46,6 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
   stiffness = 0.25,
   segments = 10,
   lineWidth = 3,
-  defaultColor = "rgba(106,176,112,0.45)",
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ropeStatesRef = useRef<Map<number, RopeState>>(new Map());
@@ -118,6 +117,8 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
     if (!ctx) return;
 
     let animationFrameId: number;
+    // A rope without a category colour (never the case today) is drawn in the accent.
+    const fallbackColor = readToken("accent");
 
     const updatePhysics = () => {
       const targets = ropeTargetsRef.current;
@@ -208,7 +209,7 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
         const { points } = state;
         if (points.length === 0) continue;
 
-        const color = colors.get(gi) || defaultColor;
+        const color = colors.get(gi) || fallbackColor;
 
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y);
@@ -234,7 +235,7 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [syncRopeStates, ropeTargetsRef, damping, stiffness, colors, defaultColor, lineWidth]);
+  }, [syncRopeStates, ropeTargetsRef, damping, stiffness, colors, lineWidth]);
 
   return (
     <canvas

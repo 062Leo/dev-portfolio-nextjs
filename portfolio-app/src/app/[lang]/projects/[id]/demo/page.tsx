@@ -33,7 +33,7 @@ export default async function ProjectDemoPage({
   if (!isLang(lang) || !demoProjectIds(lang).includes(id)) notFound();
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
+    <div className="relative min-h-screen overflow-x-hidden bg-bg text-text">
       <NetworkBackground />
       <Navbar />
 

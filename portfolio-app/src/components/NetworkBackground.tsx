@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { getColor } from "@/components/colors";
+import { readToken } from "@/lib/theme";
 
 type ShiftState = {
   startX: number;
@@ -57,9 +57,10 @@ export function NetworkBackground() {
     const target: Target = { x: 0, y: 0 };
     let animationFrameId = 0;
     let points: Point[] = [];
-    const colors = getColor(true);
-    const strokeBase = colors.networkStroke;
-    const circleBase = colors.networkCircle;
+    // Canvas colours come from the tokens in globals.css; the per-point fade is drawn
+    // with globalAlpha.
+    const strokeColor = readToken("accent-2");
+    const circleColor = readToken("sky");
 
     const getDistance = (p1: Target, p2: Target) => {
       const dx = p1.x - p2.x;
@@ -158,12 +159,12 @@ export function NetworkBackground() {
         return;
       }
 
+      context.globalAlpha = point.active;
+      context.strokeStyle = strokeColor;
       point.closest.forEach((closestPoint) => {
         context.beginPath();
         context.moveTo(point.x, point.y);
         context.lineTo(closestPoint.x, closestPoint.y);
-        // Replace the alpha value in the rgba string
-        context.strokeStyle = strokeBase.replace(/[\d.]+\)$/, `${point.active})`);
         context.stroke();
       });
     };
@@ -172,14 +173,15 @@ export function NetworkBackground() {
       if (!point.circle.active) {
         return;
       }
+      context.globalAlpha = point.circle.active;
+      context.fillStyle = circleColor;
       context.beginPath();
       context.arc(point.x, point.y, point.circle.radius, 0, Math.PI * 2, false);
-      // Replace the alpha value in the rgba string
-      context.fillStyle = circleBase.replace(/[\d.]+\)$/, `${point.circle.active})`);
       context.fill();
     };
 
     const animate = (now: number) => {
+      context.globalAlpha = 1;
       context.clearRect(0, 0, width, height);
 
       points.forEach((point) => {
@@ -237,10 +239,7 @@ export function NetworkBackground() {
   }, []);
 
   return (
-    <div
-      className="pointer-events-none fixed inset-0 z-0"
-      style={{ background: getColor(true).networkBackground }}
-    >
+    <div className="network-backdrop pointer-events-none fixed inset-0 z-0">
       <canvas ref={canvasRef} className="h-full w-full" />
     </div>
   );

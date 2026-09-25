@@ -17,7 +17,7 @@ export async function generateMetadata({
 
 export default function ProjectsPage() {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
+    <div className="relative min-h-screen overflow-x-hidden bg-bg text-text">
       <NetworkBackground />
       <Navbar />
 

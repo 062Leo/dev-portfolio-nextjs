@@ -5,15 +5,9 @@ import { renderMarkdownText } from "@/lib/markdown";
 interface ProjectVideosProps {
   videoBig?: string;
   videos: ProjectImage[] | undefined;
-  colors: {
-    boomforceScreenshotsTitleColor: string;
-    boomforceScreenshotsBorder: string;
-    boomforceScreenshotsBackground: string;
-    boomforceProjectDescriptionText: string;
-  };
 }
 
-const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors }) => {
+const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
   const hasBigVideo = !!videoBig && videoBig.trim() !== "";
   const hasVideos = !!videos && videos.length > 0;
 
@@ -57,20 +51,11 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors 
     <div className="pt-1 space-y-8">
       {hasBigVideo && (
         <div>
-          <h3
-            className="mb-6 text-2xl font-semibold font-press-start text-center"
-            style={{ color: colors.boomforceScreenshotsTitleColor }}
-          >
+          <h3 className="mb-6 text-2xl font-semibold font-press-start text-center text-accent-2-light">
             VIDEO
           </h3>
           <div className="flex justify-center">
-            <div
-              className="aspect-video w-full max-w-4xl rounded-xl overflow-hidden border-2"
-              style={{
-                borderColor: colors.boomforceScreenshotsBorder,
-                backgroundColor: colors.boomforceScreenshotsBackground,
-              }}
-            >
+            <div className="aspect-video w-full max-w-4xl rounded-xl overflow-hidden border-2 border-accent bg-bg">
               <video
                 src={videoBig}
                 preload="auto"
@@ -86,35 +71,21 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors 
 
       {hasVideos && (
         <>
-          <h3
-            className="mb-8 text-2xl font-semibold font-press-start text-center"
-            style={{ color: colors.boomforceScreenshotsTitleColor }}
-          >
+          <h3 className="mb-8 text-2xl font-semibold font-press-start text-center text-accent-2-light">
             DETAILS
           </h3>
           <div className="space-y-8 md:space-y-10">
             {videos!.filter(isValidVideo).map((video, index) => (
               <div
                 key={index}
-                className={`relative flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-4 md:gap-8 p-4 rounded-lg group`}
-                style={{ backgroundColor: "rgba(72, 51, 95, 0.25)" }}
+                className={`relative flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-4 md:gap-8 p-4 rounded-lg group bg-accent/10`}
               >
                 {/* Connecting line */}
-                <div
-                  className="hidden md:block absolute top-1/2 left-1/2 w-12 h-0.5 -translate-x-1/2 -translate-y-1/2 z-0"
-                  style={{ backgroundColor: colors.boomforceScreenshotsBorder }}
-                ></div>
+                <div className="hidden md:block absolute top-1/2 left-1/2 w-12 h-0.5 -translate-x-1/2 -translate-y-1/2 z-0 bg-accent"></div>
 
                 {/* Video container - 4:3 aspect ratio */}
                 <div className="w-full md:w-1/2 p-2 relative z-10">
-                  <div
-                    className="rounded-lg overflow-hidden h-full transition-all duration-300 group-hover:shadow-lg"
-                    style={{
-                      border: `1px solid ${colors.boomforceScreenshotsBorder}`,
-                      backgroundColor: colors.boomforceScreenshotsBackground,
-                      aspectRatio: "4/3",
-                    }}
-                  >
+                  <div className="rounded-lg overflow-hidden h-full aspect-[4/3] border border-accent bg-bg transition-all duration-300 group-hover:shadow-lg">
                     <video
                       ref={(el) => {
                         videoRefs.current[index] = el;
@@ -133,20 +104,9 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos, colors 
                 {/* Text container */}
                 <div className="w-full md:w-1/2 p-2 flex items-center relative z-10">
                   {video.caption && (
-                    <div
-                      className="w-full p-6 rounded-lg h-full flex items-center transition-all duration-300 group-hover:shadow-lg"
-                      style={{
-                        backgroundColor: colors.boomforceScreenshotsBackground,
-                        border: `1px solid ${colors.boomforceScreenshotsBorder}`,
-                        boxShadow:
-                          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-                      }}
-                    >
+                    <div className="w-full p-6 rounded-lg h-full flex items-center border border-accent bg-bg shadow-md transition-all duration-300 group-hover:shadow-lg">
                       <div className="w-full text-sm md:text-base">
-                        {renderMarkdownText(
-                          video.caption,
-                          colors.boomforceProjectDescriptionText,
-                        ) || video.caption}
+                        {renderMarkdownText(video.caption, "text-text") || video.caption}
                       </div>
                     </div>
                   )}

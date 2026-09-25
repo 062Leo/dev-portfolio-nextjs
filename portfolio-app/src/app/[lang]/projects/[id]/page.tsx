@@ -43,7 +43,7 @@ export default async function ProjectsPage({
   const DetailComponent = DefaultDetailPage;
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
+    <div className="relative min-h-screen overflow-x-hidden bg-bg text-text">
       <NetworkBackground />
       <Navbar />
 

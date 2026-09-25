@@ -16,14 +16,62 @@
   font-display: swap;
 }
 
-@theme {
-  --color-border: var(--border);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-card: var(--card);
+/*
+ * Colour tokens. This block is the whole colour system: components only use the
+ * Tailwind utilities generated from it (bg-bg, text-text-muted, border-accent/30, …).
+ * SVG and canvas code reads the same variables through src/lib/theme.ts.
+ * "static" keeps every variable in the CSS output, including those only read from
+ * JavaScript. The theme is dark only.
+ */
+@theme static {
+  /* Surfaces */
+  --color-bg: #0b0d17;
+  --color-surface: #0b111e;
+  --color-surface-2: #161721;
+  --color-backdrop: #171236;
+  --color-border: #262e42;
 
+  /* Text. text-muted is opaque and keeps 4.5:1 on bg (see tests/unit/theme.test.ts). */
+  --color-text: #d5dce8;
+  --color-text-muted: #848994;
+
+  /* Accents: the purple, the red and their darker / lighter companions */
+  --color-accent: #a78bfa;
+  --color-accent-deep: #691e9b;
+  --color-accent-2: #ef4444;
+  --color-accent-2-light: #f87171;
+  --color-accent-2-deep: #832828;
+
+  /* Single-purpose colours */
+  --color-success: #4ade80;
+  --color-cyan: #22d3ee;
+  --color-gold: #facc15;
+  --color-sky: #9cd9f9;
+
+  /* Skill rating scale 1 (weak) to 5 (strong), used by the skills graph and its filter */
+  --color-rating-1: rgba(255, 0, 0, 0.51);
+  --color-rating-2: rgba(255, 102, 0, 0.54);
+  --color-rating-3: rgba(242, 255, 0, 0.61);
+  --color-rating-4: rgba(77, 199, 28, 0.79);
+  --color-rating-5: rgb(33, 211, 24);
+
+  /* Shadows */
+  --shadow-glow: 0 0 20px color-mix(in srgb, var(--color-accent) 50%, transparent);
+  --shadow-glow-soft: 0 0 30px color-mix(in srgb, var(--color-accent) 15%, transparent);
+  --shadow-card: 0 25px 60px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  --shadow-hero:
+    0 0 25px color-mix(in srgb, var(--color-accent-2) 50%, transparent),
+    0 0 45px color-mix(in srgb, var(--color-accent) 40%, transparent);
+  --text-shadow-glow:
+    0 0 15px color-mix(in srgb, var(--color-accent) 30%, transparent),
+    0 0 25px color-mix(in srgb, var(--color-accent) 30%, transparent);
+
+  /* Display fonts of the project pages (font-rubik, font-press-start) */
+  --font-rubik: "Rubik Mono One", sans-serif;
+  --font-press-start: "Press Start 2P", cursive;
+}
+
+@theme {
   --animate-float: float 6s ease-in-out infinite;
   --animate-pulse-subtle: pulse-subtle 4s ease-in-out infinite;
   --animate-fade-in: fade-in 0.7s ease-out forwards;
@@ -82,10 +130,10 @@
   @keyframes glow-pulse {
     0%,
     100% {
-      box-shadow: 0 0 15px rgba(167, 139, 250, 0.2);
+      box-shadow: 0 0 15px color-mix(in srgb, var(--color-accent) 20%, transparent);
     }
     50% {
-      box-shadow: 0 0 30px rgba(167, 139, 250, 0.45);
+      box-shadow: 0 0 30px color-mix(in srgb, var(--color-accent) 45%, transparent);
     }
   }
 
@@ -106,7 +154,7 @@ html {
 }
 
 body {
-  @apply bg-background text-foreground transition-colors duration-300 antialiased;
+  @apply bg-bg text-text transition-colors duration-300 antialiased;
   font-feature-settings:
     "rlig" 1,
     "calt" 1;
@@ -161,36 +209,51 @@ a {
   font-size: clamp(1rem, 1.5vw, 1.5rem);
 }
 
-@utility text-glow {
-  @apply relative;
-  text-shadow: 0 0 10px var(--primary);
-}
-
 @utility card-hover {
   @apply transition-all duration-300;
   &:hover {
     transform: translateY(-4px) scale(1.01);
-    box-shadow: 0 0 35px rgba(167, 139, 250, 0.3);
+    box-shadow: 0 0 35px color-mix(in srgb, var(--color-accent) 30%, transparent);
   }
 }
 
 @utility gradient-border {
   @apply relative rounded-md;
-  background: linear-gradient(to right, var(--card), var(--card));
+  background: linear-gradient(to right, var(--color-surface), var(--color-surface));
   background-clip: padding-box;
   border: 1px solid transparent;
 }
 
 @utility cosmic-button {
   @apply rounded-full px-6 py-2 font-medium transition-all duration-300;
-  @apply bg-primary text-primary-foreground;
+  @apply bg-accent text-text;
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 25px var(--primary);
+    box-shadow: 0 0 25px var(--color-accent);
   }
 
   &:active {
     transform: scale(0.97);
   }
+}
+
+/* Fixed page backdrop behind the network canvas: purple centre fading to black. */
+@utility network-backdrop {
+  background: radial-gradient(circle at center, var(--color-backdrop), black);
+}
+
+/* Red and purple light spots behind the hero box. */
+@utility hero-backdrop {
+  background-image:
+    radial-gradient(
+      circle at 20% 20%,
+      color-mix(in srgb, var(--color-accent-2) 35%, transparent),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 0%,
+      color-mix(in srgb, var(--color-accent) 40%, transparent),
+      transparent 50%
+    );
 }

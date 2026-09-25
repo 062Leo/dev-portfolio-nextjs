@@ -6,7 +6,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
-import { useThemeColors, applyThemeColors } from "@/components/colors";
 import { useLanguage } from "@/context/LanguageContext";
 import { useT, type Lang } from "@/i18n";
 
@@ -15,10 +14,8 @@ const OTHER_LANGUAGE: Record<Lang, Lang> = { de: "en", en: "de" };
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // theme is always dark
   const { language, setLanguage } = useLanguage();
   const t = useT();
-  const colors = useThemeColors(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,14 +39,6 @@ export function Navbar() {
     };
   }, [isMenuOpen]);
 
-  useEffect(() => {
-    // ensure CSS variables / classes for dark theme are applied
-    if (typeof document !== "undefined") {
-      document.documentElement.classList.add("dark");
-    }
-    applyThemeColors(true);
-  }, []);
-
   const toggleLanguage = () => {
     setLanguage(OTHER_LANGUAGE[language]);
   };
@@ -58,14 +47,7 @@ export function Navbar() {
   // next to it does, so the image is decorative there.
   const flag = (alt: string) => (
     <div className="relative">
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300"
-        style={{
-          width: "1.8rem",
-          height: "1.8rem",
-          backgroundColor: colors.languageToggleBgColor,
-        }}
-      />
+      <div className="absolute top-1/2 left-1/2 size-[1.8rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white transition-all duration-300" />
       <div className="relative h-6 w-6 overflow-hidden rounded-full z-10">
         <Image
           src={`/Icons/${language}_flag.png`}
@@ -90,26 +72,14 @@ export function Navbar() {
     <nav
       className={cn(
         "fixed z-40 w-full transition-all duration-300",
-        isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-sm" : "py-5",
+        isScrolled ? "py-3 bg-bg/80 backdrop-blur-md shadow-sm" : "py-5",
       )}
-      style={{ backgroundColor: isScrolled ? `${colors.navbarBackground}cc` : "transparent" }}
     >
       <div className="container grid grid-cols-[1fr_auto_1fr] items-center">
         <Link href="/" className="flex items-center text-xl font-bold group">
           <span className="relative z-10 flex items-baseline">
-            <span
-              className="text-glow transition-colors duration-300"
-              style={{ color: colors.navbarTitleColor, textShadow: colors.navbarTitleGlow }}
-            >
-              leo
-            </span>
-            <span
-              className="text-glow transition-all duration-300"
-              style={{
-                color: colors.navbarLinkHover,
-                textShadow: colors.navbarTitleGlow,
-              }}
-            >
+            <span className="text-text text-shadow-glow transition-colors duration-300">leo</span>
+            <span className="text-accent-2-light text-shadow-glow transition-all duration-300">
               {".dev"}
             </span>
           </span>
@@ -120,10 +90,7 @@ export function Navbar() {
             <Link
               key={item.name}
               href={item.href}
-              className="transition-colors duration-300"
-              style={{ color: colors.navbarLinkText }}
-              onMouseEnter={(event) => (event.currentTarget.style.color = colors.navbarLinkHover)}
-              onMouseLeave={(event) => (event.currentTarget.style.color = colors.navbarLinkText)}
+              className="text-text transition-colors duration-300 hover:text-accent-2-light"
             >
               {item.name}
             </Link>
@@ -143,19 +110,17 @@ export function Navbar() {
 
         <button
           onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="z-50 p-2 md:hidden"
+          className="z-50 p-2 text-text md:hidden"
           aria-label={isMenuOpen ? t.nav.closeMenu : t.nav.openMenu}
-          style={{ color: colors.navbarTitleColor }}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
         <div
           className={cn(
-            "fixed inset-0 z-40 flex flex-col items-center justify-center bg-background/95 backdrop-blur-md transition-all duration-300 md:hidden",
+            "fixed inset-0 z-40 flex flex-col items-center justify-center bg-bg/95 backdrop-blur-md transition-all duration-300 md:hidden",
             isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
           )}
-          style={{ backgroundColor: colors.navbarMenuBackdrop }}
         >
           <div className="flex flex-col space-y-8 text-xl">
             {navItems.map((item) => (
@@ -163,10 +128,7 @@ export function Navbar() {
                 key={item.name}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="transition-colors duration-300"
-                style={{ color: colors.navbarMenuText }}
-                onMouseEnter={(event) => (event.currentTarget.style.color = colors.navbarLinkHover)}
-                onMouseLeave={(event) => (event.currentTarget.style.color = colors.navbarMenuText)}
+                className="text-text transition-colors duration-300 hover:text-accent-2-light"
               >
                 {item.name}
               </Link>
@@ -176,8 +138,7 @@ export function Navbar() {
             <button
               type="button"
               onClick={toggleLanguage}
-              className="flex min-h-11 w-full items-center justify-center gap-3 transition-colors duration-300"
-              style={{ color: colors.navbarMenuText }}
+              className="flex min-h-11 w-full items-center justify-center gap-3 text-text transition-colors duration-300"
             >
               {flag("")}
               <span>{t.nav.currentLanguage}</span>

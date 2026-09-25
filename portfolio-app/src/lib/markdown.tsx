@@ -1,28 +1,23 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 
-export function renderMarkdownText(text: string, color: string) {
+// Renders a small markdown subset: blank line = paragraph, newline = line break,
+// **text** = bold. The optional class goes on every paragraph (e.g. a text colour).
+export function renderMarkdownText(text: string, className?: string) {
   if (!text) return null;
 
   return text.split("\n\n").map((paragraph, pIndex) => {
     const lines = paragraph.split("\n");
 
     return (
-      <p key={pIndex} className="mb-4 last:mb-0">
+      <p key={pIndex} className={cn("mb-4 last:mb-0", className)}>
         {lines.map((line, lineIndex) => (
           <span key={lineIndex}>
             {line.split(/(\*\*.*?\*\*)/g).map((part, partIndex) => {
               if (part.startsWith("**") && part.endsWith("**")) {
-                return (
-                  <strong key={partIndex} style={{ color }}>
-                    {part.slice(2, -2)}
-                  </strong>
-                );
+                return <strong key={partIndex}>{part.slice(2, -2)}</strong>;
               }
-              return (
-                <span key={partIndex} style={{ color }}>
-                  {part}
-                </span>
-              );
+              return <span key={partIndex}>{part}</span>;
             })}
             {lineIndex < lines.length - 1 && <br />}
           </span>

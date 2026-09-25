@@ -65,39 +65,36 @@ export function Footer() {
 
   return (
     <>
-      <footer className="relative border-t border-[rgba(167,139,250,0.15)]">
+      <footer className="relative border-t border-accent/15">
         <div className="container mx-auto max-w-6xl px-4 pb-8 pt-12">
           <div className="grid grid-cols-1 gap-10 md:grid-cols-[2fr_1fr_2fr]">
             {/* Brand */}
             <div>
               <span className="text-xl font-bold">
-                <span className="text-foreground/90">leo</span>
-                <span className="text-[rgba(248,113,113,1)]">.dev</span>
+                <span className="text-text/90">leo</span>
+                <span className="text-accent-2-light">.dev</span>
               </span>
-              <p className="mt-3 text-sm text-foreground/60">{t.footer.tagline}</p>
+              <p className="mt-3 text-sm text-text-muted">{t.footer.tagline}</p>
             </div>
 
             {/* Navigation */}
             <div>
-              <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-foreground/50">
+              <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
                 {t.footer.navigation}
               </h4>
               <nav className="flex flex-col gap-2 text-sm">
-                <Link
-                  href="/"
-                  className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors"
-                >
+                <Link href="/" className="text-text/70 hover:text-accent-2-light transition-colors">
                   {t.nav.home}
                 </Link>
                 <Link
                   href="/#about"
-                  className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors"
+                  className="text-text/70 hover:text-accent-2-light transition-colors"
                 >
                   {t.nav.about}
                 </Link>
                 <Link
                   href="/projects"
-                  className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors"
+                  className="text-text/70 hover:text-accent-2-light transition-colors"
                 >
                   {t.nav.projects}
                 </Link>
@@ -106,14 +103,14 @@ export function Footer() {
 
             {/* Links & Legal */}
             <div>
-              <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-foreground/50">
+              <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
                 {t.footer.links}
               </h4>
               <div className="flex gap-4 mb-4">
                 <button
                   type="button"
                   onClick={() => handleExternalLink("https://github.com/062Leo", "GitHub")}
-                  className="text-foreground/60 hover:text-[rgba(248,113,113,1)] transition-colors cursor-pointer"
+                  className="text-text-muted hover:text-accent-2-light transition-colors cursor-pointer"
                   aria-label="GitHub"
                 >
                   <GithubIcon />
@@ -126,7 +123,7 @@ export function Footer() {
                       "Unity Asset Store",
                     )
                   }
-                  className="text-foreground/60 hover:text-[rgba(248,113,113,1)] transition-colors cursor-pointer"
+                  className="text-text-muted hover:text-accent-2-light transition-colors cursor-pointer"
                   aria-label="Unity Asset Store"
                 >
                   <UnityIcon />
@@ -134,24 +131,24 @@ export function Footer() {
                 <button
                   type="button"
                   onClick={() => handleExternalLink("https://062leo.itch.io/", "itch.io")}
-                  className="text-foreground/60 hover:text-[rgba(248,113,113,1)] transition-colors cursor-pointer"
+                  className="text-text-muted hover:text-accent-2-light transition-colors cursor-pointer"
                   aria-label="Itch.io"
                 >
                   <ItchIcon />
                 </button>
               </div>
-              <p className="text-xs text-foreground/40 leading-relaxed">{t.footer.notice}</p>
+              <p className="text-xs text-text-muted leading-relaxed">{t.footer.notice}</p>
             </div>
           </div>
 
-          <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-[rgba(167,139,250,0.1)] pt-6 md:flex-row">
-            <p className="text-xs text-foreground/50">
+          <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-accent/10 pt-6 md:flex-row">
+            <p className="text-xs text-text-muted">
               © {new Date().getFullYear()} Leo. {t.footer.rights}
             </p>
             <button
               type="button"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="flex items-center gap-1.5 rounded-full border border-[rgba(167,139,250,0.3)] px-3 py-1.5 text-xs text-foreground/50 hover:text-foreground/90 hover:border-[rgba(167,139,250,0.6)] transition-all duration-300"
+              className="flex items-center gap-1.5 rounded-full border border-accent/30 px-3 py-1.5 text-xs text-text-muted hover:text-text/90 hover:border-accent/60 transition-all duration-300"
             >
               <ArrowUp className="h-3 w-3" />
               {t.footer.backToTop}
@@ -168,7 +165,7 @@ export function Footer() {
             aria-modal="true"
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
           >
-            <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
+            <div className="w-full max-w-2xl rounded-3xl bg-bg/95 px-10 py-12 text-text shadow-2xl border border-border">
               <h2 className="mb-6 text-4xl font-semibold">{t.dialog.title}</h2>
               <p className="mb-4 text-2xl">
                 {t.dialog.leaving(pendingLabel || t.dialog.defaultLabel)}
@@ -180,7 +177,7 @@ export function Footer() {
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                 <button
                   type="button"
-                  className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-background hover:bg-muted hover:shadow-lg hover:-translate-y-[2px] hover:border-foreground/60 transition-all duration-150"
+                  className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-bg hover:bg-surface-2 hover:shadow-lg hover:-translate-y-[2px] hover:border-text/60 transition-all duration-150"
                   onClick={() => {
                     setShowDialog(false);
                     setPendingUrl(null);
@@ -191,7 +188,7 @@ export function Footer() {
                 </button>
                 <button
                   type="button"
-                  className="rounded-md px-4 py-2 text-xl font-semibold bg-foreground text-background hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-foreground/70 transition-all duration-150"
+                  className="rounded-md px-4 py-2 text-xl font-semibold bg-text text-bg hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-text/70 transition-all duration-150"
                   onClick={() => {
                     const url = pendingUrl;
                     setShowDialog(false);

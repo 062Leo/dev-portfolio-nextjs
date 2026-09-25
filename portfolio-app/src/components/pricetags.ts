@@ -77,8 +77,9 @@ export function createPricetags(
     const name = categories[gi];
     const textW = name.length * FONT_SZ * 0.6 + PAD * 2;
 
+    // Guide line from the tag to its group. updatePricetags hides it in every branch,
+    // so it carries no colour.
     const line = document.createElementNS(NS, "line");
-    line.setAttribute("stroke", "rgba(106,176,112,0.35)");
     line.setAttribute("stroke-width", "1.5");
     line.setAttribute("stroke-dasharray", "3,4");
     pricetagLayer.appendChild(line);
@@ -95,7 +96,7 @@ export function createPricetags(
       onToggle?.(name);
     });
 
-    const catColor = CATEGORIES[gi]?.color || "rgba(106,176,112,0.25)";
+    const catColor = CATEGORIES[gi % CATEGORIES.length].color;
     const fillColor = catColor.replace(/[\d.]+\)$/, "0.7)");
 
     const tri = document.createElementNS(NS, "polygon");

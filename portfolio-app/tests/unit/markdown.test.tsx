@@ -2,15 +2,15 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { renderMarkdownText } from "@/lib/markdown";
 
-const COLOR = "#123456";
+const CLASS = "text-accent";
 
-function render(text: string): string {
-  return renderToStaticMarkup(<>{renderMarkdownText(text, COLOR)}</>);
+function render(text: string, className?: string): string {
+  return renderToStaticMarkup(<>{renderMarkdownText(text, className)}</>);
 }
 
 describe("renderMarkdownText", () => {
   it("renders nothing for empty input", () => {
-    expect(renderMarkdownText("", COLOR)).toBeNull();
+    expect(renderMarkdownText("")).toBeNull();
     expect(render("")).toBe("");
   });
 
@@ -36,17 +36,23 @@ describe("renderMarkdownText", () => {
 
   it("renders **text** as bold without the asterisks", () => {
     const html = render("Normal **strong** normal");
-    expect(html).toContain(`<strong style="color:${COLOR}">strong</strong>`);
+    expect(html).toContain("<strong>strong</strong>");
     expect(html).not.toContain("**");
   });
 
   it("renders several bold parts in one line", () => {
     const html = render("**a** and **b**");
-    expect(html.match(/<strong /g)).toHaveLength(2);
+    expect(html.match(/<strong>/g)).toHaveLength(2);
   });
 
-  it("applies the colour to plain text", () => {
-    expect(render("plain")).toContain(`<span style="color:${COLOR}">plain</span>`);
+  it("puts the optional class on every paragraph and nowhere else", () => {
+    const html = render("one\n\ntwo", CLASS);
+    expect(html.match(new RegExp(`<p class="mb-4 last:mb-0 ${CLASS}">`, "g"))).toHaveLength(2);
+    expect(html).not.toContain("style=");
+  });
+
+  it("renders paragraphs without a class when none is given", () => {
+    expect(render("plain")).toContain('<p class="mb-4 last:mb-0">');
   });
 
   it("escapes HTML in the input", () => {

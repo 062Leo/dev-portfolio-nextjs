@@ -8,7 +8,7 @@ import { SkillGraph } from "@/components/SkillGraph";
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
+    <div className="relative min-h-screen overflow-x-hidden bg-bg text-text">
       <NetworkBackground />
       <Navbar />
       <main className="relative z-10">
