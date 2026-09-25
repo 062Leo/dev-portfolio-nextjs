@@ -60,6 +60,7 @@ export const en: Dictionary = {
   },
   skills: {
     rating: "Rating:",
+    ratingOf: (rating: number) => `Rating ${rating} of 5`,
     applyFilter: "Apply Filter",
     reset: "Reset",
   },

@@ -58,6 +58,7 @@ export const de = {
   },
   skills: {
     rating: "Bewertung:",
+    ratingOf: (rating: number) => `Bewertung ${rating} von 5`,
     applyFilter: "Filter anwenden",
     reset: "Zurücksetzen",
   },

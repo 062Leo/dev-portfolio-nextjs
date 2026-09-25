@@ -3,6 +3,7 @@ import {
   CATEGORIES,
   categoryColor,
   categoryColorAlpha,
+  categoryRows,
   flattenSkillsData,
   labelFontSize,
   radiusScale,
@@ -24,7 +25,13 @@ import {
   nearestHullPoint,
 } from "@/components/skills/hull";
 import { boxesOverlap, estimateTextSize, placeLabels, textBBox } from "@/components/skills/labels";
-import type { Box, RopeTarget, SimLink, SimNode } from "@/components/skills/types";
+import type {
+  Box,
+  RopeTarget,
+  SimLink,
+  SimNode,
+  SkillsDataNested,
+} from "@/components/skills/types";
 import skillsDe from "@/data/skills.json";
 import skillsEn from "@/data/skills_en.json";
 
@@ -97,6 +104,54 @@ describe("flattenSkillsData", () => {
         expect(rating).toBeGreaterThanOrEqual(1);
         expect(rating).toBeLessThanOrEqual(5);
       }
+    }
+  });
+});
+
+describe("categoryRows", () => {
+  it("labels a subgroup and merges consecutive direct skills into one row", () => {
+    expect(
+      categoryRows({ Scripting: { Python: 3, TypeScript: 4 }, "C++": 3, C: 2, Dart: 3 }),
+    ).toEqual([
+      {
+        label: "Scripting",
+        skills: [
+          ["Python", 3],
+          ["TypeScript", 4],
+        ],
+      },
+      {
+        label: null,
+        skills: [
+          ["C++", 3],
+          ["C", 2],
+          ["Dart", 3],
+        ],
+      },
+    ]);
+  });
+
+  it("keeps the data order and starts a new unlabelled row after a subgroup", () => {
+    expect(categoryRows({ A: 1, Group: { B: 2 }, C: 3 })).toEqual([
+      { label: null, skills: [["A", 1]] },
+      { label: "Group", skills: [["B", 2]] },
+      { label: null, skills: [["C", 3]] },
+    ]);
+    expect(categoryRows({})).toEqual([]);
+  });
+
+  it.each([
+    ["skills.json", skillsDe],
+    ["skills_en.json", skillsEn],
+  ])("lists every skill of %s exactly once", (_name, data) => {
+    for (const entries of Object.values(data as SkillsDataNested)) {
+      const expected = Object.values(entries).reduce<number>(
+        (sum, value) => sum + (typeof value === "number" ? 1 : Object.keys(value).length),
+        0,
+      );
+      const listed = categoryRows(entries).flatMap((row) => row.skills.map(([name]) => name));
+      expect(listed).toHaveLength(expected);
+      expect(new Set(listed).size).toBe(expected);
     }
   });
 });

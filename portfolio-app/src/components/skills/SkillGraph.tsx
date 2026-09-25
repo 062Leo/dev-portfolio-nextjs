@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Simulation } from "d3-force";
 import { useSkillsData } from "@/data/index";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { RATING_FILL_CLASS, flattenSkillsData, radiusScale } from "./data";
@@ -33,6 +34,7 @@ import {
   updateNodePositions,
   updateRipple,
 } from "./render";
+import { SkillList } from "./SkillList";
 import { SkillTooltip } from "./SkillTooltip";
 import { createTooltipController } from "./tooltip";
 import type {
@@ -48,12 +50,37 @@ import type {
 import { WobblyRopes } from "./WobblyRopes";
 
 const CONTAINER_HEIGHT = "clamp(400px, 90vh, 540px)";
+// Below md the graph is not mounted at all: 68 labels at 9 to 14 px do not fit a phone
+// (issue #63). The list takes its place; the d3 simulation never starts there.
+const GRAPH_QUERY = "(min-width: 768px)";
 
-// The section composes the pieces: the data (data.ts, graph.ts), the physics (forces.ts),
+// The section: heading plus the graph from md up and the list below. Neither is in the
+// server HTML, the viewport being unknown there; the placeholder keeps the graph's
+// height on desktop so the page does not jump when the graph mounts.
+export function SkillGraph() {
+  const showGraph = useMediaQuery(GRAPH_QUERY);
+
+  return (
+    <section id="skills" className="relative w-full py-16 md:py-24">
+      <div className="container mx-auto max-w-7xl px-4">
+        <h2 className="mb-6 text-center text-3xl font-bold text-accent-2 text-shadow-glow text-shadow-accent-2/35 md:text-4xl">
+          Skills &amp; Expertise
+        </h2>
+      </div>
+      {showGraph === undefined && (
+        <div className="hidden md:block" style={{ height: CONTAINER_HEIGHT }} />
+      )}
+      {showGraph === true && <SkillGraphCanvas />}
+      {showGraph === false && <SkillList />}
+    </section>
+  );
+}
+
+// The graph composes the pieces: the data (data.ts, graph.ts), the physics (forces.ts),
 // the drawing (render.ts, hull.ts, labels.ts, pricetags.ts, WobblyRopes.tsx) and the
 // pointer handling (interaction.ts, tooltip.ts). It owns the React state, the refs the
 // simulation writes into, and the filter UI.
-export function SkillGraph() {
+function SkillGraphCanvas() {
   const t = useT();
   const skillsDataRaw = useSkillsData() as SkillsDataNested;
 
@@ -277,12 +304,7 @@ export function SkillGraph() {
   }, [buildSimulation]);
 
   return (
-    <section id="skills" className="relative w-full py-16 md:py-24">
-      <div className="container mx-auto max-w-7xl px-4">
-        <h2 className="mb-6 text-center text-3xl font-bold text-accent-2 text-shadow-glow text-shadow-accent-2/35 md:text-4xl">
-          Skills &amp; Expertise
-        </h2>
-      </div>
+    <>
       <div
         ref={containerRef}
         className="relative mx-auto w-full max-w-7xl overflow-hidden rounded-xl border border-accent/25 bg-bg"
@@ -316,7 +338,7 @@ export function SkillGraph() {
                   });
                 }}
                 className={cn(
-                  "rounded border px-3 py-1 font-mono text-sm font-bold transition-all duration-150 max-md:min-h-11 max-md:min-w-11",
+                  "rounded border px-3 py-1 font-mono text-sm font-bold transition-all duration-150",
                   filterToggles[r]
                     ? `${RATING_FILL_CLASS[r]} text-bg`
                     : "border-border bg-surface-2 text-text-muted opacity-55",
@@ -332,20 +354,20 @@ export function SkillGraph() {
         <div className="flex flex-wrap items-center justify-center gap-3 mt-3">
           <button
             onClick={applyFilter}
-            className="cursor-pointer rounded border border-accent/70 bg-accent/60 px-4 py-1 font-mono text-xs font-semibold text-white transition-all duration-150 max-md:min-h-11"
+            className="cursor-pointer rounded border border-accent/70 bg-accent/60 px-4 py-1 font-mono text-xs font-semibold text-white transition-all duration-150"
           >
             {t.skills.applyFilter}
           </button>
           {filterActive && (
             <button
               onClick={resetFilter}
-              className="rounded border border-accent/30 bg-surface-2 px-3 py-1 font-mono text-xs text-text-muted transition-all duration-150 max-md:min-h-11"
+              className="rounded border border-accent/30 bg-surface-2 px-3 py-1 font-mono text-xs text-text-muted transition-all duration-150"
             >
               {t.skills.reset}
             </button>
           )}
         </div>
       </div>
-    </section>
+    </>
   );
 }

@@ -32,6 +32,29 @@ export function getSkillCategories(src: SkillsFlat): Map<string, Record<string, 
   return map;
 }
 
+// One row of the list view: the skills of a subgroup under its name, or a run of direct
+// skills without a label.
+export interface SkillRow {
+  label: string | null;
+  skills: [string, number][];
+}
+
+// The rows of a category in data order. A subgroup becomes a labelled row; consecutive
+// direct skills share one unlabelled row.
+export function categoryRows(entries: SkillsDataNested[string]): SkillRow[] {
+  const rows: SkillRow[] = [];
+  for (const [name, value] of Object.entries(entries)) {
+    if (typeof value === "number") {
+      const last = rows[rows.length - 1];
+      if (last && last.label === null) last.skills.push([name, value]);
+      else rows.push({ label: null, skills: [[name, value]] });
+    } else {
+      rows.push({ label: name, skills: Object.entries(value) });
+    }
+  }
+  return rows;
+}
+
 // The sub-entries shown in the tooltip of a node: the ratings of a skill group, or the
 // single rating of a direct skill. Null when the data has no entry for the node.
 export function tooltipContentFor(
@@ -88,7 +111,7 @@ export function categoryColorAlpha(groupIndex: number, alpha: number): string {
 // ══════════════════════════════════════════════════════════════════════════════
 
 const RATING_MIN = 1; // lowest possible rating
-const RATING_MAX = 5; // highest possible rating
+export const RATING_MAX = 5; // highest possible rating
 
 const RADIUS_MIN = 5; // smallest circle radius (px) for rating 1
 const RADIUS_MAX = 15; // largest circle radius (px) for rating 5
