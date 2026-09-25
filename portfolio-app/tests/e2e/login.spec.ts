@@ -12,6 +12,13 @@ test("redirects / to /login without a session", async ({ page }) => {
   await expect(page).toHaveURL(onPath("/login"));
 });
 
+test("redirects an unknown path to /login without a session, not to the 404 page", async ({
+  page,
+}) => {
+  await page.goto("/does-not-exist");
+  await expect(page).toHaveURL(onPath("/login"));
+});
+
 test("shows an error for a wrong password and stays on /login", async ({ page }) => {
   await page.goto("/login");
   await page.locator('input[name="password"]').fill("wrong-password");

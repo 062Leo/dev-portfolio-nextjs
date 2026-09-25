@@ -16,10 +16,12 @@ import {
   langFromAcceptLanguage,
 } from "@/i18n/lang";
 
-// Page paths that live under the internal [lang] segment: /, /projects..., /login. Only
-// these are rewritten; everything else the matcher lets through (media under public/, the
-// image optimizer) is passed on unchanged after the password check.
-const PAGE_PATH = /^\/(projects(\/.*)?|login)?$/;
+// Paths that are not pages: framework paths (/_next/..., the image optimizer included)
+// and the folders under public/. They are passed on unchanged after the password check.
+// Every other path is a page path and is rewritten to /<lang>/..., an unknown one too: it
+// then ends in the [lang] catch-all and gets the site's 404 page in the visitor's language
+// instead of the framework page without a lang attribute.
+const NOT_A_PAGE = /^\/(_|(Bilder|Videos|Icons|fonts)\/)/;
 
 // The internal language prefix must never be used from outside: a visitor who reached
 // /de/... would keep that language whatever the cookie says.
@@ -48,7 +50,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url), 303);
   }
 
-  if (!PAGE_PATH.test(pathname)) return NextResponse.next();
+  if (NOT_A_PAGE.test(pathname)) return NextResponse.next();
   return rewriteToLanguage(request);
 }
 

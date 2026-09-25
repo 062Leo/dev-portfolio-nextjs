@@ -1,3 +1,5 @@
+import { readdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest, type NextResponse } from "next/server";
 import {
@@ -16,6 +18,7 @@ import { MAX_FAILURES, WINDOW_MS } from "@/lib/rate-limit";
 const PASSWORD = "unit-test-password";
 const SECRET = "unit-test-secret";
 const ORIGIN = "http://localhost:3100";
+const PUBLIC_DIR = fileURLToPath(new URL("../../public", import.meta.url));
 
 type RequestOptions = {
   cookie?: string;
@@ -100,6 +103,8 @@ describe("proxy with SITE_PASSWORD and AUTH_SECRET", () => {
     expect(redirectsToLogin(await proxy(request("/projects")))).toBe(true);
     expect(redirectsToLogin(await proxy(request("/Bilder/Arcanoid/arcanoid.png")))).toBe(true);
     expect(redirectsToLogin(await proxy(request("/Videos/Big/Arcanoid.mp4")))).toBe(true);
+    expect(redirectsToLogin(await proxy(request("/does-not-exist")))).toBe(true);
+    expect(redirectsToLogin(await proxy(request("/login/x")))).toBe(true);
   });
 
   it("redirects a request with an unknown cookie to /login", async () => {
@@ -425,8 +430,23 @@ describe("language rewrite", () => {
     expect(getRedirectUrl(home)).toBe(`${ORIGIN}/`);
   });
 
-  it("does not rewrite a path that only starts like a page path", async () => {
-    for (const path of ["/projectsx", "/loginx", "/login/x"]) {
+  it("rewrites an unknown path too, so it gets the 404 page in the visitor's language", async () => {
+    for (const path of ["/does-not-exist", "/projectsx", "/loginx", "/login/x", "/a/b/c"]) {
+      expect(rewrittenPath(await proxy(request(path, { cookie, lang: "de" }))), path).toBe(
+        `/de${path}`,
+      );
+    }
+    expect(rewrittenPath(await proxy(request("/does-not-exist", { cookie, lang: "en" })))).toBe(
+      "/en/does-not-exist",
+    );
+  });
+
+  it("leaves every entry under public/ that the proxy sees to the file server", async () => {
+    // A folder or file added to public/ has to be added to NOT_A_PAGE in src/proxy.ts (or
+    // be excluded by the matcher), or its files would be rewritten to /<lang>/... and 404.
+    for (const entry of readdirSync(PUBLIC_DIR, { withFileTypes: true })) {
+      const path = entry.isDirectory() ? `/${entry.name}/x.png` : `/${entry.name}`;
+      if (!unstable_doesMiddlewareMatch({ config, url: path })) continue;
       expect(isRewrite(await proxy(request(path, { cookie, lang: "en" }))), path).toBe(false);
     }
   });

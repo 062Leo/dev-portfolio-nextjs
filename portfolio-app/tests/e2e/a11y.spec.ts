@@ -4,10 +4,16 @@ import { PAGES } from "./pages";
 
 // Accessibility checks (issue #69): an axe audit of every page against WCAG 2.1 A and AA
 // plus the axe best practices (landmarks, heading order and the like). Besides the pages
-// of the smoke tests it covers a demo page and the 404 page of an unknown project.
+// of the smoke tests it covers a demo page and the 404 pages of an unknown project and of
+// an unknown path.
 
 const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21aa", "best-practice"];
-const AXE_PAGES = [...PAGES, "/projects/prop-hunt/demo", "/projects/does-not-exist"];
+const AXE_PAGES = [
+  ...PAGES,
+  "/projects/prop-hunt/demo",
+  "/projects/does-not-exist",
+  "/does-not-exist",
+];
 const BLOCKING = new Set(["serious", "critical"]);
 
 // The fade-in animations start at opacity 0; axe measures contrast on what is painted,

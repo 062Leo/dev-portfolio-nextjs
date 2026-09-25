@@ -94,6 +94,29 @@ test("an unknown project shows the 404 page with navbar and footer in the visito
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Page not found");
 });
 
+// Any other unknown path gets the same 404 page, not the framework page without a lang
+// attribute: the proxy rewrites it into the [lang] tree, where a catch-all calls notFound().
+for (const path of ["/does-not-exist", "/login/x", "/a/b/c"]) {
+  test(`the unknown path ${path} shows the site's 404 page in the visitor's language`, async ({
+    page,
+    context,
+  }) => {
+    const german = await page.goto(path);
+    expect(german?.status()).toBe(404);
+    await expect(page.locator("html")).toHaveAttribute("lang", "de");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Seite nicht gefunden");
+    await expect(page.getByRole("contentinfo")).toBeVisible();
+
+    // Replaces the cookie the proxy set on the first visit (same name, domain and path).
+    const domain = new URL(page.url()).hostname;
+    await context.addCookies([{ name: "lang", value: "en", domain, path: "/" }]);
+    const english = await page.goto(path);
+    expect(english?.status()).toBe(404);
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Page not found");
+  });
+}
+
 test.describe("English browser", () => {
   test.use({ locale: "en-US" });
 

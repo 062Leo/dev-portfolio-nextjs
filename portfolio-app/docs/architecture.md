@@ -26,8 +26,8 @@ flowchart LR
 
 1. **Proxy.** Jede Anfrage außer `_next/static`, `favicon.ico`, `robots.txt`, `fonts/` und den drei freien Icons (`Icons/de_flag.png`, `Icons/en_flag.png`, `Icons/og-image.png`) läuft zuerst durch `src/proxy.ts` (Node.js-Runtime auf Vercel).
 2. **Passwortschutz.** Der Proxy prüft den Cookie `site-auth`: ein HMAC-Token aus `SITE_PASSWORD`, `AUTH_SECRET` und `AUTH_VERSION` (`src/lib/auth.ts`). Ohne gültigen Cookie folgt ein Redirect auf `/login`; ein korrekter `?key=` setzt den Cookie und leitet auf die URL ohne `key` weiter. Ohne `SITE_PASSWORD` entfällt die Prüfung (lokale Entwicklung).
-3. **Sprache.** Für Seitenpfade (`/`, `/projects…`, `/login`) wählt der Proxy die Sprache aus dem Cookie `lang`, sonst aus `Accept-Language`, und schreibt intern auf `/de/…` oder `/en/…` um. Die sichtbare URL bleibt gleich; ein direkt aufgerufenes `/de/…` wird auf den Pfad ohne Präfix umgeleitet.
-4. **Seite.** Die Seiten unter `src/app/[lang]/` sind beim Build je Sprache vorgerendert (`generateStaticParams`) und werden statisch ausgeliefert.
+3. **Sprache.** Für Seitenpfade (alles außer `/_…` und den Ordnern unter `public/`, auch unbekannte Pfade) wählt der Proxy die Sprache aus dem Cookie `lang`, sonst aus `Accept-Language`, und schreibt intern auf `/de/…` oder `/en/…` um. Die sichtbare URL bleibt gleich; ein direkt aufgerufenes `/de/…` wird auf den Pfad ohne Präfix umgeleitet.
+4. **Seite.** Die Seiten unter `src/app/[lang]/` sind beim Build je Sprache vorgerendert (`generateStaticParams`) und werden statisch ausgeliefert. Ein unbekannter Pfad landet im Catch-all `src/app/[lang]/[...rest]/` und bekommt die eigene 404-Seite in der Sprache des Besuchers.
 5. **Medien.** Bilder und Videos kommen direkt aus `public/` (`images.unoptimized`, keine Bildoptimierung zur Laufzeit), aber erst nach der Passwortprüfung.
 
 Jede Antwort trägt die Security-Header aus `src/lib/security-headers.ts`, eingebunden in `next.config.ts`.
@@ -35,7 +35,7 @@ Jede Antwort trägt die Security-Header aus `src/lib/security-headers.ts`, einge
 ## Statisch und dynamisch
 
 - **Statisch:** alle Seiten in beiden Sprachen, die Projektdetail- und Demo-Seiten eingeschlossen.
-- **Dynamisch:** der Proxy bei jeder Anfrage und die Server-Action des Login-Formulars (`src/app/[lang]/login/actions.ts`), die das Passwort prüft und den Cookie setzt.
+- **Dynamisch:** der Proxy bei jeder Anfrage, die 404-Seite unbekannter Pfade (`[lang]/[...rest]`) und die Server-Action des Login-Formulars (`src/app/[lang]/login/actions.ts`), die das Passwort prüft und den Cookie setzt.
 - **Im Browser:** der Sprachumschalter schreibt den Cookie `lang` und lädt die Seite neu vom Server.
 
 ## Umgebungsvariablen
