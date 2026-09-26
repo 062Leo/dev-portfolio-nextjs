@@ -3,7 +3,7 @@ import type { Project, ProjectImage } from "./types";
 export const portfolioData = {
   personal: {
     firstName: "Leo",
-    role: "Softwareentwickler (B.Sc. Softwareentwicklung, Durchschnitt 2.1) mit Fokus auf AI, Automatisierung und sauberen Code",
+    role: "Softwareentwickler (B.Sc. SWE, Ø 2.1) mit Fokus auf AI, Automatisierung und sauberen Code",
   },
   about: {
     title: "About Me",
