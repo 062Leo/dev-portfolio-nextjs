@@ -5,9 +5,9 @@ import type { Dictionary } from "./de";
 
 export const en: Dictionary = {
   meta: {
-    title: "leo.dev — Portfolio",
+    title: "Portfolio · leo.dev",
     description:
-      "leo.dev — Software developer portfolio focused on AI, automation and interactive applications",
+      "Software developer portfolio focused on AI, automation and interactive applications",
     projectsTitle: "Projects",
     loginTitle: "Login",
   },
@@ -70,7 +70,7 @@ export const en: Dictionary = {
   projectsPreview: {
     titleStart: "Featured",
     titleAccent: "Projects",
-    subtitle: (total: number) => `3 of ${total} projects — from AI to mobile to game development.`,
+    subtitle: (total: number) => `3 of ${total} projects, from AI to mobile to game development.`,
     viewAll: (total: number) => `View All ${total} Projects`,
   },
   projects: {

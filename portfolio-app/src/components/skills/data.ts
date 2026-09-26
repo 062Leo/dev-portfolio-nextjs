@@ -107,7 +107,7 @@ export function categoryColorAlpha(groupIndex: number, alpha: number): string {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  RATING SCALE — node size, label size and colour all scale with the rating 1…5
+//  RATING SCALE: node size, label size and colour all scale with the rating 1…5
 // ══════════════════════════════════════════════════════════════════════════════
 
 const RATING_MIN = 1; // lowest possible rating

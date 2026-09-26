@@ -259,7 +259,7 @@ export const portfolioData = {
       subtitle:
         "Barcode scanner for ingredient analysis, NOVA classification & nutritional risk assessment",
       description:
-        "Privacy-first mobile app (Expo/React Native) that scans food barcodes, evaluates ingredients and additives against 683 health rules, and classifies processing levels — no proprietary backend, no tracking, no ads.",
+        "Privacy-first mobile app (Expo/React Native) that scans food barcodes, evaluates ingredients and additives against 683 health rules, and classifies processing levels. No proprietary backend, no tracking, no ads.",
       longDescription:
         "FoodCheck is a React Native (Expo) app that recognizes EAN-8/EAN-13 barcodes via the camera, caches product data locally in SQLite, and checks ingredients for health-related risk factors.\n\n" +
         "The app combines local SQLite persistence, on-device ML Kit OCR for ingredient scans, and lookups against the Open Food Facts API v2. It includes an extensive red-flag system with 683 seed rules across 19 categories (E-numbers, sweeteners, preservatives, emulsifiers, hydrogenated fats, phosphates, etc.), multilingual ingredient displays in 8 languages (de/en/fr/it/es/nl/pt/pl), and NOVA / Nutri-Score classification with color-coded traffic-light ratings. AI-powered insights from Robotoff complement the analysis with confidence-scored predictions for categories, labels, and ingredients.\n\n" +
@@ -365,16 +365,16 @@ export const portfolioData = {
       videos: [],
       tags: ["Vue 3", "TypeScript", "SPA", "Zero-Backend", "IndexedDB", "MusicBrainz", "YouTube"],
       features: [
-        "Random music discovery via MusicBrainz API — truly random selection across 126 years of music history",
+        "Random music discovery via MusicBrainz API: truly random selection across 126 years of music history",
         "YouTube video playback with gapless dual-player (two IFrame instances)",
         "0-5 star rating with keyboard shortcuts (keys 0-5, S for skip)",
         "Custom playlists and automatic rating playlists (one per rating level)",
         "Artist blocking with permanent filtering",
         "Full data export/import as JSON (data portability)",
         "Password protection with SHA-256 auto-login via URL parameter",
-        "Fully client-side — no server data storage, no tracking, no cookies",
+        "Fully client-side: no server data storage, no tracking, no cookies",
         "Zero-quota YouTube search via HTML scraping (no YouTube Data API)",
-        "No registration — runs anonymously in the browser",
+        "No registration, runs anonymously in the browser",
       ],
       techStack: [
         "Vue 3",

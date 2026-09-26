@@ -29,9 +29,9 @@ import type { Point, SimLink, SimNode, Size } from "./types";
 // working) and with lostpointercapture; all three release the node and cool the
 // simulation down.
 
-const DRAG_TOOLTIP_SPEED_THRESHOLD = 180; // px/s — hide tooltip when moving faster
+const DRAG_TOOLTIP_SPEED_THRESHOLD = 180; // px/s: hide tooltip when moving faster
 const SLOW_DEBOUNCE_MS = 1000; // ms of slow movement before tooltip reappears
-const CLICK_MOVE_THRESHOLD = 8; // px — max movement to still count as "click"
+const CLICK_MOVE_THRESHOLD = 8; // px: max movement to still count as "click"
 
 export interface PointerState {
   dragNode: SimNode | null;
@@ -88,7 +88,7 @@ export function bindNodeHover(
     els.line.style.stroke = LABEL_LINE_COLOR;
     els.line.setAttribute("stroke-width", String(LABEL_LINE_WIDTH));
 
-    // The tooltip lingers after the pointer leaves — but not while dragging, where the
+    // The tooltip lingers after the pointer leaves, but not while dragging, where the
     // speed-based control is active.
     if (!pointer.dragNode) {
       tooltip.markVisible();

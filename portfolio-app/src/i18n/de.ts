@@ -3,9 +3,9 @@
 
 export const de = {
   meta: {
-    title: "leo.dev — Portfolio",
+    title: "Portfolio · leo.dev",
     description:
-      "leo.dev — Softwareentwickler Portfolio mit Fokus auf AI, Automatisierung und interaktive Anwendungen",
+      "Softwareentwickler-Portfolio mit Fokus auf AI, Automatisierung und interaktive Anwendungen",
     projectsTitle: "Projekte",
     loginTitle: "Anmeldung",
   },
@@ -69,7 +69,7 @@ export const de = {
     titleStart: "Ausgewählte",
     titleAccent: "Projekte",
     subtitle: (total: number) =>
-      `3 von ${total} Projekten — von AI über Mobile bis Game Development.`,
+      `3 von ${total} Projekten, von AI über Mobile bis Game Development.`,
     viewAll: (total: number) => `Alle ${total} Projekte ansehen`,
   },
   projects: {

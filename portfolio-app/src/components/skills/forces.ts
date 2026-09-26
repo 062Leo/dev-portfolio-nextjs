@@ -4,20 +4,20 @@ import { radiusScale } from "./data";
 import type { Point, SimLink, SimNode, Size } from "./types";
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  FORCE SIMULATION — dynamic scaling based on visible node count
+//  FORCE SIMULATION: dynamic scaling based on visible node count
 // ══════════════════════════════════════════════════════════════════════════════
 
 const LINK_DISTANCE = 50; // target length of link edges
 
-// —— anchor points for force interpolation (nodeCount → force values) ——
+// -- anchor points for force interpolation (nodeCount → force values) --
 const MAX_NODES = 60;
 const MIN_NODES = 6;
 
-// values at max nodes (all ratings — known perfect)
+// values at max nodes (all ratings: known perfect)
 const CHARGE_AT_MAX = -105;
 const CENTER_Y_AT_MAX = 0.06;
 
-// values at 6 nodes (rating 1 only — ADJUST THESE UNTIL LAYOUT LOOKS GOOD)
+// values at 6 nodes (rating 1 only: ADJUST THESE UNTIL LAYOUT LOOKS GOOD)
 const CHARGE_AT_MIN = -250;
 const CENTER_Y_AT_MIN = 0.045;
 
@@ -29,11 +29,11 @@ export const REHEAT_ALPHA = 0.2; // alpha / alphaTarget when re-energizing (drag
 const CHAIN_MIN_ANGLE_DEG = 27; // minimum angle (degrees) between consecutive chain links
 const CHAIN_ANGLE_FORCE = 30; // strength of the angle-enforcing force
 
-// ——  boundary (keeps nodes inside the container)  ————————————————————————————
+// --  boundary (keeps nodes inside the container)  ----------------------------
 const BOUNDARY_MARGIN = 20; // px margin from container edges
 const BOUNDARY_PUSH_FACTOR = 0.3; // push strength when a node crosses the boundary
 
-// ——  mouse repulsion (left-click + drag on empty canvas pushes nodes away)  ——
+// --  mouse repulsion (left-click + drag on empty canvas pushes nodes away)  --
 export const MOUSE_FORCE_RADIUS = 160; // px range of the repulsion field
 const MOUSE_FORCE_STRENGTH = 20; // max push strength at the cursor centre
 

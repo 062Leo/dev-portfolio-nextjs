@@ -5,23 +5,23 @@ import type { Box, Point, SimNode } from "./types";
 // Label placement: every node gets one label and one connector line. Labels are placed
 // in the first free direction around the node, high ratings first. Pure geometry, no DOM.
 
-// ——  positioning  ————————————————————————————————————————————————————————————
+// --  positioning  ------------------------------------------------------------
 const LABEL_GAP_NODE = 4; // px gap between node edge and label start
 const LABEL_GAP_OTHER_LABEL = 2; // min px gap between two label bounding boxes
 const LABEL_CONNECTOR_LENGTH = 8; // length of the connector from node edge to label (px)
 const LABEL_TRY_DIRECTIONS = 8; // directions tried: 4 = N/S/W/E, 8 = + diagonals
 
-// ——  text  ———————————————————————————————————————————————————————————————————
+// --  text  -------------------------------------------------------------------
 export const LABEL_FONT_FAMILY = "monospace";
 export const LABEL_COLOR_HOVER = "white"; // text colour while the node is hovered
 
-// ——  connector line label → node  ————————————————————————————————————————————
+// --  connector line label → node  --------------------------------------------
 export const LABEL_LINE_COLOR = tokenAlpha("text", 74);
 export const LABEL_LINE_WIDTH = 1; // px
 export const LABEL_LINE_COLOR_HOVER = "white";
 export const LABEL_LINE_WIDTH_HOVER = 1.5;
 
-// ——  direction priority (higher = tried first)  ——————————————————————————————
+// --  direction priority (higher = tried first)  ------------------------------
 //      0=below  1=above  2=right  3=left  4=below-right  5=above-right  6=below-left  7=above-left
 const LABEL_DIR_PRIORITY: Record<number, number> = {
   0: 8, // below (preferred)

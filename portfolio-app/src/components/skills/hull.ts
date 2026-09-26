@@ -6,7 +6,7 @@ import type { Point, SimNode } from "./types";
 export const HULL_ENABLED = true; // master switch
 export const HULL_MIN_NODES = 1; // a group needs ≥ N nodes, otherwise no hull
 
-// ——  perimeter sampling per node  ————————————————————————————————————————————
+// --  perimeter sampling per node  --------------------------------------------
 const HULL_CIRCLE_SAMPLES = 20; // sample points on the node perimeter (more = finer)
 const HULL_ARC_SPAN = Math.PI; // which arc of the node is sampled: the outer 180°
 //   Math.PI * 0.6 = outer ~108° (looser, less wrapping)
@@ -14,26 +14,26 @@ const HULL_ARC_SPAN = Math.PI; // which arc of the node is sampled: the outer 18
 const HULL_OFFSET_FACTOR = 2 / 3; // extra distance = radius + radius * factor
 //   0 = directly on the node edge, 1/3 = 33 % extra, 0.5 = 50 % extra
 
-// ——  radial envelope  ————————————————————————————————————————————————————————
+// --  radial envelope  --------------------------------------------------------
 const HULL_RADIAL_BUCKETS = 90; // angle buckets (360° / BUCKETS = ° per bucket)
 //   72 = 5° steps, 90 = 4° steps, 120 = 3° steps
 
-// ——  hide interior points  ———————————————————————————————————————————————————
+// --  hide interior points  ---------------------------------------------------
 // Keeps the hull from picking up points that sit deep inside the group.
 const HULL_INNER_FILTER = true;
 const HULL_INNER_THRESHOLD = 0.5; // 0…1: distance to the centroid relative to the mean of
 //   all hull points; points below threshold × mean are dropped. 1.0 = keep everything.
 
-// ——  vacuum effect (sucked-in spots between distant nodes)  ——————————————————
+// --  vacuum effect (sucked-in spots between distant nodes)  ------------------
 const HULL_VACUUM_THRESHOLD = 5.2; // gap threshold (multiple of the bucket arc); smaller =
 //   more frequent vacuum points
 const HULL_VACUUM_STRENGTH = 0.15; // suction (fraction of the gap width): 0 = none, 0.3 = strong
 const HULL_VACUUM_MAX_PX = 30; // maximum suction distance in px (cap)
 
-// ——  curve smoothing  ————————————————————————————————————————————————————————
+// --  curve smoothing  --------------------------------------------------------
 export const HULL_CURVE_TENSION = 0.1; // Catmull-Rom tension 0 … 1: 0 = round, 1 = tight
 
-// ——  appearance  —————————————————————————————————————————————————————————————
+// --  appearance  -------------------------------------------------------------
 export const HULL_STROKE_WIDTH = 2; // px
 export const HULL_FILL_OPACITY = 0.07; // 0 … 1
 export const HULL_STROKE_OPACITY = 0.35; // 0 … 1
@@ -170,7 +170,7 @@ function bridgeGaps(points: EnvPt[], gapThreshold: number, c: Point): [number, n
 
     result.push([curr.x, curr.y]);
 
-    // Only bridge gaps between DIFFERENT nodes — never within the same node.
+    // Only bridge gaps between DIFFERENT nodes, never within the same node.
     if (curr.nodeIdx === next.nodeIdx) continue;
 
     const gap = distance(curr, next);

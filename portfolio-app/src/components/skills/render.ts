@@ -20,11 +20,11 @@ import type { Point, SimLink, SimNode } from "./types";
 
 // The SVG layer: creates the elements once per build and moves them on every tick.
 // Token colours are CSS values (var / color-mix), which SVG only resolves in styles, not
-// in presentation attributes — hence `style.fill` and `style.stroke`.
+// in presentation attributes, hence `style.fill` and `style.stroke`.
 
 const NS = "http://www.w3.org/2000/svg";
 
-// ——  node sizing & styling  ——————————————————————————————————————————————————
+// --  node sizing & styling  --------------------------------------------------
 export const NODE_STROKE_COLOR = alpha("white", 20); // normal circle stroke
 export const NODE_STROKE_WIDTH = 1; // normal stroke width (px)
 export const NODE_HOVER_SCALE = 1.5; // radius multiplier on pointer enter
@@ -33,18 +33,18 @@ export const NODE_HOVER_STROKE_WIDTH = 2.5; // stroke width on hover (px)
 export const NODE_DRAG_HIT_PADDING = 4; // extra px around node for drag hit-test
 const NODE_TRANSITION = "r 0.25s ease, stroke-width 0.25s ease, stroke 0.25s ease";
 
-// ——  link styles  ————————————————————————————————————————————————————————————
+// --  link styles  ------------------------------------------------------------
 const LINK_STROKE_COLOR = tokenAlpha("text", 57); // connection line color
 const LINK_STROKE_WIDTH = 1; // connection line stroke width (px)
 
-// ——  mouse ripple (repulsion field visual)  ——————————————————————————————————
+// --  mouse ripple (repulsion field visual)  ----------------------------------
 const MOUSE_RIPPLE_COLOR = tokenAlpha("accent", 69); // glow colour at the ripple centre
 const MOUSE_RIPPLE_COLOR_MID = tokenAlpha("accent", 15); // glow colour at 60 % radius
 const MOUSE_RIPPLE_COLOR_EDGE = tokenAlpha("accent", 0); // glow colour at the edge
 const MOUSE_RIPPLE_RING_COLOR = tokenAlpha("accent", 45); // stroke of the expanding rings
 const RIPPLE_MAX_R = MOUSE_FORCE_RADIUS * 0.6;
 
-// ——  glow filter (per category)  —————————————————————————————————————————————
+// --  glow filter (per category)  ---------------------------------------------
 const GLOW_BLUR_STDDEV = 3; // gaussian blur standard deviation
 const GLOW_FLOOD_ALPHA = 0.8; // alpha of the flood colour (replaces category alpha)
 const GLOW_FLOOD_OPACITY = 0.5; // flood-opacity filter attribute

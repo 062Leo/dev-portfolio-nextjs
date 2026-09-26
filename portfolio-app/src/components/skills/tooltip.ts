@@ -6,8 +6,8 @@ import type { SimNode, SkillsDataNested, TooltipContent } from "./types";
 // state; visibility, the active node and the linger timer live in refs because the
 // pointer handlers read and write them outside of React.
 
-const TOOLTIP_MARGIN = 12; // px — flips to the left of the node this close to the right edge
-const TOOLTIP_ESTIMATE = 180; // px — assumed width before the first layout
+const TOOLTIP_MARGIN = 12; // px: flips to the left of the node this close to the right edge
+const TOOLTIP_ESTIMATE = 180; // px: assumed width before the first layout
 const TOOLTIP_LINGER_MS = 4000; // the tooltip stays this long after the pointer leaves
 
 export interface TooltipRefs {

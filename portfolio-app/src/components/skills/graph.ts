@@ -10,7 +10,7 @@ const GROUP_EXTRA_LINK_MAX_LOOKAHEAD = 4; // how many nodes ahead are eligible a
 // Max links of any node, chain links included. The node with extra links has two chain
 // links, so it gets at most three extra ones.
 const MAX_DEGREE = 5;
-const INITIAL_SPREAD = 200; // px — new nodes start scattered around the centre
+const INITIAL_SPREAD = 200; // px: new nodes start scattered around the centre
 
 // Off-screen position of the nodes of a toggled-off group.
 const PARKED = -9999;
