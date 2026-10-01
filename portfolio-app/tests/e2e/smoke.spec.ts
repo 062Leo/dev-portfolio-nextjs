@@ -339,7 +339,7 @@ test.describe("page titles", () => {
     const homeTitle = await page.title();
     await page.goto(DETAIL_PAGE);
     const detailTitle = await page.title();
-    expect(homeTitle).not.toContain(" · leo.dev");
+    expect(homeTitle).toBe("Portfolio · leo.dev");
     expect(detailTitle).toMatch(/.+ · leo\.dev$/);
     expect(detailTitle).not.toBe(homeTitle);
   });
