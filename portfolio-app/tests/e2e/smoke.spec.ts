@@ -295,9 +295,12 @@ test.describe("project videos", () => {
       expect(await recorded(), message).toEqual(expected);
     };
 
+    // A phone has no mouse: after a tap the native controls overlay the video and decide
+    // on their own what a further click does, so only the tap is checked there.
     if (isMobile) {
       await video.tap();
       await settled([], "events after a tap");
+      return;
     }
     await video.click();
     await settled(["pause"], "events after the first click");
