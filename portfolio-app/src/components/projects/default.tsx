@@ -1,452 +1,54 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePortfolioData, useOtherProjects } from "@/data/index";
-import { ArrowLeft, Play, CheckCircle, Clock, Star, Code, Zap, Users, Target, Award, Layers, Download, Eye, TrendingUp, DollarSign, ExternalLink } from "lucide-react";
-import Link from "next/link";
-import { useThemeColors } from "@/components/colors";
-import { useLanguage } from "@/context/LanguageContext";
+import Image from "next/image";
+import { useProject } from "@/data/index";
 import { renderMarkdownText } from "@/lib/markdown";
+import { ExternalLinkDialog, useExternalLink } from "@/components/ui/ExternalLinkDialog";
+import { ProjectActions } from "./components/ProjectActions";
+import { ProjectFacts } from "./components/ProjectFacts";
+import { ProjectGallery } from "./components/ProjectGallery";
+import { ProjectHeader } from "./components/ProjectHeader";
 import ProjectVideos from "./components/ProjectVideos";
 
-const iconMap = {
-    Clock,
-    Star,
-    Code,
-    Zap,
-    Users,
-    Target,
-    Award,
-    Layers,
-    Download,
-    Eye,
-    TrendingUp,
-    DollarSign
-};
+// Full width of the max-w-5xl column (less its px-4 padding). Inert for now: with
+// images.unoptimized in next.config.ts next/image renders neither srcset nor sizes; it
+// takes effect once the optimizer is back.
+const MAIN_IMAGE_SIZES = "(max-width: 1024px) 100vw, 992px";
 
+// The project detail page composed from its sections, top to bottom. One vertical rhythm
+// between them; every section is built for a phone first and widens from md up.
 export function DetailPage({ id }: { id: string }) {
-    const [isReady, setIsReady] = useState(false);
-    const [showDialog, setShowDialog] = useState(false);
-    const [pendingUrl, setPendingUrl] = useState<string | null>(null);
-    const [showCustomDialog, setShowCustomDialog] = useState(false);
-    const [pendingCustomUrl, setPendingCustomUrl] = useState<string | null>(null);
-    const [pendingCustomLabel, setPendingCustomLabel] = useState<string>("");
-    const [selectedImage, setSelectedImage] = useState<{ url: string; caption?: string } | null>(null);
-    const { language } = useLanguage();
-    const portfolioData = usePortfolioData();
-    const otherProjects = useOtherProjects();
-    const [project, setProject] = useState<
-        (typeof portfolioData.projects)[number] | (typeof otherProjects.projects)[number] | null
-    >(null);
+  const { open: openExternalLink, dialogProps } = useExternalLink();
+  const project = useProject(id);
+  const mainImage = project.image || project.images?.[0]?.url || "/Bilder/dummy.png";
 
-    useEffect(() => {
-        const foundProject =
-            portfolioData.projects.find((p) => p.id === id) ||
-            otherProjects.projects.find((p) => p.id === id) ||
-            null;
+  return (
+    <div className="relative z-10 container mx-auto max-w-5xl px-4 py-24">
+      <div className="space-y-10 md:space-y-16">
+        <ProjectHeader project={project} />
 
-        setProject(foundProject);
+        <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-accent/60 bg-bg shadow-card">
+          {/* The first image of the page, so it is preloaded instead of lazy. */}
+          <Image
+            src={mainImage}
+            alt={project.title}
+            fill
+            preload
+            sizes={MAIN_IMAGE_SIZES}
+            className="object-cover"
+          />
+        </div>
 
-        setIsReady(true);
-    }, [id, portfolioData, otherProjects]);
-    const colors = useThemeColors(true);
+        <div className="text-base leading-relaxed md:text-lg">
+          {renderMarkdownText(project.longDescription || project.description, "text-text")}
+        </div>
 
-    if (!isReady) {
-        return null;
-    }
-
-    // Early return if project is not found
-    if (!project) {
-        return (
-            <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
-                <h1 className="text-4xl font-bold">Project not found</h1>
-                <Link href="/" className="mt-4 hover:underline" style={{ color: colors.boomforceBackLinkText }}>
-                    Back to Home
-                </Link>
-            </div>
-        );
-    }
-
-    // Dynamic stats from project data
-    const showStats = project.stats && project.stats.length > 0;
-    const hasImages = project.images && project.images.length > 0;
-
-    return (
-        <>
-            <style jsx global>{`
-                .font-rubik { font-family: 'Rubik Mono One', sans-serif; }
-                .font-press-start { font-family: 'Press Start 2P', cursive; }
-            `}</style>
-
-            <main className="relative z-10 container mx-auto max-w-5xl px-4 py-24">
-                <div className="mb-8">
-                    <Link
-                        href="/projects"
-                        className="mb-8 inline-flex items-center gap-2 transition-colors"
-                        style={{ color: colors.boomforceBackLinkText }}
-                        onMouseEnter={(e) => e.currentTarget.style.color = colors.boomforceBackLinkHover}
-                        onMouseLeave={(e) => e.currentTarget.style.color = colors.boomforceBackLinkText}
-                    >
-                        <ArrowLeft size={20} />
-                        {language === "de" ? "Zurück zur Projektübersicht" : "Back to Projects"}
-                    </Link>
-                </div>
-
-                <div className="flex justify-center">
-                    <div className="w-full max-w-4xl space-y-8">
-                        <div>
-                            <div className="mb-4 flex items-baseline gap-3 flex-wrap">
-                                <h1 className="text-4xl font-bold font-rubik md:text-5xl uppercase" style={{ color: colors.boomforceProjectTitleColor, textShadow: colors.boomforceProjectTitleGlow }}>
-                                    {renderMarkdownText(project.title, colors.boomforceProjectTitleColor) || project.title}
-                                </h1>
-                                {project.subtitle && project.subtitle.trim() && (
-                                    <h2 className="text-xl font-semibold font-rubik md:text-2xl uppercase" style={{ color: colors.boomforceProjectTitleColor, textShadow: colors.boomforceProjectTitleGlow }}>
-                                        {project.subtitle}
-                                    </h2>
-                                )}
-                            </div>
-                            <div className="flex flex-wrap gap-2">
-                                {project.tags.map((tag) => (
-                                    <span
-                                        key={tag}
-                                        className="rounded-full px-3 py-1 text-sm font-medium"
-                                        style={{ borderColor: colors.boomforceTagBorder, border: `1px solid ${colors.boomforceTagBorder}`, backgroundColor: colors.boomforceTagBackground, color: colors.boomforceTagText }}
-                                    >
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Main Image */}
-                        <div className="aspect-video w-full max-w-4xl rounded-xl overflow-hidden border-2" style={{ borderColor: colors.boomforceMainImageBorder, backgroundColor: colors.boomforceMainImageBackground }}>
-                            {/* Use project.image if available, otherwise a placeholder or the first image from images array */}
-                            <img
-                                src={project.image || (project.images && project.images[0]?.url) || "/Bilder/dummy.png"}
-                                alt={project.title}
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-
-                        <div className="text-lg leading-relaxed">
-                            {renderMarkdownText(project.longDescription || project.description, colors.boomforceProjectDescriptionText)}
-                        </div>
-
-                        
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div>
-                                <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.boomforceFeatureTitleColor }}>KEY FEATURES</h3>
-                                <ul className="space-y-2" style={{ color: colors.boomforceFeatureListText }}>
-                                    {project.features?.map((feature, index) => (
-                                        <li key={index} className="flex items-start">
-                                            <CheckCircle className="mr-2 w-4 h-4 mt-1 shrink-0" style={{ color: colors.boomforceFeatureCheckmarkColor }} />
-                                            <div className="flex-1">
-                                                {renderMarkdownText(feature, colors.boomforceFeatureListText) || feature}
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            <div>
-                                <h3 className="mb-4 text-xl font-semibold font-press-start" style={{ color: colors.boomforceTechStackTitleColor }}>TECH STACK</h3>
-                                <div className="flex flex-wrap gap-3">
-                                    {project.techStack?.map((tech) => (
-                                        <span
-                                            key={tech}
-                                            className="rounded-md px-3 py-1.5 text-sm font-mono uppercase"
-                                            style={{ backgroundColor: colors.boomforceTechStackBgColor, color: colors.boomforceTechStackTextColor }}
-                                        >
-                                            {tech}
-                                        </span>
-                                    ))}
-                                </div>
-
-                                {showStats && (
-                                    <>
-                                        <h3 className="mt-6 mb-4 text-xl font-semibold font-press-start" style={{ color: colors.boomforceStatsTitleColor }}>STATS</h3>
-                                        <div className="space-y-2" style={{ color: colors.boomforceStatsTextColor }}>
-                                            {project.stats?.map((stat, index) => {
-                                                const IconComponent = iconMap[stat.icon as keyof typeof iconMap];
-                                                return (
-                                                    <div key={index} className="flex items-center">
-                                                        {IconComponent && <IconComponent className="mr-2 w-4 h-4" style={{ color: colors.boomforceStatsIconColor }} />}
-                                                        <span>{stat.label}: {stat.value}</span>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="flex flex-wrap gap-4 pt-6">
-                            {project.demoLink && (
-                                <Link
-                                    href={`/projects/${id}/demo`}
-                                    className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
-                                    style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
-                                >
-                                    <Play className="mr-2 w-5 h-5" />
-                                    {language === "de" ? "DEMO SPIELEN" : "PLAY DEMO"}
-                                </Link>
-                            )}
-                            {project.demoDownload && (
-                                <button
-                                    type="button"
-                                    className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
-                                    style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
-                                    onClick={() => {
-                                        setPendingUrl(project.demoDownload as string);
-                                        setShowDialog(true);
-                                    }}
-                                >
-                                    <Download className="mr-2 w-5 h-5" />
-                                    {language === "de" ? "DEMO HERUNTERLADEN" : "DOWNLOAD DEMO"}
-                                </button>
-                            )}
-                            {project.githubUrl && (
-                                <button
-                                    type="button"
-                                    className="flex items-center gap-2 rounded-lg px-6 py-3 transition-all transform hover:scale-105 shadow-lg"
-                                    style={{ border: `1px solid ${colors.boomforceViewCodeBtnBorder}`, color: colors.boomforceViewCodeBtnText, boxShadow: `0 0 20px ${colors.boomforceViewCodeBtnShadow}` }}
-                                    onClick={() => {
-                                        setPendingUrl(project.githubUrl as string);
-                                        setShowDialog(true);
-                                    }}
-                                >
-                                    <ExternalLink className="w-5 h-5" />
-                                    {language === "de" ? "CODE ANSEHEN" : "VIEW CODE"}
-                                </button>
-                            )}
-                            {(project as any).custom1Link && (project as any).custom1BTNText && (
-                                <button
-                                    type="button"
-                                    className="flex items-center px-6 py-3 rounded-lg font-bold transition-all transform hover:scale-105 shadow-lg"
-                                    style={{ background: `linear-gradient(to right, ${colors.boomforceDemoBtnGradientStart}, ${colors.boomforceDemoBtnGradientEnd})`, color: colors.boomforceDemoBtnTextColor, boxShadow: `0 0 20px ${colors.boomforceDemoBtnShadow}` }}
-                                    onClick={() => {
-                                        setPendingCustomUrl((project as any).custom1Link as string);
-                                        setPendingCustomLabel(("customLabel" in project && (project as any).customLabel) ? (project as any).customLabel : "");
-                                        setShowCustomDialog(true);
-                                    }}
-                                >
-                                    <ExternalLink className="mr-2 w-5 h-5" />
-                                    {(project as any).custom1BTNText}
-                                </button>
-                            )}
-                        </div>
-
-                        
-                        {/* Details Section with Videos */}
-                        <ProjectVideos 
-                            videoBig={project.videoBig}
-                            videos={project.videos}
-                            colors={{
-                                boomforceScreenshotsTitleColor: colors.boomforceScreenshotsTitleColor,
-                                boomforceScreenshotsBorder: colors.boomforceScreenshotsBorder,
-                                boomforceScreenshotsBackground: colors.boomforceScreenshotsBackground,
-                                boomforceProjectDescriptionText: colors.boomforceProjectDescriptionText
-                            }}
-                        />
-
-
-                        {hasImages && (
-                            <div >
-                                <h3
-                                    className="mt-12 mb-6 text-2xl font-semibold font-press-start text-center"
-                                    style={{ color: colors.boomforceScreenshotsTitleColor }}
-                                >
-                                    SCREENSHOTS
-                                </h3>
-                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                    {project.images!.map((image, index) => (
-                                        <div key={index} className="flex flex-col items-center gap-3">
-                                            <div
-                                                className="relative w-full max-w-md overflow-hidden rounded-xl border-2 aspect-video cursor-pointer group"
-                                                style={{
-                                                    borderColor: colors.boomforceScreenshotsBorder,
-                                                    backgroundColor: colors.boomforceScreenshotsBackground,
-                                                }}
-                                                onClick={() => setSelectedImage(image)}
-                                            >
-                                                <img
-                                                    src={image.url}
-                                                    alt={image.caption || project.title}
-                                                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                                />
-                                                <div
-                                                    className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                                                >
-                                                    <span className="text-lg font-semibold text-white">Click me</span>
-                                                </div>
-                                            </div>
-                                            {image.caption && (
-                                                <p
-                                                    className="text-sm text-center max-w-md"
-                                                    style={{ color: colors.boomforceProjectDescriptionText }}
-                                                >
-                                                    {image.caption}
-                                                </p>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        
-                    </div>
-                </div>
-                {selectedImage && (
-                    <div
-                        role="dialog"
-                        aria-modal="true"
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4"
-                        onClick={() => setSelectedImage(null)}
-                    >
-                        <div
-                            className="w-full max-w-[95vw] rounded-3xl bg-background/95 px-6 py-4 text-foreground shadow-2xl border border-border relative"
-                            style={{ maxHeight: '90vh', overflow: 'auto' }}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <button
-                                type="button"
-                                className="absolute -top+0 right-6 text-5xl font-extrabold text-red-500 drop-shadow-lg hover:scale-110 hover:opacity-90 transition-transform"
-                                onClick={() => setSelectedImage(null)}
-                            >
-                                ×
-                            </button>
-                            <div className="flex justify-center pb-4">
-                                <div className="w-full flex justify-center">
-                                    <img
-                                        src={selectedImage.url}
-                                        alt={selectedImage.caption || "Screenshot"}
-                                        className="min-h-[50vh] min-w-[50vw] max-h-[75vh] max-w-[95vw] h-auto w-auto object-contain rounded-xl"
-                                    />
-                                </div>
-                            </div>
-                            {selectedImage.caption && (
-                                <p className="text-center text-base" style={{ color: colors.boomforceProjectDescriptionText }}>
-                                    {selectedImage.caption}
-                                </p>
-                            )}
-                        </div>
-                    </div>
-                )}
-                {showDialog && pendingUrl && (
-                    <div
-                        role="dialog"
-                        aria-modal="true"
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-                    >
-                        <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
-                            <h2 className="mb-6 text-4xl font-semibold">
-                                {language === "en" ? "External link" : "Externer Link"}
-                            </h2>
-                            <p className="mb-4 text-2xl">
-                                {language === "en"
-                                     ? "You are about to leave this website and will be redirected to an external platform (GitHub)."
-                                     : "Sie verlassen diese Website und werden auf eine externe Plattform (GitHub) weitergeleitet."}
-                            </p>
-                            <p className="mb-10 text-2xl">
-                                {language === "en"
-                                      ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
-                                      : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
-                            </p>
-                            <p className="mb-10 text-sm break-all opacity-80">
-                                {language === "en"
-                                    ? `(redirecting to: ${pendingUrl})`
-                                    : `(Weiterleitung zu: ${pendingUrl})`}
-                            </p>
-                            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-                                <button
-                                    type="button"
-                                    className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-background hover:bg-muted hover:shadow-lg hover:-translate-y-[2px] hover:border-foreground/60 transition-all duration-150"
-                                    onClick={() => {
-                                        setShowDialog(false);
-                                        setPendingUrl(null);
-                                    }}
-                                >
-                                    {language === "en" ? "Cancel" : "Abbrechen"}
-                                </button>
-                                <button
-                                    type="button"
-                                    className="rounded-md px-4 py-2 text-xl font-semibold bg-foreground text-background hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-foreground/70 transition-all duration-150"
-                                    onClick={() => {
-                                        const url = pendingUrl;
-                                        setShowDialog(false);
-                                        setPendingUrl(null);
-                                        if (url) {
-                                            window.open(url, "_blank", "noopener,noreferrer");
-                                        }
-                                    }}
-                                >
-                                    {language === "en" ? "Continue" : "Fortfahren"}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-                {showCustomDialog && pendingCustomUrl && (
-                    <div
-                        role="dialog"
-                        aria-modal="true"
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-                    >
-                        <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
-                            <h2 className="mb-6 text-4xl font-semibold">
-                                {language === "en" ? "External link" : "Externer Link"}
-                            </h2>
-                            <p className="mb-4 text-2xl">
-                                {language === "en"
-                                    ? `You are about to leave this website and will be redirected to an external platform (${pendingCustomLabel || "External Website"}).`
-                                    : `Sie verlassen diese Website und werden auf eine externe Plattform (${pendingCustomLabel || "Externe Website"}) weitergeleitet.`}
-                            </p>
-                            <p className="mb-10 text-2xl">
-                                {language === "en"
-                                    ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
-                                    : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
-                            </p>
-                            <p className="mb-10 text-sm break-all opacity-80">
-                                {language === "en"
-                                    ? `(redirecting to: ${pendingCustomUrl})`
-                                    : `(Weiterleitung zu: ${pendingCustomUrl})`}
-                            </p>
-                            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-                                <button
-                                    type="button"
-                                    className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-background hover:bg-muted hover:shadow-lg hover:-translate-y-[2px] hover:border-foreground/60 transition-all duration-150"
-                                    onClick={() => {
-                                        setShowCustomDialog(false);
-                                        setPendingCustomUrl(null);
-                                        setPendingCustomLabel("");
-                                    }}
-                                >
-                                    {language === "en" ? "Cancel" : "Abbrechen"}
-                                </button>
-                                <button
-                                    type="button"
-                                    className="rounded-md px-4 py-2 text-xl font-semibold bg-foreground text-background hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-foreground/70 transition-all duration-150"
-                                    onClick={() => {
-                                        const url = pendingCustomUrl;
-                                        setShowCustomDialog(false);
-                                        setPendingCustomUrl(null);
-                                        setPendingCustomLabel("");
-                                        if (url) {
-                                            window.open(url, "_blank", "noopener,noreferrer");
-                                        }
-                                    }}
-                                >
-                                    {language === "en" ? "Continue" : "Fortfahren"}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-            </main>
-        </>
-    );
+        <ProjectFacts project={project} />
+        <ProjectActions id={id} project={project} onExternalLink={openExternalLink} />
+        <ProjectVideos videoBig={project.videoBig} videos={project.videos} />
+        <ProjectGallery images={project.images} title={project.title} />
+      </div>
+      <ExternalLinkDialog {...dialogProps} />
+    </div>
+  );
 }

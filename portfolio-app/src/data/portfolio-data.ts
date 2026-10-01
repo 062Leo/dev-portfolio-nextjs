@@ -1,59 +1,9 @@
-export type ProjectImage = {
-  url: string;
-  caption?: string;
-};
-
-export type ProjectStat = {
-  icon:
-    | "Clock"
-    | "Star"
-    | "Code"
-    | "Zap"
-    | "Users"
-    | "Target"
-    | "Award"
-    | "Layers";
-  label: string;
-  value: string;
-};
-
-export type DemoControlsGroup = {
-  title: string;
-  items: string[];
-};
-
-export type Project = {
-  id: string;
-  title: string;
-  subtitle?: string;
-  description: string;
-  longDescription?: string;
-  image: string; // Kept for backward compatibility as the main image
-  images?: ProjectImage[]; // New field for multiple images with captions
-  tags: string[];
-  demoLink?: string;
-  demoImage?: string;
-  demoDownload?: string;
-  githubUrl?: string;
-  videoBig?: string;
-  custom1Link?: string;
-  custom1BTNText?: string;
-  customLabel?: string;
-  demotext: string;
-  demoControls: string[] | DemoControlsGroup[];
-  misctext: string;
-  miscimage: string;
-  miscTitle: string;
-  features?: string[];
-  techStack?: string[];
-  detailComponent?: "BoomForce" | "Old";
-  stats?: ProjectStat[];
-};
+import type { Project, ProjectImage } from "./types";
 
 export const portfolioData = {
   personal: {
     firstName: "Leo",
-    role: "Softwareentwickler (B.Sc. Softwareentwicklung, Durchschnitt 2.1) mit Fokus auf AI, Automatisierung und sauberen Code",
+    role: "Softwareentwickler (B.Sc. SWE, Ø 2.1) mit Fokus auf AI, Automatisierung und sauberen Code",
   },
   about: {
     title: "About Me",
@@ -75,7 +25,6 @@ export const portfolioData = {
         "Im Rahmen meiner Bachelorarbeit habe ich einen ML-Agenten mit dem Unity ML-Agents Toolkit in Unity trainiert, der verschiedene dreidimensionale Parkour-Level mit dynamischen Hindernissen bewältigt.\n\nDer Fokus der Arbeit liegt auf der Frage, wie Trainingsstrategien, Curriculum-Design und Domain Randomization gestaltet werden müssen, damit der Agent nicht nur einzelne Trainingsszenarien löst, sondern robuste und generalisierungsfähige Strategien lernt. Das finale Modell erreicht hohe Erfolgsraten in den Trainingsleveln und zeigt zugleich übertragbares Verhalten in einem separaten Generalisierungs-Level.\n\nTechnisch kombiniert das Projekt umfangreiche Raycast- und Vektorbeobachtungen, einen hybriden Aktionsraum (kontinuierliche Bewegung + diskrete Aktionen) sowie einen PPO-Algorithmus mit LSTM-Netzwerk. Ein eigenes Python-Automatisierungsskript steuert Langzeittrainings, passt Hyperparameter dynamisch an und ermöglicht eine detaillierte Auswertung der Ergebnisse mit TensorBoard.",
       image: "/Bilder/BachelorArbeit/BachelorArbeit.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["Reinforcement Learning", "Unity 3D", "ML-Agents", "PPO", "LSTM"],
       features: [
@@ -88,14 +37,7 @@ export const portfolioData = {
         "Python-Automatisierungsskript zur Steuerung langer Trainingsläufe und dynamischer Hyperparameter",
         "Auswertung der Trainingsläufe mit TensorBoard (Rewards, Losses, Erfolgsquoten)",
       ],
-      techStack: [
-        "Unity",
-        "ML-Agents Toolkit",
-        "C#",
-        "Python",
-        "PPO",
-        "TensorBoard",
-      ],
+      techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
       demoLink: "",
       demoImage: "",
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
@@ -150,7 +92,6 @@ export const portfolioData = {
         "**Problem:** In professionellen **Unity**-Produktionsabläufen werden wichtige Szenenanpassungen häufig im **Play Mode** vorgenommen, doch Unity verwirft diese beim Beenden des Modus. Dies erzwingt wiederholte manuelle Nacharbeit, verlangsamt die Iteration und erhöht das Risiko für fehlende oder inkonsistente Änderungen.\n\n**Lösung:** Play Mode Changes Saver wurde als produktionsorientiertes **Editor-Tool** entwickelt, das automatisch Szenen-Snapshots erstellt und Änderungen an **Transforms**, allen Unity-Components, eigenen Components und Scripts an GameObjects, Materials sowie Namen nachverfolgt. Es bietet eine geführte Side-by-Side-Prüfung, sodass nur validierte Änderungen in den Edit Mode übernommen werden. Die Lösung umfasst Inspector-Integration, Multi-Scene-Unterstützung, Undo/Redo-Support und eine robuste Objekterkennung via **hybrider GUID+Pfad-Identifikation**, die auch bei Umbenennungen stabil bleibt.\n\n**Ergebnis:** Dies ist kein reiner Prototyp, sondern ein **production-ready Produkt**, das im **Unity Asset Store** veröffentlicht wurde. Es demonstriert die vollständige Umsetzung von der Problemanalyse bis hin zu einer ausgelieferten Lösung, die den täglichen Workflow von Entwicklern und Level-Designern optimiert.\n\nWeitere Informationen zum Tool sind auf der Unity-Asset-Store-Seite verfügbar.",
       image: "/Bilder/RuntimeSaver/TitleImage.jpg",
       images: [],
-      detailComponent: "",
       videos: [],
       tags: [
         "Unity",
@@ -233,7 +174,6 @@ export const portfolioData = {
         "Engineering: strikte Schicht-Trennung (Domain / Infrastructure / API), Domain-Driven Design, Plugin-Architektur, SignalR-basierte Real-Time-Updates, Fire-and-Forget-Background-Tasks, vollständige Test-Pyramide (Vitest, pytest, xUnit) und reproduzierbares Docker-Compose-Setup mit Healthchecks für alle Services.",
       image: "/Bilder/ACMS/cases_view.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "Agentic AI",
@@ -332,7 +272,6 @@ export const portfolioData = {
         "Die Architektur ist streng geschichtet (Screens → Store → Domain → Infrastructure), folgt SOLID-Prinzipien und ist vollständig in TypeScript (Strict Mode) typisiert. Die App ist derzeit nicht im App Store veröffentlicht; eine spätere Veröffentlichung ist möglich. Jeder kann sie aus dem Quellcode bauen oder ein vorkompiliertes Build von den GitHub Releases herunterladen.",
       image: "/Bilder/FoodCheck/AppIcon.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "React Native",
@@ -427,17 +366,8 @@ export const portfolioData = {
         "Technisch setzt SongVoyage auf **Vue 3** (Composition API), **Pinia** für State Management und **Dexie.js** als IndexedDB-Wrapper für die lokale Datenhaltung. Der **Dual-Player** mit zwei YouTube-IFrame-Instanzen ermöglicht gapless Playback ohne spürbare Verzögerung. \n\n",
       image: "/Bilder/SongVoyage/Bild.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
-      tags: [
-        "Vue 3",
-        "TypeScript",
-        "SPA",
-        "Zero-Backend",
-        "IndexedDB",
-        "MusicBrainz",
-        "YouTube",
-      ],
+      tags: ["Vue 3", "TypeScript", "SPA", "Zero-Backend", "IndexedDB", "MusicBrainz", "YouTube"],
       features: [
         "Zufällige Musikentdeckung per MusicBrainz API, echte Zufallsauswahl über 126 Jahre Musikgeschichte",
         "YouTube-Videoplayback mit Gapless Dual-Player (zwei IFrame-Instanzen)",
@@ -503,7 +433,6 @@ export const portfolioData = {
         '**Hide\'n Hunt** entstand als Projekt für den Kurs "Labor Games" in meinem Studium. Es ist ein Prototyp eines asymmetrischen 4 vs 1 Online-Multiplayer Survival-Horrorspiels, in dem bis zu vier Überlebende gegen einen Killer antreten.\n\nDie Besonderheit des Spiels ist die **Prop-Mechanik**: Überlebende können sich in nahezu jeden Gegenstand der Umgebung verwandeln, um sich zu verstecken oder den Killer zu täuschen. Das zentrale Spielziel besteht darin, gemeinsam **fünf Generatoren zu reparieren**, um das **Fluchttor** zu öffnen und der Map zu entkommen, während der Killer die Spieler jagt, niederschlägt und auf **Folterstühlen** platziert.\n\nTechnisch legt das Projekt den Fokus auf **Online-Multiplayer** und **Networking** mit Unitys Netcode for GameObjects. Die korrekte Synchronisation von Spielerbewegungen, Prop-Verwandlungen, Interaktionen und dem Wechsel zwischen First- und Third-Person-Perspektive war besonders herausfordernd und erforderte viele Iterationen und Debugging-Runden.\n\nMehr Informationen finden sich im **README auf GitHub**.',
       image: "/Bilder/HideAndHunt/menu.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "Unity 3D",
@@ -590,7 +519,6 @@ export const portfolioData = {
         "**BoomForce** entstand als Projekt für den Game Engines-Kurs meines Studiums. Ich habe den Prototyp eines physikbasiertes 2D-Side-Scrolling-Shooters entwickelt, das sich auf **zerstörbare Umgebungen** und **komplexe Kettenreaktionen** konzentriert.\n\nDas Spiel demonstriert fortgeschrittene Spielmechaniken: Ein **ausgefeiltes Explosionssystem** berechnet Schäden basierend auf Nähe und Objekttyp. Ein **robustes State-Management** verwaltet mehrere gleichzeitige Kettenreaktionen ohne Performance-Probleme.\n\nSpieler interagieren mit einer dynamischen Welt aus **zerstörbaren Blöcken**, **fallenden Steinen** und **verschiedenen Fasstypen** - jedes mit eigenen Explosionsradien und Brandeffekten. Das Projekt zeigt tiefes Verständnis für **Physik-Systeme**, **Event-Handling** und **Optimierungstechniken**.\n\n Mehr Informationen und technische Details  im **README auf GitHub**.",
       image: "/Bilder/BoomForce/BoomForce.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [
         {
           url: "/Videos/BoomForce/KettenReaktionen.mp4",
@@ -613,13 +541,7 @@ export const portfolioData = {
             "Komplexe Kettenreaktion:\n Mehrere Fässer triggern sich gegenseitig und beeinflussen die Umliegenden Blöcke:\n\n Blöcke in Farb-Kategorien:\n Sofortige Zerstörung; Brennt und stirbt; Brennt und bleibt am leben;\n (je nach Anzahl und Radius der Fässer die den Block triggern) ",
         },
       ],
-      tags: [
-        "Unity 2D",
-        "Physics Engine",
-        "Destructible Environment",
-        "State Management",
-        "C#",
-      ],
+      tags: ["Unity 2D", "Physics Engine", "Destructible Environment", "State Management", "C#"],
       features: [
         "Tilemap-basiertes Grid-System mit zerstörbaren Blöcken",
         "Physikbasiertes Explosionssystem mit Radiusberechnung",
@@ -656,13 +578,11 @@ export const portfolioData = {
       id: "coming-soon",
       title: "Bald verfügbar",
       subtitle: "",
-      description:
-        "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
+      description: "Dieses Projekt ist noch geheim - mehr Infos bald verfügbar.",
       longDescription:
         "Dieser Eintrag ist ein Platzhalter. In Zukunft werden hier weitere Projekte präsentiert.",
       image: "/Bilder/dummy.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["Bald verfügbar", "Portfolio", "Mehr Projekte"],
       features: ["Platzhalter für zukünftige Projekte", "In Vorbereitung"],
@@ -693,7 +613,6 @@ export const portfolioData = {
     //   longDescription: "",
     //   image: "",
     //   images: [] as ProjectImage[],
-    //   detailComponent: "",
     //   videos: [],
     //   tags: ["", "", "", "", ""],
     //   features: ["", "", "", ""],
@@ -711,5 +630,5 @@ export const portfolioData = {
     //   stats: [],
     // },
     // ,
-  ],
+  ] satisfies Project[],
 };

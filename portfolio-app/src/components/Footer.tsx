@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { ExternalLinkDialog, useExternalLink } from "@/components/ui/ExternalLinkDialog";
+import Link from "next/link";
 import { ArrowUp } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
+import { useT } from "@/i18n";
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg
@@ -51,170 +51,110 @@ const ItchIcon = ({ className }: { className?: string }) => (
 );
 
 export function Footer() {
-  const { language } = useLanguage();
-  const [mounted, setMounted] = useState(false);
-  const [showDialog, setShowDialog] = useState(false);
-  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
-  const [pendingLabel, setPendingLabel] = useState<string>("");
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const handleExternalLink = (url: string, label: string) => {
-    setPendingUrl(url);
-    setPendingLabel(label);
-    setShowDialog(true);
-  };
+  const t = useT();
+  const { open: openExternalLink, dialogProps } = useExternalLink();
 
   return (
     <>
-      <footer className="relative border-t border-[rgba(167,139,250,0.15)]">
+      <footer className="relative border-t border-accent/15">
         <div className="container mx-auto max-w-6xl px-4 pb-8 pt-12">
           <div className="grid grid-cols-1 gap-10 md:grid-cols-[2fr_1fr_2fr]">
             {/* Brand */}
             <div>
               <span className="text-xl font-bold">
-                <span className="text-foreground/90">leo</span>
-                <span className="text-[rgba(248,113,113,1)]">.dev</span>
+                <span className="text-text/90">leo</span>
+                <span className="text-accent-2-light">.dev</span>
               </span>
-              <p className="mt-3 text-sm text-foreground/60">
-                {language === "de"
-                  ? "Softwareentwickler mit Fokus auf AI, Automatisierung und interaktive Anwendungen."
-                  : "Software developer focused on AI, automation and interactive applications."}
-              </p>
+              <p className="mt-3 text-sm text-text-muted">{t.footer.tagline}</p>
             </div>
 
             {/* Navigation */}
             <div>
-              <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-foreground/50">
-                {language === "de" ? "Navigation" : "Navigation"}
-              </h4>
-              <nav className="flex flex-col gap-2 text-sm">
-                <a href="/" className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors">
-                  {language === "de" ? "Home" : "Home"}
-                </a>
-                <a href="/#about" className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors">
-                  {language === "de" ? "Über mich" : "About"}
-                </a>
-                <a href="/projects" className="text-foreground/70 hover:text-[rgba(248,113,113,1)] transition-colors">
-                  {language === "de" ? "Projekte" : "Projects"}
-                </a>
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
+                {t.footer.navigation}
+              </h2>
+              <nav
+                aria-label={t.footer.navLabel}
+                className="flex flex-col gap-2 text-sm max-md:gap-0"
+              >
+                <Link
+                  href="/"
+                  className="flex items-center text-text/70 hover:text-accent-2-light transition-colors max-md:min-h-11"
+                >
+                  {t.nav.home}
+                </Link>
+                <Link
+                  href="/#about"
+                  className="flex items-center text-text/70 hover:text-accent-2-light transition-colors max-md:min-h-11"
+                >
+                  {t.nav.about}
+                </Link>
+                <Link
+                  href="/projects"
+                  className="flex items-center text-text/70 hover:text-accent-2-light transition-colors max-md:min-h-11"
+                >
+                  {t.nav.projects}
+                </Link>
               </nav>
             </div>
 
             {/* Links & Legal */}
             <div>
-              <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-foreground/50">
-                {language === "de" ? "Links" : "Links"}
-              </h4>
-              <div className="flex gap-4 mb-4">
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
+                {t.footer.links}
+              </h2>
+              <div className="flex gap-6 mb-4">
                 <button
                   type="button"
-                  onClick={() => handleExternalLink("https://github.com/062Leo", "GitHub")}
-                  className="text-foreground/60 hover:text-[rgba(248,113,113,1)] transition-colors cursor-pointer"
+                  onClick={() => openExternalLink("https://github.com/062Leo", "GitHub")}
+                  className="-m-3 p-3 text-text-muted hover:text-accent-2-light transition-colors cursor-pointer"
                   aria-label="GitHub"
                 >
                   <GithubIcon />
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleExternalLink("https://assetstore.unity.com/publishers/133842", "Unity Asset Store")}
-                  className="text-foreground/60 hover:text-[rgba(248,113,113,1)] transition-colors cursor-pointer"
+                  onClick={() =>
+                    openExternalLink(
+                      "https://assetstore.unity.com/publishers/133842",
+                      "Unity Asset Store",
+                    )
+                  }
+                  className="-m-3 p-3 text-text-muted hover:text-accent-2-light transition-colors cursor-pointer"
                   aria-label="Unity Asset Store"
                 >
                   <UnityIcon />
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleExternalLink("https://062leo.itch.io/", "itch.io")}
-                  className="text-foreground/60 hover:text-[rgba(248,113,113,1)] transition-colors cursor-pointer"
+                  onClick={() => openExternalLink("https://062leo.itch.io/", "itch.io")}
+                  className="-m-3 p-3 text-text-muted hover:text-accent-2-light transition-colors cursor-pointer"
                   aria-label="Itch.io"
                 >
                   <ItchIcon />
                 </button>
               </div>
-              <p className="text-xs text-foreground/40 leading-relaxed">
-                {language === "de"
-                  ? "Private Portfolio-Website. Externe Links öffnen externe Plattformen. Diese Website speichert keine personenbezogenen Daten."
-                  : "Private portfolio website. External links open external platforms. This website does not store any personal data."}
-              </p>
+              <p className="text-xs text-text-muted leading-relaxed">{t.footer.notice}</p>
             </div>
           </div>
 
-          <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-[rgba(167,139,250,0.1)] pt-6 md:flex-row">
-            <p className="text-xs text-foreground/50">
-              © {new Date().getFullYear()} Leo.{" "}
-              {language === "de" ? "Alle Rechte vorbehalten." : "All rights reserved."}
+          <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-accent/10 pt-6 md:flex-row">
+            <p className="text-xs text-text-muted">
+              © {new Date().getFullYear()} Leo. {t.footer.rights}
             </p>
             <button
               type="button"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="flex items-center gap-1.5 rounded-full border border-[rgba(167,139,250,0.3)] px-3 py-1.5 text-xs text-foreground/50 hover:text-foreground/90 hover:border-[rgba(167,139,250,0.6)] transition-all duration-300"
+              className="flex items-center gap-1.5 rounded-full border border-accent/30 px-3 py-1.5 text-xs text-text-muted hover:text-text/90 hover:border-accent/60 transition-all duration-300 max-md:min-h-11"
             >
               <ArrowUp className="h-3 w-3" />
-              {language === "de" ? "Nach oben" : "Back to top"}
+              {t.footer.backToTop}
             </button>
           </div>
         </div>
       </footer>
 
-      {mounted && showDialog && pendingUrl && createPortal(
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-        >
-          <div className="w-full max-w-2xl rounded-3xl bg-background/95 px-10 py-12 text-foreground shadow-2xl border border-border">
-            <h2 className="mb-6 text-4xl font-semibold">
-              {language === "en" ? "External link" : "Externer Link"}
-            </h2>
-            <p className="mb-4 text-2xl">
-              {language === "en"
-                ? `You are about to leave this website and will be redirected to an external platform (${pendingLabel || "External Website"}).`
-                : `Sie verlassen diese Website und werden auf eine externe Plattform (${pendingLabel || "Externe Website"}) weitergeleitet.`}
-            </p>
-            <p className="mb-10 text-2xl">
-              {language === "en"
-                ? "The processing of personal data on the destination website is the sole responsibility of the respective operator."
-                : "Für die Verarbeitung personenbezogener Daten auf der Zielseite ist ausschließlich der jeweilige Betreiber verantwortlich."}
-            </p>
-            <p className="mb-10 text-sm break-all opacity-80">
-              {language === "en"
-                ? `(redirecting to: ${pendingUrl})`
-                : `(Weiterleitung zu: ${pendingUrl})`}
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                className="rounded-md px-4 py-2 text-xl font-medium border border-border bg-background hover:bg-muted hover:shadow-lg hover:-translate-y-[2px] hover:border-foreground/60 transition-all duration-150"
-                onClick={() => {
-                  setShowDialog(false);
-                  setPendingUrl(null);
-                  setPendingLabel("");
-                }}
-              >
-                {language === "en" ? "Cancel" : "Abbrechen"}
-              </button>
-              <button
-                type="button"
-                className="rounded-md px-4 py-2 text-xl font-semibold bg-foreground text-background hover:brightness-110 hover:shadow-xl hover:-translate-y-[2px] hover:ring-2 hover:ring-foreground/70 transition-all duration-150"
-                onClick={() => {
-                  const url = pendingUrl;
-                  setShowDialog(false);
-                  setPendingUrl(null);
-                  setPendingLabel("");
-                  if (url) {
-                    window.open(url, "_blank", "noopener,noreferrer");
-                  }
-                }}
-              >
-                {language === "en" ? "Continue" : "Fortfahren"}
-              </button>
-            </div>
-          </div>
-        </div>
-      , document.body)}
+      <ExternalLinkDialog {...dialogProps} />
     </>
   );
 }

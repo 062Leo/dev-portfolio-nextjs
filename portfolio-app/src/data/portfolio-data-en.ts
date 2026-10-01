@@ -1,62 +1,9 @@
-export type ProjectImage = {
-  url: string;
-  caption?: string;
-};
-
-export type ProjectStat = {
-  icon:
-    | "Clock"
-    | "Star"
-    | "Code"
-    | "Zap"
-    | "Users"
-    | "Target"
-    | "DollarSign"
-    | "Layers"
-    | "Download"
-    | "Eye"
-    | "TrendingUp";
-  label: string;
-  value: string;
-};
-
-export type DemoControlsGroup = {
-  title: string;
-  items: string[];
-};
-
-export type Project = {
-  id: string;
-  title: string;
-  subtitle?: string;
-  description: string;
-  longDescription?: string;
-  image: string; // Kept for backward compatibility as the main image
-  images?: ProjectImage[]; // New field for multiple images with captions
-  tags: string[];
-  demoLink?: string;
-  demoImage?: string;
-  demoDownload?: string;
-  githubUrl?: string;
-  videoBig?: string;
-  custom1Link?: string;
-  custom1BTNText?: string;
-  customLabel?: string;
-  demotext: string;
-  demoControls: string[] | DemoControlsGroup[];
-  misctext: string;
-  miscimage: string;
-  miscTitle: string;
-  features?: string[];
-  techStack?: string[];
-  detailComponent?: "BoomForce" | "Old";
-  stats?: ProjectStat[];
-};
+import type { Project, ProjectImage } from "./types";
 
 export const portfolioData = {
   personal: {
     firstName: "Leo",
-    role: "Software Developer (B.Sc. Software Engineering, GPA 2.1) with expertise in AI, automation, and clean code",
+    role: "Software Developer (B.Sc. SWE, Ø 2.1) with expertise in AI, automation, and clean code",
   },
   about: {
     title: "About Me",
@@ -78,7 +25,6 @@ export const portfolioData = {
         "As part of my bachelor's thesis I trained an ML agent with the Unity ML-Agents Toolkit in Unity that masters various three-dimensional parkour levels with dynamic obstacles.\n\nThe focus of the thesis is on how training strategies, curriculum design and domain randomization must be structured so that the agent not only solves individual training scenarios but learns robust and generalizable strategies. The final model achieves high success rates in the training levels and at the same time shows transferable behaviour in a separate generalization level.\n\nTechnically, the project combines extensive raycast and vector observations, a hybrid action space (continuous movement + discrete actions) and a PPO algorithm with an LSTM network. A custom Python automation script controls long-term training runs, dynamically adjusts hyperparameters and enables a detailed evaluation of the results with TensorBoard.",
       image: "/Bilder/BachelorArbeit/BachelorArbeit.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["Reinforcement Learning", "Unity 3D", "ML-Agents", "PPO", "LSTM"],
       features: [
@@ -91,14 +37,7 @@ export const portfolioData = {
         "Python automation script for controlling long training runs and dynamic hyperparameters",
         "Evaluation of training runs with TensorBoard (rewards, losses, success rates)",
       ],
-      techStack: [
-        "Unity",
-        "ML-Agents Toolkit",
-        "C#",
-        "Python",
-        "PPO",
-        "TensorBoard",
-      ],
+      techStack: ["Unity", "ML-Agents Toolkit", "C#", "Python", "PPO", "TensorBoard"],
       demoLink: "",
       demoImage: "",
       demoDownload: "https://github.com/062Leo/Bachelorarbeit-Demo/releases",
@@ -153,7 +92,6 @@ export const portfolioData = {
         "**Problem:** In professional **Unity** production workflows, important scene tweaks are often made during **Play Mode**, but Unity discards them when Play Mode ends. This repeatedly forces manual rework, slows iteration, and increases the risk of missing or inconsistent changes.\n\n**Solution:** Play Mode Changes Saver was built as a production-focused **Editor tool** that automatically snapshots scenes, tracks changes across **transforms**, all Unity components, custom components and scripts attached to GameObjects, materials, and names, and provides guided side-by-side review so only validated changes are applied back to Edit Mode. It includes inspector integration, multi-scene handling, undo/redo support, and robust object matching via **hybrid GUID+path identification** that remains stable across renames.\n\n**Result:** This is not just a prototype. It is a **production-ready product** published on the **Unity Asset Store**, demonstrating end-to-end delivery from problem analysis to a shipped solution that improves day-to-day developer and level-design workflows.\n\nMore information about the tool is available on the Unity Asset Store page.\n\nAccess the asset on the Unity Asset Store.",
       image: "/Bilder/RuntimeSaver/TitleImage.jpg",
       images: [],
-      detailComponent: "",
       videos: [],
       tags: [
         "Unity",
@@ -232,7 +170,6 @@ export const portfolioData = {
         "Engineering: strict layer separation (Domain / Infrastructure / API), Domain-Driven Design, plugin architecture, SignalR-based real-time updates, fire-and-forget background tasks, full test pyramid (Vitest, pytest, xUnit) and reproducible Docker Compose setup with health checks for all services.",
       image: "/Bilder/ACMS/cases_view.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "Agentic AI",
@@ -322,7 +259,7 @@ export const portfolioData = {
       subtitle:
         "Barcode scanner for ingredient analysis, NOVA classification & nutritional risk assessment",
       description:
-        "Privacy-first mobile app (Expo/React Native) that scans food barcodes, evaluates ingredients and additives against 683 health rules, and classifies processing levels — no proprietary backend, no tracking, no ads.",
+        "Privacy-first mobile app (Expo/React Native) that scans food barcodes, evaluates ingredients and additives against 683 health rules, and classifies processing levels. No proprietary backend, no tracking, no ads.",
       longDescription:
         "FoodCheck is a React Native (Expo) app that recognizes EAN-8/EAN-13 barcodes via the camera, caches product data locally in SQLite, and checks ingredients for health-related risk factors.\n\n" +
         "The app combines local SQLite persistence, on-device ML Kit OCR for ingredient scans, and lookups against the Open Food Facts API v2. It includes an extensive red-flag system with 683 seed rules across 19 categories (E-numbers, sweeteners, preservatives, emulsifiers, hydrogenated fats, phosphates, etc.), multilingual ingredient displays in 8 languages (de/en/fr/it/es/nl/pt/pl), and NOVA / Nutri-Score classification with color-coded traffic-light ratings. AI-powered insights from Robotoff complement the analysis with confidence-scored predictions for categories, labels, and ingredients.\n\n" +
@@ -331,7 +268,6 @@ export const portfolioData = {
         "The architecture is strictly layered (screens → store → domain → infrastructure), follows SOLID principles, and is fully typed in TypeScript strict mode. The app is currently not published in an app store; a later release is possible. Anyone can build it from source or download a build from the GitHub releases.",
       image: "/Bilder/FoodCheck/AppIcon.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "React Native",
@@ -426,28 +362,19 @@ export const portfolioData = {
         "Technically, SongVoyage is built with **Vue 3** (Composition API), **Pinia** for state management, and **Dexie.js** as an IndexedDB wrapper for local data storage. The **Dual-Player** with two YouTube IFrame instances enables gapless playback without noticeable delay.\n\n",
       image: "/Bilder/SongVoyage/Bild.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
-      tags: [
-        "Vue 3",
-        "TypeScript",
-        "SPA",
-        "Zero-Backend",
-        "IndexedDB",
-        "MusicBrainz",
-        "YouTube",
-      ],
+      tags: ["Vue 3", "TypeScript", "SPA", "Zero-Backend", "IndexedDB", "MusicBrainz", "YouTube"],
       features: [
-        "Random music discovery via MusicBrainz API — truly random selection across 126 years of music history",
+        "Random music discovery via MusicBrainz API: truly random selection across 126 years of music history",
         "YouTube video playback with gapless dual-player (two IFrame instances)",
         "0-5 star rating with keyboard shortcuts (keys 0-5, S for skip)",
         "Custom playlists and automatic rating playlists (one per rating level)",
         "Artist blocking with permanent filtering",
         "Full data export/import as JSON (data portability)",
         "Password protection with SHA-256 auto-login via URL parameter",
-        "Fully client-side — no server data storage, no tracking, no cookies",
+        "Fully client-side: no server data storage, no tracking, no cookies",
         "Zero-quota YouTube search via HTML scraping (no YouTube Data API)",
-        "No registration — runs anonymously in the browser",
+        "No registration, runs anonymously in the browser",
       ],
       techStack: [
         "Vue 3",
@@ -502,7 +429,6 @@ export const portfolioData = {
         "**Hide'n Hunt** was created as a project for the 'Labor Games' course in my studies. It is a prototype of an asymmetric 4 vs 1 online multiplayer survival horror game in which up to four survivors compete against one killer.\n\nThe special feature of the game is the **prop mechanic**: survivors can transform into almost any object in the environment to hide or deceive the killer. The central game objective is to work together to **repair five generators** in order to open the **escape gate** and escape the map while the killer hunts the players, knocks them down and places them on **torture chairs**.\n\nTechnically, the project focuses on **online multiplayer** and **networking** with Unity's Netcode for GameObjects. Correct synchronization of player movement, prop transformations, interactions and switching between first- and third-person perspectives was particularly challenging and required many iterations and debugging sessions.\n\nMore information can be found in the **README on GitHub**.",
       image: "/Bilder/HideAndHunt/menu.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "Unity 3D",
@@ -585,7 +511,6 @@ export const portfolioData = {
         "**BoomForce** was created as a project for the Game Engines course in my studies. I developed the prototype of a physics-based 2D side-scrolling shooter that focuses on **destructible environments** and **complex chain reactions**.\n\nThe game demonstrates advanced gameplay mechanics: a **sophisticated explosion system** calculates damage based on distance and object type. A **robust state management system** manages multiple simultaneous chain reactions without performance issues.\n\nPlayers interact with a dynamic world of **destructible blocks**, **falling rocks** and **different barrel types** - each with its own explosion radius and fire effects. The project demonstrates a deep understanding of **physics systems**, **event handling** and **optimization techniques**.\n\nMore information and technical details can be found in the **README on GitHub**.",
       image: "/Bilder/BoomForce/BoomForce.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [
         {
           url: "/Videos/BoomForce/KettenReaktionen.mp4",
@@ -608,13 +533,7 @@ export const portfolioData = {
             "Complex chain reaction:\n Multiple barrels trigger each other and affect the surrounding blocks:\n\n Blocks in color categories:\n Instant destruction; burns and dies; burns and survives;\n (depending on the number and radius of the barrels that trigger the block) ",
         },
       ],
-      tags: [
-        "Unity 2D",
-        "Physics Engine",
-        "Destructible Environment",
-        "State Management",
-        "C#",
-      ],
+      tags: ["Unity 2D", "Physics Engine", "Destructible Environment", "State Management", "C#"],
       features: [
         "Tilemap-based grid system with destructible blocks",
         "Physics-based explosion system with radius calculation",
@@ -651,13 +570,11 @@ export const portfolioData = {
       id: "coming-soon",
       title: "Coming soon",
       subtitle: "",
-      description:
-        "This project is still secret - more information coming soon.",
+      description: "This project is still secret - more information coming soon.",
       longDescription:
         "This entry is a placeholder. In the future, additional projects will be presented here.",
       image: "/Bilder/dummy.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["Coming soon", "Portfolio", "More projects"],
       features: ["Placeholder for future projects", "In preparation"],
@@ -680,5 +597,5 @@ export const portfolioData = {
         { icon: "Clock", label: "Schedule", value: "Coming soon" },
       ],
     },
-  ],
+  ] satisfies Project[],
 };

@@ -1,0 +1,68 @@
+name: check
+
+# Runs the quality gate on every push to main and the working branches and on pull
+# requests into main. No secrets are needed: the e2e tests start the app with the test
+# password from playwright.config.ts, and nothing is deployed from here (Vercel deploys
+# main on its own).
+
+on:
+  push:
+    branches:
+      - main
+      - "working*"
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: portfolio-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: portfolio-app/.nvmrc
+          cache: npm
+          cache-dependency-path: portfolio-app/package-lock.json
+      - run: npm ci
+      # Lint, types, unit tests, formatting, build and dependency audit.
+      - run: npm run check
+      - run: npx knip
+
+  e2e:
+    name: e2e
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: portfolio-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: portfolio-app/.nvmrc
+          cache: npm
+          cache-dependency-path: portfolio-app/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      # Builds the app and starts it on port 3100 itself (see playwright.config.ts).
+      - run: npm run e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: portfolio-app/playwright-report
+          retention-days: 7

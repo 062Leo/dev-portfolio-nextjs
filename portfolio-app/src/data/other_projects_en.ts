@@ -1,53 +1,4 @@
-export type ProjectImage = {
-  url: string;
-  caption?: string;
-};
-
-export type ProjectStat = {
-  icon:
-    | "Clock"
-    | "Star"
-    | "Code"
-    | "Zap"
-    | "Users"
-    | "Target"
-    | "Award"
-    | "Layers";
-  label: string;
-  value: string;
-};
-
-export type DemoControlsGroup = {
-  title: string;
-  items: string[];
-};
-
-export type Project = {
-  id: string;
-  title: string;
-  subtitle?: string;
-  description: string;
-  longDescription?: string;
-  image: string; // Kept for backward compatibility as the main image
-  images?: ProjectImage[]; // New field for multiple images with captions
-  custom1Link?: string;
-  custom1BTNText?: string;
-  tags: string[];
-  demoLink?: string;
-  demoImage?: string;
-  demoDownload?: string;
-  githubUrl?: string;
-  youtubeLink?: string;
-  demotext: string;
-  demoControls: string[] | DemoControlsGroup[];
-  misctext: string;
-  miscimage: string;
-  miscTitle: string;
-  features?: string[];
-  techStack?: string[];
-  detailComponent?: "BoomForce" | "Old";
-  stats?: ProjectStat[];
-};
+import type { Project, ProjectImage } from "./types";
 
 export const otherProjects = {
   projects: [
@@ -78,7 +29,6 @@ export const otherProjects = {
           caption: "Learning platform with quizzes on historical events",
         },
       ] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "Crypto Dashboard",
@@ -136,7 +86,6 @@ export const otherProjects = {
         "An interactive desktop application for Conway's Game of Life. It offers a free drawing mode and prefab placement, supports theme switching, variable brush sizes as well as flexible canvas size and speed settings, implemented with C#, .NET and WPF.",
       image: "/Bilder/GameOfLife/GameOfLife.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["C#", ".NET", "WPF", "Desktop", "Simulation"],
       features: [
@@ -150,8 +99,7 @@ export const otherProjects = {
       demoImage: "",
       demoDownload:
         "https://github.com/062Leo/Conway-s-Game-of-Life-C_Sharp-WPF/releases/tag/releaseV1",
-      githubUrl:
-        "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
+      githubUrl: "https://github.com/LeosGmbH/Conway-s-Game-of-Life-C_Sharp-WPF",
       videoBig: "/Videos/Big/GameOfLife.mp4",
       custom1Link: "",
       custom1BTNText: "",
@@ -173,7 +121,6 @@ export const otherProjects = {
         "This prototype focuses on fast, vertical movement similar to DOOM. The player has two dashes with a cooldown indicator in the UI, trampolines with different jump heights and a well-thought-out wall-climbing system. Wall-climbing is only possible within specific view angles: vertically up to about 90 degrees away from the wall, horizontally up to about 70 degrees. This ensures the player is always ready to jump off, similar to the original DOOM. In addition, there are multiple spawn points and the player dies when falling out of the map.",
       image: "/Bilder/Doom/Doom.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "Unity",
@@ -233,7 +180,6 @@ export const otherProjects = {
         "Arcanoid 3D is a modern 3D take on classic brick-breaker gameplay. There are different brick types that need to be hit a different number of times (blue bricks once, green twice, yellow three times). After every three destroyed bricks, power-ups spawn: a green power-up spawns a barrier below the paddle for 10 seconds so the ball cannot leave the play area; a yellow power-up makes the paddle wider for 10 seconds; a blue power-up fires two shots that each count as a ball hit. In addition, there is a game-over screen with a restart option when all lives are used up, and a won-game screen when all bricks have been destroyed. The score is displayed (each destroyed brick gives +10 points, when the ball is lost one life is removed and 50 points are deducted). On the top wall, the current lives and the remaining duration of the active power-ups are displayed, including an animated life indicator.",
       image: "/Bilder/Arcanoid/arcanoid.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["Unity 3D", "Arcanoid", "Powerups", "Score System", "Prototype"],
       features: [
@@ -252,8 +198,7 @@ export const otherProjects = {
       demoDownload: "",
       githubUrl: "",
       videoBig: "/Videos/Big/Arcanoid.mp4",
-      demotext:
-        "Gameplay showcase of Arcanoid 3D with bricks, power-ups, scoring and life system.",
+      demotext: "Gameplay showcase of Arcanoid 3D with bricks, power-ups, scoring and life system.",
       demoControls: [],
       misctext: "",
       miscimage: "",
@@ -288,7 +233,6 @@ export const otherProjects = {
         "The goal of this project was to develop an autonomous vehicle that can follow a colored target object without any manual input. At the core of the system is the Pixy2 camera, which detects objects based on color signatures. An Elegoo Smart Robot Car V3 handles the movement, while an Arduino Uno processes the sensor data and controls the motors. In the code, various driving functions such as forward, left, right and stop are provided. Based on the position of the object derived from the camera image, the vehicle decides whether it should steer left or right or come to a stop.\n\nThe distance to the target object is determined solely by the size of the detected object in the camera image: the larger the object appears, the closer it is. This allows the vehicle to decide whether it should keep moving or stop. The resulting prototype clearly demonstrates how color detection and camera data can be used to realize autonomous color-following behavior and provides a solid foundation for further experiments.",
       image: "/Bilder/SmartCar/smartCar.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: [
         "Arduino",
@@ -344,21 +288,14 @@ export const otherProjects = {
       id: "",
       title: "2D Online Multiplayer Mobile Card Game",
       subtitle: "",
-      description:
-        "Private project built with Unity, C# and Photon PUN 2 for Android.",
+      description: "Private project built with Unity, C# and Photon PUN 2 for Android.",
       longDescription:
         "A 2D online multiplayer card game for mobile (Android), developed as a private project. It uses Photon PUN 2 for the multiplayer part and provides an optimized mobile UI/UX.",
       image: "/Bilder/dummy.png", // Placeholder
       images: [],
-      detailComponent: "",
       videos: [],
       tags: ["Unity 2D", "Photon PUN 2", "Android", "Mobile"],
-      features: [
-        "Online multiplayer",
-        "Android build",
-        "Mobile UI/UX",
-        "Complex card logic",
-      ],
+      features: ["Online multiplayer", "Android build", "Mobile UI/UX", "Complex card logic"],
       techStack: ["Unity", "C#", "Photon PUN 2"],
       demoLink: "",
       demoImage: "",
@@ -381,7 +318,6 @@ export const otherProjects = {
     //     "",
     //   image: "",
     //   images: [] as ProjectImage[],
-    //   detailComponent: "",
     //   videos: [],
     //   tags: ["", "", "", "", ""],
     //   features: [
@@ -407,13 +343,11 @@ export const otherProjects = {
       id: "coming-soon",
       title: "Coming soon",
       subtitle: "",
-      description:
-        "This project is still secret - more information coming soon.",
+      description: "This project is still secret - more information coming soon.",
       longDescription:
         "This entry is a placeholder. In the future, additional projects will be presented here.",
       image: "/Bilder/dummy.png",
       images: [] as ProjectImage[],
-      detailComponent: "",
       videos: [],
       tags: ["Coming soon", "Portfolio", "More projects"],
       features: ["Placeholder for future projects", "In preparation"],
@@ -433,5 +367,5 @@ export const otherProjects = {
         { icon: "Clock", label: "Schedule", value: "Coming soon" },
       ],
     },
-  ],
+  ] satisfies Project[],
 };

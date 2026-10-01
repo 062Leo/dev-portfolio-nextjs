@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { getColor } from "@/components/colors";
+import { readToken } from "@/lib/theme";
 
 type ShiftState = {
   startX: number;
@@ -38,6 +38,19 @@ const GRID_DIVISOR = 20;
 const MIN_SHIFT_DURATION = 1000;
 const MAX_SHIFT_DURATION = 2000;
 
+// Without a mouse (touch devices) the focus point wanders on its own: it eases from one
+// random waypoint to the next so the network keeps moving instead of only reacting to
+// taps. A tap pulls the point to the finger and the wandering continues from there.
+const NO_HOVER_QUERY = "(hover: none)";
+const MIN_WANDER_DURATION = 3000;
+const MAX_WANDER_DURATION = 6000;
+const WANDER_MARGIN = 0.15; // fraction of width/height kept free at the edges
+
+// A mobile browser fires resize whenever its address bar shows or hides while scrolling.
+// Resizes are handled once they have settled, and only a new width rebuilds the network;
+// a height change keeps the points, the focus point and the wandering.
+const RESIZE_DEBOUNCE_MS = 200;
+
 export function NetworkBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -57,9 +70,13 @@ export function NetworkBackground() {
     const target: Target = { x: 0, y: 0 };
     let animationFrameId = 0;
     let points: Point[] = [];
-    const colors = getColor(true);
-    const strokeBase = colors.networkStroke;
-    const circleBase = colors.networkCircle;
+    // Wandering is on while no mouse has been seen; the first real mouse move ends it.
+    let wandering = window.matchMedia(NO_HOVER_QUERY).matches;
+    let wander: ShiftState | null = null;
+    // Canvas colours come from the tokens in globals.css; the per-point fade is drawn
+    // with globalAlpha.
+    const strokeColor = readToken("accent-2");
+    const circleColor = readToken("sky");
 
     const getDistance = (p1: Target, p2: Target) => {
       const dx = p1.x - p2.x;
@@ -130,8 +147,7 @@ export function NetworkBackground() {
         targetX: point.originX - 50 + Math.random() * 100,
         targetY: point.originY - 50 + Math.random() * 100,
         startTime: now,
-        duration:
-          MIN_SHIFT_DURATION + Math.random() * (MAX_SHIFT_DURATION - MIN_SHIFT_DURATION),
+        duration: MIN_SHIFT_DURATION + Math.random() * (MAX_SHIFT_DURATION - MIN_SHIFT_DURATION),
       };
     };
 
@@ -159,12 +175,12 @@ export function NetworkBackground() {
         return;
       }
 
+      context.globalAlpha = point.active;
+      context.strokeStyle = strokeColor;
       point.closest.forEach((closestPoint) => {
         context.beginPath();
         context.moveTo(point.x, point.y);
         context.lineTo(closestPoint.x, closestPoint.y);
-        // Replace the alpha value in the rgba string
-        context.strokeStyle = strokeBase.replace(/[\d.]+\)$/, `${point.active})`);
         context.stroke();
       });
     };
@@ -173,15 +189,42 @@ export function NetworkBackground() {
       if (!point.circle.active) {
         return;
       }
+      context.globalAlpha = point.circle.active;
+      context.fillStyle = circleColor;
       context.beginPath();
       context.arc(point.x, point.y, point.circle.radius, 0, Math.PI * 2, false);
-      // Replace the alpha value in the rgba string
-      context.fillStyle = circleBase.replace(/[\d.]+\)$/, `${point.circle.active})`);
       context.fill();
     };
 
+    const startWander = (now: number) => {
+      wander = {
+        startX: target.x,
+        startY: target.y,
+        targetX: width * (WANDER_MARGIN + Math.random() * (1 - 2 * WANDER_MARGIN)),
+        targetY: height * (WANDER_MARGIN + Math.random() * (1 - 2 * WANDER_MARGIN)),
+        startTime: now,
+        duration: MIN_WANDER_DURATION + Math.random() * (MAX_WANDER_DURATION - MIN_WANDER_DURATION),
+      };
+    };
+
+    const updateWanderingTarget = (now: number) => {
+      if (!wandering) return;
+      if (!wander) {
+        startWander(now);
+        return;
+      }
+      const { startX, startY, targetX, targetY, startTime, duration } = wander;
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = easeInOutCirc(progress);
+      target.x = startX + (targetX - startX) * eased;
+      target.y = startY + (targetY - startY) * eased;
+      if (progress >= 1) startWander(now);
+    };
+
     const animate = (now: number) => {
+      context.globalAlpha = 1;
       context.clearRect(0, 0, width, height);
+      updateWanderingTarget(now);
 
       points.forEach((point) => {
         updatePointPosition(point, now);
@@ -208,17 +251,37 @@ export function NetworkBackground() {
       animationFrameId = window.requestAnimationFrame(animate);
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
-      const { clientX, clientY } = event;
-      target.x = clientX;
-      target.y = clientY;
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType === "mouse") {
+        wandering = false;
+        wander = null;
+      }
+      target.x = event.clientX;
+      target.y = event.clientY;
     };
 
-    const handleResize = () => {
+    // A tap pulls the focus point to the finger; the next wander segment starts there.
+    const handlePointerDown = (event: PointerEvent) => {
+      if (event.pointerType === "mouse") return;
+      target.x = event.clientX;
+      target.y = event.clientY;
+      wander = null;
+    };
+
+    const applyResize = () => {
+      const previousWidth = width;
       configureCanvasSize();
+      if (width === previousWidth) return;
       target.x = width / 2;
       target.y = height / 2;
+      wander = null;
       initialisePoints();
+    };
+
+    let resizeTimer: ReturnType<typeof setTimeout> | undefined;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyResize, RESIZE_DEBOUNCE_MS);
     };
 
     configureCanvasSize();
@@ -227,18 +290,22 @@ export function NetworkBackground() {
     target.y = height / 2;
     animationFrameId = window.requestAnimationFrame(animate);
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerdown", handlePointerDown);
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("mousemove", handleMouseMove);
+      clearTimeout(resizeTimer);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerdown", handlePointerDown);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-0" style={{ background: getColor(true).networkBackground }}>
+    // Decoration only: hidden from assistive technology, so it needs no landmark.
+    <div className="network-backdrop pointer-events-none fixed inset-0 z-0" aria-hidden="true">
       <canvas ref={canvasRef} className="h-full w-full" />
     </div>
   );
