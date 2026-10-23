@@ -88,8 +88,10 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
 
     const ro = new ResizeObserver(() => {
       const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
+      // Backing store in device pixels, so the ropes stay as sharp as the SVG on HiDPI screens.
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
     });
     ro.observe(canvas);
 
@@ -190,7 +192,10 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
     };
 
     const draw = () => {
+      const dpr = window.devicePixelRatio || 1;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const states = ropeStatesRef.current;
 
       for (const [gi, state] of states.entries()) {
@@ -211,16 +216,26 @@ export const WobblyRopes: React.FC<WobblyRopesProps> = ({
       }
     };
 
+    // Off screen the ropes are neither simulated nor drawn; the frame callback stays cheap.
+    let visible = true;
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+    });
+    io.observe(canvas);
+
     const loop = () => {
-      syncRopeStates();
-      updatePhysics();
-      draw();
+      if (visible) {
+        syncRopeStates();
+        updatePhysics();
+        draw();
+      }
       animationFrameId = requestAnimationFrame(loop);
     };
 
     loop();
 
     return () => {
+      io.disconnect();
       cancelAnimationFrame(animationFrameId);
     };
   }, [syncRopeStates, ropeTargetsRef, damping, stiffness, colors, lineWidth]);

@@ -200,7 +200,9 @@ function SkillGraphCanvas() {
             const gi = categories.indexOf(categoryName);
             if (gi < 0) return;
             toggleGroup(gi, groups);
-            simulation.alphaTarget(REHEAT_ALPHA).restart();
+            // A one-off kick: alphaTarget would keep the simulation running for good, as
+            // nothing resets it after a click on a tag.
+            simulation.alpha(REHEAT_ALPHA).restart();
           },
         })
       : [];

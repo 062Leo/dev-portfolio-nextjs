@@ -22,7 +22,7 @@ const CHARGE_AT_MIN = -250;
 const CENTER_Y_AT_MIN = 0.045;
 
 const ALPHA_DECAY = 0.01; // cooling rate per tick (higher = faster settle)
-const ALPHA_MIN = 0.000000001; // simulation stops when alpha drops below this
+const ALPHA_MIN = 0.001; // simulation stops when alpha drops below this (d3 default; smaller only moves nodes by sub-pixels)
 const COLLIDE_PADDING = 10; // extra px between node edges for forceCollide
 export const REHEAT_ALPHA = 0.2; // alpha / alphaTarget when re-energizing (drag, resize, etc.)
 
