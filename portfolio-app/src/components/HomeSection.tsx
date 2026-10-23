@@ -46,7 +46,10 @@ export function HomeSection() {
                   className="relative inline-flex items-baseline cursor-pointer select-none bg-transparent border-0 px-0 py-0.5 -my-0.5 text-current group"
                 >
                   <span>{currentPortfolioData.personal.firstName}</span>
-                  <span className="inline-flex overflow-hidden max-w-0 transition-[max-width] duration-300 ease-out group-hover:max-w-[30rem]">
+                  <span
+                    aria-hidden="true"
+                    className="inline-flex overflow-hidden max-w-0 transition-[max-width] duration-300 ease-out group-hover:max-w-[30rem]"
+                  >
                     {hoverText.split("").map((char, index) => (
                       <span
                         key={`hover-char-${index}`}
