@@ -29,7 +29,7 @@ export const portfolioData = {
       tags: ["Reinforcement Learning", "Unity 3D", "ML-Agents", "PPO", "LSTM"],
       features: [
         "Training eines ML-Agenten in 13 Parkour-Leveln mit progressiver Komplexität",
-        "Mehere unterschiedliche Varianten für ausgewählte Level",
+        "Mehrere unterschiedliche Varianten für ausgewählte Level",
         "Umfangreiche Sensorik mit RayPerceptionSensor3D und Vektorbeobachtungen (insgesamt 538 Beobachtungen pro Schritt)",
         "Hybrider Aktionsraum aus kontinuierlicher Bewegung und diskreten Aktionen (Springen, Rennen)",
         "Ausgefeilte Reward-Struktur mit Checkpoints, Zeitbonus und Bewegungsoptimierung",
@@ -166,7 +166,7 @@ export const portfolioData = {
         "Problem: Überall, wo eingehende Anfragen verarbeitet werden (Support, Kundenkommunikation, interne Aufgaben, Vereine, Projekte), läuft dasselbe Muster: Eine Nachricht kommt rein, jemand entscheidet, eine Folge-Aktion wird ausgelöst. An der Schnittstelle zwischen fachführenden Systemen (Systems of Record) und unstrukturierten Kundenanfragen ist die manuelle Sachbearbeitung ineffizient, fehleranfällig und kaum skalierbar. Klassische Backoffice-Prozesse haben dabei vier typische Schwachstellen: Kontext-Fragmentierung, weil Mitarbeiter Informationen aus vielen Systemen zusammensuchen müssen, Ineffizienz bei Routineaufgaben wie Antworten oder Systemaktionen, fehlende Revisionssicherheit durch Medienbrüche zwischen Systemen, und Kontrollverlust durch jede Form von Blindautomatisierung. Denn egal ob rein deterministisch (zu starr) oder rein KI-gesteuert (Halluzinationen): beides nimmt dem Menschen die Entscheidung, ohne sie verlässlich genug zurückzugeben.\n\n" +
         "Lösung: ACMS greift jede dieser Schwachstellen einzeln auf. Der case-zentrierte Ansatz bündelt Daten, Nachrichten und Historien automatisch an einem Ort und löst die Kontext-Fragmentierung. KI-Agenten übernehmen das zeitaufwendige Analysieren, Strukturieren und Vorbereiten, geben aber nichts selbst aus. Statt Blindautomatisierung gilt ein natives Human-in-the-Loop-Prinzip: die KI schlägt vor, der Mensch gibt frei. Und weil alle Aktionen über definierte Capabilities laufen, entsteht ein lückenloser, auditierbarer Verlauf als Grundlage für Revisionssicherheit und Compliance.\n\n" +
         "ACMS ist die denkende, koordinierende Schicht zwischen Eingangskanälen, KI und Außenwelt. Das System nimmt beliebige eingehende Anfragen (E-Mails, Tickets, Webhooks, Formulare, Chat, API-Calls, ...) entgegen, führt sie als strukturierte Cases, lässt eine KI Vorschläge für die nächste Aktion generieren und führt diese Aktionen am Ende über versionierte, auditierte Capabilities aus, niemals autonom, sondern erst nach expliziter Freigabe durch einen Menschen.\n\n" +
-        "Architektur: ACMS trennt strikt in drei Rollen. **Ingress** (Channel-Adapter) nimmt Anfragen entgegen und normalisiert sie. **Brain** (KI) bekommt einen unveränderlichen Snapshot des Cases und entscheidet, was als nächstes passieren sollte, ohne direkten Zugriff auf Datenbank oder Außenwelt, sie liefert nur JSON-Vorschläge. **Hands** (Capabilities) sind benannte, versionierte, auditierte Aktionen wie `send_email`, `query_database` oder `create_github_issue`, die niemals autonom laufen. Dazwischen sitzt der Mensch: Er sieht den KI-Vorschlag und hat mehrere explizite Optionen z.B. Approve / Edit / Reprompt / Reject / Resubmit.\n\n" +
+        "Architektur: ACMS trennt strikt in drei Rollen. **Ingress** (Channel-Adapter) nimmt Anfragen entgegen und normalisiert sie. **Brain** (KI) bekommt einen unveränderlichen Snapshot des Cases und entscheidet, was als Nächstes passieren sollte, ohne direkten Zugriff auf Datenbank oder Außenwelt, sie liefert nur JSON-Vorschläge. **Hands** (Capabilities) sind benannte, versionierte, auditierte Aktionen wie `send_email`, `query_database` oder `create_github_issue`, die niemals autonom laufen. Dazwischen sitzt der Mensch: Er sieht den KI-Vorschlag und hat mehrere explizite Optionen, z.B. Approve / Edit / Reprompt / Reject / Resubmit.\n\n" +
         "Sicherheitsgrenze: Der AI-Service ist ein eigenständiger Microservice ohne Datenbank-Connection-String. Er bekommt nur über HTTP einen unveränderlichen Snapshot und liefert einen Vorschlag zurück. Das ist die explizite Grenze gegen Prompt-Injection: Selbst wenn die KI kompromittiert wird, kann sie nur Vorschläge machen, die der Mensch noch genehmigen muss.\n\n" +
         "End-to-End-Durchlauf: Jede Anfrage wird als Case geführt, egal aus welchem Channel. Phase 1: Die KI extrahiert strukturierte Felder (Name, IDs, Thema, ...). Phase 2: Matching gegen bestehende Cases. Phase 3: Promote / Merge / Reject durch den Menschen. Phase 4: Die KI bekommt den vollständigen Snapshot (Extrahiertes, Capability-Historie, verfügbare Capabilities, Konversations-Historie, optionale Reprompt-Instruction) und schlägt konkrete Folge-Capabilities vor. Sie bekommt alle verfügbaren Capabilities vorgelegt und prüft per Self-Check selbst, ob sie genug Informationen hat, um z.B. direkt eine Antwortmail vorzuschlagen, oder ob sie als ersten Schritt eine Daten-Beschaffungs-Capability wie eine Datenbank-Abfrage vorschlagen sollte. Phase 5: Human-in-the-Loop. Phase 6: Execution. Phase 7: Auto-Loop, wenn nur Daten-Beschaffungs-Capabilities gelaufen sind, springt das System automatisch zurück zu Phase 4 und fragt die KI nach dem nächsten Schritt.\n\n" +
         "Erweiterbarkeit: Neue Capabilities werden zur Laufzeit per `definition.json` + Executable registriert, ohne Code-Deploy. Eingehende Channels sind über ein `IInputChannel`-Interface frei konfigurierbar (E-Mail, Web-Formulare, REST-API, Chat, Ticket-Systeme, Webhooks, IoT). Das LLM ist über ein `ILlmClient`-Interface austauschbar, sodass beliebige Provider wie NVIDIA NIM, OpenAI, Anthropic, Azure OpenAI, lokale Modelle (Ollama, llama.cpp, vLLM) oder Multi-Provider-Setups möglich sind.\n\n" +
@@ -263,7 +263,7 @@ export const portfolioData = {
       subtitle:
         "Barcode-Scanner zur Analyse von Zutaten, NOVA-Klassifizierung und Ernährungsrisiko-Bewertung",
       description:
-        "Datenschutzorientierte mobile App (Expo/React Native), die Lebensmittel-Barcodes scannt, Zutaten und Zusatzstoffe gegen 683 Gesundheitsregeln bewertet und Verarbeitungsstufen klassifiziert - ohne proprietären Backend, ohne Tracking, ohne Werbung.",
+        "Datenschutzorientierte mobile App (Expo/React Native), die Lebensmittel-Barcodes scannt, Zutaten und Zusatzstoffe gegen 683 Gesundheitsregeln bewertet und Verarbeitungsstufen klassifiziert - ohne proprietäres Backend, ohne Tracking, ohne Werbung.",
       longDescription:
         "FoodCheck ist eine React Native (Expo) App, die EAN-8/EAN-13 Barcodes via Kamera erkennt, Produktdaten lokal in SQLite zwischenspeichert und Zutaten auf gesundheitliche Risikofaktoren überprüft.\n\n" +
         "Die App kombiniert lokale SQLite-Persistierung, on-device ML Kit OCR für Zutatenlisten und Abfragen gegen die Open Food Facts API v2. Sie enthält ein umfassendes Risiko-Bewertungssystem mit 683 Kern-Regeln in 19 Kategorien (E-Nummern, Süßstoffe, Konservierungsstoffe, Emulgatoren, gehärtete Fette, Phosphate etc.), mehrsprachige Zutatendarstellungen in 8 Sprachen (de/en/fr/it/es/nl/pt/pl) und NOVA-/Nutri-Score-Klassifizierung mit farblich gekennzeichneten Ampel-Bewertungen. KI-gestützte Insights von Robotoff ergänzen die Analyse mit Confidence-Scores für Kategorien, Labels und Zutaten.\n\n" +
@@ -291,7 +291,7 @@ export const portfolioData = {
         "Risiko-Bewertung: 683 Kern-Regeln in 19 Kategorien (Zusatzstoffe, Zucker, gehärtete Fette, E-Nummern, etc.)",
         "Benutzerdefinierte Filter: Zutaten-Stichwörter und Nährstoff-Schwellenwerte mit mehrsprachiger Auto-Übersetzung",
         "NOVA-Klassifizierung (1-4, unverarbeitet bis ultra-verarbeitet) und Nutri-Score (A-E), beide farblich gekennzeichnet",
-        "Lokales ML Kit OCR für Zutatenlisten und Nährwertangaben mit automatischer Spracherkennung",
+        "Lokale ML-Kit-OCR für Zutatenlisten und Nährwertangaben mit automatischer Spracherkennung",
         "Cloud Vision OCR Fallback mit Crop-Tool und Bearbeitungsfunktion",
         "Produktkatalog mit Textsuche (SQLite LIKE), Risiko-Filter (OK/Warnung/Kritisch), Sortierung und Wisch-zum-Löschen",
         "Favoritenverwaltung mit schnellem Toggle aus Produktdetail und Katalog",
@@ -361,7 +361,7 @@ export const portfolioData = {
       description:
         "Vollständig clientseitige Single Page Web Application zur zufälligen Musikentdeckung über 126 Jahre Musikgeschichte. Ganz ohne Algorithmus oder Server-Backend.",
       longDescription:
-        "**SongVoyage** ist eine vollständig clientseitige, platformunabhängige **Single Page Web Application (SPA)** zur unvoreingenommenen Musikentdeckung. Die Anwendung folgt strikt einer **Zero-Backend-Philosophie**: sämtliche Nutzerdaten verbleiben dezentral und ausschließlich im Browser des Nutzers.\n\n" +
+        "**SongVoyage** ist eine vollständig clientseitige, plattformunabhängige **Single Page Web Application (SPA)** zur unvoreingenommenen Musikentdeckung. Die Anwendung folgt strikt einer **Zero-Backend-Philosophie**: sämtliche Nutzerdaten verbleiben dezentral und ausschließlich im Browser des Nutzers.\n\n" +
         "Die App wählt per Zufall Songs aus dem MusicBrainz-Archiv (1900-2026) aus und spielt die zugehörigen YouTube-Videos ab, ohne algorithmische Vorfilterung und ohne YouTube Data API (Zero-Quota durch HTML-Scraping). Nutzer bewerten Songs mit 0-5 Sternen, legen Playlists an und können Künstler blockieren.\n\n" +
         "Technisch setzt SongVoyage auf **Vue 3** (Composition API), **Pinia** für State Management und **Dexie.js** als IndexedDB-Wrapper für die lokale Datenhaltung. Der **Dual-Player** mit zwei YouTube-IFrame-Instanzen ermöglicht gapless Playback ohne spürbare Verzögerung. \n\n",
       image: "/Bilder/SongVoyage/Bild.png",
@@ -512,11 +512,11 @@ export const portfolioData = {
     {
       id: "broforce-clone",
       title: "BoomForce",
-      subtitle: "(Broforce Klon)",
+      subtitle: "(Broforce-Klon)",
       description:
         "2D-Side-Scrolling-Shooter mit zerstörbarer Umgebung, Kettenreaktions-Engine und physikbasiertem Explosionssystem.",
       longDescription:
-        "**BoomForce** entstand als Projekt für den Game Engines-Kurs meines Studiums. Ich habe den Prototyp eines physikbasiertes 2D-Side-Scrolling-Shooters entwickelt, das sich auf **zerstörbare Umgebungen** und **komplexe Kettenreaktionen** konzentriert.\n\nDas Spiel demonstriert fortgeschrittene Spielmechaniken: Ein **ausgefeiltes Explosionssystem** berechnet Schäden basierend auf Nähe und Objekttyp. Ein **robustes State-Management** verwaltet mehrere gleichzeitige Kettenreaktionen ohne Performance-Probleme.\n\nSpieler interagieren mit einer dynamischen Welt aus **zerstörbaren Blöcken**, **fallenden Steinen** und **verschiedenen Fasstypen** - jedes mit eigenen Explosionsradien und Brandeffekten. Das Projekt zeigt tiefes Verständnis für **Physik-Systeme**, **Event-Handling** und **Optimierungstechniken**.\n\n Mehr Informationen und technische Details  im **README auf GitHub**.",
+        "**BoomForce** entstand als Projekt für den Game-Engines-Kurs meines Studiums. Ich habe den Prototyp eines physikbasierten 2D-Side-Scrolling-Shooters entwickelt, der sich auf **zerstörbare Umgebungen** und **komplexe Kettenreaktionen** konzentriert.\n\nDas Spiel demonstriert fortgeschrittene Spielmechaniken: Ein **ausgefeiltes Explosionssystem** berechnet Schäden basierend auf Nähe und Objekttyp. Ein **robustes State-Management** verwaltet mehrere gleichzeitige Kettenreaktionen ohne Performance-Probleme.\n\nSpieler interagieren mit einer dynamischen Welt aus **zerstörbaren Blöcken**, **fallenden Steinen** und **verschiedenen Fasstypen** - jedes mit eigenen Explosionsradien und Brandeffekten. Das Projekt zeigt tiefes Verständnis für **Physik-Systeme**, **Event-Handling** und **Optimierungstechniken**.\n\n Mehr Informationen und technische Details im **README auf GitHub**.",
       image: "/Bilder/BoomForce/BoomForce.png",
       images: [] as ProjectImage[],
       videos: [
@@ -528,7 +528,7 @@ export const portfolioData = {
         {
           url: "/Videos/BoomForce/Steine.mp4",
           caption:
-            "Fallende Steine:\n\n Auslösebedingungen:\nTreffer durch Kugeln; Feuerkontakt; Kollision mit Spieler;\n\n Verhalten:\n Fällt, wenn nichts drunter ist; Fällt, wenn nur ein Nachber-Block vorhanden ist.",
+            "Fallende Steine:\n\n Auslösebedingungen:\nTreffer durch Kugeln; Feuerkontakt; Kollision mit Spieler;\n\n Verhalten:\n Fällt, wenn nichts drunter ist; Fällt, wenn nur ein Nachbar-Block vorhanden ist.",
         },
         {
           url: "/Videos/BoomForce/Radius2.mp4",
@@ -538,7 +538,7 @@ export const portfolioData = {
         {
           url: "/Videos/BoomForce/radius.mp4",
           caption:
-            "Komplexe Kettenreaktion:\n Mehrere Fässer triggern sich gegenseitig und beeinflussen die Umliegenden Blöcke:\n\n Blöcke in Farb-Kategorien:\n Sofortige Zerstörung; Brennt und stirbt; Brennt und bleibt am leben;\n (je nach Anzahl und Radius der Fässer die den Block triggern) ",
+            "Komplexe Kettenreaktion:\n Mehrere Fässer triggern sich gegenseitig und beeinflussen die umliegenden Blöcke:\n\n Blöcke in Farb-Kategorien:\n Sofortige Zerstörung; Brennt und stirbt; Brennt und bleibt am Leben;\n (je nach Anzahl und Radius der Fässer, die den Block triggern) ",
         },
       ],
       tags: ["Unity 2D", "Physics Engine", "Destructible Environment", "State Management", "C#"],
@@ -601,7 +601,7 @@ export const portfolioData = {
       miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Layers", label: "Kategorie", value: "Streng Geheim" },
+        { icon: "Layers", label: "Kategorie", value: "Streng geheim" },
         { icon: "Clock", label: "Zeitplan", value: "Bald verfügbar" },
       ],
     },

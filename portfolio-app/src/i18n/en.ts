@@ -77,7 +77,7 @@ export const en: Dictionary = {
     titleStart: "Featured",
     titleAccent: "Projects",
     intro: "Here are some of my recent projects that combine design, performance, and clean code.",
-    moreDetails: "View more Details",
+    moreDetails: "View more details",
     moreTitle: "More Projects",
     moreIntro: "Additional projects and experiments that complement my portfolio.",
     githubCta: "Check My Personal GitHub",
