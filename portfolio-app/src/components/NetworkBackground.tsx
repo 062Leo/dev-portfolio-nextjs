@@ -221,6 +221,8 @@ export function NetworkBackground() {
       if (progress >= 1) startWander(now);
     };
 
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const animate = (now: number) => {
       context.globalAlpha = 1;
       context.clearRect(0, 0, width, height);
@@ -248,7 +250,8 @@ export function NetworkBackground() {
         drawCircle(point);
       });
 
-      animationFrameId = window.requestAnimationFrame(animate);
+      // With reduced motion the network is drawn once (and again after a resize) and stays still.
+      if (!reducedMotion) animationFrameId = window.requestAnimationFrame(animate);
     };
 
     const handlePointerMove = (event: PointerEvent) => {
@@ -281,7 +284,10 @@ export function NetworkBackground() {
     let resizeTimer: ReturnType<typeof setTimeout> | undefined;
     const handleResize = () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(applyResize, RESIZE_DEBOUNCE_MS);
+      resizeTimer = setTimeout(() => {
+        applyResize();
+        if (reducedMotion) animationFrameId = window.requestAnimationFrame(animate);
+      }, RESIZE_DEBOUNCE_MS);
     };
 
     configureCanvasSize();

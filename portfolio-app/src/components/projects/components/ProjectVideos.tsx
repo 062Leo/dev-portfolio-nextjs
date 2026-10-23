@@ -43,13 +43,25 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
   useEffect(() => {
     if (!videos || videos.length === 0) return;
 
+    // Videos the visitor paused stay paused when they scroll back into view; with reduced
+    // motion nothing starts on its own.
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const pausedByUser = new WeakSet<HTMLVideoElement>();
+    const onPause = (event: Event) => {
+      const video = event.currentTarget as HTMLVideoElement;
+      if (video.dataset.autoPause === "1") delete video.dataset.autoPause;
+      else pausedByUser.add(video);
+    };
+    const onPlay = (event: Event) => pausedByUser.delete(event.currentTarget as HTMLVideoElement);
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const video = entry.target as HTMLVideoElement;
           if (entry.isIntersecting) {
-            video.play().catch(() => {});
-          } else {
+            if (!reducedMotion && !pausedByUser.has(video)) video.play().catch(() => {});
+          } else if (!video.paused) {
+            video.dataset.autoPause = "1";
             video.pause();
           }
         });
@@ -57,14 +69,19 @@ const ProjectVideos: React.FC<ProjectVideosProps> = ({ videoBig, videos }) => {
       { threshold: 0.5 },
     );
 
-    videoRefs.current.forEach((video) => {
-      if (video) {
-        observer.observe(video);
-      }
+    const observed = videoRefs.current.filter((video): video is HTMLVideoElement => !!video);
+    observed.forEach((video) => {
+      video.addEventListener("pause", onPause);
+      video.addEventListener("play", onPlay);
+      observer.observe(video);
     });
 
     return () => {
       observer.disconnect();
+      observed.forEach((video) => {
+        video.removeEventListener("pause", onPause);
+        video.removeEventListener("play", onPlay);
+      });
     };
   }, [videos]);
 
