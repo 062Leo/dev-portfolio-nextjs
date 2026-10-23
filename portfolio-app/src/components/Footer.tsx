@@ -139,7 +139,9 @@ export function Footer() {
           </div>
 
           <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-accent/10 pt-6 md:flex-row">
-            <p className="text-xs text-text-muted">
+            {/* The page is prerendered; after New Year the client's year differs until the
+                next deploy, which is expected. */}
+            <p className="text-xs text-text-muted" suppressHydrationWarning>
               © {new Date().getFullYear()} Leo. {t.footer.rights}
             </p>
             <button

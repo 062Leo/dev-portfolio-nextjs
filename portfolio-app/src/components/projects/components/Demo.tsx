@@ -67,6 +67,7 @@ export function DetailPage({ id }: { id: string }) {
           {project.demoImage && (
             <button
               type="button"
+              aria-label={t.projectDetail.playDemo}
               className="w-full rounded-xl overflow-hidden border-2 border-accent bg-bg cursor-pointer block"
               onClick={() => {
                 if (project.demoLink) {
