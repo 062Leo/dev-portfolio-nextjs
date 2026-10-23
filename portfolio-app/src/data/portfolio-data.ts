@@ -318,7 +318,7 @@ export const portfolioData = {
         "Open Food Facts API v2 (read + write)",
         "Robotoff (AI insights)",
         "DeepL Free API + MyMemory (translation)",
-        "SymSpell (spell correction for ingredient matching)",
+        "SymSpell (Rechtschreibkorrektur für den Zutatenabgleich)",
         "ESLint 10 (flat config) + Prettier 3",
         "Jest + jest-expo (23 suites, 265 tests)",
       ],

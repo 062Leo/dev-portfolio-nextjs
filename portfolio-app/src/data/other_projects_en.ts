@@ -109,7 +109,7 @@ export const otherProjects = {
       misctext: "",
       miscimage: "",
       miscTitle: "",
-      stats: [{ icon: "Users", label: "Development", value: "Solo project" }],
+      stats: [{ icon: "Star", label: "Development", value: "Solo project" }],
     },
     {
       id: "doom-mobility-prototype",

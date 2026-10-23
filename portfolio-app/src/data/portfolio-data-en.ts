@@ -593,7 +593,7 @@ export const portfolioData = {
       miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Eye", label: "Category", value: "Top secret" },
+        { icon: "Layers", label: "Category", value: "Top secret" },
         { icon: "Clock", label: "Schedule", value: "Coming soon" },
       ],
     },

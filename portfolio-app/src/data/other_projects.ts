@@ -300,7 +300,7 @@ export const otherProjects = {
       miscimage: "",
       miscTitle: "",
       stats: [
-        { icon: "Layers", label: "Kategorie", value: "Streng Geheim" },
+        { icon: "Layers", label: "Kategorie", value: "Streng geheim" },
         { icon: "Clock", label: "Zeitplan", value: "Bald verfügbar" },
       ],
     },
